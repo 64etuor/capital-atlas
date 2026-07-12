@@ -1,111 +1,101 @@
+@import "tailwindcss";
+@import "@fontsource/instrument-serif";
+@import "@fontsource-variable/archivo";
+@import "@fontsource-variable/spline-sans-mono";
+
+/*
+ * CAPITAL ATLAS — BAROMETER (돈의 기상학).
+ * Visual canon: DESIGN.md §2–§3. Tokens below ARE that definition; if they
+ * drift, DESIGN.md wins.
+ */
+@theme {
+  /* ink atmosphere (§2) */
+  --color-ink-0: #05070c; /* 심야 — 캔버스 최심부 */
+  --color-ink-1: #0a0f1a; /* 기본 배경 */
+  --color-ink-2: #101828; /* 수평선/패널 스크림 */
+  --color-paper: #e8e4d8; /* 전경 텍스트 — 순백 금지 */
+  --color-paper-dim: #8b8878;
+
+  --color-flow-in: #ffb454; /* 자본 유입 — solar amber */
+  --color-flow-out: #4fd8e8; /* 자본 유출 — ion cyan */
+  --color-signal: #ff4d3d; /* 경보/이상치 전용 red */
+
+  /* 잔액(기압) 순차 스케일: 심해 → 여명 */
+  --color-pressure-1: #1b2a4a;
+  --color-pressure-2: #29627e;
+  --color-pressure-3: #3fa27b;
+  --color-pressure-4: #c8d96f;
+
+  --font-display: "Instrument Serif", "Iowan Old Style", Georgia, serif;
+  --font-sans: "Archivo Variable", "Archivo", "Helvetica Neue", sans-serif;
+  --font-mono: "Spline Sans Mono Variable", "Spline Sans Mono", ui-monospace,
+    monospace;
+}
+
+/* canonical aliases + fog alphas (신뢰등급 → 안개, §2) */
 :root {
-  --text: #6b6375;
-  --text-h: #08060d;
-  --bg: #fff;
-  --border: #e5e4e7;
-  --code-bg: #f4f3ec;
-  --accent: #aa3bff;
-  --accent-bg: rgba(170, 59, 255, 0.1);
-  --accent-border: rgba(170, 59, 255, 0.5);
-  --social-bg: rgba(244, 243, 236, 0.5);
-  --shadow:
-    rgba(0, 0, 0, 0.1) 0 10px 15px -3px, rgba(0, 0, 0, 0.05) 0 4px 6px -2px;
+  --atlas-ink-0: var(--color-ink-0);
+  --atlas-ink-1: var(--color-ink-1);
+  --atlas-ink-2: var(--color-ink-2);
+  --atlas-paper: var(--color-paper);
+  --atlas-paper-dim: var(--color-paper-dim);
+  --flow-in: var(--color-flow-in);
+  --flow-out: var(--color-flow-out);
+  --signal: var(--color-signal);
+  --pressure-1: var(--color-pressure-1);
+  --pressure-2: var(--color-pressure-2);
+  --pressure-3: var(--color-pressure-3);
+  --pressure-4: var(--color-pressure-4);
+  --fog-A: 0;
+  --fog-B: 0.08;
+  --fog-C: 0.18;
+  --fog-D: 0.3;
+  --fog-E: 0.45;
 
-  --sans: system-ui, 'Segoe UI', Roboto, sans-serif;
-  --heading: system-ui, 'Segoe UI', Roboto, sans-serif;
-  --mono: ui-monospace, Consolas, monospace;
-
-  font: 18px/145% var(--sans);
-  letter-spacing: 0.18px;
-  color-scheme: light dark;
-  color: var(--text);
-  background: var(--bg);
-  font-synthesis: none;
-  text-rendering: optimizeLegibility;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-
-  @media (max-width: 1024px) {
-    font-size: 16px;
-  }
+  /* UI 전환 이징 (§4) */
+  --ease-baro: cubic-bezier(0.22, 1, 0.36, 1);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --text: #9ca3af;
-    --text-h: #f3f4f6;
-    --bg: #16171d;
-    --border: #2e303a;
-    --code-bg: #1f2028;
-    --accent: #c084fc;
-    --accent-bg: rgba(192, 132, 252, 0.15);
-    --accent-border: rgba(192, 132, 252, 0.5);
-    --social-bg: rgba(47, 48, 58, 0.5);
-    --shadow:
-      rgba(0, 0, 0, 0.4) 0 10px 15px -3px, rgba(0, 0, 0, 0.25) 0 4px 6px -2px;
-  }
-
-  #social .button-icon {
-    filter: invert(1) brightness(2);
-  }
-}
-
+html,
+body,
 #root {
-  width: 1126px;
-  max-width: 100%;
-  margin: 0 auto;
-  text-align: center;
-  border-inline: 1px solid var(--border);
-  min-height: 100svh;
-  display: flex;
-  flex-direction: column;
-  box-sizing: border-box;
+  height: 100%;
+  margin: 0;
 }
 
 body {
-  margin: 0;
+  /* 배경 = 대기: 하단 수평선 방향으로 밝아지는 잉크 그라디언트 (§2) */
+  background: linear-gradient(
+    180deg,
+    var(--color-ink-0) 0%,
+    var(--color-ink-1) 58%,
+    var(--color-ink-2) 100%
+  );
+  @apply text-paper font-sans antialiased;
+  overflow: hidden; /* 단일 관측 화면 — 페이지 스크롤 없음 (§1) */
+  overscroll-behavior: none;
 }
 
-h1,
-h2 {
-  font-family: var(--heading);
-  font-weight: 500;
-  color: var(--text-h);
+/* grain: feTurbulence 한 장 재사용 (§8) */
+.atlas-grain::after {
+  content: "";
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 50;
+  opacity: 0.05;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
 }
 
-h1 {
-  font-size: 56px;
-  letter-spacing: -1.68px;
-  margin: 32px 0;
-  @media (max-width: 1024px) {
-    font-size: 36px;
-    margin: 20px 0;
-  }
-}
-h2 {
-  font-size: 24px;
-  line-height: 118%;
-  letter-spacing: -0.24px;
-  margin: 0 0 8px;
-  @media (max-width: 1024px) {
-    font-size: 20px;
-  }
-}
-p {
-  margin: 0;
+/* 데이터 리드아웃은 항상 tabular (§3) */
+.readout {
+  @apply font-mono;
+  font-variant-numeric: tabular-nums;
 }
 
-code,
-.counter {
-  font-family: var(--mono);
-  display: inline-flex;
-  border-radius: 4px;
-  color: var(--text-h);
-}
-
-code {
-  font-size: 15px;
-  line-height: 135%;
-  padding: 4px 8px;
-  background: var(--code-bg);
+/* 계기 라벨: 11px mono uppercase, 자간 0.12em (§3) */
+.dial-label {
+  @apply font-mono uppercase;
+  font-size: 11px;
+  letter-spacing: 0.12em;
 }
