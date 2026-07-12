@@ -1,0 +1,53 @@
+.gitignore
+  s_e47a5eda862f84::t_e24ce2d15bbdc5 1-24
+.oxlintrc.json
+  s_e47a5eda862f84::t_4e2650c84280ac 1-8
+README.md
+  s_e47a5eda862f84::t_345a844221a7d1 1-32
+index.html
+  s_e47a5eda862f84::t_e4b6862df75bff 1-13
+package.json
+  s_e47a5eda862f84::t_bc39bded10d083 1-32
+pnpm-lock.yaml
+  s_e47a5eda862f84::t_d57f7d7155ec66 1-4278
+public/favicon.svg
+  s_e47a5eda862f84::t_857bf88aa92814 1
+public/icons.svg
+  s_e47a5eda862f84::t_20c9786aa28114 1-24
+src/App.css
+  s_e47a5eda862f84::t_e2e30013cf5e5e 1-184
+src/App.tsx
+  s_e47a5eda862f84::t_dcd1d1a6e17d10 1-122
+src/assets/react.svg
+  s_e47a5eda862f84::t_a3ab83ae31ed80 1
+src/assets/vite.svg
+  s_e47a5eda862f84::t_376aacc2a7501b 1
+src/index.css
+  s_e47a5eda862f84::t_081bc88fa9dbbc 1-111
+src/main.tsx
+  s_e47a5eda862f84::t_e0fd8dce7b49dc 1-10
+tsconfig.app.json
+  s_e47a5eda862f84::t_253c776d4f11d4 1-26
+tsconfig.json
+  s_e47a5eda862f84::t_abe02ab82bcbd6 1-7
+tsconfig.node.json
+  s_e47a5eda862f84::t_103322f505102f 1-23
+vite.config.ts
+  s_e47a5eda862f84::t_e1441dc170260f 1-7
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.12",
+  "base_commit_sha": "f2dc9946a0d012a6ede96b816832edd5ef02f584",
+  "prompts": {},
+  "sessions": {
+    "s_e47a5eda862f84": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "a46a31a4-8363-4a90-b740-7e96b4bf3615",
+        "model": "claude-fable-5"
+      },
+      "human_author": "64etuor <130260521+64etuor@users.noreply.github.com>"
+    }
+  }
+}
