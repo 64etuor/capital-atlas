@@ -1,0 +1,24 @@
+docs/DATA_CONTRACT.md
+  s_e47a5eda862f84::t_85d790878c3d2e 16-19,24-29,31-33,36-48
+docs/DATA_PIPELINE.md
+  s_e47a5eda862f84::t_80295712b4f508 1-82
+src/types/data.ts
+  s_e47a5eda862f84::t_0b41b12f4ac16c 92-138,145-148
+  s_e47a5eda862f84::t_11047592736a73 149
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.12",
+  "base_commit_sha": "674198275fbdf144cc90b5a698cbb35ab30117f4",
+  "prompts": {},
+  "sessions": {
+    "s_e47a5eda862f84": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "a46a31a4-8363-4a90-b740-7e96b4bf3615",
+        "model": "claude-fable-5"
+      },
+      "human_author": "64etuor <130260521+64etuor@users.noreply.github.com>"
+    }
+  }
+}
