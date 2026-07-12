@@ -1,0 +1,475 @@
+public/data/countries.json
+  s_e47a5eda862f84::t_f5e02ab00af616 1
+public/data/flows_bilateral/2013-Q4.json
+  s_e47a5eda862f84::t_1ead227462874b 1
+public/data/flows_bilateral/2014-Q4.json
+  s_e47a5eda862f84::t_8517c88c271b81 1
+public/data/flows_bilateral/2015-Q4.json
+  s_e47a5eda862f84::t_c6c154d8cfbb5d 1
+public/data/flows_bilateral/2016-Q4.json
+  s_e47a5eda862f84::t_2fb92cfa9d2ef3 1
+public/data/flows_bilateral/2017-Q4.json
+  s_e47a5eda862f84::t_8caf8832aeb3c8 1
+public/data/flows_bilateral/2018-Q4.json
+  s_e47a5eda862f84::t_298a49e0a6fc0f 1
+public/data/flows_bilateral/2019-Q4.json
+  s_e47a5eda862f84::t_c9d4da658ecb48 1
+public/data/flows_bilateral/2020-Q4.json
+  s_e47a5eda862f84::t_3043d6924e2de1 1
+public/data/flows_bilateral/2021-Q4.json
+  s_e47a5eda862f84::t_43f8099363da36 1
+public/data/flows_bilateral/2022-Q4.json
+  s_e47a5eda862f84::t_7564aa792d1e0f 1
+public/data/flows_bilateral/2023-Q4.json
+  s_e47a5eda862f84::t_c2458f7eacf740 1
+public/data/flows_bilateral/2024-Q4.json
+  s_e47a5eda862f84::t_d507ebc1385a22 1
+public/data/flows_country/2010-Q1.json
+  s_e47a5eda862f84::t_338880a4138b05 1
+public/data/flows_country/2010-Q2.json
+  s_e47a5eda862f84::t_4d7a797aa375dc 1
+public/data/flows_country/2010-Q3.json
+  s_e47a5eda862f84::t_b3618c764879f1 1
+public/data/flows_country/2010-Q4.json
+  s_e47a5eda862f84::t_39891ccfd0a96f 1
+public/data/flows_country/2011-Q1.json
+  s_e47a5eda862f84::t_1c725c8867caf2 1
+public/data/flows_country/2011-Q2.json
+  s_e47a5eda862f84::t_c8f7bf4a719acb 1
+public/data/flows_country/2011-Q3.json
+  s_e47a5eda862f84::t_43afe0805c172c 1
+public/data/flows_country/2011-Q4.json
+  s_e47a5eda862f84::t_9e50a67dbb83bd 1
+public/data/flows_country/2012-Q1.json
+  s_e47a5eda862f84::t_3235a7274ae82b 1
+public/data/flows_country/2012-Q2.json
+  s_e47a5eda862f84::t_c704ec3ea50da2 1
+public/data/flows_country/2012-Q3.json
+  s_e47a5eda862f84::t_872f2c685c683a 1
+public/data/flows_country/2012-Q4.json
+  s_e47a5eda862f84::t_fc46e52d7fbce9 1
+public/data/flows_country/2013-Q1.json
+  s_e47a5eda862f84::t_7a11147892546b 1
+public/data/flows_country/2013-Q2.json
+  s_e47a5eda862f84::t_fd4f67b5e9611a 1
+public/data/flows_country/2013-Q3.json
+  s_e47a5eda862f84::t_794335d86d5dfa 1
+public/data/flows_country/2013-Q4.json
+  s_e47a5eda862f84::t_b5f8bed1328b57 1
+public/data/flows_country/2014-Q1.json
+  s_e47a5eda862f84::t_9a4f81208762f9 1
+public/data/flows_country/2014-Q2.json
+  s_e47a5eda862f84::t_56c4e94dedc1e9 1
+public/data/flows_country/2014-Q3.json
+  s_e47a5eda862f84::t_7244980bb75dc3 1
+public/data/flows_country/2014-Q4.json
+  s_e47a5eda862f84::t_c5ce2b055c48b2 1
+public/data/flows_country/2015-Q1.json
+  s_e47a5eda862f84::t_628df1709ee5cc 1
+public/data/flows_country/2015-Q2.json
+  s_e47a5eda862f84::t_334008b1fb7f00 1
+public/data/flows_country/2015-Q3.json
+  s_e47a5eda862f84::t_0be0485f46ec1b 1
+public/data/flows_country/2015-Q4.json
+  s_e47a5eda862f84::t_3bb79f88133eab 1
+public/data/flows_country/2016-Q1.json
+  s_e47a5eda862f84::t_ccec1c24c36817 1
+public/data/flows_country/2016-Q2.json
+  s_e47a5eda862f84::t_bd04e0c500e050 1
+public/data/flows_country/2016-Q3.json
+  s_e47a5eda862f84::t_4e32a6e61e5d73 1
+public/data/flows_country/2016-Q4.json
+  s_e47a5eda862f84::t_f74d14891a1ec0 1
+public/data/flows_country/2017-Q1.json
+  s_e47a5eda862f84::t_92b649d4ccd832 1
+public/data/flows_country/2017-Q2.json
+  s_e47a5eda862f84::t_40cc05560c3060 1
+public/data/flows_country/2017-Q3.json
+  s_e47a5eda862f84::t_61826eae19129c 1
+public/data/flows_country/2017-Q4.json
+  s_e47a5eda862f84::t_883c80cf3eb357 1
+public/data/flows_country/2018-Q1.json
+  s_e47a5eda862f84::t_809e7773d35b8f 1
+public/data/flows_country/2018-Q2.json
+  s_e47a5eda862f84::t_16923bcdbe4cc4 1
+public/data/flows_country/2018-Q3.json
+  s_e47a5eda862f84::t_80d5b9a5181a5d 1
+public/data/flows_country/2018-Q4.json
+  s_e47a5eda862f84::t_b23919c2a63fa1 1
+public/data/flows_country/2019-Q1.json
+  s_e47a5eda862f84::t_7bf82a278474b4 1
+public/data/flows_country/2019-Q2.json
+  s_e47a5eda862f84::t_15086ceca8cfad 1
+public/data/flows_country/2019-Q3.json
+  s_e47a5eda862f84::t_5e38a90781d761 1
+public/data/flows_country/2019-Q4.json
+  s_e47a5eda862f84::t_c74199b1609b8e 1
+public/data/flows_country/2020-Q1.json
+  s_e47a5eda862f84::t_32be193215f420 1
+public/data/flows_country/2020-Q2.json
+  s_e47a5eda862f84::t_046f94a0c752d0 1
+public/data/flows_country/2020-Q3.json
+  s_e47a5eda862f84::t_83729acc47d89a 1
+public/data/flows_country/2020-Q4.json
+  s_e47a5eda862f84::t_ff357f091b7114 1
+public/data/flows_country/2021-Q1.json
+  s_e47a5eda862f84::t_8c667b35800b08 1
+public/data/flows_country/2021-Q2.json
+  s_e47a5eda862f84::t_076cbbf512df2e 1
+public/data/flows_country/2021-Q3.json
+  s_e47a5eda862f84::t_9f1ab49371be04 1
+public/data/flows_country/2021-Q4.json
+  s_e47a5eda862f84::t_21a66ad14e1475 1
+public/data/flows_country/2022-Q1.json
+  s_e47a5eda862f84::t_ca598ae6fd90ad 1
+public/data/flows_country/2022-Q2.json
+  s_e47a5eda862f84::t_165582518c7386 1
+public/data/flows_country/2022-Q3.json
+  s_e47a5eda862f84::t_f1664c82e72f81 1
+public/data/flows_country/2022-Q4.json
+  s_e47a5eda862f84::t_5700031f61ac3e 1
+public/data/flows_country/2023-Q1.json
+  s_e47a5eda862f84::t_b48975272c06ab 1
+public/data/flows_country/2023-Q2.json
+  s_e47a5eda862f84::t_72e727964eafa8 1
+public/data/flows_country/2023-Q3.json
+  s_e47a5eda862f84::t_482c004fc4664d 1
+public/data/flows_country/2023-Q4.json
+  s_e47a5eda862f84::t_bdd7a9dffbdbc6 1
+public/data/flows_country/2024-Q1.json
+  s_e47a5eda862f84::t_792f57f2598949 1
+public/data/flows_country/2024-Q2.json
+  s_e47a5eda862f84::t_3a554715921196 1
+public/data/flows_country/2024-Q3.json
+  s_e47a5eda862f84::t_c0d066ece1ccc3 1
+public/data/flows_country/2024-Q4.json
+  s_e47a5eda862f84::t_71939b8ac7157b 1
+public/data/flows_country/2025-Q1.json
+  s_e47a5eda862f84::t_8a6e9cd11bb4f4 1
+public/data/flows_country/2025-Q2.json
+  s_e47a5eda862f84::t_c791ada4712bd7 1
+public/data/flows_country/2025-Q3.json
+  s_e47a5eda862f84::t_dda7cea82eeb8f 1
+public/data/flows_country/2025-Q4.json
+  s_e47a5eda862f84::t_12b15e2420bd9f 1
+public/data/flows_country/2026-Q1.json
+  s_e47a5eda862f84::t_72b5c332639763 1
+public/data/index.json
+  s_e47a5eda862f84::t_c8f6be1ed1fca7 1
+public/data/meta/flow_intensity.json
+  s_e47a5eda862f84::t_b998155a01f067 1
+public/data/meta/global_crypto.json
+  s_e47a5eda862f84::t_dcfa83a4bce409 1
+public/data/meta/pipeline_report.json
+  s_e47a5eda862f84::t_f08ff02f026685 1
+public/data/meta/sources.json
+  s_e47a5eda862f84::t_06b3aab348a754 1
+public/data/stocks_issuer/2010-Q1.json
+  s_e47a5eda862f84::t_4d3f267632e659 1
+public/data/stocks_issuer/2010-Q2.json
+  s_e47a5eda862f84::t_3b4fc441c6b321 1
+public/data/stocks_issuer/2010-Q3.json
+  s_e47a5eda862f84::t_259b9e66783dff 1
+public/data/stocks_issuer/2010-Q4.json
+  s_e47a5eda862f84::t_3352c57e8fbb02 1
+public/data/stocks_issuer/2011-Q1.json
+  s_e47a5eda862f84::t_41e55f81da0d1f 1
+public/data/stocks_issuer/2011-Q2.json
+  s_e47a5eda862f84::t_b48c1ac74d969c 1
+public/data/stocks_issuer/2011-Q3.json
+  s_e47a5eda862f84::t_92578161ba5b1c 1
+public/data/stocks_issuer/2011-Q4.json
+  s_e47a5eda862f84::t_3c97919b64634c 1
+public/data/stocks_issuer/2012-Q1.json
+  s_e47a5eda862f84::t_78063d02dd5925 1
+public/data/stocks_issuer/2012-Q2.json
+  s_e47a5eda862f84::t_b85c6eb5ec9bed 1
+public/data/stocks_issuer/2012-Q3.json
+  s_e47a5eda862f84::t_e883b9e9efaf91 1
+public/data/stocks_issuer/2012-Q4.json
+  s_e47a5eda862f84::t_2f26a349920254 1
+public/data/stocks_issuer/2013-Q1.json
+  s_e47a5eda862f84::t_0938b114c18824 1
+public/data/stocks_issuer/2013-Q2.json
+  s_e47a5eda862f84::t_5b2bd2f65636e8 1
+public/data/stocks_issuer/2013-Q3.json
+  s_e47a5eda862f84::t_e6c11e64d54d5c 1
+public/data/stocks_issuer/2013-Q4.json
+  s_e47a5eda862f84::t_0418afa30a9ec2 1
+public/data/stocks_issuer/2014-Q1.json
+  s_e47a5eda862f84::t_d3bed6ee85118d 1
+public/data/stocks_issuer/2014-Q2.json
+  s_e47a5eda862f84::t_67c5b5b2a6d9d6 1
+public/data/stocks_issuer/2014-Q3.json
+  s_e47a5eda862f84::t_4605ca2358931d 1
+public/data/stocks_issuer/2014-Q4.json
+  s_e47a5eda862f84::t_27c2d8cd009b80 1
+public/data/stocks_issuer/2015-Q1.json
+  s_e47a5eda862f84::t_2d675f0eb6e26c 1
+public/data/stocks_issuer/2015-Q2.json
+  s_e47a5eda862f84::t_37859ae8de020a 1
+public/data/stocks_issuer/2015-Q3.json
+  s_e47a5eda862f84::t_7f287aeaebdae0 1
+public/data/stocks_issuer/2015-Q4.json
+  s_e47a5eda862f84::t_c62f715a5918fc 1
+public/data/stocks_issuer/2016-Q1.json
+  s_e47a5eda862f84::t_0379da00aca019 1
+public/data/stocks_issuer/2016-Q2.json
+  s_e47a5eda862f84::t_42280e89f0a263 1
+public/data/stocks_issuer/2016-Q3.json
+  s_e47a5eda862f84::t_cab02aeffefcc1 1
+public/data/stocks_issuer/2016-Q4.json
+  s_e47a5eda862f84::t_e737e9f73e2954 1
+public/data/stocks_issuer/2017-Q1.json
+  s_e47a5eda862f84::t_bad46c9ef683a1 1
+public/data/stocks_issuer/2017-Q2.json
+  s_e47a5eda862f84::t_fc3f391bf1e1f6 1
+public/data/stocks_issuer/2017-Q3.json
+  s_e47a5eda862f84::t_cc55def093dca1 1
+public/data/stocks_issuer/2017-Q4.json
+  s_e47a5eda862f84::t_353d70caf5f24b 1
+public/data/stocks_issuer/2018-Q1.json
+  s_e47a5eda862f84::t_a3432de380a842 1
+public/data/stocks_issuer/2018-Q2.json
+  s_e47a5eda862f84::t_f65d7b56bb5fc3 1
+public/data/stocks_issuer/2018-Q3.json
+  s_e47a5eda862f84::t_d79451c71dbaaf 1
+public/data/stocks_issuer/2018-Q4.json
+  s_e47a5eda862f84::t_52f5ad8730891d 1
+public/data/stocks_issuer/2019-Q1.json
+  s_e47a5eda862f84::t_dace8fc5ed6aab 1
+public/data/stocks_issuer/2019-Q2.json
+  s_e47a5eda862f84::t_590738dc18bfa6 1
+public/data/stocks_issuer/2019-Q3.json
+  s_e47a5eda862f84::t_ae9f05fd0d23ad 1
+public/data/stocks_issuer/2019-Q4.json
+  s_e47a5eda862f84::t_f2b32f859b9142 1
+public/data/stocks_issuer/2020-Q1.json
+  s_e47a5eda862f84::t_43249f1f78e641 1
+public/data/stocks_issuer/2020-Q2.json
+  s_e47a5eda862f84::t_c852e5f644a652 1
+public/data/stocks_issuer/2020-Q3.json
+  s_e47a5eda862f84::t_0d77ad5870e737 1
+public/data/stocks_issuer/2020-Q4.json
+  s_e47a5eda862f84::t_2574481d308dfc 1
+public/data/stocks_issuer/2021-Q1.json
+  s_e47a5eda862f84::t_3f372de24e4dc8 1
+public/data/stocks_issuer/2021-Q2.json
+  s_e47a5eda862f84::t_49805e08dcdc37 1
+public/data/stocks_issuer/2021-Q3.json
+  s_e47a5eda862f84::t_174c886be5d305 1
+public/data/stocks_issuer/2021-Q4.json
+  s_e47a5eda862f84::t_03fb622864fdfa 1
+public/data/stocks_issuer/2022-Q1.json
+  s_e47a5eda862f84::t_ba802cecd77694 1
+public/data/stocks_issuer/2022-Q2.json
+  s_e47a5eda862f84::t_8b5e20f7ebb224 1
+public/data/stocks_issuer/2022-Q3.json
+  s_e47a5eda862f84::t_7dedc4eec57f72 1
+public/data/stocks_issuer/2022-Q4.json
+  s_e47a5eda862f84::t_ad572c7e3b71d3 1
+public/data/stocks_issuer/2023-Q1.json
+  s_e47a5eda862f84::t_4b1037d69b3395 1
+public/data/stocks_issuer/2023-Q2.json
+  s_e47a5eda862f84::t_d305b274144b4a 1
+public/data/stocks_issuer/2023-Q3.json
+  s_e47a5eda862f84::t_a520cce98591d5 1
+public/data/stocks_issuer/2023-Q4.json
+  s_e47a5eda862f84::t_9333c0ed21d291 1
+public/data/stocks_issuer/2024-Q1.json
+  s_e47a5eda862f84::t_52e2948ed43af9 1
+public/data/stocks_issuer/2024-Q2.json
+  s_e47a5eda862f84::t_979f79f8149f76 1
+public/data/stocks_issuer/2024-Q3.json
+  s_e47a5eda862f84::t_29db2fd17d1f90 1
+public/data/stocks_issuer/2024-Q4.json
+  s_e47a5eda862f84::t_8005379b451ddb 1
+public/data/stocks_issuer/2025-Q1.json
+  s_e47a5eda862f84::t_4e062dcc75afc7 1
+public/data/stocks_issuer/2025-Q2.json
+  s_e47a5eda862f84::t_f1aca5afee8da0 1
+public/data/stocks_issuer/2025-Q3.json
+  s_e47a5eda862f84::t_fd463fa099833e 1
+public/data/stocks_issuer/2025-Q4.json
+  s_e47a5eda862f84::t_1d86d47adddd00 1
+public/data/stocks_issuer/2026-Q1.json
+  s_e47a5eda862f84::t_f625a90552c1c0 1
+public/data/stocks_location/2010-Q4.json
+  s_e47a5eda862f84::t_cdffc6bd5a5c1e 1
+public/data/stocks_location/2011-Q4.json
+  s_e47a5eda862f84::t_615b17ffb96fbd 1
+public/data/stocks_location/2012-Q4.json
+  s_e47a5eda862f84::t_9dbe3d824ff33f 1
+public/data/stocks_location/2013-Q4.json
+  s_e47a5eda862f84::t_30a1da86dd2a9e 1
+public/data/stocks_location/2014-Q4.json
+  s_e47a5eda862f84::t_845220b6597033 1
+public/data/stocks_location/2015-Q4.json
+  s_e47a5eda862f84::t_4e0740d66cc7c6 1
+public/data/stocks_location/2016-Q4.json
+  s_e47a5eda862f84::t_e132ff999bd483 1
+public/data/stocks_location/2017-Q4.json
+  s_e47a5eda862f84::t_650fcd54bc5148 1
+public/data/stocks_location/2018-Q4.json
+  s_e47a5eda862f84::t_f3cd5b810188bf 1
+public/data/stocks_location/2019-Q4.json
+  s_e47a5eda862f84::t_2244e662e45899 1
+public/data/stocks_location/2020-Q4.json
+  s_e47a5eda862f84::t_a8c7959685a09b 1
+public/data/stocks_location/2021-Q4.json
+  s_e47a5eda862f84::t_a9fd779bdb7306 1
+public/data/stocks_location/2022-Q4.json
+  s_e47a5eda862f84::t_879eef66ec10fa 1
+public/data/stocks_location/2023-Q4.json
+  s_e47a5eda862f84::t_06bc5d4c5db96d 1
+public/data/stocks_location/2024-Q4.json
+  s_e47a5eda862f84::t_2b534f2b932f16 1
+public/data/stocks_location/2025-Q4.json
+  s_e47a5eda862f84::t_e726008cddf830 1
+public/data/stocks_owner/2010-Q1.json
+  s_e47a5eda862f84::t_0f6a01e911bff5 1
+public/data/stocks_owner/2010-Q2.json
+  s_e47a5eda862f84::t_89e8279b67f9d8 1
+public/data/stocks_owner/2010-Q3.json
+  s_e47a5eda862f84::t_6e219eb6314f5c 1
+public/data/stocks_owner/2010-Q4.json
+  s_e47a5eda862f84::t_d92c00a2d08e2f 1
+public/data/stocks_owner/2011-Q1.json
+  s_e47a5eda862f84::t_924d28f8e22a68 1
+public/data/stocks_owner/2011-Q2.json
+  s_e47a5eda862f84::t_bd241755330ab4 1
+public/data/stocks_owner/2011-Q3.json
+  s_e47a5eda862f84::t_5ff437742207dc 1
+public/data/stocks_owner/2011-Q4.json
+  s_e47a5eda862f84::t_3b11e72a3154a2 1
+public/data/stocks_owner/2012-Q1.json
+  s_e47a5eda862f84::t_43bb2a0e375378 1
+public/data/stocks_owner/2012-Q2.json
+  s_e47a5eda862f84::t_549d9f1a16bec2 1
+public/data/stocks_owner/2012-Q3.json
+  s_e47a5eda862f84::t_971ee5ebdde904 1
+public/data/stocks_owner/2012-Q4.json
+  s_e47a5eda862f84::t_ffe967be3ee1a6 1
+public/data/stocks_owner/2013-Q1.json
+  s_e47a5eda862f84::t_be373b7d83fe9b 1
+public/data/stocks_owner/2013-Q2.json
+  s_e47a5eda862f84::t_6ff880fe87dd40 1
+public/data/stocks_owner/2013-Q3.json
+  s_e47a5eda862f84::t_9ffd83f22b4ef8 1
+public/data/stocks_owner/2013-Q4.json
+  s_e47a5eda862f84::t_f50520819ad708 1
+public/data/stocks_owner/2014-Q1.json
+  s_e47a5eda862f84::t_f7e2a0e241219e 1
+public/data/stocks_owner/2014-Q2.json
+  s_e47a5eda862f84::t_b97167f373da91 1
+public/data/stocks_owner/2014-Q3.json
+  s_e47a5eda862f84::t_1df2db0119adcc 1
+public/data/stocks_owner/2014-Q4.json
+  s_e47a5eda862f84::t_39b0266326dc58 1
+public/data/stocks_owner/2015-Q1.json
+  s_e47a5eda862f84::t_3564fcb0af9123 1
+public/data/stocks_owner/2015-Q2.json
+  s_e47a5eda862f84::t_9f094aa52030ee 1
+public/data/stocks_owner/2015-Q3.json
+  s_e47a5eda862f84::t_cd9d1691a40b33 1
+public/data/stocks_owner/2015-Q4.json
+  s_e47a5eda862f84::t_28dcc58ac1d0ff 1
+public/data/stocks_owner/2016-Q1.json
+  s_e47a5eda862f84::t_5594a8ac98962b 1
+public/data/stocks_owner/2016-Q2.json
+  s_e47a5eda862f84::t_e2c03d1490dabd 1
+public/data/stocks_owner/2016-Q3.json
+  s_e47a5eda862f84::t_b89b21a87fd591 1
+public/data/stocks_owner/2016-Q4.json
+  s_e47a5eda862f84::t_da60170053e4a2 1
+public/data/stocks_owner/2017-Q1.json
+  s_e47a5eda862f84::t_8e82694e91786f 1
+public/data/stocks_owner/2017-Q2.json
+  s_e47a5eda862f84::t_d73fbc1e88431b 1
+public/data/stocks_owner/2017-Q3.json
+  s_e47a5eda862f84::t_c7bba289c96515 1
+public/data/stocks_owner/2017-Q4.json
+  s_e47a5eda862f84::t_bf32bf00e355fe 1
+public/data/stocks_owner/2018-Q1.json
+  s_e47a5eda862f84::t_0819ea1b425cbc 1
+public/data/stocks_owner/2018-Q2.json
+  s_e47a5eda862f84::t_5fddabadd660dc 1
+public/data/stocks_owner/2018-Q3.json
+  s_e47a5eda862f84::t_f097b01ee7af2a 1
+public/data/stocks_owner/2018-Q4.json
+  s_e47a5eda862f84::t_974be5c6bdc916 1
+public/data/stocks_owner/2019-Q1.json
+  s_e47a5eda862f84::t_642dfa63c82c65 1
+public/data/stocks_owner/2019-Q2.json
+  s_e47a5eda862f84::t_7128cbd48d563d 1
+public/data/stocks_owner/2019-Q3.json
+  s_e47a5eda862f84::t_11b8382ef55811 1
+public/data/stocks_owner/2019-Q4.json
+  s_e47a5eda862f84::t_41a10b868550b9 1
+public/data/stocks_owner/2020-Q1.json
+  s_e47a5eda862f84::t_c998f9a17eebb7 1
+public/data/stocks_owner/2020-Q2.json
+  s_e47a5eda862f84::t_198cce8535047c 1
+public/data/stocks_owner/2020-Q3.json
+  s_e47a5eda862f84::t_aff9a70c1e54c1 1
+public/data/stocks_owner/2020-Q4.json
+  s_e47a5eda862f84::t_3539723f1d9012 1
+public/data/stocks_owner/2021-Q1.json
+  s_e47a5eda862f84::t_cb8ca7f3161a0f 1
+public/data/stocks_owner/2021-Q2.json
+  s_e47a5eda862f84::t_fcd6b4364d8880 1
+public/data/stocks_owner/2021-Q3.json
+  s_e47a5eda862f84::t_085043a0caaaaf 1
+public/data/stocks_owner/2021-Q4.json
+  s_e47a5eda862f84::t_f5c7e6053a13be 1
+public/data/stocks_owner/2022-Q1.json
+  s_e47a5eda862f84::t_006b201fb8beb8 1
+public/data/stocks_owner/2022-Q2.json
+  s_e47a5eda862f84::t_aa2fb1ab5bee4b 1
+public/data/stocks_owner/2022-Q3.json
+  s_e47a5eda862f84::t_e149edca9b8da0 1
+public/data/stocks_owner/2022-Q4.json
+  s_e47a5eda862f84::t_82f4f4d62c9152 1
+public/data/stocks_owner/2023-Q1.json
+  s_e47a5eda862f84::t_707a77cdd92224 1
+public/data/stocks_owner/2023-Q2.json
+  s_e47a5eda862f84::t_f43192816fb830 1
+public/data/stocks_owner/2023-Q3.json
+  s_e47a5eda862f84::t_82761aad516b48 1
+public/data/stocks_owner/2023-Q4.json
+  s_e47a5eda862f84::t_0744d004552826 1
+public/data/stocks_owner/2024-Q1.json
+  s_e47a5eda862f84::t_79a86a7651e0c5 1
+public/data/stocks_owner/2024-Q2.json
+  s_e47a5eda862f84::t_cba17c53fa0acd 1
+public/data/stocks_owner/2024-Q3.json
+  s_e47a5eda862f84::t_ce67c1872da159 1
+public/data/stocks_owner/2024-Q4.json
+  s_e47a5eda862f84::t_155da4ef7fd772 1
+public/data/stocks_owner/2025-Q1.json
+  s_e47a5eda862f84::t_441eac2c52feac 1
+public/data/stocks_owner/2025-Q2.json
+  s_e47a5eda862f84::t_d594fc828710f7 1
+public/data/stocks_owner/2025-Q3.json
+  s_e47a5eda862f84::t_d158e3e1e3fa95 1
+public/data/stocks_owner/2025-Q4.json
+  s_e47a5eda862f84::t_70742f5e83653c 1
+public/data/stocks_owner/2026-Q1.json
+  s_e47a5eda862f84::t_155ad9e64a8e99 1
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.12",
+  "base_commit_sha": "c0a2f9a67a77d9003a21395a952369c7f64ba8af",
+  "prompts": {},
+  "sessions": {
+    "s_e47a5eda862f84": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "a46a31a4-8363-4a90-b740-7e96b4bf3615",
+        "model": "unknown"
+      },
+      "human_author": "64etuor <130260521+64etuor@users.noreply.github.com>"
+    }
+  }
+}
