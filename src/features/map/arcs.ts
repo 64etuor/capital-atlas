@@ -71,7 +71,7 @@ function greatCirclePath(
   if (ω < 1e-6) return null
   const sinω = Math.sin(ω)
   // hug the surface like wind — high arcs read as rings, not weather
-  const height = Math.min(Math.max(ω * EARTH_R * 0.045, 45_000), 520_000)
+  const height = Math.min(Math.max(ω * EARTH_R * 0.038, 45_000), 340_000)
   const path: [number, number, number][] = []
   const fracs: number[] = []
   for (let i = 0; i <= PATH_STEPS; i += 1) {
@@ -83,7 +83,14 @@ function greatCirclePath(
       s0 * a[1] + s1 * b[1],
       s0 * a[2] + s1 * b[2],
     ])
-    path.push([lon, lat, Math.sin(Math.PI * t) * height])
+    // Taper altitude toward the poles: a pole-crossing great circle flips
+    // longitude over a tiny arc-length near its closest approach, and a raised
+    // segment there pokes past the globe's limb as a vertical spike. Flattening
+    // it onto the surface near the poles kills the spike while keeping the
+    // mid-latitude bow that reads as wind (DESIGN.md §4).
+    const latAbs = Math.abs(lat)
+    const polarTaper = latAbs > 70 ? Math.max(0, 1 - (latAbs - 70) / 20) : 1
+    path.push([lon, lat, Math.sin(Math.PI * t) * height * polarTaper])
     fracs.push(t)
   }
   return { path, fracs }

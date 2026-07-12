@@ -39,6 +39,7 @@ function buildAreaPath(series: FlowIntensityPoint[], count: number): string {
 export function BarographTimeline() {
   const periodIndex = useViewStore((s) => s.periodIndex)
   const setPeriodIndex = useViewStore((s) => s.setPeriodIndex)
+  const reportOpen = useViewStore((s) => s.selectedCountry !== null)
   const [series, setSeries] = useState<FlowIntensityPoint[]>([])
 
   useEffect(() => {
@@ -69,7 +70,14 @@ export function BarographTimeline() {
   }
 
   return (
-    <div className="absolute inset-x-0 bottom-0 z-10 px-6 pb-3">
+    <div
+      className={
+        // shrink to the remaining width so the observation report (§5, 420px)
+        // never clips the right edge of the strip chart
+        'absolute bottom-0 left-0 z-10 px-6 pb-3 transition-[right] duration-280 ease-(--ease-baro) ' +
+        (reportOpen ? 'right-[420px]' : 'right-0')
+      }
+    >
       <div className="relative h-16 border-t border-paper/10">
         {/* area silhouette — global gross cross-border flow per quarter */}
         <svg

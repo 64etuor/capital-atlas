@@ -1,6 +1,7 @@
 import { useEffect, useRef } from 'react'
 import * as echarts from 'echarts/core'
 import { TreemapChart } from 'echarts/charts'
+import { TooltipComponent } from 'echarts/components'
 import { CanvasRenderer } from 'echarts/renderers'
 import type { AssetClass } from '../types/data'
 import { ASSET_LABELS, type TreemapItem } from '../lib/assetLabels'
@@ -8,7 +9,14 @@ import { logScale } from '../features/map/aggregate'
 import { lerpRgb, pressureColor, rgbVar, rgbaCss } from '../lib/tokens'
 import { formatUsd } from '../lib/format'
 
-echarts.use([TreemapChart, CanvasRenderer])
+echarts.use([TreemapChart, TooltipComponent, CanvasRenderer])
+
+/**
+ * A cell narrower than its label just renders "DEB…"/"$67…". Below this share
+ * of the treemap we drop the in-cell label and let the hover tooltip carry the
+ * full reading instead (no truncated slop, DESIGN.md §7).
+ */
+const LABEL_MIN_SHARE = 0.08
 
 /**
  * 자산 구성 트리맵 — BAROMETER 토큰으로 스킨 (기본 ECharts 룩 금지).
@@ -35,10 +43,27 @@ export function AssetTreemap({
     const ink1 = rgbVar('--color-ink-1')
     const paper = rgbVar('--color-paper')
     const scale = logScale(items.map((i) => i.value))
+    const total = items.reduce((s, i) => s + i.value, 0) || 1
 
     chart.setOption({
       backgroundColor: 'transparent',
       animationDuration: 420,
+      tooltip: {
+        show: true,
+        trigger: 'item',
+        backgroundColor: rgbaCss(ink0, 0.95),
+        borderColor: rgbaCss(paper, 0.15),
+        borderWidth: 1,
+        padding: [4, 8],
+        textStyle: {
+          color: rgbaCss(paper, 0.92),
+          fontFamily: '"Spline Sans Mono Variable", monospace',
+          fontSize: 11,
+        },
+        extraCssText: 'border-radius:0;box-shadow:none;',
+        formatter: (p: { name: string; value: number }) =>
+          `${p.name.toUpperCase()} · ${formatUsd(p.value, 1)}`,
+      },
       series: [
         {
           type: 'treemap',
@@ -69,6 +94,7 @@ export function AssetTreemap({
               name: ASSET_LABELS[i.asset],
               value: i.value,
               id: i.asset,
+              label: { show: i.value / total >= LABEL_MIN_SHARE },
               itemStyle: {
                 color: rgbaCss(fogged, 1 - i.fog * 0.5),
               },
