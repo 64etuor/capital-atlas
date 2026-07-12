@@ -1,0 +1,26 @@
+package.json
+  s_e47a5eda862f84::t_e8294f7f583f6f 13
+  s_e47a5eda862f84::t_3f6d4d3cc9c855 33,37-38,46,51
+scripts/build/geometry.ts
+  s_e47a5eda862f84::t_4cd3ee9550b03a 1-55
+pnpm-lock.yaml
+  s_e47a5eda862f84::t_81542e503558a7 54-56,66-71,93-95,108-110,1284-1289,2609-2612,2731-2733,4185-4193,5614-5617,5699-5700
+public/data/countries_geo.json
+  s_e47a5eda862f84::t_001007753a1e2a 1
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.12",
+  "base_commit_sha": "88c00987e11e22931049de21fd4f1a063a54b292",
+  "prompts": {},
+  "sessions": {
+    "s_e47a5eda862f84": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "a46a31a4-8363-4a90-b740-7e96b4bf3615",
+        "model": "claude-fable-5"
+      },
+      "human_author": "64etuor <130260521+64etuor@users.noreply.github.com>"
+    }
+  }
+}
