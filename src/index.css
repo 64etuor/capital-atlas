@@ -99,3 +99,24 @@ body {
   font-size: 11px;
   letter-spacing: 0.12em;
 }
+
+/* 오도미터 롤 (§4 — 수치 변경은 자리수별 상하 롤) */
+.odo {
+  display: inline-flex;
+  line-height: 1;
+}
+.odo-digit {
+  display: inline-block;
+  height: 1em;
+  width: 0.56em;
+  overflow: hidden;
+}
+.odo-reel {
+  display: block;
+  transition: transform 620ms var(--ease-baro);
+}
+.odo-cell {
+  display: block;
+  height: 1em;
+  text-align: center;
+}

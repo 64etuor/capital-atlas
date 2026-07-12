@@ -1,10 +1,11 @@
 import { create } from 'zustand'
 import type { Basis, CurrencyView, MeasureType } from '../types/data'
-import { PERIOD_COUNT } from '../lib/periods'
+import type { DossierPayload } from '../types/dossier'
+import { periodCount } from '../lib/periods'
 
 /**
  * Global view state. Every control in the chrome writes here; the map and
- * detail panels read from here. Phase C layers subscribe to this store.
+ * detail panels read from here.
  */
 interface ViewState {
   basis: Basis
@@ -16,6 +17,9 @@ interface ViewState {
   periodIndex: number
   /** ISO3 of the country open in the detail panel, or null */
   selectedCountry: string | null
+  /** last lineage-dossier payload (kept mounted through the exit slide) */
+  dossier: DossierPayload | null
+  dossierOpen: boolean
 
   setBasis: (basis: Basis) => void
   setMeasure: (measure: MeasureType) => void
@@ -23,6 +27,8 @@ interface ViewState {
   toggleEstimates: () => void
   setPeriodIndex: (index: number) => void
   selectCountry: (iso3: string | null) => void
+  openDossier: (payload: DossierPayload) => void
+  closeDossier: () => void
 }
 
 export const useViewStore = create<ViewState>()((set) => ({
@@ -30,8 +36,10 @@ export const useViewStore = create<ViewState>()((set) => ({
   measure: 'stock',
   currency: 'usd_current',
   includeEstimates: true,
-  periodIndex: PERIOD_COUNT - 1,
+  periodIndex: periodCount() - 1,
   selectedCountry: null,
+  dossier: null,
+  dossierOpen: false,
 
   setBasis: (basis) => set({ basis }),
   setMeasure: (measure) => set({ measure }),
@@ -39,6 +47,12 @@ export const useViewStore = create<ViewState>()((set) => ({
   toggleEstimates: () =>
     set((s) => ({ includeEstimates: !s.includeEstimates })),
   setPeriodIndex: (index) =>
-    set({ periodIndex: Math.min(Math.max(index, 0), PERIOD_COUNT - 1) }),
-  selectCountry: (iso3) => set({ selectedCountry: iso3 }),
+    set({ periodIndex: Math.min(Math.max(index, 0), periodCount() - 1) }),
+  selectCountry: (iso3) =>
+    set((s) => ({
+      selectedCountry: iso3,
+      dossierOpen: iso3 === s.selectedCountry ? s.dossierOpen : false,
+    })),
+  openDossier: (payload) => set({ dossier: payload, dossierOpen: true }),
+  closeDossier: () => set({ dossierOpen: false }),
 }))

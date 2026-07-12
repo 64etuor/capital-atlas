@@ -1,9 +1,24 @@
 import type { PeriodKey } from '../types/data'
 
 export const START_YEAR = 2010
-export const END_YEAR = 2025
-/** total quarters on the timeline slider (2010-Q1 … 2025-Q4) */
-export const PERIOD_COUNT = (END_YEAR - START_YEAR + 1) * 4
+/** Overridden at boot from public/data/index.json (the canonical period list). */
+const FALLBACK_LATEST: PeriodKey = '2025-Q4'
+
+let latest: PeriodKey = FALLBACK_LATEST
+
+/** Called once in main.tsx, before the first render. */
+export function initPeriods(latestQuarter: PeriodKey): void {
+  latest = latestQuarter
+}
+
+export function latestPeriod(): PeriodKey {
+  return latest
+}
+
+/** Quarters on the timeline: 2010-Q1 … latest_quarter (stable after boot). */
+export function periodCount(): number {
+  return indexFromPeriod(latest) + 1
+}
 
 export function periodFromIndex(index: number): PeriodKey {
   const year = START_YEAR + Math.floor(index / 4)

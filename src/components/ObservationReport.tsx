@@ -1,27 +1,55 @@
+import { useEffect, useState } from 'react'
 import { useViewStore } from '../store/viewStore'
-import { periodFromIndex } from '../lib/periods'
-import type { ConfidenceGrade } from '../types/data'
-
-/** demo-pick display names until Phase B ships countries.json */
-const COUNTRY_NAMES: Record<string, string> = {
-  KOR: 'Korea',
-  USA: 'United States',
-  JPN: 'Japan',
-}
+import {
+  getBilateral,
+  getCountries,
+  getFlowsCountry,
+  getIndex,
+  getStocks,
+  nearestAvailable,
+} from '../lib/dataClient'
+import { indexFromPeriod, periodFromIndex } from '../lib/periods'
+import { formatUsd, formatUsdNet } from '../lib/format'
+import { fogAlpha } from '../lib/tokens'
+import { OBSERVED_GRADES, summarizeStocks } from '../features/map/aggregate'
+import { Odometer } from './Odometer'
+import { AssetTreemap } from './AssetTreemap'
+import { ASSET_LABELS, type TreemapItem } from '../lib/assetLabels'
+import type {
+  BilateralRecord,
+  ConfidenceGrade,
+  CountryMaster,
+  PeriodKey,
+  StockRecord,
+} from '../types/data'
+import type { DossierPayload } from '../types/dossier'
 
 const GRADES: readonly ConfidenceGrade[] = ['A', 'B', 'C', 'D', 'E']
 
-/**
- * "관측 준비 중" — no numbers without lineage (DESIGN.md §1.5), no skeleton
- * pulse (§7). Sections state their instrument status instead.
- */
-function AwaitingSection({ title, note }: { title: string; note: string }) {
+interface QuarterFlow {
+  period: PeriodKey
+  inflow: number
+  outflow: number
+  grade: ConfidenceGrade
+  n: number
+}
+
+interface ReportData {
+  key: string
+  stocks: StockRecord[]
+  stocksEff: PeriodKey | null
+  flows: QuarterFlow[]
+  partners: BilateralRecord[]
+  partnersEff: PeriodKey | null
+}
+
+function NoObservation({ title, note }: { title: string; note: string }) {
   return (
     <section className="border-t border-paper/10 px-6 py-5">
       <h3 className="dial-label text-paper-dim">{title}</h3>
       <div className="mt-3 border border-dashed border-paper/15 px-3 py-6 text-center">
         <p className="readout text-[11px] tracking-[0.12em] text-paper-dim/80">
-          AWAITING OBSERVATION
+          NO OBSERVATION
         </p>
         <p className="mt-1 font-sans text-[11px] text-paper-dim/60">{note}</p>
       </div>
@@ -29,12 +57,182 @@ function AwaitingSection({ title, note }: { title: string; note: string }) {
   )
 }
 
-/** 우측 슬라이드 관측 리포트 — 에디토리얼 조판 (DESIGN.md §5). */
+/** grade mark: solid = observed, half = derived, hollow = modelled (§6) */
+function gradeMark(grade: ConfidenceGrade): string {
+  if (OBSERVED_GRADES.has(grade)) return '●'
+  return grade === 'C' ? '◐' : '○'
+}
+
+/** 우측 슬라이드 관측 리포트 — 에디토리얼 조판, 실데이터 (DESIGN.md §5). */
 export function ObservationReport() {
   const selectedCountry = useViewStore((s) => s.selectedCountry)
   const selectCountry = useViewStore((s) => s.selectCountry)
+  const openDossier = useViewStore((s) => s.openDossier)
+  const basis = useViewStore((s) => s.basis)
+  const includeEstimates = useViewStore((s) => s.includeEstimates)
   const periodIndex = useViewStore((s) => s.periodIndex)
   const open = selectedCountry !== null
+
+  const [countries, setCountries] = useState<Map<string, CountryMaster>>(
+    () => new Map(),
+  )
+  const [data, setData] = useState<ReportData | null>(null)
+
+  const period = periodFromIndex(periodIndex)
+  const desiredKey = `${selectedCountry}|${basis}|${period}|${includeEstimates}`
+
+  useEffect(() => {
+    getCountries().then(setCountries).catch(() => {})
+  }, [])
+
+  useEffect(() => {
+    if (!selectedCountry) return
+    let alive = true
+    async function load() {
+      const iso3 = selectedCountry as string
+      const index = await getIndex()
+
+      const stocksEff = nearestAvailable(
+        index.periods[`stocks_${basis}`],
+        period,
+      )
+      const stocks = stocksEff
+        ? (await getStocks(basis, stocksEff)).records.filter(
+            (r) =>
+              r.country === iso3 &&
+              (includeEstimates || OBSERVED_GRADES.has(r.confidence_grade)),
+          )
+        : []
+
+      const flowPeriods = index.periods.flows_country
+        .filter((p) => indexFromPeriod(p) <= indexFromPeriod(period))
+        .slice(-12)
+      const flows: QuarterFlow[] = []
+      for (const p of flowPeriods) {
+        const recs = (await getFlowsCountry(p)).records.filter(
+          (r) =>
+            r.country === iso3 &&
+            r.measure === 'flow' &&
+            (includeEstimates || OBSERVED_GRADES.has(r.confidence_grade)),
+        )
+        if (recs.length === 0) continue
+        let inflow = 0
+        let outflow = 0
+        let grade: ConfidenceGrade = 'A'
+        let maxAbs = -1
+        for (const r of recs) {
+          if (r.entry === 'liabilities') inflow += r.value_usd
+          else outflow += r.value_usd
+          if (Math.abs(r.value_usd) > maxAbs) {
+            maxAbs = Math.abs(r.value_usd)
+            grade = r.confidence_grade
+          }
+        }
+        flows.push({ period: p, inflow, outflow, grade, n: recs.length })
+      }
+
+      const partnersEff = nearestAvailable(
+        index.periods.flows_bilateral,
+        period,
+      )
+      const partners = partnersEff
+        ? (await getBilateral(partnersEff)).records
+            .filter(
+              (r) =>
+                r.measure === 'stock' &&
+                (r.owner_country === iso3 || r.issuer_country === iso3) &&
+                (includeEstimates ||
+                  OBSERVED_GRADES.has(r.confidence_grade)),
+            )
+            .sort((a, b) => Math.abs(b.value_usd) - Math.abs(a.value_usd))
+            .slice(0, 6)
+        : []
+
+      if (alive) {
+        setData({
+          key: `${iso3}|${basis}|${period}|${includeEstimates}`,
+          stocks,
+          stocksEff,
+          flows,
+          partners,
+          partnersEff,
+        })
+      }
+    }
+    load().catch(() => {
+      if (alive) setData(null)
+    })
+    return () => {
+      alive = false
+    }
+  }, [selectedCountry, basis, period, includeEstimates])
+
+  const master = selectedCountry ? countries.get(selectedCountry) : undefined
+  const current = data && data.key === desiredKey ? data : null
+  const syncing = open && !current
+
+  // ── headline aggregation ──────────────────────────────────────────────
+  const reading = current
+    ? summarizeStocks(current.stocks, includeEstimates).get(
+        selectedCountry ?? '',
+      )
+    : undefined
+  const estimated = current
+    ? current.stocks.filter((r) => r.estimate_method !== undefined)
+    : []
+  const bounds =
+    estimated.length > 0 && current
+      ? current.stocks.reduce(
+          (acc, r) => [
+            acc[0] + (r.lower_bound ?? r.value_usd),
+            acc[1] + (r.upper_bound ?? r.value_usd),
+          ],
+          [0, 0],
+        )
+      : null
+
+  const headlineDossier = (): DossierPayload | null => {
+    if (!current || !reading) return null
+    return {
+      title: `${master?.name ?? selectedCountry} — total cross-border position`,
+      subtitle: `BASIS ${basis.toUpperCase()} · ${current.stocksEff ?? period}`,
+      value_usd: reading.value,
+      grade: reading.grade,
+      method:
+        estimated.length > 0
+          ? `sum over ${current.stocks.length} asset classes (${estimated.length} estimated)`
+          : undefined,
+      lower_bound: bounds?.[0],
+      upper_bound: bounds?.[1],
+      effective_date: current.stocks[0]?.effective_date,
+      source_ids: [...new Set(current.stocks.map((r) => r.source_id))],
+      context: [
+        ['Coverage', `${current.stocks.length} asset-class records`],
+        ['View', includeEstimates ? 'observed + estimated' : 'observed only'],
+      ],
+    }
+  }
+
+  const treemapItems: TreemapItem[] = current
+    ? current.stocks
+        .map((r) => ({
+          asset: r.asset,
+          value: Math.abs(r.value_usd),
+          grade: r.confidence_grade,
+          fog: fogAlpha(r.confidence_grade),
+        }))
+        .filter((i) => i.value > 0)
+    : []
+
+  const maxFlow = current
+    ? Math.max(
+        1,
+        ...current.flows.flatMap((f) => [
+          Math.abs(f.inflow),
+          Math.abs(f.outflow),
+        ]),
+      )
+    : 1
 
   return (
     <aside
@@ -47,15 +245,17 @@ export function ObservationReport() {
       <div className="flex items-start justify-between px-6 pt-6">
         <div>
           <p className="readout text-[11px] tracking-[0.12em] text-paper-dim">
-            OBSERVATION REPORT · {periodFromIndex(periodIndex)}
+            OBSERVATION REPORT · {period}
+            {current?.stocksEff && current.stocksEff !== period
+              ? ` · OBS ${current.stocksEff}`
+              : ''}
           </p>
           <h2 className="font-display text-[clamp(3rem,6vw,5.5rem)] leading-[0.95] text-paper">
-            {selectedCountry
-              ? (COUNTRY_NAMES[selectedCountry] ?? selectedCountry)
-              : '—'}
+            {master?.name ?? selectedCountry ?? '—'}
           </h2>
           <p className="readout mt-1 text-[11px] tracking-[0.12em] text-paper-dim/70">
             {selectedCountry ?? ''}
+            {master ? ` · ${master.region.toUpperCase()}` : ''}
           </p>
         </div>
         <button
@@ -68,23 +268,227 @@ export function ObservationReport() {
         </button>
       </div>
 
-      <div className="mt-6">
-        <AwaitingSection
-          title="Headline position"
-          note="Total investable assets — lands with Phase B datasets"
-        />
-        <AwaitingSection
-          title="Asset composition"
-          note="Treemap over adjusted stocks by asset class"
-        />
-        <AwaitingSection
-          title="Net flows by quarter"
-          note="Transaction flows vs valuation effects, separated"
-        />
-        <AwaitingSection
-          title="Top counterparties"
-          note="Bilateral positions, mirror-checked"
-        />
+      {syncing && (
+        <p className="readout px-6 pt-3 text-[10px] tracking-[0.12em] text-flow-in/80">
+          SYNCING OBSERVATION…
+        </p>
+      )}
+
+      <div className="mt-4">
+        {/* Headline position */}
+        {current && reading ? (
+          <section className="border-t border-paper/10 px-6 py-5">
+            <h3 className="dial-label text-paper-dim">
+              Cross-border position · {basis}
+            </h3>
+            <button
+              type="button"
+              onClick={() => {
+                const p = headlineDossier()
+                if (p) openDossier(p)
+              }}
+              className="mt-2 block text-left transition-opacity duration-140 hover:opacity-80"
+              style={{ opacity: 1 - reading.fog * 0.6 }}
+            >
+              <Odometer
+                text={formatUsd(reading.value)}
+                className="font-display text-[clamp(2.6rem,5vw,3.6rem)] leading-none text-paper"
+              />
+            </button>
+            <p className="readout mt-2 text-[10px] tracking-[0.1em] text-paper-dim">
+              {gradeMark(reading.grade)} GRADE {reading.grade} ·{' '}
+              {current.stocks.length} ASSET CLASSES
+              {bounds
+                ? ` · RANGE ${formatUsd(bounds[0])} — ${formatUsd(bounds[1])}`
+                : ''}
+            </p>
+          </section>
+        ) : (
+          !syncing && (
+            <NoObservation
+              title="Cross-border position"
+              note={
+                includeEstimates
+                  ? `no records at ${period}`
+                  : 'estimates hidden — OBS mode'
+              }
+            />
+          )
+        )}
+
+        {/* Asset composition */}
+        {current && treemapItems.length > 0 ? (
+          <section className="border-t border-paper/10 px-6 py-5">
+            <h3 className="dial-label text-paper-dim">Asset composition</h3>
+            <div className="mt-3">
+              <AssetTreemap
+                items={treemapItems}
+                onPick={(asset) => {
+                  const r = current.stocks.find((s) => s.asset === asset)
+                  if (!r) return
+                  openDossier({
+                    title: `${ASSET_LABELS[asset]} — ${master?.name ?? r.country}`,
+                    subtitle: `BASIS ${basis.toUpperCase()} · ${r.period}`,
+                    value_usd: r.value_usd,
+                    grade: r.confidence_grade,
+                    method: r.estimate_method,
+                    lower_bound: r.lower_bound,
+                    upper_bound: r.upper_bound,
+                    effective_date: r.effective_date,
+                    source_ids: [r.source_id],
+                    context: [['Measure', 'stock']],
+                  })
+                }}
+              />
+            </div>
+          </section>
+        ) : (
+          !syncing && (
+            <NoObservation
+              title="Asset composition"
+              note="no stock records for this basis"
+            />
+          )
+        )}
+
+        {/* Net flows by quarter */}
+        {current && current.flows.length > 0 ? (
+          <section className="border-t border-paper/10 px-6 py-5">
+            <h3 className="dial-label text-paper-dim">
+              Transaction flows · last {current.flows.length} quarters
+            </h3>
+            <div className="mt-3 flex items-end gap-1.5">
+              {current.flows.map((f) => (
+                <button
+                  key={f.period}
+                  type="button"
+                  onClick={() =>
+                    openDossier({
+                      title: `${master?.name ?? selectedCountry} — BOP financial-account flows`,
+                      subtitle: f.period,
+                      value_usd: f.inflow - f.outflow,
+                      grade: f.grade,
+                      effective_date: undefined,
+                      source_ids: ['imf_bop'],
+                      context: [
+                        ['Inflow side', formatUsdNet(f.inflow)],
+                        ['Outflow side', formatUsdNet(f.outflow)],
+                        ['Records', String(f.n)],
+                        ['Sign', 'BPM6 — net acquisition basis'],
+                      ],
+                    })
+                  }
+                  title={`${f.period}: in ${formatUsdNet(f.inflow)} / out ${formatUsdNet(f.outflow)}`}
+                  className="group flex h-24 flex-1 flex-col items-center justify-center gap-px"
+                >
+                  <span className="relative h-10 w-full">
+                    <span
+                      className="absolute bottom-0 left-1/2 w-[38%] -translate-x-[110%] bg-flow-in/85 transition-colors group-hover:bg-flow-in"
+                      style={{
+                        height: `${(Math.abs(f.inflow) / maxFlow) * 100}%`,
+                        opacity: f.inflow < 0 ? 0.35 : 1,
+                      }}
+                    />
+                    <span
+                      className="absolute bottom-0 left-1/2 w-[38%] translate-x-[10%] bg-flow-out/85 transition-colors group-hover:bg-flow-out"
+                      style={{
+                        height: `${(Math.abs(f.outflow) / maxFlow) * 100}%`,
+                        opacity: f.outflow < 0 ? 0.35 : 1,
+                      }}
+                    />
+                  </span>
+                  <span className="readout text-[8px] text-paper-dim/70">
+                    {f.period.slice(2).replace('-', '')}
+                  </span>
+                </button>
+              ))}
+            </div>
+            <p className="readout mt-2 text-[9px] tracking-[0.1em] text-paper-dim/60">
+              <span className="text-flow-in">■</span> NONRESIDENT INFLOW ·{' '}
+              <span className="text-flow-out">■</span> RESIDENT OUTFLOW · DIMMED
+              = NET WITHDRAWAL
+            </p>
+          </section>
+        ) : (
+          !syncing && (
+            <NoObservation
+              title="Transaction flows"
+              note="no BOP flow records in range"
+            />
+          )
+        )}
+
+        {/* Top counterparties */}
+        {current && current.partners.length > 0 ? (
+          <section className="border-t border-paper/10 px-6 py-5">
+            <h3 className="dial-label text-paper-dim">
+              Top counterparties · positions{' '}
+              {current.partnersEff ? `· ${current.partnersEff}` : ''}
+            </h3>
+            <ul className="mt-3 space-y-1.5">
+              {current.partners.map((r) => {
+                const inbound = r.issuer_country === selectedCountry
+                const partner = inbound ? r.owner_country : r.issuer_country
+                return (
+                  <li key={`${r.owner_country}-${r.issuer_country}-${r.asset}`}>
+                    <button
+                      type="button"
+                      onClick={() =>
+                        openDossier({
+                          title: `${r.owner_country} → ${r.issuer_country} · ${ASSET_LABELS[r.asset]}`,
+                          subtitle: `CPIS bilateral position · ${r.period}`,
+                          value_usd: r.value_usd,
+                          grade: r.confidence_grade,
+                          method: r.estimate_method,
+                          lower_bound: r.lower_bound,
+                          upper_bound: r.upper_bound,
+                          effective_date: r.effective_date,
+                          source_ids: [r.source_id],
+                          context: [
+                            ['Direction', inbound ? 'into this country' : 'out of this country'],
+                          ],
+                        })
+                      }
+                      className="flex w-full items-baseline gap-2 text-left transition-colors duration-140 hover:bg-ink-1/60"
+                    >
+                      <span
+                        className={
+                          'readout w-10 text-[11px] ' +
+                          (inbound ? 'text-flow-in' : 'text-flow-out')
+                        }
+                      >
+                        {inbound ? '←' : '→'} {partner.slice(0, 3)}
+                      </span>
+                      <span className="min-w-0 flex-1 truncate font-sans text-[12px] text-paper">
+                        {countries.get(partner)?.name ?? partner}
+                        <span className="text-paper-dim">
+                          {' '}
+                          · {ASSET_LABELS[r.asset]}
+                        </span>
+                      </span>
+                      <span
+                        className="readout text-[11px] text-paper"
+                        style={{
+                          opacity: 1 - fogAlpha(r.confidence_grade) * 1.2,
+                        }}
+                      >
+                        {gradeMark(r.confidence_grade)}{' '}
+                        {formatUsd(Math.abs(r.value_usd), 1)}
+                      </span>
+                    </button>
+                  </li>
+                )
+              })}
+            </ul>
+          </section>
+        ) : (
+          !syncing && (
+            <NoObservation
+              title="Top counterparties"
+              note="not a CPIS reporter at this date"
+            />
+          )
+        )}
       </div>
 
       {/* visibility legend — grades render as fog before badges (§2, §6) */}

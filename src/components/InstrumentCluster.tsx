@@ -88,6 +88,7 @@ const ESTIMATES: readonly DialOption<EstimateView>[] = [
 
 /** 우측 계기 클러스터 — basis · measure · currency · estimates 수직 스택. */
 export function InstrumentCluster() {
+  const reportOpen = useViewStore((s) => s.selectedCountry !== null)
   const basis = useViewStore((s) => s.basis)
   const measure = useViewStore((s) => s.measure)
   const currency = useViewStore((s) => s.currency)
@@ -100,7 +101,11 @@ export function InstrumentCluster() {
   return (
     <nav
       aria-label="Instruments"
-      className="absolute right-0 top-1/2 z-10 flex -translate-y-1/2 flex-col gap-3 pr-4"
+      className={
+        'absolute top-1/2 z-30 flex -translate-y-1/2 flex-col gap-3 pr-4 transition-[right] duration-280 ease-(--ease-baro) ' +
+        // slide clear of the observation report so the dials stay reachable
+        (reportOpen ? 'right-[420px]' : 'right-0')
+      }
     >
       <Dial label="Basis" options={BASIS} value={basis} onChange={setBasis} />
       <Dial
