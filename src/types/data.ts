@@ -89,10 +89,62 @@ export interface SourceRegistryEntry {
   retrieved_at: string // ISO datetime the snapshot was fetched
 }
 
+/**
+ * public/data/flows_country/{period}.json — observed BOP transactions
+ * (grade A) plus derived valuation changes (ΔIIP − transactions, grade C).
+ * `entry`: 'assets' = resident net acquisition of foreign assets (outflow-
+ * side), 'liabilities' = nonresident net investment into the country
+ * (inflow-side). BPM6 sign conventions preserved.
+ */
+export interface FlowRecord extends Lineage {
+  country: string // ISO3
+  asset: AssetClass
+  period: PeriodKey
+  measure: 'flow' | 'valuation'
+  entry: 'assets' | 'liabilities'
+  value_usd: number
+}
+
+/**
+ * Files are sharded per period (contract sharding clause, activated in
+ * Phase B): stocks_{basis}/{period}.json etc. public/data/index.json lists
+ * available periods per family and the latest quarter.
+ */
+export interface PeriodIndexFile {
+  generated_at: string
+  latest_quarter: PeriodKey
+  periods: {
+    stocks_owner: PeriodKey[]
+    stocks_issuer: PeriodKey[]
+    stocks_location: PeriodKey[]
+    flows_country: PeriodKey[]
+    flows_bilateral: PeriodKey[]
+  }
+}
+
+/** public/data/meta/flow_intensity.json — barograph series (global gross). */
+export interface FlowIntensityPoint {
+  period: PeriodKey
+  gross_flow_usd: number
+  n_countries: number
+  source_id: string
+  confidence_grade: ConfidenceGrade
+}
+
+export interface FlowIntensityFile {
+  generated_at: string
+  series: FlowIntensityPoint[]
+}
+
 export interface StocksFile {
   basis: Basis
   generated_at: string
   records: StockRecord[]
+}
+
+export interface FlowsCountryFile {
+  generated_at: string
+  records: FlowRecord[]
 }
 
 export interface BilateralFile {
