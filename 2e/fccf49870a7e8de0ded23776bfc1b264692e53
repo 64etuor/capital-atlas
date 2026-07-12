@@ -1,0 +1,28 @@
+src/components/AssetTreemap.tsx
+  s_d42bb63fec4cd7::t_e9bac6c90bce4b 46,51-66
+  s_d42bb63fec4cd7::t_e27f15a3abecae 97
+  s_d42bb63fec4cd7::t_616c7c495a711d 4,12-19
+src/features/map/arcs.ts
+  s_d42bb63fec4cd7::t_1ec0d1a3bccea5 74,86-93
+src/components/BarographTimeline.tsx
+  s_d42bb63fec4cd7::t_dd9ca890120969 73-80
+  s_d42bb63fec4cd7::t_e79e6d1935fe60 42
+vite.config.ts
+  s_d42bb63fec4cd7::t_9ef321de514736 14-30
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.12",
+  "base_commit_sha": "2efccf49870a7e8de0ded23776bfc1b264692e53",
+  "prompts": {},
+  "sessions": {
+    "s_d42bb63fec4cd7": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "3d135ffa-af7c-4eec-8267-91abeffdf96d",
+        "model": "claude-opus-4-8"
+      },
+      "human_author": "64etuor <130260521+64etuor@users.noreply.github.com>"
+    }
+  }
+}
