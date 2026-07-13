@@ -1,0 +1,70 @@
+src/features/station/StationView.tsx
+  s_e47a5eda862f84::t_91025803ca8ecb 1-403,406,410-411,414-519
+  s_e47a5eda862f84::t_5d7fe00edd888e 404-405,407-409
+  s_e47a5eda862f84::t_059a581189b7e8 412-413
+src/features/station/AssetRail.tsx
+  s_e47a5eda862f84::t_be9c043e8e7ef6 1-61
+src/store/viewStore.ts
+  s_e47a5eda862f84::t_45b58e61d943d7 26
+  s_e47a5eda862f84::t_f7412f3cb7f465 11-12
+src/features/station/shared.ts
+  s_e47a5eda862f84::t_791dd83ab29629 1-159
+src/features/station/GaugeStrip.tsx
+  s_e47a5eda862f84::t_cf20e753fa61ed 1-48
+src/components/ObservationReport.tsx
+  s_e47a5eda862f84::t_6599c067d4bce6 74-76
+src/features/station/PartnerMatrix.tsx
+  s_e47a5eda862f84::t_8f011429bf1158 1-167
+src/features/station/CompositionStream.tsx
+  s_e47a5eda862f84::t_ea96cf5b93d388 1-9,11-48,52-55,57-147
+  s_e47a5eda862f84::t_9ba1e3582027e0 10
+  s_e47a5eda862f84::t_ce73b493c9f517 56
+  s_e47a5eda862f84::t_ee23473f41f473 49-51
+src/features/station/CountryDial.tsx
+  s_e47a5eda862f84::t_e4c016bc46bb9a 1-145
+src/components/InstrumentCluster.tsx
+  s_e47a5eda862f84::t_5c1c9b8e5a11cb 91-93
+src/features/station/derive.ts
+  s_e47a5eda862f84::t_b69e96a28fc8b2 1-131
+src/features/station/StockBandChart.tsx
+  s_e47a5eda862f84::t_293d068050a4a4 1-199
+src/components/BarographTimeline.tsx
+  s_e47a5eda862f84::t_b3debc9c256ad9 42-44
+src/App.tsx
+  s_e47a5eda862f84::t_81d3407a6393a0 8
+  s_e47a5eda862f84::t_f6848ae1e74472 18
+src/components/StationPlate.tsx
+  s_e47a5eda862f84::t_b92af1184885a6 7
+README.md
+  s_e47a5eda862f84::t_fbde237e2f3ba8 36-47
+  s_e47a5eda862f84::t_a330d5fbce117b 28
+  s_e47a5eda862f84::t_3ebf0352a020c5 48
+src/features/station/LedgerTable.tsx
+  s_e47a5eda862f84::t_4494b92ea5a080 1-90
+src/features/station/FlowChart.tsx
+  s_5d0c7b43738dac::t_0777fa568fac3b 1-182
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.12",
+  "base_commit_sha": "2c4cdf7154987f9a7473f67a7d29fcc7ca75a6c5",
+  "prompts": {},
+  "sessions": {
+    "s_5d0c7b43738dac": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "3b489689-95d8-41c6-b330-cbe3a808fc7b",
+        "model": "claude-opus-4-8"
+      },
+      "human_author": "64etuor <130260521+64etuor@users.noreply.github.com>"
+    },
+    "s_e47a5eda862f84": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "a46a31a4-8363-4a90-b740-7e96b4bf3615",
+        "model": "claude-fable-5"
+      },
+      "human_author": "64etuor <130260521+64etuor@users.noreply.github.com>"
+    }
+  }
+}
