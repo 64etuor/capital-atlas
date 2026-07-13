@@ -1,0 +1,36 @@
+scripts/build/synoptic.test.ts
+  s_e47a5eda862f84::t_83b152809c0138 135-136,144-147,151-157
+  s_e47a5eda862f84::t_17cdc272332f0c 208-217
+  s_e47a5eda862f84::t_9716ec03efa6b2 1-134,137-143,148-150,158-207,218-233
+scripts/build/synoptic.ts
+  s_e47a5eda862f84::t_dfbd2315f21cdb 1-175,180,182-184,191-257
+  s_e47a5eda862f84::t_114e9ca16147ed 176-179,181,185-190
+docs/DATA_CONTRACT.md
+  s_e47a5eda862f84::t_f68bedcd5d8dee 34
+  s_e47a5eda862f84::t_e4fb4b5732dfa6 163-180
+src/types/data.ts
+  s_e47a5eda862f84::t_4324c552dda991 176-236
+src/lib/dataClient.ts
+  s_e47a5eda862f84::t_a70b3120c33e87 88-91
+  s_e47a5eda862f84::t_acaf97988b8859 15
+package.json
+  s_e47a5eda862f84::t_e687c01dde30a8 16,59
+public/data/meta/synoptic.json
+  s_e47a5eda862f84::t_a7debf2de138ec 1
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.12",
+  "base_commit_sha": "fa47732ac19f810f03aa2655361a09f5f516e70a",
+  "prompts": {},
+  "sessions": {
+    "s_e47a5eda862f84": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "a46a31a4-8363-4a90-b740-7e96b4bf3615",
+        "model": "claude-fable-5"
+      },
+      "human_author": "64etuor <130260521+64etuor@users.noreply.github.com>"
+    }
+  }
+}
