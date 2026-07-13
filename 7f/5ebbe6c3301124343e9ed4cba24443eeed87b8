@@ -1,0 +1,555 @@
+public/data/meta/sources.json
+  s_5d0c7b43738dac::t_06f22808aec3a8 1
+public/data/station/AFG.json
+  s_e47a5eda862f84::t_35539bbc927d74 1
+public/data/station/AGO.json
+  s_e47a5eda862f84::t_a7292f6c4b45ae 1
+public/data/station/ALB.json
+  s_e47a5eda862f84::t_b841d81b1020b0 1
+public/data/station/AND.json
+  s_e47a5eda862f84::t_584189492507d9 1
+public/data/station/ARE.json
+  s_e47a5eda862f84::t_e8084d8033a1ff 1
+public/data/station/ARG.json
+  s_e47a5eda862f84::t_225c1d3de12d9e 1
+public/data/station/ARM.json
+  s_e47a5eda862f84::t_4c5dbbd78555d9 1
+public/data/station/ATG.json
+  s_e47a5eda862f84::t_8fde35597ee010 1
+public/data/station/AUS.json
+  s_e47a5eda862f84::t_61054005bf7deb 1
+public/data/station/AUT.json
+  s_e47a5eda862f84::t_c94ab6b808984f 1
+public/data/station/AZE.json
+  s_e47a5eda862f84::t_77c292deefeb17 1
+public/data/station/BDI.json
+  s_e47a5eda862f84::t_0767174cbbdf87 1
+public/data/station/BEL.json
+  s_e47a5eda862f84::t_ea42d894d7ac83 1
+public/data/station/BEN.json
+  s_e47a5eda862f84::t_7503442a81ab3f 1
+public/data/station/BFA.json
+  s_e47a5eda862f84::t_69264b641e5e71 1
+public/data/station/BGD.json
+  s_e47a5eda862f84::t_583b9071b0101b 1
+public/data/station/BGR.json
+  s_e47a5eda862f84::t_258522eabfdc28 1
+public/data/station/BHR.json
+  s_e47a5eda862f84::t_087eb39b743696 1
+public/data/station/BHS.json
+  s_e47a5eda862f84::t_f81dc7cfd1ad96 1
+public/data/station/BIH.json
+  s_e47a5eda862f84::t_fdeb55bc2d9b31 1
+public/data/station/BLR.json
+  s_e47a5eda862f84::t_a5e4350ac4b736 1
+public/data/station/BLZ.json
+  s_e47a5eda862f84::t_4bdee662be54fe 1
+public/data/station/BOL.json
+  s_e47a5eda862f84::t_9699f25520c727 1
+public/data/station/BRA.json
+  s_e47a5eda862f84::t_1616461c7512d9 1
+public/data/station/BRB.json
+  s_e47a5eda862f84::t_4682009004629a 1
+public/data/station/BRN.json
+  s_e47a5eda862f84::t_158fb4171b4f6a 1
+public/data/station/BTN.json
+  s_e47a5eda862f84::t_11a6d5e98e8b38 1
+public/data/station/BWA.json
+  s_e47a5eda862f84::t_2394ea02427418 1
+public/data/station/CAF.json
+  s_e47a5eda862f84::t_d97b20c3e08593 1
+public/data/station/CAN.json
+  s_e47a5eda862f84::t_d9c5534dc55101 1
+public/data/station/CHE.json
+  s_e47a5eda862f84::t_defce354cffb18 1
+public/data/station/CHL.json
+  s_e47a5eda862f84::t_5b36075754a466 1
+public/data/station/CHN.json
+  s_e47a5eda862f84::t_a4623c62c86a68 1
+public/data/station/CIV.json
+  s_e47a5eda862f84::t_16f6d52cfbcfb7 1
+public/data/station/CMR.json
+  s_e47a5eda862f84::t_ccb5892487683f 1
+public/data/station/COD.json
+  s_e47a5eda862f84::t_15c75ea2a26aa5 1
+public/data/station/COG.json
+  s_e47a5eda862f84::t_f55290d32af5b4 1
+public/data/station/COL.json
+  s_e47a5eda862f84::t_37fd0d1ce0dc45 1
+public/data/station/COM.json
+  s_e47a5eda862f84::t_23be6d259ed3d6 1
+public/data/station/CPV.json
+  s_e47a5eda862f84::t_9bf169c3de6ee1 1
+public/data/station/CRI.json
+  s_e47a5eda862f84::t_860e5030a3efc4 1
+public/data/station/CUB.json
+  s_e47a5eda862f84::t_4466b426441e21 1
+public/data/station/CYP.json
+  s_e47a5eda862f84::t_6eb20650ff5ac3 1
+public/data/station/CZE.json
+  s_e47a5eda862f84::t_ed6fbabff1b76e 1
+public/data/station/DEU.json
+  s_e47a5eda862f84::t_e5345688eef8ea 1
+public/data/station/DJI.json
+  s_e47a5eda862f84::t_f7564ed91c8ead 1
+public/data/station/DMA.json
+  s_e47a5eda862f84::t_d4097390eb93db 1
+public/data/station/DNK.json
+  s_e47a5eda862f84::t_85737d136dc48a 1
+public/data/station/DOM.json
+  s_e47a5eda862f84::t_3cb1363dd53cc5 1
+public/data/station/DZA.json
+  s_e47a5eda862f84::t_80c64776d973e8 1
+public/data/station/ECU.json
+  s_e47a5eda862f84::t_45c04f673fa4a3 1
+public/data/station/EGY.json
+  s_e47a5eda862f84::t_ca955e389ef418 1
+public/data/station/ERI.json
+  s_e47a5eda862f84::t_e56e42969063ad 1
+public/data/station/ESP.json
+  s_e47a5eda862f84::t_e3452b2acefcb8 1
+public/data/station/EST.json
+  s_e47a5eda862f84::t_7b34b22af51efc 1
+public/data/station/ETH.json
+  s_e47a5eda862f84::t_f96f03f60319d8 1
+public/data/station/FIN.json
+  s_e47a5eda862f84::t_02814ebedc0c46 1
+public/data/station/FJI.json
+  s_e47a5eda862f84::t_20f94c8bfe419b 1
+public/data/station/FRA.json
+  s_e47a5eda862f84::t_8d80e6692c96c0 1
+public/data/station/FSM.json
+  s_e47a5eda862f84::t_d3e54ac122f1a8 1
+public/data/station/GAB.json
+  s_e47a5eda862f84::t_4a54fa8a01a5b3 1
+public/data/station/GBR.json
+  s_e47a5eda862f84::t_53dbba51bf8886 1
+public/data/station/GEO.json
+  s_e47a5eda862f84::t_fc5db00e380532 1
+public/data/station/GHA.json
+  s_e47a5eda862f84::t_ae9055979af55f 1
+public/data/station/GIN.json
+  s_e47a5eda862f84::t_2a83e1be8f33a4 1
+public/data/station/GMB.json
+  s_e47a5eda862f84::t_bedbe7c3b0dcf6 1
+public/data/station/GNB.json
+  s_e47a5eda862f84::t_7285364a62b127 1
+public/data/station/GNQ.json
+  s_e47a5eda862f84::t_0d55574abd6a88 1
+public/data/station/GRC.json
+  s_e47a5eda862f84::t_467630024af326 1
+public/data/station/GRD.json
+  s_e47a5eda862f84::t_dae9fbd7a889ec 1
+public/data/station/GTM.json
+  s_e47a5eda862f84::t_8f76357351e1a2 1
+public/data/station/GUY.json
+  s_e47a5eda862f84::t_b63940de6c3418 1
+public/data/station/HKG.json
+  s_e47a5eda862f84::t_f4fef9d1d0cd90 1
+public/data/station/HND.json
+  s_e47a5eda862f84::t_f0e59c2738b2f6 1
+public/data/station/HRV.json
+  s_e47a5eda862f84::t_325055255790c9 1
+public/data/station/HTI.json
+  s_e47a5eda862f84::t_87bb9083f11bf2 1
+public/data/station/HUN.json
+  s_e47a5eda862f84::t_1e7d62a2321bb1 1
+public/data/station/IDN.json
+  s_e47a5eda862f84::t_0bdbec10770dc2 1
+public/data/station/IND.json
+  s_e47a5eda862f84::t_ce14a962e17445 1
+public/data/station/IRL.json
+  s_e47a5eda862f84::t_9116428d656eb6 1
+public/data/station/IRN.json
+  s_e47a5eda862f84::t_a6631512f7c8f2 1
+public/data/station/IRQ.json
+  s_e47a5eda862f84::t_700130ab1e2fbc 1
+public/data/station/ISL.json
+  s_e47a5eda862f84::t_18082d033ac31e 1
+public/data/station/ISR.json
+  s_e47a5eda862f84::t_2ccf13d1acee58 1
+public/data/station/ITA.json
+  s_e47a5eda862f84::t_e3648ecf88e51d 1
+public/data/station/JAM.json
+  s_e47a5eda862f84::t_759a7530c009ea 1
+public/data/station/JOR.json
+  s_e47a5eda862f84::t_0f26d552178555 1
+public/data/station/JPN.json
+  s_e47a5eda862f84::t_75dc158ac47cfd 1
+public/data/station/KAZ.json
+  s_e47a5eda862f84::t_bbf5d8a9038db1 1
+public/data/station/KEN.json
+  s_e47a5eda862f84::t_fa128c43cd51ff 1
+public/data/station/KGZ.json
+  s_e47a5eda862f84::t_22c8c60d3ced29 1
+public/data/station/KHM.json
+  s_e47a5eda862f84::t_d70cfb2f72ef81 1
+public/data/station/KIR.json
+  s_e47a5eda862f84::t_d1313079280cfc 1
+public/data/station/KNA.json
+  s_e47a5eda862f84::t_6436bab662d9ce 1
+public/data/station/KOR.json
+  s_e47a5eda862f84::t_30222dca4455d2 1
+public/data/station/KWT.json
+  s_e47a5eda862f84::t_66c2204d023866 1
+public/data/station/LAO.json
+  s_e47a5eda862f84::t_a62b1e3dba892a 1
+public/data/station/LBN.json
+  s_e47a5eda862f84::t_c235b64aec4a4b 1
+public/data/station/LBR.json
+  s_e47a5eda862f84::t_4f0dd8a4fac864 1
+public/data/station/LBY.json
+  s_e47a5eda862f84::t_75ce665c998896 1
+public/data/station/LCA.json
+  s_e47a5eda862f84::t_6fb57fc9b9c7a7 1
+public/data/station/LIE.json
+  s_e47a5eda862f84::t_917c6dbcca5923 1
+public/data/station/LKA.json
+  s_e47a5eda862f84::t_65d4d312f35512 1
+public/data/station/LSO.json
+  s_e47a5eda862f84::t_7eff8519862899 1
+public/data/station/LTU.json
+  s_e47a5eda862f84::t_38968d7ed7390a 1
+public/data/station/LUX.json
+  s_e47a5eda862f84::t_b53eed3a8b960b 1
+public/data/station/LVA.json
+  s_e47a5eda862f84::t_1798372b6aa630 1
+public/data/station/MAC.json
+  s_e47a5eda862f84::t_0739bce9bc98bf 1
+public/data/station/MAR.json
+  s_e47a5eda862f84::t_c353044771102f 1
+public/data/station/MCO.json
+  s_e47a5eda862f84::t_cf626379fe37f4 1
+public/data/station/MDA.json
+  s_e47a5eda862f84::t_9db40459cec4dd 1
+public/data/station/MDG.json
+  s_e47a5eda862f84::t_667e9cd0216bf8 1
+public/data/station/MDV.json
+  s_e47a5eda862f84::t_8fb9ae3fda41b4 1
+public/data/station/MEX.json
+  s_e47a5eda862f84::t_f4966da9441390 1
+public/data/station/MHL.json
+  s_e47a5eda862f84::t_683399acd7c760 1
+public/data/station/MKD.json
+  s_e47a5eda862f84::t_c51001516c7d61 1
+public/data/station/MLI.json
+  s_e47a5eda862f84::t_7b57b1bd7b66d8 1
+public/data/station/MLT.json
+  s_e47a5eda862f84::t_c37297964832d7 1
+public/data/station/MMR.json
+  s_e47a5eda862f84::t_740ba3531c3765 1
+public/data/station/MNE.json
+  s_e47a5eda862f84::t_8114e068c75b15 1
+public/data/station/MNG.json
+  s_e47a5eda862f84::t_36c6ba826c71fc 1
+public/data/station/MOZ.json
+  s_e47a5eda862f84::t_d1b4549c9ce3b8 1
+public/data/station/MRT.json
+  s_e47a5eda862f84::t_93d04856d71fc8 1
+public/data/station/MUS.json
+  s_e47a5eda862f84::t_be5b562391bff4 1
+public/data/station/MWI.json
+  s_e47a5eda862f84::t_3ef149cfa814fe 1
+public/data/station/MYS.json
+  s_e47a5eda862f84::t_e105e80b606f4e 1
+public/data/station/NAM.json
+  s_e47a5eda862f84::t_5f9fa844117393 1
+public/data/station/NER.json
+  s_e47a5eda862f84::t_77ffb7370d667b 1
+public/data/station/NGA.json
+  s_e47a5eda862f84::t_3f47dde3a4c7d5 1
+public/data/station/NIC.json
+  s_e47a5eda862f84::t_c7835487a7583d 1
+public/data/station/NLD.json
+  s_e47a5eda862f84::t_fb8f0dfe17591d 1
+public/data/station/NOR.json
+  s_e47a5eda862f84::t_e1c9dddfebd5b6 1
+public/data/station/NPL.json
+  s_e47a5eda862f84::t_154e520b77d283 1
+public/data/station/NRU.json
+  s_e47a5eda862f84::t_affa6485b5034b 1
+public/data/station/NZL.json
+  s_e47a5eda862f84::t_6adc3a9ba1764c 1
+public/data/station/OMN.json
+  s_e47a5eda862f84::t_884ea4320125da 1
+public/data/station/PAK.json
+  s_e47a5eda862f84::t_516152e2c6c2b6 1
+public/data/station/PAN.json
+  s_e47a5eda862f84::t_5aae1d08a72402 1
+public/data/station/PER.json
+  s_e47a5eda862f84::t_372ec628721346 1
+public/data/station/PHL.json
+  s_e47a5eda862f84::t_168ee11a6509ec 1
+public/data/station/PLW.json
+  s_e47a5eda862f84::t_5db1f99c15b115 1
+public/data/station/PNG.json
+  s_e47a5eda862f84::t_ffc9f0dff2e90f 1
+public/data/station/POL.json
+  s_e47a5eda862f84::t_b488e11f6d011a 1
+public/data/station/PRT.json
+  s_e47a5eda862f84::t_6e7f67334d067e 1
+public/data/station/PRY.json
+  s_e47a5eda862f84::t_59c2cc74b04e37 1
+public/data/station/PSE.json
+  s_e47a5eda862f84::t_9abf56909aa1ac 1
+public/data/station/QAT.json
+  s_e47a5eda862f84::t_5b01d841ff8032 1
+public/data/station/ROU.json
+  s_e47a5eda862f84::t_f04a5b89faa9e9 1
+public/data/station/RUS.json
+  s_e47a5eda862f84::t_577cbf28b8d126 1
+public/data/station/RWA.json
+  s_e47a5eda862f84::t_5ce3031e52d338 1
+public/data/station/SAU.json
+  s_e47a5eda862f84::t_a5a3af5ae62155 1
+public/data/station/SDN.json
+  s_e47a5eda862f84::t_25b6ddf054b703 1
+public/data/station/SEN.json
+  s_e47a5eda862f84::t_c0ce9e24f3d292 1
+public/data/station/SGP.json
+  s_e47a5eda862f84::t_b898554cf2a76d 1
+public/data/station/SLB.json
+  s_e47a5eda862f84::t_6bc7b870a39bce 1
+public/data/station/SLE.json
+  s_e47a5eda862f84::t_f79e817861ff5c 1
+public/data/station/SLV.json
+  s_e47a5eda862f84::t_28283dcbb11c4a 1
+public/data/station/SMR.json
+  s_e47a5eda862f84::t_ee9d498a8bf068 1
+public/data/station/SOM.json
+  s_e47a5eda862f84::t_a57989c4db3dde 1
+public/data/station/SRB.json
+  s_e47a5eda862f84::t_1fb6561dc0e7ec 1
+public/data/station/SSD.json
+  s_e47a5eda862f84::t_31127bf90412a4 1
+public/data/station/STP.json
+  s_e47a5eda862f84::t_5d364d903457c0 1
+public/data/station/SUR.json
+  s_e47a5eda862f84::t_0a44ba18436f1e 1
+public/data/station/SVK.json
+  s_e47a5eda862f84::t_58d963923484d6 1
+public/data/station/SVN.json
+  s_e47a5eda862f84::t_cf0de586cc3865 1
+public/data/station/SWE.json
+  s_e47a5eda862f84::t_29bfe0fc9e0aa4 1
+public/data/station/SWZ.json
+  s_e47a5eda862f84::t_00457a2c6e8e2a 1
+public/data/station/SYC.json
+  s_e47a5eda862f84::t_1e8e2347972454 1
+public/data/station/SYR.json
+  s_e47a5eda862f84::t_1bb4b6bd67ecb8 1
+public/data/station/TCD.json
+  s_e47a5eda862f84::t_f70f7845f1bb60 1
+public/data/station/TGO.json
+  s_e47a5eda862f84::t_a19b7da9ca8dc3 1
+public/data/station/THA.json
+  s_e47a5eda862f84::t_2e494abb7f15fb 1
+public/data/station/TJK.json
+  s_e47a5eda862f84::t_166b34eb5aabea 1
+public/data/station/TKM.json
+  s_e47a5eda862f84::t_2e903f62d57653 1
+public/data/station/TLS.json
+  s_e47a5eda862f84::t_3392320705c26b 1
+public/data/station/TON.json
+  s_e47a5eda862f84::t_126c1b279b25dd 1
+public/data/station/TTO.json
+  s_e47a5eda862f84::t_93f2053e2edb17 1
+public/data/station/TUN.json
+  s_e47a5eda862f84::t_c1a43f8b28c1ce 1
+public/data/station/TUR.json
+  s_e47a5eda862f84::t_5efa9142977276 1
+public/data/station/TUV.json
+  s_e47a5eda862f84::t_14544b5e923c53 1
+public/data/station/TZA.json
+  s_e47a5eda862f84::t_f9e456933620f9 1
+public/data/station/UGA.json
+  s_e47a5eda862f84::t_db8eced56ef3bc 1
+public/data/station/UKR.json
+  s_e47a5eda862f84::t_6ae4a220768945 1
+public/data/station/URY.json
+  s_e47a5eda862f84::t_bb8318f5500aaf 1
+public/data/station/USA.json
+  s_e47a5eda862f84::t_1db1df352e99ea 1
+public/data/station/UZB.json
+  s_e47a5eda862f84::t_25700fe48b6360 1
+public/data/station/VCT.json
+  s_e47a5eda862f84::t_0215fd070547ec 1
+public/data/station/VEN.json
+  s_e47a5eda862f84::t_a7d6031f03219f 1
+public/data/station/VNM.json
+  s_e47a5eda862f84::t_658189f1acdd95 1
+public/data/station/VUT.json
+  s_e47a5eda862f84::t_93737d6a18fbf2 1
+public/data/station/WLD.json
+  s_e47a5eda862f84::t_3ee5e9af472cc2 1
+public/data/station/WSM.json
+  s_e47a5eda862f84::t_7cde919f006a8b 1
+public/data/station/YEM.json
+  s_e47a5eda862f84::t_6a8c069a302cf7 1
+public/data/station/ZAF.json
+  s_e47a5eda862f84::t_8cd62c816c3a86 1
+public/data/station/ZMB.json
+  s_e47a5eda862f84::t_da0362ea60bdf6 1
+public/data/station/ZWE.json
+  s_e47a5eda862f84::t_904d15e8e38623 1
+public/data/station/index.json
+  s_e47a5eda862f84::t_b18c921873e7e1 1
+public/data/flows_bilateral/2010-Q1.json
+  s_e47a5eda862f84::t_9d6873fae27a6c 1
+public/data/flows_bilateral/2010-Q2.json
+  s_e47a5eda862f84::t_7c807fd74bea29 1
+public/data/flows_bilateral/2010-Q3.json
+  s_e47a5eda862f84::t_f4427147515559 1
+public/data/flows_bilateral/2010-Q4.json
+  s_e47a5eda862f84::t_b4a777bb3d9831 1
+public/data/flows_bilateral/2011-Q1.json
+  s_e47a5eda862f84::t_bd6ece04c7a934 1
+public/data/flows_bilateral/2011-Q2.json
+  s_e47a5eda862f84::t_39ca9ad1f630d0 1
+public/data/flows_bilateral/2011-Q3.json
+  s_e47a5eda862f84::t_4a110df6ff7633 1
+public/data/flows_bilateral/2011-Q4.json
+  s_e47a5eda862f84::t_c3fe4471bd9870 1
+public/data/flows_bilateral/2012-Q1.json
+  s_e47a5eda862f84::t_bcf2ca23f93eee 1
+public/data/flows_bilateral/2012-Q2.json
+  s_e47a5eda862f84::t_8682b37c663057 1
+public/data/flows_bilateral/2012-Q3.json
+  s_e47a5eda862f84::t_ec8f943719d0b2 1
+public/data/flows_bilateral/2012-Q4.json
+  s_e47a5eda862f84::t_6dab1bd2250e6a 1
+public/data/flows_bilateral/2013-Q1.json
+  s_e47a5eda862f84::t_aa5e26309e36f9 1
+public/data/flows_bilateral/2013-Q2.json
+  s_e47a5eda862f84::t_d0debc2918fd33 1
+public/data/flows_bilateral/2013-Q3.json
+  s_e47a5eda862f84::t_dc1ceec30fa4b1 1
+public/data/flows_bilateral/2013-Q4.json
+  s_e47a5eda862f84::t_0a5a536c9b887e 1
+public/data/flows_bilateral/2014-Q1.json
+  s_e47a5eda862f84::t_658cae987882ae 1
+public/data/flows_bilateral/2014-Q2.json
+  s_e47a5eda862f84::t_118f793d66fce0 1
+public/data/flows_bilateral/2014-Q3.json
+  s_e47a5eda862f84::t_d60c33889ae66a 1
+public/data/flows_bilateral/2014-Q4.json
+  s_e47a5eda862f84::t_49428f5f574a87 1
+public/data/flows_bilateral/2015-Q1.json
+  s_e47a5eda862f84::t_f1251abb9bfece 1
+public/data/flows_bilateral/2015-Q2.json
+  s_e47a5eda862f84::t_241455c4dd3386 1
+public/data/flows_bilateral/2015-Q3.json
+  s_e47a5eda862f84::t_06202cb07edabe 1
+public/data/flows_bilateral/2015-Q4.json
+  s_e47a5eda862f84::t_8b4025e33c474e 1
+public/data/flows_bilateral/2016-Q1.json
+  s_e47a5eda862f84::t_25d1aeaaa83c84 1
+public/data/flows_bilateral/2016-Q2.json
+  s_e47a5eda862f84::t_cb2a622d4f1bc3 1
+public/data/flows_bilateral/2016-Q3.json
+  s_e47a5eda862f84::t_6047f232e3cc19 1
+public/data/flows_bilateral/2016-Q4.json
+  s_e47a5eda862f84::t_350d4bb5a23f47 1
+public/data/flows_bilateral/2017-Q1.json
+  s_e47a5eda862f84::t_dd90978ad60f8d 1
+public/data/flows_bilateral/2017-Q2.json
+  s_e47a5eda862f84::t_d4bf6f0a75cc97 1
+public/data/flows_bilateral/2017-Q3.json
+  s_e47a5eda862f84::t_1267d6a7d97c56 1
+public/data/flows_bilateral/2017-Q4.json
+  s_e47a5eda862f84::t_0384ddcd04d879 1
+public/data/flows_bilateral/2018-Q1.json
+  s_e47a5eda862f84::t_212cd435a5dc5a 1
+public/data/flows_bilateral/2018-Q2.json
+  s_e47a5eda862f84::t_fb2c7213d38946 1
+public/data/flows_bilateral/2018-Q3.json
+  s_e47a5eda862f84::t_c878a6e6e195fa 1
+public/data/flows_bilateral/2018-Q4.json
+  s_e47a5eda862f84::t_aabe668484bb9d 1
+public/data/flows_bilateral/2019-Q1.json
+  s_e47a5eda862f84::t_566f50525be538 1
+public/data/flows_bilateral/2019-Q2.json
+  s_e47a5eda862f84::t_c1c08605fb0b8a 1
+public/data/flows_bilateral/2019-Q3.json
+  s_e47a5eda862f84::t_e907e68a391181 1
+public/data/flows_bilateral/2019-Q4.json
+  s_e47a5eda862f84::t_bc85ba7be90dbf 1
+public/data/flows_bilateral/2020-Q1.json
+  s_e47a5eda862f84::t_1c8b0c6e4c3a84 1
+public/data/flows_bilateral/2020-Q2.json
+  s_e47a5eda862f84::t_912d5106ae9c94 1
+public/data/flows_bilateral/2020-Q3.json
+  s_e47a5eda862f84::t_9126034eb7847d 1
+public/data/flows_bilateral/2020-Q4.json
+  s_e47a5eda862f84::t_def994c7eeb38f 1
+public/data/flows_bilateral/2021-Q1.json
+  s_e47a5eda862f84::t_b0a543288128da 1
+public/data/flows_bilateral/2021-Q2.json
+  s_e47a5eda862f84::t_9dd9110895034d 1
+public/data/flows_bilateral/2021-Q3.json
+  s_e47a5eda862f84::t_7428778a16b8ab 1
+public/data/flows_bilateral/2021-Q4.json
+  s_e47a5eda862f84::t_a196e09fae8299 1
+public/data/flows_bilateral/2022-Q1.json
+  s_e47a5eda862f84::t_81890f3646f1e2 1
+public/data/flows_bilateral/2022-Q2.json
+  s_e47a5eda862f84::t_09756dcfc6b80c 1
+public/data/flows_bilateral/2022-Q3.json
+  s_e47a5eda862f84::t_075a60368ba081 1
+public/data/flows_bilateral/2022-Q4.json
+  s_e47a5eda862f84::t_5f9200918c76b0 1
+public/data/flows_bilateral/2023-Q1.json
+  s_e47a5eda862f84::t_95e60022bf5f09 1
+public/data/flows_bilateral/2023-Q2.json
+  s_e47a5eda862f84::t_1546c695ac0892 1
+public/data/flows_bilateral/2023-Q3.json
+  s_e47a5eda862f84::t_fc6b1a11a4fb46 1
+public/data/flows_bilateral/2023-Q4.json
+  s_e47a5eda862f84::t_cf4d4ceadb12b1 1
+public/data/flows_bilateral/2024-Q1.json
+  s_e47a5eda862f84::t_c2ff45f6d1a8d0 1
+public/data/flows_bilateral/2024-Q2.json
+  s_e47a5eda862f84::t_1fab23e86c5484 1
+public/data/flows_bilateral/2024-Q3.json
+  s_e47a5eda862f84::t_699eed5f6b2098 1
+public/data/flows_bilateral/2024-Q4.json
+  s_e47a5eda862f84::t_645987897e60b4 1
+public/data/flows_bilateral/2025-Q1.json
+  s_e47a5eda862f84::t_13680ba9946084 1
+public/data/flows_bilateral/2025-Q2.json
+  s_e47a5eda862f84::t_e216e8ad6b2e8b 1
+public/data/flows_bilateral/2025-Q3.json
+  s_e47a5eda862f84::t_a795535e1f0697 1
+public/data/flows_bilateral/2025-Q4.json
+  s_e47a5eda862f84::t_8c4822d79f10be 1
+public/data/index.json
+  s_e47a5eda862f84::t_fa55104cec2f81 1
+public/data/meta/pipeline_report.json
+  s_e47a5eda862f84::t_902f6acef1748f 1
+public/data/meta/synoptic.json
+  s_e47a5eda862f84::t_f27d4779c7a553 1
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.13",
+  "base_commit_sha": "7f5ebbe6c3301124343e9ed4cba24443eeed87b8",
+  "prompts": {},
+  "sessions": {
+    "s_5d0c7b43738dac": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "3b489689-95d8-41c6-b330-cbe3a808fc7b",
+        "model": "claude-opus-4-8"
+      },
+      "human_author": "64etuor <130260521+64etuor@users.noreply.github.com>"
+    },
+    "s_e47a5eda862f84": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "a46a31a4-8363-4a90-b740-7e96b4bf3615",
+        "model": "claude-fable-5"
+      },
+      "human_author": "64etuor <130260521+64etuor@users.noreply.github.com>"
+    }
+  }
+}
