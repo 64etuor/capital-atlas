@@ -1,0 +1,38 @@
+src/lib/dataClient.test.ts
+  s_e47a5eda862f84::t_a53980a877f446 1-194
+scripts/fetch/lib.test.ts
+  s_e47a5eda862f84::t_310c5d14497fad 18
+  s_e47a5eda862f84::t_fe1e60e057dd6c 1-17,19-229
+vitest.config.ts
+  s_e47a5eda862f84::t_6bc2f5867cdf16 1-10
+package.json
+  s_e47a5eda862f84::t_5072cebb0ebbb3 11
+  s_e47a5eda862f84::t_bef1ac95f8655d 52
+tsconfig.node.json
+  s_e47a5eda862f84::t_ea5a599b3c050b 23
+src/lib/dataClient.ts
+  s_e47a5eda862f84::t_7a1fc0b4352929 34-42,46-53,55-76
+  s_e47a5eda862f84::t_841e2b8ba05005 89-98,104-112
+scripts/fetch/lib.ts
+  s_e47a5eda862f84::t_189841c990921c 148-151
+  s_e47a5eda862f84::t_33a6c4b2453fd4 31,40,42,57
+  s_e47a5eda862f84::t_28030c1a550050 125-126
+pnpm-lock.yaml
+  s_e47a5eda862f84::t_7b76b73d230e39 108-110,990-992,1126-1128,1246-1248,1420-1448,1490-1493,1549-1552,1892-1894,1968-1970,1975-1978,2468-2470,2610-2612,2626-2631,2670-2676,2687-2690,2800-2840,2846-2850,4008-4009,4140-4144,4284-4285,4540-4580,4628-4629,4687-4688,5060-5061,5182-5185,5188-5189,5604-5605,5755-5756,5765-5768,5803-5806,5816-5817,5895-5921,5926-5930
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.12",
+  "base_commit_sha": "066a8120b37c0448d45db6f1add14990fc666769",
+  "prompts": {},
+  "sessions": {
+    "s_e47a5eda862f84": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "a46a31a4-8363-4a90-b740-7e96b4bf3615",
+        "model": "claude-fable-5"
+      },
+      "human_author": "64etuor <130260521+64etuor@users.noreply.github.com>"
+    }
+  }
+}
