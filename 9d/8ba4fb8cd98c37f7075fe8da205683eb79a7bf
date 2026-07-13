@@ -1,0 +1,164 @@
+scripts/build/flowmatrix.test.ts
+  s_e47a5eda862f84::t_7090a70b3f0e75 1-54,58,64-67,69-73,80-176
+  s_e47a5eda862f84::t_a13407cea113ce 55-57,59-63,68,74-79
+src/lib/dataClient.ts
+  s_e47a5eda862f84::t_51ba4ecb835d48 122-129
+  s_e47a5eda862f84::t_6a9bfac8c966b5 10-11
+  s_e47a5eda862f84::t_28cd282e1dec68 51
+package.json
+  s_e47a5eda862f84::t_2a576a3d236a44 22-23
+scripts/check/sanity.ts
+  s_e47a5eda862f84::t_bba50c6427f309 190-241
+.github/workflows/data-refresh.yml
+  s_e47a5eda862f84::t_ae097cbb3ad6d4 36-37
+public/data/flowmatrix/2010-Q1.json
+  s_e47a5eda862f84::t_6971bb9ee7152c 1
+public/data/flowmatrix/2010-Q2.json
+  s_e47a5eda862f84::t_e355cd031bbf70 1
+public/data/flowmatrix/2010-Q3.json
+  s_e47a5eda862f84::t_0fd7c038e8d447 1
+public/data/flowmatrix/2010-Q4.json
+  s_e47a5eda862f84::t_6f0c049c21efc0 1
+public/data/flowmatrix/2011-Q1.json
+  s_e47a5eda862f84::t_aeda2a14556e4b 1
+public/data/flowmatrix/2011-Q2.json
+  s_e47a5eda862f84::t_6792166c89469d 1
+public/data/flowmatrix/2011-Q3.json
+  s_e47a5eda862f84::t_7c9e351768b91e 1
+public/data/flowmatrix/2011-Q4.json
+  s_e47a5eda862f84::t_88f1fcee8e62b1 1
+public/data/flowmatrix/2012-Q1.json
+  s_e47a5eda862f84::t_b52c60d77cebfb 1
+public/data/flowmatrix/2012-Q2.json
+  s_e47a5eda862f84::t_f4eaeb23520daa 1
+public/data/flowmatrix/2012-Q3.json
+  s_e47a5eda862f84::t_98d7f1990afc3f 1
+public/data/flowmatrix/2012-Q4.json
+  s_e47a5eda862f84::t_3fac6d227312bf 1
+public/data/flowmatrix/2013-Q1.json
+  s_e47a5eda862f84::t_eac8d030a8f6c0 1
+public/data/flowmatrix/2013-Q2.json
+  s_e47a5eda862f84::t_1af4d04ea5413a 1
+public/data/flowmatrix/2013-Q3.json
+  s_e47a5eda862f84::t_dbf7f00b21bde8 1
+public/data/flowmatrix/2013-Q4.json
+  s_e47a5eda862f84::t_527e8f589c4935 1
+public/data/flowmatrix/2014-Q1.json
+  s_e47a5eda862f84::t_ae023878033159 1
+public/data/flowmatrix/2014-Q2.json
+  s_e47a5eda862f84::t_041a0a835a3c8e 1
+public/data/flowmatrix/2014-Q3.json
+  s_e47a5eda862f84::t_598c7698dbc8bd 1
+public/data/flowmatrix/2014-Q4.json
+  s_e47a5eda862f84::t_56f255f3ba882a 1
+public/data/flowmatrix/2015-Q1.json
+  s_e47a5eda862f84::t_c26c38d2761ba8 1
+public/data/flowmatrix/2015-Q2.json
+  s_e47a5eda862f84::t_37953b546e31f1 1
+public/data/flowmatrix/2015-Q3.json
+  s_e47a5eda862f84::t_2528f27db6057d 1
+public/data/flowmatrix/2015-Q4.json
+  s_e47a5eda862f84::t_f87799d0c7bfad 1
+public/data/flowmatrix/2016-Q1.json
+  s_e47a5eda862f84::t_f86693ac3fc68e 1
+public/data/flowmatrix/2016-Q2.json
+  s_e47a5eda862f84::t_ea935fb58c2d90 1
+public/data/flowmatrix/2016-Q3.json
+  s_e47a5eda862f84::t_47c93005b57190 1
+public/data/flowmatrix/2016-Q4.json
+  s_e47a5eda862f84::t_982ac597f1f4c7 1
+public/data/flowmatrix/2017-Q1.json
+  s_e47a5eda862f84::t_4a9df04e983f1a 1
+public/data/flowmatrix/2017-Q2.json
+  s_e47a5eda862f84::t_defff22cc9194b 1
+public/data/flowmatrix/2017-Q3.json
+  s_e47a5eda862f84::t_d1d3fb397af010 1
+public/data/flowmatrix/2017-Q4.json
+  s_e47a5eda862f84::t_4976867870360a 1
+public/data/flowmatrix/2018-Q1.json
+  s_e47a5eda862f84::t_d4e597e2184689 1
+public/data/flowmatrix/2018-Q2.json
+  s_e47a5eda862f84::t_bf81b510eee80d 1
+public/data/flowmatrix/2018-Q3.json
+  s_e47a5eda862f84::t_b92ef58ce03017 1
+public/data/flowmatrix/2018-Q4.json
+  s_e47a5eda862f84::t_b40619752487ec 1
+public/data/flowmatrix/2019-Q1.json
+  s_e47a5eda862f84::t_9c7e38957fe436 1
+public/data/flowmatrix/2019-Q2.json
+  s_e47a5eda862f84::t_edb235f32bcf9a 1
+public/data/flowmatrix/2019-Q3.json
+  s_e47a5eda862f84::t_417407b000501e 1
+public/data/flowmatrix/2019-Q4.json
+  s_e47a5eda862f84::t_ce79766dd318b2 1
+public/data/flowmatrix/2020-Q1.json
+  s_e47a5eda862f84::t_88cef661eef34e 1
+public/data/flowmatrix/2020-Q2.json
+  s_e47a5eda862f84::t_7c6b5c4522528d 1
+public/data/flowmatrix/2020-Q3.json
+  s_e47a5eda862f84::t_a7a04299d65053 1
+public/data/flowmatrix/2020-Q4.json
+  s_e47a5eda862f84::t_44e740993df501 1
+public/data/flowmatrix/2021-Q1.json
+  s_e47a5eda862f84::t_a5b76247d610fb 1
+public/data/flowmatrix/2021-Q2.json
+  s_e47a5eda862f84::t_016dd5727c3e01 1
+public/data/flowmatrix/2021-Q3.json
+  s_e47a5eda862f84::t_8d15a81c1d8994 1
+public/data/flowmatrix/2021-Q4.json
+  s_e47a5eda862f84::t_30d009b859aa39 1
+public/data/flowmatrix/2022-Q1.json
+  s_e47a5eda862f84::t_7156fcc3937dd0 1
+public/data/flowmatrix/2022-Q2.json
+  s_e47a5eda862f84::t_5a44c95cf2505e 1
+public/data/flowmatrix/2022-Q3.json
+  s_e47a5eda862f84::t_aedd186d76f945 1
+public/data/flowmatrix/2022-Q4.json
+  s_e47a5eda862f84::t_06477094a8f623 1
+public/data/flowmatrix/2023-Q1.json
+  s_e47a5eda862f84::t_8e16b9bed324e6 1
+public/data/flowmatrix/2023-Q2.json
+  s_e47a5eda862f84::t_fbc842876c6749 1
+public/data/flowmatrix/2023-Q3.json
+  s_e47a5eda862f84::t_3df47b582f386f 1
+public/data/flowmatrix/2023-Q4.json
+  s_e47a5eda862f84::t_80b647b477a7f3 1
+public/data/flowmatrix/2024-Q1.json
+  s_e47a5eda862f84::t_81f0aece6c3703 1
+public/data/flowmatrix/2024-Q2.json
+  s_e47a5eda862f84::t_fbaf7e339e1c60 1
+public/data/flowmatrix/2024-Q3.json
+  s_e47a5eda862f84::t_c9d1490233ec63 1
+public/data/flowmatrix/2024-Q4.json
+  s_e47a5eda862f84::t_462a36cde3aeff 1
+public/data/flowmatrix/2025-Q1.json
+  s_e47a5eda862f84::t_33d9be36dee5a2 1
+public/data/flowmatrix/2025-Q2.json
+  s_e47a5eda862f84::t_14243d54cd0b45 1
+public/data/flowmatrix/2025-Q3.json
+  s_e47a5eda862f84::t_05dc41a4647444 1
+public/data/flowmatrix/2025-Q4.json
+  s_e47a5eda862f84::t_e0aa783eedea88 1
+public/data/flowmatrix/2026-Q1.json
+  s_e47a5eda862f84::t_6af68cfbf49c4f 1
+public/data/flowmatrix/index.json
+  s_e47a5eda862f84::t_5799d1e864dedf 1
+src/types/data.ts
+  s_e47a5eda862f84::t_d4b0ef85f42847 415-451
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.13",
+  "base_commit_sha": "9d8ba4fb8cd98c37f7075fe8da205683eb79a7bf",
+  "prompts": {},
+  "sessions": {
+    "s_e47a5eda862f84": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "a46a31a4-8363-4a90-b740-7e96b4bf3615",
+        "model": "claude-fable-5"
+      },
+      "human_author": "64etuor <130260521+64etuor@users.noreply.github.com>"
+    }
+  }
+}
