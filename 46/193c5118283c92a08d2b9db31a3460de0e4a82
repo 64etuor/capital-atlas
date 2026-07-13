@@ -1,0 +1,31 @@
+src/App.tsx
+  s_e47a5eda862f84::t_7b2e6f790beb91 11,19-21
+src/main.tsx
+  s_e47a5eda862f84::t_05d0467f6ce853 21
+  s_e47a5eda862f84::t_e36bf760a0a39c 6
+src/lib/periods.ts
+  s_e47a5eda862f84::t_d6e7680eba52a4 14-30
+src/components/StationPlate.tsx
+  s_e47a5eda862f84::t_030c88dd09bbd9 13-20
+  s_e47a5eda862f84::t_661bee98ccb7fb 61
+DESIGN.md
+  s_e47a5eda862f84::t_bc2146d7c950eb 88-90
+README.md
+  s_e47a5eda862f84::t_466a283605b294 214-220
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.12",
+  "base_commit_sha": "46193c5118283c92a08d2b9db31a3460de0e4a82",
+  "prompts": {},
+  "sessions": {
+    "s_e47a5eda862f84": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "a46a31a4-8363-4a90-b740-7e96b4bf3615",
+        "model": "unknown"
+      },
+      "human_author": "64etuor <130260521+64etuor@users.noreply.github.com>"
+    }
+  }
+}
