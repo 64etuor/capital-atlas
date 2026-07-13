@@ -5,6 +5,11 @@ import App from './App.tsx'
 import { getIndex } from './lib/dataClient'
 import { initPeriods, periodCount } from './lib/periods'
 import { useViewStore } from './store/viewStore'
+import { applyLocale, detectLocale } from './i18n'
+import { applyUrlState, startUrlSync } from './lib/urlState'
+
+// 로케일: URL ?lang > localStorage > en (G2) — 첫 렌더 전에 적용
+applyLocale(detectLocale())
 
 const root = createRoot(document.getElementById('root')!)
 
@@ -17,6 +22,9 @@ getIndex()
   })
   .catch(() => {})
   .then(() => {
+    // 딥링크 복원(P2-9)은 기간 정본 확정 후 — 클램프 정확성. 이후 상태→URL 동기화.
+    applyUrlState(useViewStore)
+    startUrlSync(useViewStore)
     root.render(
       <StrictMode>
         <App />

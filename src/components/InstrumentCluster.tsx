@@ -1,10 +1,10 @@
+import { useTranslation } from 'react-i18next'
 import { useViewStore } from '../store/viewStore'
 import type { Basis, CurrencyView, MeasureType } from '../types/data'
 
 interface DialOption<T extends string> {
   value: T
   abbr: string
-  text: string
 }
 
 interface DialProps<T extends string> {
@@ -19,6 +19,7 @@ interface DialProps<T extends string> {
  * 트레이 확장. 다이얼 면 클릭 = 다음 값으로 스텝(키보드 Enter 포함).
  */
 function Dial<T extends string>({ label, options, value, onChange }: DialProps<T>) {
+  const { t } = useTranslation()
   const idx = options.findIndex((o) => o.value === value)
   const current = options[idx]
 
@@ -39,7 +40,7 @@ function Dial<T extends string>({ label, options, value, onChange }: DialProps<T
                 : 'text-paper-dim hover:text-paper')
             }
           >
-            {opt.text}
+            {t(`cluster.opts.${opt.value}`)}
           </button>
         ))}
       </div>
@@ -48,7 +49,7 @@ function Dial<T extends string>({ label, options, value, onChange }: DialProps<T
       <button
         type="button"
         onClick={() => onChange(options[(idx + 1) % options.length].value)}
-        aria-label={`${label}: ${current.text} — activate to change`}
+        aria-label={t('cluster.optionAria', { label, text: t(`cluster.opts.${current.value}`) })}
         className="w-16 border-y border-paper/10 bg-ink-1/70 py-2 text-center transition-colors duration-140 hover:bg-ink-2/80"
       >
         <span className="dial-label block text-[9px] text-paper-dim/70">
@@ -63,31 +64,32 @@ function Dial<T extends string>({ label, options, value, onChange }: DialProps<T
 }
 
 const BASIS: readonly DialOption<Basis>[] = [
-  { value: 'owner', abbr: 'OWN', text: 'Owner' },
-  { value: 'issuer', abbr: 'ISS', text: 'Issuer' },
-  { value: 'location', abbr: 'LOC', text: 'Location' },
+  { value: 'owner', abbr: 'OWN' },
+  { value: 'issuer', abbr: 'ISS' },
+  { value: 'location', abbr: 'LOC' },
 ]
 
 const MEASURE: readonly DialOption<MeasureType>[] = [
-  { value: 'stock', abbr: 'STK', text: 'Stock' },
-  { value: 'flow', abbr: 'FLW', text: 'Flow' },
-  { value: 'valuation', abbr: 'VAL', text: 'Valuation' },
-  { value: 'turnover', abbr: 'TRN', text: 'Turnover' },
+  { value: 'stock', abbr: 'STK' },
+  { value: 'flow', abbr: 'FLW' },
+  { value: 'valuation', abbr: 'VAL' },
+  { value: 'turnover', abbr: 'TRN' },
 ]
 
 const CURRENCY: readonly DialOption<CurrencyView>[] = [
-  { value: 'usd_current', abbr: 'USD', text: 'USD current' },
-  { value: 'usd_constant_fx', abbr: 'FXD', text: 'USD fx-fixed' },
+  { value: 'usd_current', abbr: 'USD' },
+  { value: 'usd_constant_fx', abbr: 'FXD' },
 ]
 
 type EstimateView = 'obs' | 'est'
 const ESTIMATES: readonly DialOption<EstimateView>[] = [
-  { value: 'est', abbr: 'EST+', text: 'Observed + estimated' },
-  { value: 'obs', abbr: 'OBS', text: 'Observed only' },
+  { value: 'est', abbr: 'EST+' },
+  { value: 'obs', abbr: 'OBS' },
 ]
 
 /** 우측 계기 클러스터 — basis · measure · currency · estimates 수직 스택. */
 export function InstrumentCluster() {
+  const { t } = useTranslation()
   const reportOpen = useViewStore(
     (s) => s.selectedCountry !== null && s.appView === 'globe',
   )
@@ -102,28 +104,28 @@ export function InstrumentCluster() {
 
   return (
     <nav
-      aria-label="Instruments"
+      aria-label={t('cluster.aria')}
       className={
         'absolute top-1/2 z-30 flex -translate-y-1/2 flex-col gap-3 pr-4 transition-[right] duration-280 ease-(--ease-baro) ' +
         // slide clear of the observation report so the dials stay reachable
         (reportOpen ? 'right-[420px]' : 'right-0')
       }
     >
-      <Dial label="Basis" options={BASIS} value={basis} onChange={setBasis} />
+      <Dial label={t('cluster.labels.basis')} options={BASIS} value={basis} onChange={setBasis} />
       <Dial
-        label="Measure"
+        label={t('cluster.labels.measure')}
         options={MEASURE}
         value={measure}
         onChange={setMeasure}
       />
       <Dial
-        label="Curr"
+        label={t('cluster.labels.currency')}
         options={CURRENCY}
         value={currency}
         onChange={setCurrency}
       />
       <Dial
-        label="Vis"
+        label={t('cluster.labels.estimates')}
         options={ESTIMATES}
         value={includeEstimates ? 'est' : 'obs'}
         onChange={(v) => {

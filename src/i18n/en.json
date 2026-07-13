@@ -1,0 +1,125 @@
+{
+  "common": {
+    "close": "Close",
+    "preparing": "PREPARING OBSERVATION",
+    "noObservation": "NO OBSERVATION",
+    "quarterAria": "Quarter"
+  },
+  "plate": {
+    "lastObs": "LAST OFFICIAL OBS",
+    "estimatedAsOf": "ESTIMATED AS OF",
+    "surfaceAria": "Observation surface",
+    "localeAria": "Language"
+  },
+  "dial": {
+    "label": "OBSERVATORY",
+    "world": "World",
+    "filterPlaceholder": "FILTER — ISO3 OR NAME",
+    "filterAria": "Filter countries",
+    "listAria": "Country",
+    "noMatch": "NO MATCHING STATION",
+    "recent": "RECENT"
+  },
+  "cluster": {
+    "aria": "Instruments",
+    "optionAria": "{{label}}: {{text}} — activate to change",
+    "labels": {
+      "basis": "Basis",
+      "measure": "Measure",
+      "currency": "Curr",
+      "estimates": "Vis"
+    },
+    "opts": {
+      "owner": "Owner basis",
+      "issuer": "Issuer basis",
+      "location": "Asset location",
+      "stock": "Positions (stock)",
+      "flow": "Transaction flows",
+      "valuation": "Valuation changes",
+      "turnover": "Turnover",
+      "usd_current": "Current USD",
+      "usd_constant_fx": "USD fx-fixed",
+      "est": "Observed + estimated",
+      "obs": "Observed only"
+    }
+  },
+  "report": {
+    "title": "OBSERVATION REPORT",
+    "closeAria": "Close observation report",
+    "syncing": "SYNCING OBSERVATION…",
+    "headline": "Cross-border position",
+    "composition": "Asset composition",
+    "flows": "Transaction flows · last {{count}} quarters",
+    "counterparties": "Top counterparties · positions",
+    "visibility": "Visibility",
+    "gradeLine": "GRADE {{grade}} · {{count}} asset classes",
+    "rangeLine": "RANGE {{low}} — {{high}}",
+    "legend": "nonresident inflow · resident outflow · dimmed = net withdrawal",
+    "noRecordsAt": "no records at {{period}}",
+    "estimatesHidden": "estimates hidden — OBS mode",
+    "noStockRecords": "no stock records for this basis",
+    "noBopRecords": "no BOP flow records in range",
+    "notCpisReporter": "not a CPIS reporter at this date",
+    "observedToFog": "observed → residual fog",
+    "flowBarTitle": "{{period}}: in {{inflow}} / out {{outflow}}",
+    "directionIn": "into this country",
+    "directionOut": "out of this country",
+    "openStation": "OPEN STATION →",
+    "openStationAria": "Open the analysis console for this country",
+    "ctxCoverage": "Coverage",
+    "ctxCoverageValue": "{{count}} asset-class records",
+    "ctxView": "View",
+    "viewEst": "observed + estimated",
+    "viewObs": "observed only",
+    "ctxDirection": "Direction",
+    "ctxInflowSide": "Inflow side",
+    "ctxOutflowSide": "Outflow side",
+    "ctxRecords": "Records",
+    "ctxSign": "Sign"
+  },
+  "dossier": {
+    "title": "CALIBRATION SHEET",
+    "aria": "Data lineage",
+    "closeAria": "Close lineage dossier",
+    "rows": {
+      "source": "Source",
+      "collection": "Collection",
+      "method": "Method",
+      "range": "Range",
+      "effective": "Effective",
+      "retrieved": "Retrieved",
+      "license": "License",
+      "coverage": "Coverage",
+      "view": "View"
+    },
+    "observedValue": "— (observed value)",
+    "directObservation": "DIRECT OBSERVATION",
+    "modes": {
+      "live_market": "LIVE MARKET",
+      "batch_official": "OFFICIAL BATCH",
+      "derived_model": "DERIVED MODEL",
+      "static_reference": "STATIC REFERENCE"
+    }
+  },
+  "synoptic": {
+    "circulationFlow": "DERIVED NET FLOW",
+    "circulationPositions": "CPIS POSITIONS",
+    "circulationNoObserved": "NO OBSERVED CORRIDORS — CPIS-DERIVED FLOWS ARE GRADE D",
+    "circulationAwaiting": "AWAITING BILATERAL OBSERVATION",
+    "circulationAria": "top capital corridors",
+    "visibilityTitle": "visibility — observation grade mix",
+    "filterTitle": "{{label}} — filter"
+  },
+  "station": {
+    "matrixSelect": "BILATERAL MATRIX — SELECT A COUNTRY STATION",
+    "matrixNone": "NO BILATERAL OBSERVATIONS",
+    "railNoData": "no {{asset}} observations for this station",
+    "brushHint": "drag to zoom a range",
+    "brushReset": "RESET RANGE",
+    "annotations": {
+      "euro": "EURO CRISIS",
+      "covid": "COVID-19",
+      "tightening": "2022 TIGHTENING"
+    }
+  }
+}

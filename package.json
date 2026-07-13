@@ -23,9 +23,11 @@
     "@fontsource/instrument-serif": "^5.2.8",
     "deck.gl": "^9.3.6",
     "echarts": "^6.1.0",
+    "i18next": "^26.3.6",
     "maplibre-gl": "^5.24.0",
     "react": "^19.2.7",
     "react-dom": "^19.2.7",
+    "react-i18next": "^17.0.9",
     "zustand": "^5.0.14"
   },
   "devDependencies": {

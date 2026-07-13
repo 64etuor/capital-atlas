@@ -4,6 +4,7 @@
  * cyan 수축), 추정 비중만큼 §6 안개. 칼럼 클릭 = 자산 필터.
  */
 import { useViewStore } from '../../store/viewStore'
+import { useTranslation } from 'react-i18next'
 import { ASSET_LABELS } from '../../lib/assetLabels'
 import { formatUsd, formatUsdNet } from '../../lib/format'
 import { pressureColor, rgbaCss } from '../../lib/tokens'
@@ -27,6 +28,7 @@ export function BarometerBank({
   filter,
   onFilter,
 }: Props) {
+  const { t } = useTranslation()
   const openDossier = useViewStore((s) => s.openDossier)
   const mode = assets.map((a) => ({
     asset: a,
@@ -100,7 +102,7 @@ export function BarometerBank({
               <button
                 type="button"
                 aria-pressed={filter === asset}
-                title={`${ASSET_LABELS[asset]} — filter`}
+                title={t('synoptic.filterTitle', { label: ASSET_LABELS[asset] })}
                 onClick={() => onFilter(filter === asset ? null : asset)}
                 className="relative flex w-10 flex-1 items-end justify-center"
               >

@@ -1,0 +1,125 @@
+{
+  "common": {
+    "close": "닫기",
+    "preparing": "관측 준비 중",
+    "noObservation": "관측 없음",
+    "quarterAria": "분기"
+  },
+  "plate": {
+    "lastObs": "마지막 공식 관측",
+    "estimatedAsOf": "현재 추정 기준",
+    "surfaceAria": "관측 표면",
+    "localeAria": "언어"
+  },
+  "dial": {
+    "label": "관측소",
+    "world": "세계",
+    "filterPlaceholder": "필터 — ISO3 또는 이름",
+    "filterAria": "국가 필터",
+    "listAria": "국가",
+    "noMatch": "일치하는 관측소 없음",
+    "recent": "최근"
+  },
+  "cluster": {
+    "aria": "계기",
+    "optionAria": "{{label}}: {{text}} — 눌러서 변경",
+    "labels": {
+      "basis": "귀속",
+      "measure": "측정",
+      "currency": "통화",
+      "estimates": "시정"
+    },
+    "opts": {
+      "owner": "소유자 기준",
+      "issuer": "발행자 기준",
+      "location": "자산 소재지",
+      "stock": "잔액(포지션)",
+      "flow": "실거래 흐름",
+      "valuation": "평가변동",
+      "turnover": "거래량",
+      "usd_current": "명목 USD",
+      "usd_constant_fx": "고정환율 USD",
+      "est": "관측 + 추정",
+      "obs": "관측만"
+    }
+  },
+  "report": {
+    "title": "관측 리포트",
+    "closeAria": "관측 리포트 닫기",
+    "syncing": "관측 동기화 중…",
+    "headline": "국경 간 포지션",
+    "composition": "자산 구성",
+    "flows": "실거래 흐름 · 최근 {{count}}분기",
+    "counterparties": "상위 상대국 · 포지션",
+    "visibility": "시정",
+    "gradeLine": "등급 {{grade}} · 자산군 {{count}}종",
+    "rangeLine": "범위 {{low}} — {{high}}",
+    "legend": "비거주자 유입 · 거주자 유출 · 흐림 = 순회수",
+    "noRecordsAt": "{{period}} 기준 레코드 없음",
+    "estimatesHidden": "추정치 숨김 — OBS 모드",
+    "noStockRecords": "이 기준의 잔액 레코드 없음",
+    "noBopRecords": "범위 내 BOP 흐름 레코드 없음",
+    "notCpisReporter": "이 시점의 CPIS 보고국 아님",
+    "observedToFog": "관측 → 잔차 안개",
+    "flowBarTitle": "{{period}}: 유입 {{inflow}} / 유출 {{outflow}}",
+    "directionIn": "이 나라로 유입",
+    "directionOut": "이 나라에서 유출",
+    "openStation": "분석 콘솔 열기 →",
+    "openStationAria": "이 국가의 분석 콘솔 열기",
+    "ctxCoverage": "커버리지",
+    "ctxCoverageValue": "자산군 레코드 {{count}}건",
+    "ctxView": "보기",
+    "viewEst": "관측 + 추정",
+    "viewObs": "관측만",
+    "ctxDirection": "방향",
+    "ctxInflowSide": "유입측",
+    "ctxOutflowSide": "유출측",
+    "ctxRecords": "레코드",
+    "ctxSign": "부호 규약"
+  },
+  "dossier": {
+    "title": "교정 증명서",
+    "aria": "데이터 계보",
+    "closeAria": "계보 도시에 닫기",
+    "rows": {
+      "source": "출처",
+      "collection": "수집 분류",
+      "method": "산식",
+      "range": "범위",
+      "effective": "기준일",
+      "retrieved": "수집일",
+      "license": "라이선스",
+      "coverage": "커버리지",
+      "view": "보기"
+    },
+    "observedValue": "— (관측값)",
+    "directObservation": "직접 관측",
+    "modes": {
+      "live_market": "실시간 시장",
+      "batch_official": "공식 배치",
+      "derived_model": "파생 모델",
+      "static_reference": "정적 참조"
+    }
+  },
+  "synoptic": {
+    "circulationFlow": "파생 순흐름",
+    "circulationPositions": "CPIS 포지션",
+    "circulationNoObserved": "관측 회랑 없음 — CPIS 파생 흐름은 D등급",
+    "circulationAwaiting": "양자 관측 대기",
+    "circulationAria": "상위 자본 회랑",
+    "visibilityTitle": "시정 — 관측 등급 구성",
+    "filterTitle": "{{label}} — 필터"
+  },
+  "station": {
+    "matrixSelect": "양자 매트릭스 — 국가 관측소를 선택하세요",
+    "matrixNone": "양자 관측 없음",
+    "railNoData": "이 관측소의 {{asset}} 관측 없음",
+    "brushHint": "드래그로 구간 확대",
+    "brushReset": "구간 초기화",
+    "annotations": {
+      "euro": "유로 위기",
+      "covid": "COVID-19",
+      "tightening": "2022 긴축"
+    }
+  }
+}

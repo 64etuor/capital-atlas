@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react'
+import { useTranslation } from 'react-i18next'
 import { useViewStore } from '../store/viewStore'
 import { getFlowIntensity } from '../lib/dataClient'
 import {
@@ -37,6 +38,7 @@ function buildAreaPath(series: FlowIntensityPoint[], count: number): string {
  * IMF BOP grade A) — not decoration.
  */
 export function BarographTimeline() {
+  const { t } = useTranslation()
   const periodIndex = useViewStore((s) => s.periodIndex)
   const setPeriodIndex = useViewStore((s) => s.setPeriodIndex)
   const reportOpen = useViewStore(
@@ -144,7 +146,7 @@ export function BarographTimeline() {
           step={1}
           value={periodIndex}
           onChange={(e) => setPeriodIndex(Number(e.target.value))}
-          aria-label="Quarter"
+          aria-label={t('common.quarterAria')}
           aria-valuetext={`${periodFromIndex(periodIndex)} — latest ${latestPeriod()}`}
           className="absolute inset-0 w-full cursor-ew-resize opacity-0"
         />

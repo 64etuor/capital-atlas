@@ -3,10 +3,29 @@
  * 조작(↑↓/Enter/Esc). WORLD = 세계 집계(WLD).
  */
 import { useEffect, useRef, useState } from 'react'
+import { useTranslation } from 'react-i18next'
 
 export interface DialCountry {
   iso3: string
   name: string
+}
+
+/** 최근 선택 관측소 — 상단 고정 (UX_RESEARCH P1-4). */
+const RECENT_KEY = 'atlas.recentStations'
+function readRecents(): string[] {
+  try {
+    const raw = JSON.parse(localStorage.getItem(RECENT_KEY) ?? '[]') as unknown
+    return Array.isArray(raw) ? raw.filter((v): v is string => typeof v === 'string').slice(0, 5) : []
+  } catch {
+    return []
+  }
+}
+function pushRecent(iso3: string): void {
+  if (iso3 === 'WLD') return
+  localStorage.setItem(
+    RECENT_KEY,
+    JSON.stringify([iso3, ...readRecents().filter((r) => r !== iso3)].slice(0, 5)),
+  )
 }
 
 interface Props {
@@ -22,6 +41,7 @@ export function CountryDial({
   currentName,
   onSelect,
 }: Props) {
+  const { t } = useTranslation()
   const [open, setOpen] = useState(false)
   const [query, setQuery] = useState('')
   const [cursor, setCursor] = useState(0)
@@ -29,14 +49,21 @@ export function CountryDial({
   const inputRef = useRef<HTMLInputElement>(null)
 
   const q = query.trim().toUpperCase()
+  const matches = countries.filter(
+    (c) => q === '' || c.iso3.includes(q) || c.name.toUpperCase().includes(q),
+  )
+  // 빈 쿼리일 때 최근 선택을 상단으로 (P1-4)
+  const recents =
+    q === ''
+      ? readRecents()
+          .map((iso) => matches.find((c) => c.iso3 === iso))
+          .filter((c): c is DialCountry => c !== undefined)
+      : []
+  const recentSet = new Set(recents.map((c) => c.iso3))
   const rows: DialCountry[] = [
-    { iso3: 'WLD', name: 'World' },
-    ...countries.filter(
-      (c) =>
-        q === '' ||
-        c.iso3.includes(q) ||
-        c.name.toUpperCase().includes(q),
-    ),
+    { iso3: 'WLD', name: t('dial.world') },
+    ...recents,
+    ...matches.filter((c) => !recentSet.has(c.iso3)),
   ]
 
   useEffect(() => {
@@ -50,6 +77,7 @@ export function CountryDial({
   }, [open])
 
   const choose = (iso3: string) => {
+    pushRecent(iso3)
     onSelect(iso3 === 'WLD' ? null : iso3)
     setOpen(false)
     setQuery('')
@@ -65,7 +93,7 @@ export function CountryDial({
         onClick={() => setOpen((o) => !o)}
         className="dial-label flex items-center gap-2 border-y border-paper/10 bg-ink-1/70 px-2.5 py-1.5 text-paper-dim transition-colors duration-140 hover:text-paper"
       >
-        OBSERVATORY
+        {t('dial.label')}
         <span className="text-flow-in">{currentIso === 'WLD' ? 'WORLD' : currentIso}</span>
         <span aria-hidden="true" className="text-paper-dim/60">
           ▾
@@ -78,8 +106,8 @@ export function CountryDial({
           <input
             ref={inputRef}
             value={query}
-            placeholder="FILTER — ISO3 OR NAME"
-            aria-label="Filter countries"
+            placeholder={t('dial.filterPlaceholder')}
+            aria-label={t('dial.filterAria')}
             onChange={(e) => {
               setQuery(e.target.value)
               setCursor(0)
@@ -104,12 +132,12 @@ export function CountryDial({
           />
           <ul
             role="listbox"
-            aria-label="Country"
+            aria-label={t('dial.listAria')}
             className="max-h-72 overflow-y-auto [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
           >
             {rows.length === 1 && q !== '' && (
               <li className="dial-label px-2.5 py-2 text-paper-dim/60">
-                NO MATCHING STATION
+                {t('dial.noMatch')}
               </li>
             )}
             {rows.map((c, i) => (
@@ -133,6 +161,11 @@ export function CountryDial({
                   </span>
                   <span className="dial-label min-w-0 flex-1 truncate text-paper-dim">
                     {c.name}
+                    {q === '' && recentSet.has(c.iso3) ? (
+                      <span className="ml-2 text-flow-in/50">
+                        {t('dial.recent')}
+                      </span>
+                    ) : null}
                   </span>
                 </button>
               </li>

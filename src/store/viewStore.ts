@@ -1,5 +1,10 @@
 import { create } from 'zustand'
-import type { Basis, CurrencyView, MeasureType } from '../types/data'
+import type {
+  AssetClass,
+  Basis,
+  CurrencyView,
+  MeasureType,
+} from '../types/data'
 import type { DossierPayload } from '../types/dossier'
 import { periodCount } from '../lib/periods'
 
@@ -19,6 +24,8 @@ interface ViewState {
   periodIndex: number
   /** ISO3 of the country open in the detail panel, or null */
   selectedCountry: string | null
+  /** STATION 자산 탭 — URL 딥링크 대상이라 전역 (P2-9) */
+  stationAsset: 'all' | AssetClass
   /** last lineage-dossier payload (kept mounted through the exit slide) */
   dossier: DossierPayload | null
   dossierOpen: boolean
@@ -29,6 +36,7 @@ interface ViewState {
   setCurrency: (currency: CurrencyView) => void
   toggleEstimates: () => void
   setPeriodIndex: (index: number) => void
+  setStationAsset: (asset: 'all' | AssetClass) => void
   selectCountry: (iso3: string | null) => void
   openDossier: (payload: DossierPayload) => void
   closeDossier: () => void
@@ -42,6 +50,7 @@ export const useViewStore = create<ViewState>()((set) => ({
   includeEstimates: true,
   periodIndex: periodCount() - 1,
   selectedCountry: null,
+  stationAsset: 'all',
   dossier: null,
   dossierOpen: false,
 
@@ -53,6 +62,7 @@ export const useViewStore = create<ViewState>()((set) => ({
     set((s) => ({ includeEstimates: !s.includeEstimates })),
   setPeriodIndex: (index) =>
     set({ periodIndex: Math.min(Math.max(index, 0), periodCount() - 1) }),
+  setStationAsset: (stationAsset) => set({ stationAsset }),
   selectCountry: (iso3) =>
     set((s) => ({
       selectedCountry: iso3,

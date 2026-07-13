@@ -7,6 +7,7 @@
  * 국가 선택은 지구본의 selectedCountry와 양방향 동기화된다.
  */
 import { useEffect, useState } from 'react'
+import { useTranslation } from 'react-i18next'
 import { useViewStore } from '../../store/viewStore'
 import {
   getCountries,
@@ -47,6 +48,7 @@ const INK_BG =
   'linear-gradient(180deg, var(--atlas-ink-0) 0%, var(--atlas-ink-1) 55%, var(--atlas-ink-2) 130%)'
 
 export function StationView() {
+  const { t } = useTranslation()
   const appView = useViewStore((s) => s.appView)
   const periodIndex = useViewStore((s) => s.periodIndex)
   const setPeriodIndex = useViewStore((s) => s.setPeriodIndex)
@@ -144,7 +146,7 @@ export function StationView() {
         <div className="readout flex h-full items-center justify-center text-[12px] tracking-[0.18em] text-paper-dim">
           {loadError
             ? `STATION FEED UNAVAILABLE — ${loadError}`
-            : 'PREPARING OBSERVATION'}
+            : t('common.preparing')}
         </div>
       ) : (
         <StationBody
@@ -197,6 +199,7 @@ function StationBody({
   onPickPeriod,
   openDossier,
 }: BodyProps) {
+  const { t } = useTranslation()
   const present = assetsPresent(file)
   const assetLabel = tab === 'all' ? 'ALL ASSETS' : ASSET_LABELS[tab]
   const flows = flowArrays(file, tab, observedOnly)
@@ -397,8 +400,8 @@ function StationBody({
     tab === 'all' ? partnerEntry?.all : partnerEntry?.assets[tab]
   const partnerEmpty =
     iso === 'WLD'
-      ? 'BILATERAL MATRIX — SELECT A COUNTRY STATION'
-      : 'NO BILATERAL OBSERVATIONS'
+      ? t('station.matrixSelect')
+      : t('station.matrixNone')
 
   const tabPoints: StationPoint[] = tab === 'all' ? [] : (file.series[tab] ?? [])
   const nearestNow = tab === 'all' ? null : nearestPoint(tabPoints, periodIndex)

@@ -4,6 +4,7 @@
  * 굵기 ∝ log 규모, §6: 관측=실선 / 유도=파선 / 모델=희박 점선 + 감쇠.
  */
 import { useViewStore } from '../../store/viewStore'
+import { useTranslation } from 'react-i18next'
 import { ASSET_LABELS } from '../../lib/assetLabels'
 import { formatUsd } from '../../lib/format'
 import { fogAlpha } from '../../lib/tokens'
@@ -28,6 +29,7 @@ export function CirculationChart({
   observedOnly,
   filter,
 }: Props) {
+  const { t } = useTranslation()
   const openDossier = useViewStore((s) => s.openDossier)
   const rows = corridors
     .filter((c) => (filter ? c.asset === filter : true))
@@ -43,14 +45,14 @@ export function CirculationChart({
     <section className="flex min-h-0 min-w-0 flex-col">
       <p className="dial-label shrink-0 text-paper-dim/70">
         CIRCULATION · TOP CORRIDORS ·{' '}
-        {isFlow ? 'DERIVED NET FLOW' : 'CPIS POSITIONS'}
+        {isFlow ? t('synoptic.circulationFlow') : t('synoptic.circulationPositions')}
         {effPeriod ? ` · ${effPeriod}` : ''}
       </p>
       {rows.length === 0 ? (
         <div className="readout flex flex-1 items-center justify-center text-[11px] tracking-[0.14em] text-paper-dim">
           {observedOnly && isFlow
-            ? 'NO OBSERVED CORRIDORS — CPIS-DERIVED FLOWS ARE GRADE D'
-            : 'AWAITING BILATERAL OBSERVATION'}
+            ? t('synoptic.circulationNoObserved')
+            : t('synoptic.circulationAwaiting')}
         </div>
       ) : (
         <svg
@@ -58,7 +60,7 @@ export function CirculationChart({
           viewBox="0 0 100 100"
           preserveAspectRatio="none"
           role="img"
-          aria-label="top capital corridors"
+          aria-label={t('synoptic.circulationAria')}
         >
           <defs>
             <linearGradient id="corridor-grad" x1="0" y1="0" x2="1" y2="0">

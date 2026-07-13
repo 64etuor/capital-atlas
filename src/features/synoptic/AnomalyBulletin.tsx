@@ -4,6 +4,7 @@
  * ⑤ 시정 바 — A~E 레코드 구성. "관측 몇 % 위에 서 있는가"를 항상 노출.
  */
 import { useViewStore } from '../../store/viewStore'
+import { useTranslation } from 'react-i18next'
 import { ASSET_LABELS } from '../../lib/assetLabels'
 import { formatUsdNet } from '../../lib/format'
 import { fogAlpha } from '../../lib/tokens'
@@ -106,6 +107,7 @@ interface VisibilityProps {
 }
 
 export function VisibilityBar({ period, gradeMix }: VisibilityProps) {
+  const { t } = useTranslation()
   const openDossier = useViewStore((s) => s.openDossier)
   const total = GRADES.reduce((s, g) => s + (gradeMix[g] ?? 0), 0)
   if (total === 0) return null
@@ -116,7 +118,7 @@ export function VisibilityBar({ period, gradeMix }: VisibilityProps) {
     <button
       type="button"
       className="flex shrink-0 items-center gap-3 text-left"
-      title="visibility — observation grade mix"
+      title={t('synoptic.visibilityTitle')}
       onClick={() =>
         openDossier({
           title: 'Visibility — observation grade mix',

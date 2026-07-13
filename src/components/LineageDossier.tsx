@@ -3,15 +3,8 @@ import { useViewStore } from '../store/viewStore'
 import { getSources } from '../lib/dataClient'
 import { formatUsd } from '../lib/format'
 import { fogAlpha } from '../lib/tokens'
-import type { CollectionMode, SourceRegistryEntry } from '../types/data'
-
-/** 수집 분류 표기 — 실시간 시장 데이터 vs 공식 통계 배치를 도시에에서 구분 */
-const MODE_LABELS: Record<CollectionMode, string> = {
-  live_market: 'LIVE MARKET',
-  batch_official: 'OFFICIAL BATCH',
-  derived_model: 'DERIVED MODEL',
-  static_reference: 'STATIC REFERENCE',
-}
+import { useTranslation } from 'react-i18next'
+import type { SourceRegistryEntry } from '../types/data'
 
 function Row({ label, children }: { label: string; children: React.ReactNode }) {
   return (
@@ -29,6 +22,7 @@ function Row({ label, children }: { label: string; children: React.ReactNode }) 
  * source, method, confidence, range, dates. §1.5 made concrete.
  */
 export function LineageDossier() {
+  const { t } = useTranslation()
   // store keeps the last payload through the slide-out transition
   const payload = useViewStore((s) => s.dossier)
   const open = useViewStore((s) => s.dossierOpen)
@@ -60,7 +54,7 @@ export function LineageDossier() {
   return (
     <section
       role="dialog"
-      aria-label="Data lineage"
+      aria-label={t('dossier.aria')}
       aria-hidden={!open}
       className={
         'absolute bottom-24 left-1/2 z-30 w-[min(720px,92vw)] -translate-x-1/2 border border-paper/12 bg-ink-0/95 transition-all duration-280 ease-(--ease-baro) ' +
@@ -70,11 +64,11 @@ export function LineageDossier() {
       }
     >
       <header className="flex items-center justify-between border-b border-paper/10 px-5 py-2">
-        <p className="dial-label text-paper-dim">Calibration sheet</p>
+        <p className="dial-label text-paper-dim">{t('dossier.title')}</p>
         <button
           type="button"
           onClick={closeDossier}
-          aria-label="Close lineage dossier"
+          aria-label={t('dossier.closeAria')}
           className="readout px-1 text-[12px] text-paper-dim transition-colors duration-140 hover:text-paper"
         >
           ✕
@@ -114,7 +108,7 @@ export function LineageDossier() {
         </div>
 
         <dl className="min-w-0 flex-1">
-          <Row label="Source">
+          <Row label={t('dossier.rows.source')}>
             {resolved.length === 0 && payload.source_ids.join(', ')}
             {resolved.map((s, i) =>
               s ? (
@@ -136,36 +130,42 @@ export function LineageDossier() {
               ),
             )}
           </Row>
-          <Row label="Collection">
+          <Row label={t('dossier.rows.collection')}>
             {[
               ...new Set(
                 resolved
                   .filter((s) => s != null)
                   .map(
                     (s) =>
-                      `${MODE_LABELS[s.collection_mode]} · ${s.update_frequency.toUpperCase()}`,
+                      `${t(`dossier.modes.${s.collection_mode}`)} · ${s.update_frequency.toUpperCase()}`,
                   ),
               ),
             ].join(' / ') || '—'}
           </Row>
-          <Row label="Method">
-            {payload.method ?? 'DIRECT OBSERVATION'}
+          <Row label={t('dossier.rows.method')}>
+            {payload.method ?? t('dossier.directObservation')}
           </Row>
-          <Row label="Range">
+          <Row label={t('dossier.rows.range')}>
             {payload.lower_bound !== undefined &&
             payload.upper_bound !== undefined
               ? `${formatUsd(payload.lower_bound)} — ${formatUsd(payload.upper_bound)} (95%)`
-              : '— (observed value)'}
+              : t('dossier.observedValue')}
           </Row>
           {payload.effective_date && (
-            <Row label="Effective">{payload.effective_date}</Row>
+            <Row label={t('dossier.rows.effective')}>
+              {payload.effective_date}
+            </Row>
           )}
           {firstSource && (
-            <Row label="Retrieved">
+            <Row label={t('dossier.rows.retrieved')}>
               {firstSource.retrieved_at.slice(0, 10)}
             </Row>
           )}
-          {firstSource && <Row label="License">{firstSource.license_note}</Row>}
+          {firstSource && (
+            <Row label={t('dossier.rows.license')}>
+              {firstSource.license_note}
+            </Row>
+          )}
           {payload.context.map(([label, value]) => (
             <Row key={label} label={label}>
               {value}

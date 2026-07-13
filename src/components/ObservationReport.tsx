@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react'
+import { useTranslation } from 'react-i18next'
 import { useViewStore } from '../store/viewStore'
 import {
   getBilateral,
@@ -44,12 +45,13 @@ interface ReportData {
 }
 
 function NoObservation({ title, note }: { title: string; note: string }) {
+  const { t } = useTranslation()
   return (
     <section className="border-t border-paper/10 px-6 py-5">
       <h3 className="dial-label text-paper-dim">{title}</h3>
       <div className="mt-3 border border-dashed border-paper/15 px-3 py-6 text-center">
         <p className="readout text-[11px] tracking-[0.12em] text-paper-dim/80">
-          NO OBSERVATION
+          {t('common.noObservation')}
         </p>
         <p className="mt-1 font-sans text-[11px] text-paper-dim/60">{note}</p>
       </div>
@@ -65,8 +67,10 @@ function gradeMark(grade: ConfidenceGrade): string {
 
 /** 우측 슬라이드 관측 리포트 — 에디토리얼 조판, 실데이터 (DESIGN.md §5). */
 export function ObservationReport() {
+  const { t } = useTranslation()
   const selectedCountry = useViewStore((s) => s.selectedCountry)
   const selectCountry = useViewStore((s) => s.selectCountry)
+  const setAppView = useViewStore((s) => s.setAppView)
   const openDossier = useViewStore((s) => s.openDossier)
   const basis = useViewStore((s) => s.basis)
   const includeEstimates = useViewStore((s) => s.includeEstimates)
@@ -209,8 +213,14 @@ export function ObservationReport() {
       effective_date: current.stocks[0]?.effective_date,
       source_ids: [...new Set(current.stocks.map((r) => r.source_id))],
       context: [
-        ['Coverage', `${current.stocks.length} asset-class records`],
-        ['View', includeEstimates ? 'observed + estimated' : 'observed only'],
+        [
+          t('report.ctxCoverage'),
+          t('report.ctxCoverageValue', { count: current.stocks.length }),
+        ],
+        [
+          t('report.ctxView'),
+          includeEstimates ? t('report.viewEst') : t('report.viewObs'),
+        ],
       ],
     }
   }
@@ -247,7 +257,7 @@ export function ObservationReport() {
       <div className="flex items-start justify-between px-6 pt-6">
         <div>
           <p className="readout text-[11px] tracking-[0.12em] text-paper-dim">
-            OBSERVATION REPORT · {period}
+            {t('report.title')} · {period}
             {current?.stocksEff && current.stocksEff !== period
               ? ` · OBS ${current.stocksEff}`
               : ''}
@@ -259,11 +269,19 @@ export function ObservationReport() {
             {selectedCountry ?? ''}
             {master ? ` · ${master.region.toUpperCase()}` : ''}
           </p>
+          <button
+            type="button"
+            onClick={() => setAppView('station')}
+            aria-label={t('report.openStationAria')}
+            className="dial-label mt-3 border-y border-flow-in/25 bg-ink-1/70 px-2.5 py-1.5 text-flow-in transition-colors duration-140 hover:border-flow-in/60"
+          >
+            {t('report.openStation')}
+          </button>
         </div>
         <button
           type="button"
           onClick={() => selectCountry(null)}
-          aria-label="Close observation report"
+          aria-label={t('report.closeAria')}
           className="readout mt-1 px-2 py-1 text-[13px] text-paper-dim transition-colors duration-140 hover:text-paper"
         >
           ✕
@@ -272,7 +290,7 @@ export function ObservationReport() {
 
       {syncing && (
         <p className="readout px-6 pt-3 text-[10px] tracking-[0.12em] text-flow-in/80">
-          SYNCING OBSERVATION…
+          {t('report.syncing')}
         </p>
       )}
 
@@ -281,7 +299,7 @@ export function ObservationReport() {
         {current && reading ? (
           <section className="border-t border-paper/10 px-6 py-5">
             <h3 className="dial-label text-paper-dim">
-              Cross-border position · {basis}
+              {t('report.headline')} · {basis}
             </h3>
             <button
               type="button"
@@ -298,21 +316,27 @@ export function ObservationReport() {
               />
             </button>
             <p className="readout mt-2 text-[10px] tracking-[0.1em] text-paper-dim">
-              {gradeMark(reading.grade)} GRADE {reading.grade} ·{' '}
-              {current.stocks.length} ASSET CLASSES
+              {gradeMark(reading.grade)}{' '}
+              {t('report.gradeLine', {
+                grade: reading.grade,
+                count: current.stocks.length,
+              })}
               {bounds
-                ? ` · RANGE ${formatUsd(bounds[0])} — ${formatUsd(bounds[1])}`
+                ? ` · ${t('report.rangeLine', {
+                    low: formatUsd(bounds[0]),
+                    high: formatUsd(bounds[1]),
+                  })}`
                 : ''}
             </p>
           </section>
         ) : (
           !syncing && (
             <NoObservation
-              title="Cross-border position"
+              title={t('report.headline')}
               note={
                 includeEstimates
-                  ? `no records at ${period}`
-                  : 'estimates hidden — OBS mode'
+                  ? t('report.noRecordsAt', { period })
+                  : t('report.estimatesHidden')
               }
             />
           )
@@ -321,7 +345,9 @@ export function ObservationReport() {
         {/* Asset composition */}
         {current && treemapItems.length > 0 ? (
           <section className="border-t border-paper/10 px-6 py-5">
-            <h3 className="dial-label text-paper-dim">Asset composition</h3>
+            <h3 className="dial-label text-paper-dim">
+              {t('report.composition')}
+            </h3>
             <div className="mt-3">
               <AssetTreemap
                 items={treemapItems}
@@ -347,8 +373,8 @@ export function ObservationReport() {
         ) : (
           !syncing && (
             <NoObservation
-              title="Asset composition"
-              note="no stock records for this basis"
+              title={t('report.composition')}
+              note={t('report.noStockRecords')}
             />
           )
         )}
@@ -357,7 +383,7 @@ export function ObservationReport() {
         {current && current.flows.length > 0 ? (
           <section className="border-t border-paper/10 px-6 py-5">
             <h3 className="dial-label text-paper-dim">
-              Transaction flows · last {current.flows.length} quarters
+              {t('report.flows', { count: current.flows.length })}
             </h3>
             <div className="mt-3 flex items-end gap-1.5">
               {current.flows.map((f) => (
@@ -373,14 +399,18 @@ export function ObservationReport() {
                       effective_date: undefined,
                       source_ids: ['imf_bop'],
                       context: [
-                        ['Inflow side', formatUsdNet(f.inflow)],
-                        ['Outflow side', formatUsdNet(f.outflow)],
-                        ['Records', String(f.n)],
-                        ['Sign', 'BPM6 — net acquisition basis'],
+                        [t('report.ctxInflowSide'), formatUsdNet(f.inflow)],
+                        [t('report.ctxOutflowSide'), formatUsdNet(f.outflow)],
+                        [t('report.ctxRecords'), String(f.n)],
+                        [t('report.ctxSign'), 'BPM6 — net acquisition basis'],
                       ],
                     })
                   }
-                  title={`${f.period}: in ${formatUsdNet(f.inflow)} / out ${formatUsdNet(f.outflow)}`}
+                  title={t('report.flowBarTitle', {
+                    period: f.period,
+                    inflow: formatUsdNet(f.inflow),
+                    outflow: formatUsdNet(f.outflow),
+                  })}
                   className="group flex h-24 flex-1 flex-col items-center justify-center gap-px"
                 >
                   <span className="relative h-10 w-full">
@@ -405,17 +435,16 @@ export function ObservationReport() {
                 </button>
               ))}
             </div>
-            <p className="readout mt-2 text-[9px] tracking-[0.1em] text-paper-dim/60">
-              <span className="text-flow-in">■</span> NONRESIDENT INFLOW ·{' '}
-              <span className="text-flow-out">■</span> RESIDENT OUTFLOW · DIMMED
-              = NET WITHDRAWAL
+            <p className="readout mt-2 text-[9px] uppercase tracking-[0.1em] text-paper-dim/60">
+              <span className="text-flow-in">■</span>{' '}
+              <span className="text-flow-out">■</span> {t('report.legend')}
             </p>
           </section>
         ) : (
           !syncing && (
             <NoObservation
-              title="Transaction flows"
-              note="no BOP flow records in range"
+              title={t('report.flows', { count: 12 })}
+              note={t('report.noBopRecords')}
             />
           )
         )}
@@ -424,7 +453,7 @@ export function ObservationReport() {
         {current && current.partners.length > 0 ? (
           <section className="border-t border-paper/10 px-6 py-5">
             <h3 className="dial-label text-paper-dim">
-              Top counterparties · positions{' '}
+              {t('report.counterparties')}{' '}
               {current.partnersEff ? `· ${current.partnersEff}` : ''}
             </h3>
             <ul className="mt-3 space-y-1.5">
@@ -447,7 +476,12 @@ export function ObservationReport() {
                           effective_date: r.effective_date,
                           source_ids: [r.source_id],
                           context: [
-                            ['Direction', inbound ? 'into this country' : 'out of this country'],
+                            [
+                              t('report.ctxDirection'),
+                              inbound
+                                ? t('report.directionIn')
+                                : t('report.directionOut'),
+                            ],
                           ],
                         })
                       }
@@ -486,8 +520,8 @@ export function ObservationReport() {
         ) : (
           !syncing && (
             <NoObservation
-              title="Top counterparties"
-              note="not a CPIS reporter at this date"
+              title={t('report.counterparties')}
+              note={t('report.notCpisReporter')}
             />
           )
         )}
@@ -495,7 +529,7 @@ export function ObservationReport() {
 
       {/* visibility legend — grades render as fog before badges (§2, §6) */}
       <section className="mt-auto border-t border-paper/10 px-6 py-4">
-        <h3 className="dial-label text-paper-dim">Visibility</h3>
+        <h3 className="dial-label text-paper-dim">{t('report.visibility')}</h3>
         <div className="mt-2 flex items-center gap-1">
           {GRADES.map((g, i) => (
             <span
@@ -514,7 +548,7 @@ export function ObservationReport() {
             </span>
           ))}
           <span className="ml-2 font-sans text-[11px] text-paper-dim/70">
-            observed → residual fog
+            {t('report.observedToFog')}
           </span>
         </div>
       </section>

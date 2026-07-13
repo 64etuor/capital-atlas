@@ -3,6 +3,7 @@
  * 현재 분기 니들 동기화(바로그래프 스크럽과 연동), 행 클릭 = 자산 필터.
  */
 import { ASSET_LABELS } from '../../lib/assetLabels'
+import { useTranslation } from 'react-i18next'
 import { formatUsd } from '../../lib/format'
 import type {
   AssetClass,
@@ -24,6 +25,7 @@ const gross = (c: SynopticCell | undefined, obs: boolean): number =>
   c ? (obs ? c.flow_gross_obs : c.flow_gross) : 0
 
 export function StripBank({ syn, periodIndex, observedOnly, filter, onFilter }: Props) {
+  const { t } = useTranslation()
   const periods = syn.periods
   const needleX = ((periodIndex + 0.5) / periods.length) * 100
 
@@ -52,7 +54,7 @@ export function StripBank({ syn, periodIndex, observedOnly, filter, onFilter }: 
               type="button"
               aria-pressed={filter === asset}
               onClick={() => onFilter(filter === asset ? null : asset)}
-              title={`${ASSET_LABELS[asset]} — filter`}
+              title={t('synoptic.filterTitle', { label: ASSET_LABELS[asset] })}
               className={
                 'flex min-h-0 flex-1 items-center gap-2 text-left transition-opacity duration-140 ' +
                 (dimmed ? 'opacity-35' : 'opacity-100')
