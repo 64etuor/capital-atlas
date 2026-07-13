@@ -1,0 +1,435 @@
+src/lib/dataClient.ts
+  s_e47a5eda862f84::t_c076e48eb3e6f6 14-15
+  s_e47a5eda862f84::t_46f464d5e85f13 44-46
+  s_e47a5eda862f84::t_e6e1e34512058e 96-103
+scripts/build/station.test.ts
+  s_e47a5eda862f84::t_6440872805f126 108
+  s_e47a5eda862f84::t_25a4724dcdb46a 1-83,85-107,109-132,135-267
+  s_e47a5eda862f84::t_0565d3557f8784 84
+  s_e47a5eda862f84::t_aba6c4760ad3e1 133-134
+docs/DATA_CONTRACT.md
+  s_e47a5eda862f84::t_e930960efe13d4 35-36
+  s_e47a5eda862f84::t_dc384de9ec5bbf 183-201
+scripts/build/station.ts
+  s_e47a5eda862f84::t_034fd10a3ec954 106,109
+  s_e47a5eda862f84::t_450c7c3428e2a1 183-189
+  s_e47a5eda862f84::t_711426f486d910 129
+  s_e47a5eda862f84::t_8f4b32b7577011 37-39
+  s_e47a5eda862f84::t_a38ab0fc859e26 1-36,40-105,107-108,110-128,130-182,190-433
+src/types/data.ts
+  s_e47a5eda862f84::t_8fe6027c615089 225-297
+src/lib/dataClient.test.ts
+  s_e47a5eda862f84::t_093f19783f99fb 160-177
+package.json
+  s_e47a5eda862f84::t_0a6b3c0f2b7928 17-18
+public/data/station/AFG.json
+  s_e47a5eda862f84::t_5bad654bdb674b 1
+public/data/station/AGO.json
+  s_e47a5eda862f84::t_4e901806b075c9 1
+public/data/station/ALB.json
+  s_e47a5eda862f84::t_b16ac299f60fba 1
+public/data/station/AND.json
+  s_e47a5eda862f84::t_eee33931bae0f2 1
+public/data/station/ARE.json
+  s_e47a5eda862f84::t_28e8544ef742fe 1
+public/data/station/ARG.json
+  s_e47a5eda862f84::t_e6b3dcb60ffb6c 1
+public/data/station/ARM.json
+  s_e47a5eda862f84::t_6593f3c8f8018d 1
+public/data/station/ATG.json
+  s_e47a5eda862f84::t_d8cd1011775df5 1
+public/data/station/AUS.json
+  s_e47a5eda862f84::t_00bd1f87488ee1 1
+public/data/station/AUT.json
+  s_e47a5eda862f84::t_6d1e3b9dbe8fda 1
+public/data/station/AZE.json
+  s_e47a5eda862f84::t_a05dfdbea70a3e 1
+public/data/station/BDI.json
+  s_e47a5eda862f84::t_1b8be1cc65c07e 1
+public/data/station/BEL.json
+  s_e47a5eda862f84::t_cf46bbb0df8405 1
+public/data/station/BEN.json
+  s_e47a5eda862f84::t_b6404124f2a91e 1
+public/data/station/BFA.json
+  s_e47a5eda862f84::t_91f9a08b2a2474 1
+public/data/station/BGD.json
+  s_e47a5eda862f84::t_f74a94c5c8c818 1
+public/data/station/BGR.json
+  s_e47a5eda862f84::t_c665eef0d9308f 1
+public/data/station/BHR.json
+  s_e47a5eda862f84::t_689493a52d38c2 1
+public/data/station/BHS.json
+  s_e47a5eda862f84::t_38a55a820cdaa8 1
+public/data/station/BIH.json
+  s_e47a5eda862f84::t_1b91f4fc911a89 1
+public/data/station/BLR.json
+  s_e47a5eda862f84::t_451a5191029d56 1
+public/data/station/BLZ.json
+  s_e47a5eda862f84::t_0c06a6673be433 1
+public/data/station/BOL.json
+  s_e47a5eda862f84::t_419723c9ab5c70 1
+public/data/station/BRA.json
+  s_e47a5eda862f84::t_6e01d042ab59e9 1
+public/data/station/BRB.json
+  s_e47a5eda862f84::t_77355d9a192874 1
+public/data/station/BRN.json
+  s_e47a5eda862f84::t_21c5c2bdf7f8ea 1
+public/data/station/BTN.json
+  s_e47a5eda862f84::t_81d0fa17c2faba 1
+public/data/station/BWA.json
+  s_e47a5eda862f84::t_c38e84c8e08948 1
+public/data/station/CAF.json
+  s_e47a5eda862f84::t_e9e21a502deacf 1
+public/data/station/CAN.json
+  s_e47a5eda862f84::t_ed6e3e93c1a7e7 1
+public/data/station/CHE.json
+  s_e47a5eda862f84::t_ab2952715c509f 1
+public/data/station/CHL.json
+  s_e47a5eda862f84::t_7627703205e520 1
+public/data/station/CHN.json
+  s_e47a5eda862f84::t_1bbe974ce592a0 1
+public/data/station/CIV.json
+  s_e47a5eda862f84::t_4f0e0eb04e81fb 1
+public/data/station/CMR.json
+  s_e47a5eda862f84::t_6e7f576957710f 1
+public/data/station/COD.json
+  s_e47a5eda862f84::t_0dc6cc7d7062d0 1
+public/data/station/COG.json
+  s_e47a5eda862f84::t_66c454f6459ad2 1
+public/data/station/COL.json
+  s_e47a5eda862f84::t_bea661de7293e2 1
+public/data/station/COM.json
+  s_e47a5eda862f84::t_153e271c804758 1
+public/data/station/CPV.json
+  s_e47a5eda862f84::t_d00a77dcc0ac6c 1
+public/data/station/CRI.json
+  s_e47a5eda862f84::t_28a52d9b57df68 1
+public/data/station/CUB.json
+  s_e47a5eda862f84::t_8ea91d2af089b9 1
+public/data/station/CYP.json
+  s_e47a5eda862f84::t_18af26be37a423 1
+public/data/station/CZE.json
+  s_e47a5eda862f84::t_aa905a8ac056a6 1
+public/data/station/DEU.json
+  s_e47a5eda862f84::t_636f9353ee33f2 1
+public/data/station/DJI.json
+  s_e47a5eda862f84::t_218be9e434b3b0 1
+public/data/station/DMA.json
+  s_e47a5eda862f84::t_27c5627243daf7 1
+public/data/station/DNK.json
+  s_e47a5eda862f84::t_596fafdfd48df9 1
+public/data/station/DOM.json
+  s_e47a5eda862f84::t_2210197d95d363 1
+public/data/station/DZA.json
+  s_e47a5eda862f84::t_dae29bc3fb92b2 1
+public/data/station/ECU.json
+  s_e47a5eda862f84::t_852cd9f968f2eb 1
+public/data/station/EGY.json
+  s_e47a5eda862f84::t_6ddd10329f5790 1
+public/data/station/ERI.json
+  s_e47a5eda862f84::t_bf34a47e88e575 1
+public/data/station/ESP.json
+  s_e47a5eda862f84::t_2e0027a614962f 1
+public/data/station/EST.json
+  s_e47a5eda862f84::t_52c7f174e0bdca 1
+public/data/station/ETH.json
+  s_e47a5eda862f84::t_9d4f48d347e102 1
+public/data/station/FIN.json
+  s_e47a5eda862f84::t_ea5c24b791f39f 1
+public/data/station/FJI.json
+  s_e47a5eda862f84::t_ac0da8d9970474 1
+public/data/station/FRA.json
+  s_e47a5eda862f84::t_818a6151c17d6d 1
+public/data/station/FSM.json
+  s_e47a5eda862f84::t_6d24fcbb7ab71a 1
+public/data/station/GAB.json
+  s_e47a5eda862f84::t_fa0715927909ce 1
+public/data/station/GBR.json
+  s_e47a5eda862f84::t_8dc8659b9533c4 1
+public/data/station/GEO.json
+  s_e47a5eda862f84::t_52698bb4caa21f 1
+public/data/station/GHA.json
+  s_e47a5eda862f84::t_18d03ffb8c4ca2 1
+public/data/station/GIN.json
+  s_e47a5eda862f84::t_36871c870f07cf 1
+public/data/station/GMB.json
+  s_e47a5eda862f84::t_508a04f05390aa 1
+public/data/station/GNB.json
+  s_e47a5eda862f84::t_46c04cb690e211 1
+public/data/station/GNQ.json
+  s_e47a5eda862f84::t_d38e8d75d3532f 1
+public/data/station/GRC.json
+  s_e47a5eda862f84::t_e39b62ab78f40a 1
+public/data/station/GRD.json
+  s_e47a5eda862f84::t_ef9a0f8071434d 1
+public/data/station/GTM.json
+  s_e47a5eda862f84::t_dfd70ba7bf0a0b 1
+public/data/station/GUY.json
+  s_e47a5eda862f84::t_c4dc4e69ba41f9 1
+public/data/station/HKG.json
+  s_e47a5eda862f84::t_0fca87c874c0fd 1
+public/data/station/HND.json
+  s_e47a5eda862f84::t_f7a168bf8024e2 1
+public/data/station/HRV.json
+  s_e47a5eda862f84::t_1f25f8fd18bb2b 1
+public/data/station/HTI.json
+  s_e47a5eda862f84::t_fe17ad660c5b34 1
+public/data/station/HUN.json
+  s_e47a5eda862f84::t_62c254483f182f 1
+public/data/station/IDN.json
+  s_e47a5eda862f84::t_bf9716f134d3d1 1
+public/data/station/IND.json
+  s_e47a5eda862f84::t_4bf6be617aa835 1
+public/data/station/IRL.json
+  s_e47a5eda862f84::t_9671bed66a2e54 1
+public/data/station/IRN.json
+  s_e47a5eda862f84::t_e4de587edeaa90 1
+public/data/station/IRQ.json
+  s_e47a5eda862f84::t_ffca067a389f0b 1
+public/data/station/ISL.json
+  s_e47a5eda862f84::t_ee0965bc7836af 1
+public/data/station/ISR.json
+  s_e47a5eda862f84::t_1c2eed5f6a9703 1
+public/data/station/ITA.json
+  s_e47a5eda862f84::t_44ba8a3e60cfdc 1
+public/data/station/JAM.json
+  s_e47a5eda862f84::t_d42043a72bcee6 1
+public/data/station/JOR.json
+  s_e47a5eda862f84::t_929f3a849a0dd0 1
+public/data/station/JPN.json
+  s_e47a5eda862f84::t_54995e0e6c5b02 1
+public/data/station/KAZ.json
+  s_e47a5eda862f84::t_4d0904bd4ea321 1
+public/data/station/KEN.json
+  s_e47a5eda862f84::t_00fea9b0c18d11 1
+public/data/station/KGZ.json
+  s_e47a5eda862f84::t_88fd489351b853 1
+public/data/station/KHM.json
+  s_e47a5eda862f84::t_a49290fa2db167 1
+public/data/station/KIR.json
+  s_e47a5eda862f84::t_2dbd702a2f087c 1
+public/data/station/KNA.json
+  s_e47a5eda862f84::t_354064d05cb045 1
+public/data/station/KOR.json
+  s_e47a5eda862f84::t_a6b76566e28ec3 1
+public/data/station/KWT.json
+  s_e47a5eda862f84::t_d7525dc9b8cde4 1
+public/data/station/LAO.json
+  s_e47a5eda862f84::t_8f638145494ec6 1
+public/data/station/LBN.json
+  s_e47a5eda862f84::t_babe090598edf0 1
+public/data/station/LBR.json
+  s_e47a5eda862f84::t_232eb5c2756f08 1
+public/data/station/LBY.json
+  s_e47a5eda862f84::t_0455335179b1c3 1
+public/data/station/LCA.json
+  s_e47a5eda862f84::t_5f85ddba0cc80a 1
+public/data/station/LIE.json
+  s_e47a5eda862f84::t_f4901e486f50d9 1
+public/data/station/LKA.json
+  s_e47a5eda862f84::t_d8743f0e2e28ea 1
+public/data/station/LSO.json
+  s_e47a5eda862f84::t_86a8832984b8e6 1
+public/data/station/LTU.json
+  s_e47a5eda862f84::t_b60e683360d8f7 1
+public/data/station/LUX.json
+  s_e47a5eda862f84::t_a85fdcf5698e68 1
+public/data/station/LVA.json
+  s_e47a5eda862f84::t_6517d3345034b8 1
+public/data/station/MAC.json
+  s_e47a5eda862f84::t_37220cbbf456eb 1
+public/data/station/MAR.json
+  s_e47a5eda862f84::t_0753f39e2f6735 1
+public/data/station/MCO.json
+  s_e47a5eda862f84::t_b8833c4d896068 1
+public/data/station/MDA.json
+  s_e47a5eda862f84::t_00c8b75c647f37 1
+public/data/station/MDG.json
+  s_e47a5eda862f84::t_70bee301ecc4ea 1
+public/data/station/MDV.json
+  s_e47a5eda862f84::t_fd6d0e80e71e23 1
+public/data/station/MEX.json
+  s_e47a5eda862f84::t_fe569b84790dad 1
+public/data/station/MHL.json
+  s_e47a5eda862f84::t_31fc4385e9ac03 1
+public/data/station/MKD.json
+  s_e47a5eda862f84::t_15fe37c1d59565 1
+public/data/station/MLI.json
+  s_e47a5eda862f84::t_082be43bc49078 1
+public/data/station/MLT.json
+  s_e47a5eda862f84::t_04c264b9308ef3 1
+public/data/station/MMR.json
+  s_e47a5eda862f84::t_9094862ff654aa 1
+public/data/station/MNE.json
+  s_e47a5eda862f84::t_cfdc8801ed23ac 1
+public/data/station/MNG.json
+  s_e47a5eda862f84::t_24ce29ee45acb0 1
+public/data/station/MOZ.json
+  s_e47a5eda862f84::t_2b81e1d31887ed 1
+public/data/station/MRT.json
+  s_e47a5eda862f84::t_a639b3fbd3d926 1
+public/data/station/MUS.json
+  s_e47a5eda862f84::t_3bd31dd8b598dd 1
+public/data/station/MWI.json
+  s_e47a5eda862f84::t_be2c1f521ededc 1
+public/data/station/MYS.json
+  s_e47a5eda862f84::t_49d74cb9f0b33b 1
+public/data/station/NAM.json
+  s_e47a5eda862f84::t_35139d65b5bbde 1
+public/data/station/NER.json
+  s_e47a5eda862f84::t_cf0263bc54c57f 1
+public/data/station/NGA.json
+  s_e47a5eda862f84::t_53d09c514e6be2 1
+public/data/station/NIC.json
+  s_e47a5eda862f84::t_e7a23a4a69e51e 1
+public/data/station/NLD.json
+  s_e47a5eda862f84::t_87e048058bf4cf 1
+public/data/station/NOR.json
+  s_e47a5eda862f84::t_ca32ca8db92d75 1
+public/data/station/NPL.json
+  s_e47a5eda862f84::t_df7a82cde0e675 1
+public/data/station/NRU.json
+  s_e47a5eda862f84::t_aae3f474448c48 1
+public/data/station/NZL.json
+  s_e47a5eda862f84::t_cdaf6f4bfce06f 1
+public/data/station/OMN.json
+  s_e47a5eda862f84::t_e4302bb21b69f9 1
+public/data/station/PAK.json
+  s_e47a5eda862f84::t_fbef60c65f910a 1
+public/data/station/PAN.json
+  s_e47a5eda862f84::t_930a93931353e7 1
+public/data/station/PER.json
+  s_e47a5eda862f84::t_102c968a7c4b6d 1
+public/data/station/PHL.json
+  s_e47a5eda862f84::t_dea3799a0dfbc4 1
+public/data/station/PLW.json
+  s_e47a5eda862f84::t_bf6f65f2d98484 1
+public/data/station/PNG.json
+  s_e47a5eda862f84::t_7f7b4377e16278 1
+public/data/station/POL.json
+  s_e47a5eda862f84::t_141117cb4fd299 1
+public/data/station/PRT.json
+  s_e47a5eda862f84::t_68afab25bbe24a 1
+public/data/station/PRY.json
+  s_e47a5eda862f84::t_f34db4c04334b3 1
+public/data/station/PSE.json
+  s_e47a5eda862f84::t_24f1ffa536772b 1
+public/data/station/QAT.json
+  s_e47a5eda862f84::t_a6eb8251f6ad21 1
+public/data/station/ROU.json
+  s_e47a5eda862f84::t_dc07aa7bebfc9a 1
+public/data/station/RUS.json
+  s_e47a5eda862f84::t_fbb7d87964303d 1
+public/data/station/RWA.json
+  s_e47a5eda862f84::t_6ea7b9270c5766 1
+public/data/station/SAU.json
+  s_e47a5eda862f84::t_f39582021d0e43 1
+public/data/station/SDN.json
+  s_e47a5eda862f84::t_cace66f0cd4892 1
+public/data/station/SEN.json
+  s_e47a5eda862f84::t_ea19ac52e94b76 1
+public/data/station/SGP.json
+  s_e47a5eda862f84::t_941dc61984b02a 1
+public/data/station/SLB.json
+  s_e47a5eda862f84::t_a5c55574b57320 1
+public/data/station/SLE.json
+  s_e47a5eda862f84::t_8f4357421fb323 1
+public/data/station/SLV.json
+  s_e47a5eda862f84::t_746723ff36a990 1
+public/data/station/SMR.json
+  s_e47a5eda862f84::t_1b3475a6b8ea69 1
+public/data/station/SOM.json
+  s_e47a5eda862f84::t_ab558c8cccbb07 1
+public/data/station/SRB.json
+  s_e47a5eda862f84::t_944c5e81ff3efc 1
+public/data/station/SSD.json
+  s_e47a5eda862f84::t_b7d6feaa7c67cc 1
+public/data/station/STP.json
+  s_e47a5eda862f84::t_4dadb63cca80fc 1
+public/data/station/SUR.json
+  s_e47a5eda862f84::t_5b792eab8a860f 1
+public/data/station/SVK.json
+  s_e47a5eda862f84::t_fe5f9f889a8b01 1
+public/data/station/SVN.json
+  s_e47a5eda862f84::t_fc7f3de2afec01 1
+public/data/station/SWE.json
+  s_e47a5eda862f84::t_bac3cc9c5668e7 1
+public/data/station/SWZ.json
+  s_e47a5eda862f84::t_3bd4b5706b5cf4 1
+public/data/station/SYC.json
+  s_e47a5eda862f84::t_36de9b09baf350 1
+public/data/station/SYR.json
+  s_e47a5eda862f84::t_b29ff8a2d98cc8 1
+public/data/station/TCD.json
+  s_e47a5eda862f84::t_5037e851ae9ddc 1
+public/data/station/TGO.json
+  s_e47a5eda862f84::t_2f2feddede9983 1
+public/data/station/THA.json
+  s_e47a5eda862f84::t_2775e8ed62fa78 1
+public/data/station/TJK.json
+  s_e47a5eda862f84::t_9e316c496e5ce9 1
+public/data/station/TKM.json
+  s_e47a5eda862f84::t_a456698e04f5d4 1
+public/data/station/TLS.json
+  s_e47a5eda862f84::t_1e1adac3922c43 1
+public/data/station/TON.json
+  s_e47a5eda862f84::t_6556fe38857f0e 1
+public/data/station/TTO.json
+  s_e47a5eda862f84::t_3e835baee8849f 1
+public/data/station/TUN.json
+  s_e47a5eda862f84::t_172e42c5dc76a8 1
+public/data/station/TUR.json
+  s_e47a5eda862f84::t_b76523ed963718 1
+public/data/station/TUV.json
+  s_e47a5eda862f84::t_02b10184a31e3f 1
+public/data/station/TZA.json
+  s_e47a5eda862f84::t_b28cc0cd16ba09 1
+public/data/station/UGA.json
+  s_e47a5eda862f84::t_9639040f7c3542 1
+public/data/station/UKR.json
+  s_e47a5eda862f84::t_c44891276155dc 1
+public/data/station/URY.json
+  s_e47a5eda862f84::t_3975ab77f83fd0 1
+public/data/station/USA.json
+  s_e47a5eda862f84::t_fdcf1badb0020b 1
+public/data/station/UZB.json
+  s_e47a5eda862f84::t_c29c7a09b73490 1
+public/data/station/VCT.json
+  s_e47a5eda862f84::t_265598e8ae1002 1
+public/data/station/VEN.json
+  s_e47a5eda862f84::t_ffaed956bbc149 1
+public/data/station/VNM.json
+  s_e47a5eda862f84::t_55dc754500fa60 1
+public/data/station/VUT.json
+  s_e47a5eda862f84::t_2917969e19a4f0 1
+public/data/station/WLD.json
+  s_e47a5eda862f84::t_90797aa8fbca0c 1
+public/data/station/WSM.json
+  s_e47a5eda862f84::t_df7ca0f210b403 1
+public/data/station/YEM.json
+  s_e47a5eda862f84::t_1d3ef67237200b 1
+public/data/station/ZAF.json
+  s_e47a5eda862f84::t_9a12fb309391fb 1
+public/data/station/ZMB.json
+  s_e47a5eda862f84::t_864f6ce5c3c8ee 1
+public/data/station/ZWE.json
+  s_e47a5eda862f84::t_96850e92b348d9 1
+public/data/station/index.json
+  s_e47a5eda862f84::t_fce73de9d8fd62 1
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.12",
+  "base_commit_sha": "361e6cc1a90be73641f5fc1bfdb416dff8b4224f",
+  "prompts": {},
+  "sessions": {
+    "s_e47a5eda862f84": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "a46a31a4-8363-4a90-b740-7e96b4bf3615",
+        "model": "claude-fable-5"
+      },
+      "human_author": "64etuor <130260521+64etuor@users.noreply.github.com>"
+    }
+  }
+}
