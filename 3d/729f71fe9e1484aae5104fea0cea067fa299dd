@@ -1,0 +1,19 @@
+src/features/station/GaugeStrip.tsx
+  s_e47a5eda862f84::t_8617deda6b5cab 25-27
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.12",
+  "base_commit_sha": "3d729f71fe9e1484aae5104fea0cea067fa299dd",
+  "prompts": {},
+  "sessions": {
+    "s_e47a5eda862f84": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "a46a31a4-8363-4a90-b740-7e96b4bf3615",
+        "model": "unknown"
+      },
+      "human_author": "64etuor <130260521+64etuor@users.noreply.github.com>"
+    }
+  }
+}
