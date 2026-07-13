@@ -1,0 +1,88 @@
+src/lib/urlState.ts
+  s_e47a5eda862f84::t_4d7540eb9cdafe 120
+  s_e47a5eda862f84::t_503bccef0a3550 19
+  s_e47a5eda862f84::t_baf2d94cb5aa1c 77
+  s_e47a5eda862f84::t_aac062d54df5e8 58-59
+  s_e47a5eda862f84::t_08b04332dfaa3d 95
+src/features/station/StationView.tsx
+  s_e47a5eda862f84::t_7265db3cc17b41 531-537,541,543,547,549,553,555,562,564
+  s_e47a5eda862f84::t_c8089d9bece278 672
+  s_e47a5eda862f84::t_bb35229d4e20b3 605-611
+  s_e47a5eda862f84::t_43e2284839373c 239-243
+  s_e47a5eda862f84::t_f0dfd977d4bf2a 691-703,708
+  s_e47a5eda862f84::t_ed4cd7e92a8a74 631-633,639,709
+  s_e47a5eda862f84::t_e2d6d646c0fe50 337,339-342,346,352-355
+  s_e47a5eda862f84::t_67ba9fd691b049 20,49,220-224,640,644,651,655,661,673,680,684,687,710,716-717,728-729,739-741
+src/components/InstrumentCluster.tsx
+  s_e47a5eda862f84::t_a2456cac0c79b7 138-165
+  s_e47a5eda862f84::t_9297b07ce3eaa1 1,4-5,17-18,23,25-31,35-44,50-72,75,78-79
+  s_e47a5eda862f84::t_3827ba6e92924c 86-91
+  s_e47a5eda862f84::t_f338c25aa06264 189
+  s_e47a5eda862f84::t_7bfb985db14b87 113-114
+  s_e47a5eda862f84::t_2e77828cd294f8 166
+src/store/viewStore.ts
+  s_e47a5eda862f84::t_04f86441e4012a 55
+src/lib/urlState.test.ts
+  s_e47a5eda862f84::t_78eadd250ec9f1 18,26,36,43
+  s_e47a5eda862f84::t_d662fd69f6f985 60,68
+src/lib/money.test.ts
+  s_e47a5eda862f84::t_d574c9de857f31 1-133
+src/lib/money.ts
+  s_e47a5eda862f84::t_c585544cba3241 1-150
+src/features/station/derive.ts
+  s_e47a5eda862f84::t_b97a2e6cf56954 23-57
+src/lib/dataClient.ts
+  s_e47a5eda862f84::t_076031be33d306 97-98
+  s_e47a5eda862f84::t_6aba55528f0153 11
+  s_5d0c7b43738dac::t_af2fce44cf1ebf 99
+README.md
+  s_e47a5eda862f84::t_e8a845406d3114 72-73,203-209,232
+src/components/AssetTreemap.tsx
+  s_e47a5eda862f84::t_04fb0ba7bce726 28,32-33,69,92,120
+src/components/ObservationReport.tsx
+  s_e47a5eda862f84::t_67b129c73855e6 13-14,89-90,227,319,331-332,359,373-376,415,421-422,495,523
+src/features/station/CompositionStream.tsx
+  s_e47a5eda862f84::t_20d2926cfcc2d8 47-48,59,196,201,212
+src/features/station/FlowChart.tsx
+  s_e47a5eda862f84::t_9ab6635911ca40 9,59-61,81-82,179-181,184,189,314
+src/features/station/LedgerTable.tsx
+  s_e47a5eda862f84::t_4bb198a5b555c7 17-23,26-33,77,84,92
+src/features/station/PartnerMatrix.tsx
+  s_e47a5eda862f84::t_e030367277a6bd 26-29,46-47,130,159,162
+src/features/station/SmallMultiples.tsx
+  s_e47a5eda862f84::t_151cf5f4ee5d95 25-26,39,122
+src/features/station/StockBandChart.tsx
+  s_e47a5eda862f84::t_db8e0409abfcdb 31-32,42,107,111,114,119,175
+src/features/station/shared.ts
+  s_e47a5eda862f84::t_33cbf94b53dba3 129,134
+src/i18n/en.json
+  s_e47a5eda862f84::t_635125e4c73912 40-41,44-46
+src/i18n/ko.json
+  s_e47a5eda862f84::t_4944fd3e117831 40-41,44-46
+.gitignore
+  s_e47a5eda862f84::t_59e3bd6d49f50e 26
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.13",
+  "base_commit_sha": "8f3779d5e1d4e9bdee3b0bd3767d07facdc1300e",
+  "prompts": {},
+  "sessions": {
+    "s_5d0c7b43738dac": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "3b489689-95d8-41c6-b330-cbe3a808fc7b",
+        "model": "claude-opus-4-8"
+      },
+      "human_author": "64etuor <130260521+64etuor@users.noreply.github.com>"
+    },
+    "s_e47a5eda862f84": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "a46a31a4-8363-4a90-b740-7e96b4bf3615",
+        "model": "claude-fable-5"
+      },
+      "human_author": "64etuor <130260521+64etuor@users.noreply.github.com>"
+    }
+  }
+}
