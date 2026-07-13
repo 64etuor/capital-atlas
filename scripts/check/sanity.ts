@@ -50,20 +50,27 @@ const flowRecord = stockBase
   })
   .refine(boundsWhenEstimated, { message: 'D/E records require estimate_method + bounds' })
 
-const bilateralRecord = z.object({
-  owner_country: z.string().length(3),
-  issuer_country: z.string().length(3),
-  asset: z.enum(['listed_equity', 'debt_securities']),
-  period,
-  measure: z.enum(['stock', 'flow']),
-  value_usd: z.number().finite(),
-  source_id: z.string(),
-  effective_date: isoDate,
-  confidence_grade: grade,
-  estimate_method: z.string().optional(),
-  lower_bound: z.number().optional(),
-  upper_bound: z.number().optional(),
-})
+const bilateralRecord = z
+  .object({
+    owner_country: z.string().length(3),
+    issuer_country: z.string().length(3),
+    // Phase M: 은행 채널(BIS LBS) 합류 — loans/deposits는 bis_lbs 전용(refine)
+    asset: z.enum(['listed_equity', 'debt_securities', 'loans', 'deposits']),
+    period,
+    measure: z.enum(['stock', 'flow']),
+    value_usd: z.number().finite(),
+    source_id: z.string(),
+    effective_date: isoDate,
+    confidence_grade: grade,
+    estimate_method: z.string().optional(),
+    lower_bound: z.number().optional(),
+    upper_bound: z.number().optional(),
+  })
+  .refine(
+    (r) =>
+      ['loans', 'deposits'].includes(r.asset) ? r.source_id === 'bis_lbs' : true,
+    { message: 'banking-channel assets must come from bis_lbs' },
+  )
 
 let errors = 0
 const fail = (msg: string) => {

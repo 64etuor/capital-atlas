@@ -88,6 +88,17 @@ export const SOURCE_REGISTRY: readonly SourceDef[] = [
     expected_release_lag: '~1 month after quarter end',
   },
   {
+    source_id: 'bis_lbs',
+    name: 'Locational Banking Statistics (LBS) — cross-border loans & deposits, bilateral',
+    publisher: 'BIS',
+    url: 'https://stats.bis.org/api/v2/data/dataflow/BIS/WS_LBS_D_PUB/1.0',
+    license_note:
+      'BIS terms — reproduction permitted with attribution (bis.org/terms_conditions.htm)',
+    collection_mode: 'batch_official',
+    update_frequency: 'quarterly',
+    expected_release_lag: '~1–2 quarters after period end',
+  },
+  {
     source_id: 'wb_wdi',
     name: 'World Development Indicators (market cap, GDP)',
     publisher: 'World Bank',

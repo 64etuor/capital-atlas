@@ -7,7 +7,9 @@ import { run as runWorldBank } from './fetch/worldbank.ts'
 import { runIip, runBop, runPip } from './fetch/imf.ts'
 import { run as runCrypto } from './fetch/crypto.ts'
 import { runFx } from './fetch/fx.ts'
+import { runBis } from './fetch/bis.ts'
 import { assemble } from './build/assemble.ts'
+import { applyBankMerge } from './build/bank_merge.ts'
 import { writeSourcesJson } from './build/sources.ts'
 import { failures } from './fetch/lib.ts'
 
@@ -23,6 +25,18 @@ const cryptoOk = await runCrypto()
 await runFx(iso3s) // Phase L: CURR=LCU 다이얼 근거 (실패는 failures에 기록)
 
 assemble({ countries, wb, iip, bop, pip })
+
+// Phase M: BIS 은행 회랑 — assemble이 쓴 bilateral 샤드에 병합(멱등)
+{
+  const iso3ByIso2 = new Map(countries.map((c) => [c.iso2, c.iso3]))
+  const bis = await runBis(iso3ByIso2)
+  if (bis.records.length > 0) {
+    applyBankMerge(bis.records, {
+      reporters: bis.reporters,
+      droppedReporters: bis.droppedReporters,
+    })
+  }
+}
 
 // source registry — SSOT는 scripts/fetch/registry.ts, 이 run이 전부 재수집했으므로 전 소스 now 스탬프
 writeSourcesJson({ stampAll: new Date().toISOString() })

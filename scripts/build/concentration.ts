@@ -18,7 +18,8 @@ const worst = (a: Grade | undefined, b: Grade): Grade =>
 const OBSERVED = new Set<Grade>(['A', 'B'])
 
 export const CP_METHOD =
-  'HHI = sum of squared counterparty shares over CPIS bilateral positions; ' +
+  'HHI = sum of squared counterparty shares over bilateral positions ' +
+  '(CPIS securities + BIS LBS banking channel); ' +
   'top-5 = combined share of the five largest counterparties. ' +
   'Limitation: computed from published shards pruned upstream at |value| ≥ $100M ' +
   '(99.8% of gross value retained), so the long tail is truncated and HHI is ' +
@@ -29,7 +30,8 @@ export const QUARTERLY_METHOD =
   'exact-period sums); asset_shares = asset stock ÷ country total.'
 
 export const CORRIDOR_CONC_METHOD =
-  'top-N corridor gross ÷ total bilateral gross (CPIS positions, pruned ' +
+  'top-N corridor gross ÷ total bilateral gross (CPIS securities + BIS LBS ' +
+  'banking positions, pruned ' +
   'upstream at |value| ≥ $100M). *_obs variants restrict both numerator and ' +
   'denominator to observed (A/B) records.'
 
