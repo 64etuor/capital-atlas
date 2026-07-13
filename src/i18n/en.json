@@ -132,7 +132,19 @@
     "viewModeAria": "Composition view mode",
     "sharedYAria": "Toggle shared y-scale across multiples",
     "multiplesNoFlow": "NO FLOW OBSERVATIONS",
-    "multipleAria": "Open {{asset}} asset detail"
+    "multipleAria": "Open {{asset}} asset detail",
+    "realloc": {
+      "aria": "Asset-to-asset reallocation model matrix",
+      "hiddenObs": "MODEL ALLOCATION HIDDEN — OBSERVED ONLY",
+      "world": "WORLD REALLOCATION NOT MODELED — margins are per-country actors",
+      "loading": "PREPARING ALLOCATION MODEL",
+      "empty": "NO REALLOCATION MODEL FOR {{period}} — no observed asset flows",
+      "dossierKind": "model-allocated flow",
+      "dossierSub": "Max-entropy allocation under observed BOP margins",
+      "marginsNote": "observed BOP net flows (grade A) — the only observed truth here",
+      "axis": "SOLD ↓ / BOUGHT →",
+      "footnote": "ALL CELLS ARE MODEL ALLOCATION (GRADE E) — margins observed, paths estimated. Range = Fréchet limits."
+    }
   },
   "export": {
     "pngAria": "Download chart as PNG with source attribution",

@@ -86,7 +86,7 @@ export function SmallMultiples({
             aria-label={t('station.viewModeAria')}
             className="flex items-baseline gap-2 border-l border-paper/10 pl-3"
           >
-            {(['stream', 'multiples'] as const).map((m) => (
+            {(['stream', 'multiples', 'realloc'] as const).map((m) => (
               <button
                 key={m}
                 type="button"
@@ -99,7 +99,7 @@ export function SmallMultiples({
                     : 'text-paper-dim/50 hover:text-paper')
                 }
               >
-                {m === 'stream' ? 'STREAM' : 'MULTIPLES'}
+                {m === 'stream' ? 'STREAM' : m === 'multiples' ? 'MULTIPLES' : 'REALLOC'}
               </button>
             ))}
           </span>

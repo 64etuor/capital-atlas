@@ -34,7 +34,7 @@ import {
   wireClickToPeriod,
 } from './shared'
 
-export type CompositionMode = 'stream' | 'multiples'
+export type CompositionMode = 'stream' | 'multiples' | 'realloc'
 
 interface Props {
   series: Partial<Record<AssetClass, StationPoint[]>>
@@ -272,7 +272,7 @@ export function CompositionStream({
             aria-label={t('station.viewModeAria')}
             className="flex items-baseline gap-2 border-l border-paper/10 pl-3"
           >
-            {(['stream', 'multiples'] as const).map((m) => (
+            {(['stream', 'multiples', 'realloc'] as const).map((m) => (
               <button
                 key={m}
                 type="button"
@@ -285,7 +285,7 @@ export function CompositionStream({
                     : 'text-paper-dim/50 hover:text-paper')
                 }
               >
-                {m === 'stream' ? 'STREAM' : 'MULTIPLES'}
+                {m === 'stream' ? 'STREAM' : m === 'multiples' ? 'MULTIPLES' : 'REALLOC'}
               </button>
             ))}
           </span>

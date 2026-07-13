@@ -275,6 +275,28 @@ live 데이터는 `meta/` 통제값·오버레이 전용.
 개정으로 오인 금지). 미추적 키는 "not tracked before {date}" 정직 표기.
 stock 계열만 추적(흐름·파생 지표는 revision_key 없음 = 행 생략).
 
+### flowmatrix/{period}.json — 자산 간 재배분 행렬 (Phase O, §8 축소 구현)
+
+`scripts/build/flowmatrix.ts`(`pnpm data:flowmatrix`)가 커밋된 `flows_country`
+샤드에서 **네트워크 없이** 생성. TS 미러: `FlowMatrixFile`.
+
+- **관측 진실은 마진뿐**: 국가별 BOP `entry=assets` 순흐름(A등급)이 행(매도)/
+  열(매수) 합 제약. 매수·매도 차액은 `external` 가상 노드(source=신규 자금 /
+  sink=순회수)가 흡수 — 행렬은 항상 폐합(§12, sanity가 전 행렬 검증).
+- **셀은 전부 grade E 모델 배분**: IPF(균등 prior = 최대엔트로피 독립해
+  `F[i][j] = row_i·col_j / T`), 반복 상한 100·잔차 1e-9(미수렴 = 빌드 실패,
+  부분 결과 커밋 금지). `lower/upper`는 **Fréchet 한계**
+  (`max(0, r+c−T) ≤ F ≤ min(r, c)`) — 가정 없는 원리적 범위로 E등급
+  "범위 필수" 조항을 충족한다.
+- **부문 축 생략**: 초안 §8의 국가×부문×자산 중 부문은 v1 BOP 집계에
+  분해가 없어 미구현(`basis_note`에 명시).
+- **UI 계약**: STATION ALL 탭 `REALLOC` 보기. 상시 "MODEL ALLOCATION ·
+  GRADE E" 라벨 + E-안개, 셀 도시에에 산식·Fréchet 범위·반복·잔차·관측
+  마진 전부 노출(source: `model_flow_reallocation` + `imf_bop`).
+  **VIS=OBS에서 구역 통째 소멸**(전부 모델 — §6의 가장 순수한 적용).
+- 결정론(N1): 타임스탬프 없음, 재실행 바이트 동일(테스트 강제). 65분기 ·
+  파일당 ~110KB(5MB 조항 준수). 갱신 체인: `data:station` 다음.
+
 ## enum 정본
 
 - `basis`: `owner` | `issuer` | `location`

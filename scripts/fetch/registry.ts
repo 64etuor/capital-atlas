@@ -129,6 +129,17 @@ export const SOURCE_REGISTRY: readonly SourceDef[] = [
     expected_release_lag: 'derived at assembly time',
   },
   {
+    source_id: 'model_flow_reallocation',
+    name: 'Asset-to-asset flow reallocation — max-entropy/IPF model (§8)',
+    publisher: 'capital-atlas pipeline',
+    url: 'docs/DATA_PIPELINE.md',
+    license_note:
+      'internal model allocation — grade E, Frechet bounds; margins are observed BOP (grade A)',
+    collection_mode: 'derived_model',
+    update_frequency: 'quarterly',
+    expected_release_lag: 'derived at assembly time',
+  },
+  {
     source_id: 'coingecko_global',
     name: 'CoinGecko global crypto market cap',
     publisher: 'CoinGecko',

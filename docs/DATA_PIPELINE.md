@@ -98,3 +98,14 @@ SDMX 2.1 REST, `format=csv`(SDMX-CSV) 지원 — IMF와 달리 CSV가 나와 파
 - BIS 양자합 ↔ IIP 국가 총계는 보고국 커버리지 차이로 불일치 — 조정하지 않고
   `pipeline_report.bis_lbs`에 기록(§12 폐합 정신, §5 중복 가드).
 - 2026-Q1이 최신 분기(IIP 기준). WB 시총은 2024년까지.
+
+## flowmatrix (Phase O — §8 재배분 행렬)
+
+- 입력: `flows_country/{period}` BOP `entry=assets` 순흐름(A등급)만 — 거주자의
+  대외자산 재배분 관점(liabilities는 행위자가 달라 혼합 금지).
+- 방법: IPF, 균등 prior(= 최대엔트로피 독립해 `row·col/T`), 상한 100회·잔차
+  1e-9. 미수렴이면 빌드 자체가 실패한다(부분 산출 금지).
+- 셀 드랍 없음 — 초소액 마진(달러 단위 국가)에서도 폐합이 정확해야 sanity의
+  전수 마진 검증이 성립한다(개발 중 $1 컷이 폐합을 깨는 것을 적발해 제거).
+- 65분기 · 8,819 국가-행렬 · 총 ~7MB. 체인: `data:station` 다음
+  `data:flowmatrix`(크론 포함 — 체인 누락=스테일 산출물).

@@ -74,10 +74,11 @@ pnpm data:fx        # ①-b (선택) 환율만 단독 재수집 — data:fetch�
 pnpm data:bis       # ② BIS 은행 회랑 재병합 (assemble이 bilateral을 재생성하므로 필수)
 pnpm data:synoptic  # ③ SYNOPTIC 사전 집계 재생성 (커밋된 샤드에서, 네트워크 없음)
 pnpm data:station   # ④ STATION 국가별 집계 + 집중도(§14) 재생성 (네트워크 없음)
-pnpm data:sources   # ⑤ meta/sources.json 재발행 (retrieved_at 보존)
-pnpm data:check     # ⑥ 계약 스키마(zod) + 상식 범위 게이트 (CI-able)
-pnpm data:changed   # ⑦ 실질 변경 vs 타임스탬프-전용 분류 (커밋 게이트)
-pnpm data:vintage   # ⑧ 실질 변경 시 빈티지 다이제스트 보존 (개정 이력의 원천)
+pnpm data:flowmatrix # ⑤ 자산 간 재배분 행렬(§8, 모델 배분) 재생성 (네트워크 없음)
+pnpm data:sources   # ⑥ meta/sources.json 재발행 (retrieved_at 보존)
+pnpm data:check     # ⑦ 계약 스키마(zod) + 상식 범위 게이트 (CI-able)
+pnpm data:changed   # ⑧ 실질 변경 vs 타임스탬프-전용 분류 (커밋 게이트)
+pnpm data:vintage   # ⑨ 실질 변경 시 빈티지 다이제스트 보존 (개정 이력의 원천)
 
 # 검증
 pnpm typecheck      # tsc -b
@@ -190,6 +191,22 @@ BIS 은행 보고국 39개(회랑 15만 건 — 마스터 밖 역외센터 BM/GG
 - **% 병기**: SYNOPTIC 기압계 칼럼(`$69.2T · 31%`)과 순환도 헤더
   (`TOP 20 = 29% OF GROSS`), COMPOSITION STREAM 범례(`EQTY 35%`), 자산 탭
   hover, 트리맵 hover. VIS=OBS면 전부 관측-한정 변형으로 전환.
+
+## REALLOCATION — 자산 간 흐름 재배분 모델 (Phase O, §8)
+
+![REALLOCATION — 매도→매수 모델 배분 행렬과 교정 시트](docs/screenshots/13-reallocation.png)
+
+"채권에서 빠진 돈이 주식으로 갔는가?"에는 직접 관측이 존재하지 않는다.
+STATION ALL 탭의 `REALLOC` 보기는 관측된 BOP 순흐름(A등급)을 마진 제약으로
+하는 **최대엔트로피(IPF) 모델 배분**을 보여준다 — 매도(행)→매수(열) 행렬,
+수지 차액은 `EXT`(신규 자금/순회수) 노드가 흡수해 항상 폐합한다.
+
+- **전 셀 grade E** — 구역 전체가 E-안개이고 "MODEL ALLOCATION · GRADE E"가
+  상시 표기된다. **VIS=OBS로 돌리면 구역이 통째로 사라진다**(전부 모델이므로 —
+  §6 안개 계약의 가장 순수한 적용).
+- 셀 클릭 = 교정 시트: 산식(`max_entropy_flow_allocation_ipf`), **Fréchet 한계**
+  (가정 없는 원리적 범위 — `max(0,r+c−T) ≤ F ≤ min(r,c)`), 반복·잔차, 관측 마진.
+- 부문(가계/기업/정부) 축은 v1 BOP 집계에 없어 생략 — 초안 §8의 정직한 축소.
 
 ### 내보내기 · 팔레트 · 튜토리얼 (Phase I — UX 백로그 완주, 잔여 0)
 

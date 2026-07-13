@@ -132,7 +132,19 @@
     "viewModeAria": "구성 보기 전환",
     "sharedYAria": "멀티플 공유 y-스케일 전환",
     "multiplesNoFlow": "흐름 관측 없음",
-    "multipleAria": "{{asset}} 자산 상세 열기"
+    "multipleAria": "{{asset}} 자산 상세 열기",
+    "realloc": {
+      "aria": "자산 간 재배분 모델 행렬",
+      "hiddenObs": "모델 배분 숨김 — 관측만 모드",
+      "world": "세계 재배분은 모델링하지 않음 — 마진이 국가 단위 행위자 기준",
+      "loading": "배분 모델 준비 중",
+      "empty": "{{period}} 재배분 모델 없음 — 관측된 자산 흐름 없음",
+      "dossierKind": "모델 배분 흐름",
+      "dossierSub": "관측 BOP 마진 제약 하의 최대엔트로피 배분",
+      "marginsNote": "관측 BOP 순흐름(A등급) — 이 행렬의 유일한 관측 진실",
+      "axis": "매도 ↓ / 매수 →",
+      "footnote": "모든 셀은 모델 배분(E등급) — 마진은 관측, 경로는 추정. 범위 = Fréchet 한계."
+    }
   },
   "export": {
     "pngAria": "출처 표기를 포함한 PNG로 차트 다운로드",

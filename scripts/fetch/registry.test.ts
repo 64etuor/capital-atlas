@@ -64,6 +64,9 @@ describe('SOURCE_REGISTRY — shape and classification', () => {
     // 파이프라인 내부 파생 모델 — 수집이 아니라 계산
     expect(mode('model_regional_median')).toBe('derived_model')
     expect(mode('model_gdp_ratio')).toBe('derived_model')
+    // Phase O: §8 재배분 행렬 — 전 셀 grade E 모델 배분
+    expect(mode('model_flow_reallocation')).toBe('derived_model')
+    expect(cadence('model_flow_reallocation')).toBe('quarterly')
     // 실시간(일중) 시장 데이터 — v1에서 유일
     expect(mode('coingecko_global')).toBe('live_market')
     // 정적 참조(지오메트리·국가 마스터) — 기존 레지스트리 갭 해소

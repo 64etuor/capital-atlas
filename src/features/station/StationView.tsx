@@ -39,6 +39,7 @@ import {
   type CompositionMode,
 } from './CompositionStream'
 import { SmallMultiples } from './SmallMultiples'
+import { ReallocationMatrix } from './ReallocationMatrix'
 import { StockBandChart } from './StockBandChart'
 import { PartnerMatrix } from './PartnerMatrix'
 import { LedgerTable } from './LedgerTable'
@@ -661,7 +662,7 @@ function StationBody({
                 onMode={setCompMode}
                 fmtValue={money.display}
               />
-            ) : (
+            ) : compMode === 'multiples' ? (
               <SmallMultiples
                 file={chartFile}
                 observedOnly={observedOnly}
@@ -670,6 +671,17 @@ function StationBody({
                 mode={compMode}
                 onMode={setCompMode}
                 fmtNet={money.displayNet}
+              />
+            ) : (
+              <ReallocationMatrix
+                iso={iso}
+                name={name}
+                period={period}
+                observedOnly={observedOnly}
+                mode={compMode}
+                onMode={setCompMode}
+                fmt={(v, d) => money.fmtAt(v, period, d)}
+                openDossier={openDossier}
               />
             )}
           </div>
