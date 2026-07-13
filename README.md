@@ -145,6 +145,23 @@ pnpm build          # tsc -b && vite build
   `lib/tokens.ts`(CSS 변수 런타임 판독 + 노드 폴백 미러, 드리프트 테스트가
   바이트 단위 정합 강제). hex-0 게이트가 회귀를 차단.
 
+## CONCENTRATION — 자본 쏠림의 정량화 (Phase H)
+
+![CONCENTRATION — STATION 계기 스트립의 WORLD SHARE · TOP-5 CP · CP HHI](docs/screenshots/08-concentration.png)
+
+"자본 비중이 어디에 쏠렸나"를 %와 집중도 지표로 읽는다 (설계 §14):
+
+- **STATION 계기 스트립**: `WORLD SHARE`(국가 잔액 ÷ 세계 총액 — 자산 탭이면 그
+  자산의 세계 대비), `TOP-5 CP`(상위 5 상대국 비중), `CP HHI`(허핀달-허시먼 지수
+  + CONCENTRATED/MODERATE/DIVERSE 관용 구간 0.25/0.15). 전부 클릭 = 교정 증명서
+  (산식·프루닝 한계·top-5 분해까지 그대로).
+- **HHI는 발행 bilateral 샤드 전체에서 사전 계산** — 화면의 top-15 리스트로
+  계산하면 꼬리가 잘려 과대평가된다. 샤드 자체의 |값|≥$100M 프루닝 한계는 산식
+  문구에 명시(예: 한국 2024-Q4 상대국 HHI 0.454 = CONCENTRATED, 1위 USA 66.8%).
+- **% 병기**: SYNOPTIC 기압계 칼럼(`$69.2T · 31%`)과 순환도 헤더
+  (`TOP 20 = 29% OF GROSS`), COMPOSITION STREAM 범례(`EQTY 35%`), 자산 탭
+  hover, 트리맵 hover. VIS=OBS면 전부 관측-한정 변형으로 전환.
+
 ### UX 백로그 (리서치 기반, 미적용 사유)
 
 - P2-10 차트 단위 PNG/CSV 내보내기 — 재배포 라이선스 표기 설계(출처 워터마크)

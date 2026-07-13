@@ -20,6 +20,8 @@ interface Props {
   isFlow: boolean
   observedOnly: boolean
   filter: AssetClass | null
+  /** §14 회랑 집중도 — 상위 20 gross ÷ 전체 bilateral gross (포지션 기준) */
+  top20Share: number | null
 }
 
 export function CirculationChart({
@@ -28,6 +30,7 @@ export function CirculationChart({
   isFlow,
   observedOnly,
   filter,
+  top20Share,
 }: Props) {
   const { t } = useTranslation()
   const openDossier = useViewStore((s) => s.openDossier)
@@ -47,6 +50,12 @@ export function CirculationChart({
         CIRCULATION · TOP CORRIDORS ·{' '}
         {isFlow ? t('synoptic.circulationFlow') : t('synoptic.circulationPositions')}
         {effPeriod ? ` · ${effPeriod}` : ''}
+        {/* 집중도는 포지션 기준 — flow 뷰에선 오도 방지 위해 생략 */}
+        {!isFlow && top20Share !== null && (
+          <span className="text-flow-in/80">
+            {' '}· TOP 20 = {(top20Share * 100).toFixed(0)}% OF GROSS
+          </span>
+        )}
       </p>
       {rows.length === 0 ? (
         <div className="readout flex flex-1 items-center justify-center text-[11px] tracking-[0.14em] text-paper-dim">

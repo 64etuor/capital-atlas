@@ -61,8 +61,9 @@ export function AssetTreemap({
           fontSize: 11,
         },
         extraCssText: 'border-radius:0;box-shadow:none;',
+        // §14 자산 비중 % 병기 — hover 승격 원칙(UX_RESEARCH P1)
         formatter: (p: { name: string; value: number }) =>
-          `${p.name.toUpperCase()} · ${formatUsd(p.value, 1)}`,
+          `${p.name.toUpperCase()} · ${formatUsd(p.value, 1)} · ${((p.value / total) * 100).toFixed(1)}%`,
       },
       series: [
         {

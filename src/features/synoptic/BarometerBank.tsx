@@ -167,6 +167,7 @@ export function BarometerBank({
                         : 'sum of country-level records (observed + estimated)',
                     source_ids: ['imf_iip'],
                     context: [
+                      ['Share of quarter total', `${(cell.share * 100).toFixed(1)}%`],
                       ['Observed share', `${(cell.obsShare * 100).toFixed(1)}%`],
                       ['Net flow (qtr)', formatUsdNet(cell.flowNet)],
                       ['Valuation (qtr)', formatUsdNet(cell.valuation)],
@@ -175,7 +176,17 @@ export function BarometerBank({
                   })
                 }
               >
-                {cell && cell.stock > 0 ? formatUsd(cell.stock, 1) : '—'}
+                {cell && cell.stock > 0 ? (
+                  <>
+                    {formatUsd(cell.stock, 1)}
+                    {/* §14 자산 비중 — 글로벌 대비 % 병기 (OBS면 관측-한정) */}
+                    <span className="text-paper-dim">
+                      {' '}· {(cell.share * 100).toFixed(0)}%
+                    </span>
+                  </>
+                ) : (
+                  '—'
+                )}
               </button>
               <span
                 className={

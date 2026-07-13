@@ -5,8 +5,10 @@
  */
 import type {
   AssetClass,
+  StationCpConcentration,
   StationFile,
   StationPoint,
+  StationQuarterlyConcentration,
 } from '../../types/data'
 import { indexFromPeriod, periodCount } from '../../lib/periods'
 import { OBSERVED_GRADES, STATION_ASSET_ORDER } from './shared'
@@ -116,6 +118,36 @@ export function flowIntensity(
   const close = stockAt(file, tab, periodIndex, observedOnly).total
   const avg = (open + close) / 2
   return { intensity: seen && avg > 0 ? net4 / avg : null, net4 }
+}
+
+/** §14 집중도 — nearest≤ 규칙(상대국 지표는 연간 CPIS)으로 현재 시점 선택. */
+export function concentrationAt(
+  file: StationFile,
+  tab: AssetTab,
+  periodIndex: number,
+): {
+  quarterly: StationQuarterlyConcentration | null
+  cp: StationCpConcentration | null
+} {
+  let quarterly: StationQuarterlyConcentration | null = null
+  for (const q of file.concentration.quarterly) {
+    const i = indexFromPeriod(q.period)
+    if (i <= periodIndex && (!quarterly || i > indexFromPeriod(quarterly.period)))
+      quarterly = q
+  }
+  const scope = tab === 'all' ? 'all' : tab
+  let cp: StationCpConcentration | null = null
+  for (const c of file.concentration.counterparty) {
+    if (c.scope !== scope) continue
+    const i = indexFromPeriod(c.period)
+    if (i <= periodIndex && (!cp || i > indexFromPeriod(cp.period))) cp = c
+  }
+  return { quarterly, cp }
+}
+
+/** HHI 관용 구간 (미 법무부 합병 가이드라인 관행: 0.15/0.25). */
+export function hhiClass(hhi: number): 'CONCENTRATED' | 'MODERATE' | 'DIVERSE' {
+  return hhi >= 0.25 ? 'CONCENTRATED' : hhi >= 0.15 ? 'MODERATE' : 'DIVERSE'
 }
 
 /** YoY 잔액 변화율 — 4분기 전 nearest≤ 대비. */

@@ -54,6 +54,16 @@ export function SynopticView() {
   const corridorEff = syn ? nearestAvailable(corridorPeriods, period) : null
   const corridorSet = corridorEff ? syn?.corridors[corridorEff] : undefined
   const isFlow = measure === 'flow' || measure === 'valuation'
+  // §14 회랑 집중도 — 자산 필터 중엔 분모가 전체라 오도되므로 생략
+  const corridorConc =
+    corridorEff && filter === null
+      ? (syn?.corridor_concentration[corridorEff] ?? null)
+      : null
+  const top20Share = corridorConc
+    ? observedOnly
+      ? corridorConc.top20_share_obs
+      : corridorConc.top20_share
+    : null
 
   return (
     <div
@@ -93,6 +103,7 @@ export function SynopticView() {
               isFlow={isFlow}
               observedOnly={observedOnly}
               filter={filter}
+              top20Share={top20Share}
             />
             <StripBank
               syn={syn}

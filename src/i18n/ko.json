@@ -120,6 +120,7 @@
       "euro": "유로 위기",
       "covid": "COVID-19",
       "tightening": "2022 긴축"
-    }
+    },
+    "railShare": "{{asset}} · 국가 국경간 잔액의 {{pct}}"
   }
 }

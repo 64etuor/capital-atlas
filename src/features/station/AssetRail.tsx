@@ -15,11 +15,13 @@ interface Props {
   assets: AssetClass[]
   /** 현재 관측소에 데이터가 있는 자산 */
   available: ReadonlySet<AssetClass>
+  /** §14 자산 구성 비중 — hover에 % 노출 (현재 분기 concentration) */
+  shares?: Partial<Record<AssetClass, number>>
   tab: AssetTab
   onTab: (tab: AssetTab) => void
 }
 
-export function AssetRail({ assets, available, tab, onTab }: Props) {
+export function AssetRail({ assets, available, shares, tab, onTab }: Props) {
   const { t } = useTranslation()
   const railRef = useRef<HTMLDivElement>(null)
   const [needle, setNeedle] = useState<{ left: number; width: number } | null>(
@@ -52,7 +54,12 @@ export function AssetRail({ assets, available, tab, onTab }: Props) {
             title={
               off
                 ? t('station.railNoData', { asset: ASSET_ABBR[tb as AssetClass] })
-                : undefined
+                : tb !== 'all' && shares?.[tb] !== undefined
+                  ? t('station.railShare', {
+                      asset: ASSET_ABBR[tb],
+                      pct: `${((shares[tb] ?? 0) * 100).toFixed(1)}%`,
+                    })
+                  : undefined
             }
             onClick={off ? undefined : () => onTab(tb)}
             className={

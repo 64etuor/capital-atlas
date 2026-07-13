@@ -36,8 +36,10 @@ import { LedgerTable } from './LedgerTable'
 import { GaugeStrip, type Gauge } from './GaugeStrip'
 import {
   assetsPresent,
+  concentrationAt,
   flowArrays,
   flowIntensity,
+  hhiClass,
   nearestPoint,
   stockAt,
   yoyStock,
@@ -206,6 +208,22 @@ function StationBody({
   const stock = stockAt(file, tab, periodIndex, observedOnly)
   const intensity = flowIntensity(file, tab, periodIndex, observedOnly)
   const yoy = yoyStock(file, tab, periodIndex, observedOnly)
+  const conc = concentrationAt(file, tab, periodIndex)
+  // §6: OBS 모드에선 관측(A/B) 아닌 파생 지표 리드아웃도 소멸
+  const gateObs = <T,>(grade: string | undefined, v: T): T | null =>
+    observedOnly && grade !== undefined && !OBSERVED_GRADES.has(grade as never)
+      ? null
+      : v
+  const worldShare =
+    iso === 'WLD'
+      ? null
+      : gateObs(
+          conc.quarterly?.grade,
+          tab === 'all'
+            ? (conc.quarterly?.share_of_world ?? null)
+            : (conc.quarterly?.share_of_world_assets[tab] ?? null),
+        )
+  const cp = gateObs(conc.cp?.grade, conc.cp)
 
   const flowInNow = flows.flowIn[periodIndex]
   const flowOutNow = flows.flowOut[periodIndex]
@@ -344,6 +362,109 @@ function StationBody({
         context: [['Observed', formatUsd(stock.obsTotal, 1)], ['Total', formatUsd(stock.total, 1)]],
       },
     },
+    // §14 집중도 계기 — WLD는 세계 대비/상대국 개념이 정의되지 않아 생략
+    ...(iso !== 'WLD'
+      ? ([
+          {
+            label: 'WORLD SHARE',
+            value:
+              worldShare !== null ? `${(worldShare * 100).toFixed(2)}%` : '—',
+            tone: 'paper',
+            dossier: conc.quarterly
+              ? {
+                  title: `${name} · ${assetLabel} — share of world`,
+                  subtitle: `stocks_owner · ${conc.quarterly.period}`,
+                  value_usd: stock.total,
+                  grade: conc.quarterly.grade,
+                  method: conc.quarterly.method,
+                  effective_date: quarterEnd(conc.quarterly.period),
+                  source_ids: conc.quarterly.source_ids,
+                  context: [
+                    [
+                      'Share of world',
+                      worldShare !== null
+                        ? `${(worldShare * 100).toFixed(2)}%`
+                        : '— (observed-only mode)',
+                    ],
+                    ['Charter §14', '국가비중 = 조정잔액_c / Σ_c 조정잔액'],
+                  ],
+                }
+              : {
+                  title: `${name} — share of world`,
+                  subtitle: 'no concentration data for this scope',
+                  value_usd: 0,
+                  grade: 'A',
+                  source_ids: ['imf_iip'],
+                  context: [['Reason', 'no owner-basis stock records']],
+                },
+          },
+          {
+            label: 'TOP-5 CP',
+            value: cp ? `${(cp.top5_share * 100).toFixed(0)}%` : '—',
+            tone: 'paper',
+            dossier: cp
+              ? {
+                  title: `${name} · ${assetLabel} — top-5 counterparty share`,
+                  subtitle: `CPIS positions · ${cp.period}`,
+                  value_usd: cp.gross_usd,
+                  grade: cp.grade,
+                  method: cp.method,
+                  effective_date: quarterEnd(cp.period),
+                  source_ids: cp.source_ids,
+                  context: [
+                    ...cp.top5.map(
+                      (t5): [string, string] => [
+                        t5.country,
+                        `${(t5.share * 100).toFixed(1)}%`,
+                      ],
+                    ),
+                    ['Counterparties', String(cp.n_partners)],
+                  ],
+                }
+              : {
+                  title: `${name} · ${assetLabel} — top-5 counterparty share`,
+                  subtitle: 'no CPIS bilateral positions for this scope',
+                  value_usd: 0,
+                  grade: 'A',
+                  source_ids: ['imf_pip'],
+                  context: [
+                    ['Reason', 'not a CPIS reporter, or asset not covered'],
+                  ],
+                },
+          },
+          {
+            label: 'CP HHI',
+            value: cp ? `${cp.hhi.toFixed(2)} · ${hhiClass(cp.hhi)}` : '—',
+            tone: cp && cp.hhi >= 0.25 ? 'in' : 'dim',
+            dossier: cp
+              ? {
+                  title: `${name} · ${assetLabel} — counterparty HHI`,
+                  subtitle: `CPIS positions · ${cp.period}`,
+                  value_usd: cp.gross_usd,
+                  grade: cp.grade,
+                  method: cp.method,
+                  effective_date: quarterEnd(cp.period),
+                  source_ids: cp.source_ids,
+                  context: [
+                    ['HHI', cp.hhi.toFixed(4)],
+                    ['Class', `${hhiClass(cp.hhi)} (0.15 / 0.25 관용 구간)`],
+                    ['Top counterparty', cp.top5[0]?.country ?? '—'],
+                    ['Counterparties', String(cp.n_partners)],
+                  ],
+                }
+              : {
+                  title: `${name} · ${assetLabel} — counterparty HHI`,
+                  subtitle: 'no CPIS bilateral positions for this scope',
+                  value_usd: 0,
+                  grade: 'A',
+                  source_ids: ['imf_pip'],
+                  context: [
+                    ['Reason', 'not a CPIS reporter, or asset not covered'],
+                  ],
+                },
+          },
+        ] satisfies Gauge[])
+      : []),
     {
       label: 'RANGE',
       value: file.summary.first ? `${file.summary.first}→${file.summary.latest ?? ''}` : '—',
@@ -437,6 +558,7 @@ function StationBody({
         <AssetRail
           assets={[...STATION_ASSET_ORDER]}
           available={new Set(present)}
+          shares={conc.quarterly?.asset_shares}
           tab={tab}
           onTab={onTab}
         />

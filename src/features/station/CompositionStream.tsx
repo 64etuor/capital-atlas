@@ -46,6 +46,22 @@ export function CompositionStream({
 
   const assets = STATION_ASSET_ORDER.filter((a) => series[a]?.length)
 
+  // §14 자산 구성 비중 — 범례에 현재 니들 시점의 % 병기 (nearest ≤ periodIndex)
+  const stocksNow = new Map<AssetClass, number>()
+  let totalNow = 0
+  for (const a of assets) {
+    let best: StationPoint | null = null
+    for (const p of series[a] ?? []) {
+      const i = indexFromPeriod(p.period)
+      if (i <= periodIndex && (!best || i > indexFromPeriod(best.period)))
+        best = p
+    }
+    if (best && best.stock > 0) {
+      stocksNow.set(a, best.stock)
+      totalNow += best.stock
+    }
+  }
+
   useEffect(() => {
     const el = holder.current
     // effect 내부에서 재파생 — 렌더 스코프 배열 identity에 의존하지 않는다
@@ -159,6 +175,9 @@ export function CompositionStream({
                 }
               >
                 {ASSET_ABBR[a]}
+                {totalNow > 0 && stocksNow.has(a)
+                  ? ` ${(((stocksNow.get(a) ?? 0) / totalNow) * 100).toFixed(0)}%`
+                  : ''}
               </span>
             </button>
           ))}

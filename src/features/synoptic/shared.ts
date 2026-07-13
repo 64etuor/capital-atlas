@@ -19,6 +19,8 @@ export interface ModeCell {
   flowGross: number
   valuation: number
   obsShare: number
+  /** §14 자산 비중 — 분기 총 잔액 대비 (OBS면 관측-한정 변형) */
+  share: number
   records: number
 }
 
@@ -34,6 +36,7 @@ export function modeCell(c: SynopticCell, observedOnly: boolean): ModeCell {
     flowGross: observedOnly ? c.flow_gross_obs : c.flow_gross,
     valuation: observedOnly ? 0 : c.valuation,
     obsShare: c.obs_share,
+    share: observedOnly ? c.share_obs : c.share,
     records: c.records,
   }
 }

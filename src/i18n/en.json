@@ -120,6 +120,7 @@
       "euro": "EURO CRISIS",
       "covid": "COVID-19",
       "tightening": "2022 TIGHTENING"
-    }
+    },
+    "railShare": "{{asset}} · {{pct}} of country cross-border stock"
   }
 }
