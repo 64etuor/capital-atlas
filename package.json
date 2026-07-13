@@ -19,7 +19,8 @@
     "data:vintage": "tsx scripts/build/vintage.ts",
     "data:changed": "tsx scripts/check/changed.ts",
     "data:check": "tsx scripts/check/sanity.ts",
-    "data:station": "tsx scripts/build/station.ts"
+    "data:station": "tsx scripts/build/station.ts",
+    "data:flowmatrix": "tsx scripts/build/flowmatrix.ts"
   },
   "dependencies": {
     "@fontsource-variable/archivo": "^5.2.8",

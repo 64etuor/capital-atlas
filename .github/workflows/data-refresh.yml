@@ -33,6 +33,8 @@ jobs:
       - run: pnpm data:bis
       - run: pnpm data:synoptic
       - run: pnpm data:station
+      # §8 재배분 행렬 — 체인 누락 = 스테일 산출물 (Phase N의 data:bis 교훈)
+      - run: pnpm data:flowmatrix
       - run: pnpm data:sources
       - run: pnpm data:check
       # 실질 변경 게이트 (Phase N) — 샤드는 결정론적이라 데이터가 안 바뀌면

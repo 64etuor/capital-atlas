@@ -7,6 +7,8 @@ import type {
   BilateralFile,
   CountryMaster,
   FlowIntensityFile,
+  FlowMatrixFile,
+  FlowMatrixIndexFile,
   FlowsCountryFile,
   FxRatesFile,
   PeriodIndexFile,
@@ -46,7 +48,7 @@ export const MAX_SHARD_CACHE = 16
 
 const isShardPath = (path: string) =>
   /^\/data\/(stocks_|flows_)/.test(path) ||
-  (/^\/data\/station\//.test(path) && !path.endsWith('/index.json'))
+  (/^\/data\/(station|flowmatrix)\//.test(path) && !path.endsWith('/index.json'))
 
 const inflight = new Map<string, Promise<unknown>>()
 
@@ -116,6 +118,14 @@ export const getStationIndex = () =>
 /** STATION 국가 파일 — 샤드 취급(LRU 대상). 'WLD' = 세계 집계 */
 export const getStation = (iso3: string) =>
   fetchJson<StationFile>(`/data/station/${iso3}.json`)
+
+/** Phase O — 자산 간 재배분 행렬 인덱스(가용 분기) — 핀 고정 */
+export const getFlowMatrixIndex = () =>
+  fetchJson<FlowMatrixIndexFile>('/data/flowmatrix/index.json')
+
+/** Phase O — 분기 재배분 행렬 샤드(LRU 대상). 전 셀 grade E 모델 배분 */
+export const getFlowMatrix = (period: PeriodKey) =>
+  fetchJson<FlowMatrixFile>(`/data/flowmatrix/${period}.json`)
 
 let countriesP: Promise<Map<string, CountryMaster>> | null = null
 export function getCountries(): Promise<Map<string, CountryMaster>> {

@@ -412,3 +412,40 @@ export interface VintageDigestFile {
 export interface VintagesIndexFile {
   vintages: string[] // 오름차순 YYYY-MM-DD
 }
+
+// ------------------------------------------------------------ flowmatrix ----
+
+/**
+ * public/data/flowmatrix/{period}.json — Phase O(§8 축소 구현): 자산 간
+ * 흐름 재배분의 최대엔트로피(IPF) 모델 배분. 마진(observed)만 관측(A),
+ * 셀은 전부 **grade E 모델 배분**이며 lower/upper는 Fréchet 한계(가정 없는
+ * 원리적 범위). 부문(가계/기업/정부) 축은 v1 BOP 집계에 없어 생략.
+ * VIS=OBS 모드에서 이 데이터 기반 UI는 통째로 소멸한다(§6).
+ */
+export interface FlowMatrixCell {
+  from: string // AssetClass | 'external'
+  to: string
+  value: number
+  lower: number
+  upper: number
+}
+
+export interface FlowMatrixCountry {
+  /** 자산별 관측 순흐름 (BOP entry=assets, grade A — 유일한 관측 진실) */
+  observed: Record<string, number>
+  cells: FlowMatrixCell[]
+  external: 'source' | 'sink' | null
+  iterations: number
+  converged: true
+  residual: number
+}
+
+export interface FlowMatrixFile {
+  method: 'max_entropy_flow_allocation_ipf'
+  basis_note: string
+  countries: Record<string, FlowMatrixCountry>
+}
+
+export interface FlowMatrixIndexFile {
+  periods: PeriodKey[]
+}

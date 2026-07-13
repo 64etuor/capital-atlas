@@ -187,6 +187,58 @@ if (korUsaEquityLatest !== null) {
 const topPairs = [...pairTotals.entries()].sort((a, b) => b[1] - a[1]).slice(0, 5)
 console.log('  top pairs (latest):', topPairs.map(([k, v]) => `${k} $${(v / 1e12).toFixed(2)}T`).join(' · '))
 
+// ---- flowmatrix (Phase O — §8 모델 배분) --------------------------------------
+const fmCell = z.object({
+  from: z.string(),
+  to: z.string(),
+  value: z.number().finite().nonnegative(),
+  lower: z.number().finite(),
+  upper: z.number().finite(),
+})
+const fmCountry = z.object({
+  observed: z.record(z.string(), z.number().finite()),
+  cells: z.array(fmCell),
+  external: z.enum(['source', 'sink']).nullable(),
+  iterations: z.number().int().positive().max(100),
+  converged: z.literal(true), // 미수렴 결과는 커밋 자체가 금지
+  residual: z.number().finite(),
+})
+const fmDir = join(OUT_DIR, 'flowmatrix')
+if (!existsSync(fmDir)) fail('flowmatrix/ missing')
+else {
+  const fmFiles = readdirSync(fmDir).filter((f) => f.endsWith('.json') && f !== 'index.json')
+  let fmCountries = 0
+  for (const f of fmFiles) {
+    const size = statSync(join(fmDir, f)).size
+    if (size > 5 * 1024 * 1024) fail(`flowmatrix/${f} exceeds 5MB`)
+    const body = JSON.parse(readFileSync(join(fmDir, f), 'utf8')) as {
+      method: string
+      countries: Record<string, unknown>
+    }
+    if (body.method !== 'max_entropy_flow_allocation_ipf')
+      fail(`flowmatrix/${f}: unexpected method ${body.method}`)
+    for (const [iso, c] of Object.entries(body.countries)) {
+      const p = fmCountry.safeParse(c)
+      if (!p.success) {
+        if (errors < 20) fail(`flowmatrix/${f} ${iso}: ${p.error.issues[0].message}`)
+        errors++
+        continue
+      }
+      fmCountries++
+      // 마진 정합: 매수 자산의 열합 = 관측 순유입 (±1e-6 상대)
+      for (const [asset, net] of Object.entries(p.data.observed)) {
+        if (net <= 0) continue
+        const col = p.data.cells
+          .filter((x) => x.to === asset)
+          .reduce((s, x) => s + x.value, 0)
+        if (Math.abs(col - net) > 1e-6 * Math.max(1, net))
+          fail(`flowmatrix/${f} ${iso}.${asset}: column sum ${col} ≠ observed ${net}`)
+      }
+    }
+  }
+  ok(`flowmatrix: ${fmFiles.length} periods, ${fmCountries} country-matrices (margins closed)`)
+}
+
 // ---- meta -------------------------------------------------------------------
 const intensity = JSON.parse(readFileSync(join(OUT_DIR, 'meta/flow_intensity.json'), 'utf8'))
 if (!Array.isArray(intensity.series) || intensity.series.length < 40)
