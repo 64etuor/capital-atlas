@@ -14,7 +14,13 @@ export type Basis = 'owner' | 'issuer' | 'location'
 
 export type MeasureType = 'stock' | 'flow' | 'valuation' | 'turnover'
 
-export type CurrencyView = 'usd_current' | 'usd_constant_fx'
+/**
+ * CURR 다이얼 (Phase L): 'usd' | 'lcu'(선택 국가의 현지통화 — 분기 환율 곱).
+ * LCU는 국가 스코프에서만 유효; 글로벌 집계는 통화 합산이 무의미해 USD 고정.
+ * 고정환율 USD(constant-FX)는 IIP 통화구성 데이터가 없어 가정 없이 계산
+ * 불가(허위 정밀도 금지) — 통화구성 확보(v3) 전까지 도입하지 않는다.
+ */
+export type CurrencyView = 'usd' | 'lcu'
 
 /** v1 asset classes (coarse; refined universes come later). */
 export type AssetClass =
@@ -64,7 +70,8 @@ export interface StockRecord extends Lineage {
   period: PeriodKey
   measure: 'stock'
   value_usd: number // current USD
-  value_usd_constant_fx?: number // base-period exchange rates
+  /** 미산출 — IIP 통화구성 확보(v3) 전까지 constant-FX는 계산하지 않는다 */
+  value_usd_constant_fx?: number
 }
 
 /** public/data/flows_bilateral.json — country-pair positions/flows (CPIS-derived). */
@@ -172,6 +179,34 @@ export interface FlowsCountryFile {
 export interface BilateralFile {
   generated_at: string
   records: BilateralRecord[]
+}
+
+// ------------------------------------------------------------------- fx ----
+
+/**
+ * public/data/meta/fx_rates.json — 분기 환율(LCU per USD, 기말) (Phase L).
+ * IMF ER(XDC_USD·EOP_RT) grade A quarterly / WB PA.NUS.FCRF 연간 Q4 폴백
+ * grade B(method 공개). 어느 쪽도 없으면 국가 자체가 없다(정직 공백).
+ */
+export interface FxRateEntry {
+  rate: number // LCU per USD
+  grade: 'A' | 'B'
+  source_id: string
+  effective_date: string
+  method?: string
+}
+
+export interface FxCountry {
+  currency: string // ISO 4217
+  /** true = IMF 분기 시계열 / false = WB 연간 Q4만 */
+  quarterly: boolean
+  rates: Partial<Record<PeriodKey, FxRateEntry>>
+}
+
+export interface FxRatesFile {
+  generated_at: string
+  base: 'USD'
+  countries: Record<string, FxCountry>
 }
 
 // ------------------------------------------------------------- synoptic ----

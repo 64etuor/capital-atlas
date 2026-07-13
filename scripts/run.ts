@@ -6,6 +6,7 @@ import { run as runCountries } from './fetch/countries.ts'
 import { run as runWorldBank } from './fetch/worldbank.ts'
 import { runIip, runBop, runPip } from './fetch/imf.ts'
 import { run as runCrypto } from './fetch/crypto.ts'
+import { runFx } from './fetch/fx.ts'
 import { assemble } from './build/assemble.ts'
 import { writeSourcesJson } from './build/sources.ts'
 import { failures } from './fetch/lib.ts'
@@ -19,6 +20,7 @@ const iip = await runIip(iso3s)
 const bop = await runBop(iso3s)
 const pip = await runPip(iso3s)
 const cryptoOk = await runCrypto()
+await runFx(iso3s) // Phase L: CURR=LCU 다이얼 근거 (실패는 failures에 기록)
 
 assemble({ countries, wb, iip, bop, pip })
 

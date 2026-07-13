@@ -12,6 +12,7 @@
     "preview": "vite preview",
     "data:fetch": "tsx scripts/run.ts",
     "data:geometry": "tsx scripts/build/geometry.ts",
+    "data:fx": "tsx scripts/fetch/fx.ts",
     "data:sources": "tsx scripts/build/sources.ts",
     "data:synoptic": "tsx scripts/build/synoptic.ts",
     "data:check": "tsx scripts/check/sanity.ts",

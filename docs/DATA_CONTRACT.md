@@ -218,6 +218,22 @@ live 데이터는 `meta/` 통제값·오버레이 전용.
 - `corridor_concentration[period]`: {top10_share, top20_share, gross_usd,
   `*_obs` 변형, gross_obs_usd} — 분모는 샤드 전체 stock gross(top-20 리스트 아님).
 
+### meta/fx_rates.json — 분기 환율 (Phase L)
+
+`scripts/fetch/fx.ts`(`pnpm data:fx`, `data:fetch`에 포함)가 생성. CURR=LCU 다이얼의
+근거. TS 미러: `FxRatesFile`.
+
+- 소스 사다리: IMF ER `XDC_USD`·`EOP_RT`(기말, 분기, grade A) → WB `PA.NUS.FCRF`
+  연간을 Q4에 적용(grade B + `method: wb_pa_nus_fcrf_annual_rate_q4`) → 둘 다 없으면
+  국가 미제공(정직 공백 — 날조 금지).
+- `countries[ISO3] = { currency(ISO 4217, world-countries), quarterly, rates{[period]:
+  {rate(LCU per USD), grade, source_id, effective_date, method?}} }`.
+- 소비 규칙: LCU 표시는 **국가 스코프 전용**(글로벌 집계는 통화 합산 무의미 → USD 고정).
+  연간 국가는 같은 해 Q4 환율을 분기에 적용(공개된 근사). 분기 환율 부재 = '—'.
+  도시에 원값은 항상 USD, LCU 표시 수치엔 FX RATE 행 병기(`src/lib/money.ts` 계약).
+- `value_usd_constant_fx`(stocks)는 **미산출 유지** — IIP 통화구성 없이 constant-FX는
+  가정 주입(허위 정밀도). v3에서 통화구성 확보 후 재검토.
+
 ## enum 정본
 
 - `basis`: `owner` | `issuer` | `location`

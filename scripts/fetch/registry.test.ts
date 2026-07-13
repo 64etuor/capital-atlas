@@ -54,6 +54,9 @@ describe('SOURCE_REGISTRY — shape and classification', () => {
     // 공식 통계 배치 — 발표 지연이 본질, 실시간 개념 없음
     expect(mode('imf_iip')).toBe('batch_official')
     expect(cadence('imf_iip')).toBe('quarterly')
+    // Phase L: 환율(ER, IFS 후속) — LCU 표시 다이얼의 근거 시계열
+    expect(mode('imf_ifs_fx')).toBe('batch_official')
+    expect(cadence('imf_ifs_fx')).toBe('quarterly')
     expect(mode('imf_bop')).toBe('batch_official')
     expect(mode('imf_pip')).toBe('batch_official')
     expect(cadence('imf_pip')).toBe('annual')
