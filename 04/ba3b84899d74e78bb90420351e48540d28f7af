@@ -1,0 +1,24 @@
+src/features/map/MapCanvas.tsx
+  s_e47a5eda862f84::t_8d552031fd452d 379
+src/lib/tokens.test.ts
+  s_e47a5eda862f84::t_88e8c01e591c6f 18-24,29
+  s_e47a5eda862f84::t_925ccf2d8588b7 1-17,25-28,30-105
+src/lib/tokens.ts
+  s_e47a5eda862f84::t_80f6a23d661ff1 3-6,12-50,56-61
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.12",
+  "base_commit_sha": "04ba3b84899d74e78bb90420351e48540d28f7af",
+  "prompts": {},
+  "sessions": {
+    "s_e47a5eda862f84": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "a46a31a4-8363-4a90-b740-7e96b4bf3615",
+        "model": "unknown"
+      },
+      "human_author": "64etuor <130260521+64etuor@users.noreply.github.com>"
+    }
+  }
+}
