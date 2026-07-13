@@ -206,7 +206,8 @@ pnpm build          # tsc -b && vite build
   무의미해 다이얼이 회색+사유("MIXED CURRENCIES — USD ONLY")가 된다. LCU 표시 수치의
   도시에엔 FX RATE·LCU/USD VALUE 행이 병기된다. **고정환율 USD(FXD)는 도입하지 않았다**
   — IIP 잔액에 통화구성이 없어 가정 없인 계산 불가(허위 정밀도 금지). 통화구성 확보(v3)
-  전까지 `value_usd_constant_fx`는 미산출.
+  전까지 `value_usd_constant_fx`는 미산출. CSV/PNG 내보내기는 LCU 모드에서도 **USD
+  원값**을 수출한다(계보 정본 유지 — 환율은 도시에 FX RATE 행으로 추적).
 - **극지 통과 입자류.** 대권항로가 극점 부근을 지날 때의 스파이크는 고도를 극지에서
   0으로 테이퍼링해 크게 완화했으나, 북극 상공 흐름 밀집 구간엔 잔여 번들이 남는다.
 - **번들 청크.** deck.gl/echarts를 별도 청크로 분리(앱 청크 ~386 KB)했으나 `deck.js`
