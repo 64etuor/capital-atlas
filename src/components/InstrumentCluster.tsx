@@ -104,6 +104,7 @@ export function InstrumentCluster() {
 
   return (
     <nav
+      data-tour="cluster"
       aria-label={t('cluster.aria')}
       className={
         'absolute top-1/2 z-30 flex -translate-y-1/2 flex-col gap-3 pr-4 transition-[right] duration-280 ease-(--ease-baro) ' +

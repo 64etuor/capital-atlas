@@ -57,6 +57,7 @@ export function StationPlate({ estimatedAsOf }: { estimatedAsOf: string }) {
       </div>
       <div
         role="group"
+        data-tour="surfaces"
         aria-label={t('plate.surfaceAria')}
         className="pointer-events-auto mt-3 flex gap-px"
       >

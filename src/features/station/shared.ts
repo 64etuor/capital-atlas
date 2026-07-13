@@ -41,6 +41,10 @@ export const OBSERVED_GRADES: ReadonlySet<ConfidenceGrade> = new Set([
   'B',
 ])
 
+/** 잉크 시트 배경(§2) — STATION 루트·풀스크린 차트 시트 공용. */
+export const INK_SHEET_BG =
+  'linear-gradient(180deg, var(--atlas-ink-0) 0%, var(--atlas-ink-1) 55%, var(--atlas-ink-2) 130%)'
+
 /** x축 정본: 타임라인 전체 분기 — 시리즈는 없는 분기를 null로 둔다. */
 export function fullPeriods(): PeriodKey[] {
   return Array.from({ length: periodCount() }, (_, i) => periodFromIndex(i))
@@ -196,9 +200,11 @@ export function annotationMarkLine(labels: Record<string, string>) {
       fontSize: 8,
       formatter: (p: { name?: string }) => p.name ?? '',
     },
-    data: EVENT_PINS.map((pin) => ({
+    data: EVENT_PINS.map((pin, i) => ({
       name: labels[pin.key],
       xAxis: indexFromPeriod(pin.period),
+      // I-0: 첫 핀(2011)은 y축과 근접 — 라벨을 선 오른쪽으로 정렬
+      ...(i === 0 && { label: { align: 'left' as const, padding: [0, 0, 0, 3] } }),
     })),
   }
 }

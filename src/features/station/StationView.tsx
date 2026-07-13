@@ -28,8 +28,16 @@ import type {
 import type { DossierPayload } from '../../types/dossier'
 import { CountryDial } from './CountryDial'
 import { AssetRail, type AssetTab } from './AssetRail'
-import { FlowChart, type FlowReadout } from './FlowChart'
-import { CompositionStream } from './CompositionStream'
+import {
+  FlowChart,
+  type ChartExportCtx,
+  type FlowReadout,
+} from './FlowChart'
+import {
+  CompositionStream,
+  type CompositionMode,
+} from './CompositionStream'
+import { SmallMultiples } from './SmallMultiples'
 import { StockBandChart } from './StockBandChart'
 import { PartnerMatrix } from './PartnerMatrix'
 import { LedgerTable } from './LedgerTable'
@@ -70,7 +78,9 @@ export function StationView() {
   )
   const [file, setFile] = useState<StationFile | null>(null)
   const [loadError, setLoadError] = useState<string | null>(null)
-  const [tab, setTab] = useState<AssetTab>('all')
+  // 자산 탭 = 스토어 stationAsset — URL 딥링크·커맨드 팔레트와 단일 경로
+  const tab = useViewStore((s) => s.stationAsset)
+  const setTab = useViewStore((s) => s.setStationAsset)
 
   useEffect(() => {
     if (!visible || index) return
@@ -202,8 +212,21 @@ function StationBody({
   openDossier,
 }: BodyProps) {
   const { t } = useTranslation()
+  // I-5: ALL 탭 구성 영역 보기 전환 (STREAM/MULTIPLES)
+  const [compMode, setCompMode] = useState<CompositionMode>('stream')
   const present = assetsPresent(file)
   const assetLabel = tab === 'all' ? 'ALL ASSETS' : ASSET_LABELS[tab]
+  const exportBase = {
+    country: iso,
+    countryName: name,
+    asset: tab === 'all' ? 'all' : tab,
+    period,
+  }
+  const flowExportCtx: ChartExportCtx = {
+    ...exportBase,
+    sourceIds: ['imf_bop', 'imf_iip'],
+  }
+  const compExportCtx: ChartExportCtx = { ...exportBase, sourceIds: ['imf_iip'] }
   const flows = flowArrays(file, tab, observedOnly)
   const stock = stockAt(file, tab, periodIndex, observedOnly)
   const intensity = flowIntensity(file, tab, periodIndex, observedOnly)
@@ -578,13 +601,28 @@ function StationBody({
               periodIndex={periodIndex}
               onPickPeriod={onPickPeriod}
               readouts={readouts}
+              exportCtx={flowExportCtx}
             />
-            <CompositionStream
-              series={file.series}
-              observedOnly={observedOnly}
-              periodIndex={periodIndex}
-              onPickPeriod={onPickPeriod}
-            />
+            {compMode === 'stream' ? (
+              <CompositionStream
+                series={file.series}
+                observedOnly={observedOnly}
+                periodIndex={periodIndex}
+                onPickPeriod={onPickPeriod}
+                exportCtx={compExportCtx}
+                mode={compMode}
+                onMode={setCompMode}
+              />
+            ) : (
+              <SmallMultiples
+                file={file}
+                observedOnly={observedOnly}
+                periodIndex={periodIndex}
+                onTab={onTab}
+                mode={compMode}
+                onMode={setCompMode}
+              />
+            )}
           </div>
           <PartnerMatrix
             sides={partnerSides}
@@ -621,6 +659,7 @@ function StationBody({
               periodIndex={periodIndex}
               onPickPeriod={onPickPeriod}
               readouts={readouts}
+              exportCtx={flowExportCtx}
             />
           </div>
           <div className="grid min-h-0 grid-rows-[minmax(0,1fr)_minmax(0,1fr)] gap-3">

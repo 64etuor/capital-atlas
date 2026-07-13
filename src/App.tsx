@@ -3,6 +3,8 @@ import { InstrumentCluster } from './components/InstrumentCluster'
 import { BarographTimeline } from './components/BarographTimeline'
 import { ObservationReport } from './components/ObservationReport'
 import { LineageDossier } from './components/LineageDossier'
+import { CommandPalette } from './components/CommandPalette'
+import { TutorialOverlay } from './components/TutorialOverlay'
 import { MapCanvas } from './features/map/MapCanvas'
 import { SynopticView } from './features/synoptic/SynopticView'
 import { StationView } from './features/station/StationView'
@@ -21,6 +23,8 @@ function App() {
       <BarographTimeline />
       <ObservationReport />
       <LineageDossier />
+      <TutorialOverlay />
+      <CommandPalette />
     </div>
   )
 }

@@ -29,6 +29,10 @@ interface ViewState {
   /** last lineage-dossier payload (kept mounted through the exit slide) */
   dossier: DossierPayload | null
   dossierOpen: boolean
+  /** Cmd+K 커맨드 팔레트 (I-2) — Esc 계층의 최상단 */
+  paletteOpen: boolean
+  /** 첫 방문 튜토리얼 (I-4) — 팔레트 명령 TUTORIAL로 재호출 */
+  tutorialOpen: boolean
 
   setAppView: (view: 'globe' | 'synoptic' | 'station') => void
   setBasis: (basis: Basis) => void
@@ -40,6 +44,8 @@ interface ViewState {
   selectCountry: (iso3: string | null) => void
   openDossier: (payload: DossierPayload) => void
   closeDossier: () => void
+  setPaletteOpen: (open: boolean) => void
+  setTutorialOpen: (open: boolean) => void
 }
 
 export const useViewStore = create<ViewState>()((set) => ({
@@ -53,6 +59,8 @@ export const useViewStore = create<ViewState>()((set) => ({
   stationAsset: 'all',
   dossier: null,
   dossierOpen: false,
+  paletteOpen: false,
+  tutorialOpen: false,
 
   setAppView: (appView) => set({ appView }),
   setBasis: (basis) => set({ basis }),
@@ -70,4 +78,6 @@ export const useViewStore = create<ViewState>()((set) => ({
     })),
   openDossier: (payload) => set({ dossier: payload, dossierOpen: true }),
   closeDossier: () => set({ dossierOpen: false }),
+  setPaletteOpen: (paletteOpen) => set({ paletteOpen }),
+  setTutorialOpen: (tutorialOpen) => set({ tutorialOpen }),
 }))

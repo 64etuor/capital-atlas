@@ -40,7 +40,11 @@ export function LineageDossier() {
   useEffect(() => {
     if (!open) return
     const onKey = (e: KeyboardEvent) => {
-      if (e.key === 'Escape') closeDossier()
+      if (e.key !== 'Escape') return
+      // Esc 계층(I-2/I-4): 팔레트·튜토리얼이 위에 열려 있으면 그쪽이 소비
+      const s = useViewStore.getState()
+      if (s.paletteOpen || s.tutorialOpen) return
+      closeDossier()
     }
     window.addEventListener('keydown', onKey)
     return () => window.removeEventListener('keydown', onKey)

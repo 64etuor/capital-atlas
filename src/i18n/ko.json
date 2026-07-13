@@ -121,6 +121,59 @@
       "covid": "COVID-19",
       "tightening": "2022 긴축"
     },
-    "railShare": "{{asset}} · 국가 국경간 잔액의 {{pct}}"
+    "railShare": "{{asset}} · 국가 국경간 잔액의 {{pct}}",
+    "viewModeAria": "구성 보기 전환",
+    "sharedYAria": "멀티플 공유 y-스케일 전환",
+    "multiplesNoFlow": "흐름 관측 없음",
+    "multipleAria": "{{asset}} 자산 상세 열기"
+  },
+  "export": {
+    "pngAria": "출처 표기를 포함한 PNG로 차트 다운로드",
+    "csvAria": "현재 시리즈를 CSV로 다운로드",
+    "fullAria": "차트를 전체 화면으로 확대",
+    "exitFullAria": "전체 화면 차트 닫기",
+    "full": "전체",
+    "exitFull": "닫기"
+  },
+  "palette": {
+    "aria": "커맨드 팔레트",
+    "inputAria": "명령 입력",
+    "placeholder": "명령 입력 — KOR EQTY · 2018-Q1 · OBS · SYNOPTIC",
+    "empty": "일치하는 명령 없음",
+    "footer": "↵ 실행 · ESC 닫기 · 계기 코드가 곧 언어",
+    "kind": {
+      "view": "관측 표면",
+      "country": "관측소",
+      "asset": "자산 탭",
+      "period": "분기",
+      "basis": "귀속 기준",
+      "measure": "측정값",
+      "vis": "시정",
+      "lang": "언어",
+      "tutorial": "튜토리얼"
+    }
+  },
+  "tutorial": {
+    "aria": "첫 방문 튜토리얼",
+    "skip": "건너뛰기",
+    "next": "다음",
+    "done": "완료",
+    "stepOf": "{{n}} / {{total}}",
+    "s1": {
+      "title": "계기 클러스터",
+      "body": "귀속 기준·측정값·통화·시정 다이얼. 모든 표면이 즉시 반응합니다 — OBS 모드는 추정치를 픽셀에서 문자 그대로 제거합니다."
+    },
+    "s2": {
+      "title": "바로그래프 타임라인",
+      "body": "타임라인 자체가 글로벌 흐름 강도 차트입니다. 니들을 드래그해 2010→현재를 시간 여행하면 모든 계기가 따라옵니다."
+    },
+    "s3": {
+      "title": "세 개의 관측 표면",
+      "body": "GLOBE는 살아있는 지도, SYNOPTIC은 세계 개황, STATION은 국가별 분석 콘솔. Cmd+K로 어디든 점프 — KOR EQTY를 입력해 보세요."
+    },
+    "s4": {
+      "title": "모든 숫자는 계보를 엽니다",
+      "body": "어떤 수치든 클릭하면 교정 증명서가 올라옵니다: 출처·산식·신뢰등급·범위·기준일. 계보 없는 숫자는 화면에 올리지 않습니다."
+    }
   }
 }

@@ -75,6 +75,7 @@ export function BarographTimeline() {
 
   return (
     <div
+      data-tour="barograph"
       className={
         // shrink to the remaining width so the observation report (§5, 420px)
         // never clips the right edge of the strip chart

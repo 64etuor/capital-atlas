@@ -4,12 +4,24 @@
  * 안개(투명도)로 가라앉는다. DOM 미니 범례(mono) — 카드 아님.
  */
 import { useEffect, useRef, useState } from 'react'
+import { useTranslation } from 'react-i18next'
 import type { AssetClass, StationPoint } from '../../types/data'
 import { indexFromPeriod } from '../../lib/periods'
 import { formatUsd } from '../../lib/format'
 import { rgbaCss } from '../../lib/tokens'
-import { ASSET_ABBR } from '../synoptic/shared'
 import {
+  attributionFor,
+  csvFilename,
+  downloadCsv,
+  exportEchartsPng,
+  serializeCsv,
+} from '../../lib/exportChart'
+import { ChartControls } from '../../components/ChartControls'
+import { useFullscreenEsc } from '../../lib/useFullscreenEsc'
+import { ASSET_ABBR } from '../synoptic/shared'
+import type { ChartExportCtx } from './FlowChart'
+import {
+  INK_SHEET_BG,
   OBSERVED_GRADES,
   STATION_ASSET_ORDER,
   assetRgb,
@@ -22,11 +34,16 @@ import {
   wireClickToPeriod,
 } from './shared'
 
+export type CompositionMode = 'stream' | 'multiples'
+
 interface Props {
   series: Partial<Record<AssetClass, StationPoint[]>>
   observedOnly: boolean
   periodIndex: number
   onPickPeriod: (index: number) => void
+  exportCtx: ChartExportCtx
+  mode: CompositionMode
+  onMode: (m: CompositionMode) => void
 }
 
 export function CompositionStream({
@@ -34,15 +51,72 @@ export function CompositionStream({
   observedOnly,
   periodIndex,
   onPickPeriod,
+  exportCtx,
+  mode,
+  onMode,
 }: Props) {
+  const { t } = useTranslation()
   const holder = useRef<HTMLDivElement>(null)
   const chartRef = useRef<echarts.ECharts | null>(null)
   // 인터랙티브 범례(P1-6) — 시리즈 숨김/고립
   const [hidden, setHidden] = useState<ReadonlySet<AssetClass>>(new Set())
+  const [full, setFull] = useState(false)
+  useFullscreenEsc(full, () => setFull(false))
   const pickRef = useRef(onPickPeriod)
   useEffect(() => {
     pickRef.current = onPickPeriod
   })
+
+  const exportPng = () => {
+    const chart = chartRef.current
+    if (!chart) return
+    void attributionFor(exportCtx.sourceIds).then((attribution) =>
+      exportEchartsPng(chart, {
+        filename: csvFilename(
+          exportCtx.country,
+          'composition',
+          exportCtx.period,
+        ).replace(/\.csv$/, '.png'),
+        title: `${exportCtx.countryName} — composition stream`,
+        attribution,
+      }),
+    )
+  }
+  const exportCsv = () => {
+    const periods = fullPeriods()
+    const present = STATION_ASSET_ORDER.filter((a) => series[a]?.length)
+    const byAsset = new Map<AssetClass, Array<number | null>>()
+    for (const a of present) {
+      const data: Array<number | null> = periods.map(() => null)
+      for (const p of series[a] ?? []) {
+        if (observedOnly && !OBSERVED_GRADES.has(p.grade)) continue
+        data[indexFromPeriod(p.period)] = p.stock
+      }
+      byAsset.set(a, data)
+    }
+    const rows = periods.map((p, i) => ({
+      period: p,
+      ...Object.fromEntries(present.map((a) => [a, byAsset.get(a)?.[i]])),
+    }))
+    void attributionFor(exportCtx.sourceIds).then((attribution) =>
+      downloadCsv(
+        csvFilename(exportCtx.country, 'composition', exportCtx.period),
+        serializeCsv({
+          meta: {
+            Country: exportCtx.countryName,
+            View: observedOnly ? 'observed-only' : 'observed+estimated',
+            Source: attribution.replace(/^Source: /, ''),
+            Generated: new Date().toISOString().slice(0, 10),
+          },
+          columns: [
+            { key: 'period', label: 'period' },
+            ...present.map((a) => ({ key: a, label: `${a}_stock_usd` })),
+          ],
+          rows,
+        }),
+      ),
+    )
+  }
 
   const assets = STATION_ASSET_ORDER.filter((a) => series[a]?.length)
 
@@ -141,7 +215,15 @@ export function CompositionStream({
   }, [periodIndex, series, observedOnly])
 
   return (
-    <section className="flex min-h-0 flex-col">
+    <section
+      className={
+        // 풀스크린 패딩: 명판·계기 클러스터·바로그래프를 피한다 (FlowChart와 동일)
+        full
+          ? 'fixed inset-0 z-40 flex flex-col gap-2 pb-24 pl-10 pr-28 pt-40'
+          : 'flex min-h-0 flex-col'
+      }
+      style={full ? { background: INK_SHEET_BG } : undefined}
+    >
       <div className="flex shrink-0 items-baseline justify-between gap-4">
         <p className="dial-label text-paper-dim/70">
           COMPOSITION STREAM · STOCKS BY ASSET · 2010→
@@ -181,6 +263,36 @@ export function CompositionStream({
               </span>
             </button>
           ))}
+          {/* I-5: STREAM/MULTIPLES 보기 전환 — 코드 라벨(로케일 불변) */}
+          <span
+            role="group"
+            aria-label={t('station.viewModeAria')}
+            className="flex items-baseline gap-2 border-l border-paper/10 pl-3"
+          >
+            {(['stream', 'multiples'] as const).map((m) => (
+              <button
+                key={m}
+                type="button"
+                aria-pressed={mode === m}
+                onClick={() => onMode(m)}
+                className={
+                  'dial-label transition-colors duration-140 ' +
+                  (mode === m
+                    ? 'text-flow-in'
+                    : 'text-paper-dim/50 hover:text-paper')
+                }
+              >
+                {m === 'stream' ? 'STREAM' : 'MULTIPLES'}
+              </button>
+            ))}
+          </span>
+          <span className="border-l border-paper/10 pl-3">
+            <ChartControls
+              onPng={exportPng}
+              onCsv={exportCsv}
+              full={{ active: full, toggle: () => setFull((f) => !f) }}
+            />
+          </span>
         </div>
       </div>
       <div ref={holder} className="min-h-0 flex-1" />

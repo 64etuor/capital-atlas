@@ -162,13 +162,30 @@ pnpm build          # tsc -b && vite build
   (`TOP 20 = 29% OF GROSS`), COMPOSITION STREAM 범례(`EQTY 35%`), 자산 탭
   hover, 트리맵 hover. VIS=OBS면 전부 관측-한정 변형으로 전환.
 
-### UX 백로그 (리서치 기반, 미적용 사유)
+### 내보내기 · 팔레트 · 튜토리얼 (Phase I — UX 백로그 완주, 잔여 0)
 
-- P2-10 차트 단위 PNG/CSV 내보내기 — 재배포 라이선스 표기 설계(출처 워터마크)
-  선행 필요.
-- P2-11 커맨드 팔레트(Cmd+K, `KOR EQTY` 식 코드 점프) — 코드 체계 안정화 후.
-- P3-15 풀스크린 차트 줌 / P3-16 첫 방문 튜토리얼 / P3-17 small multiples —
-  v1 밀도에서 우선순위 낮음. 근거: `UX_RESEARCH` (리서치 노트, 세션 산출물).
+리서치 백로그 전량 적용:
+
+- **PNG/CSV 내보내기** (P2-10): STATION 흐름 분해·구성 스트림, SYNOPTIC 지진계의
+  `PNG · CSV` 미니 계기. PNG는 하단에 **출처 표기 스트립을 자동 합성** — IMF
+  attribution·World Bank CC BY-4.0 표기 의무가 파일 안에서 이행된다. CSV는
+  `# Source/Grade/Generated` 메타 주석 + RFC4180, 파일명
+  `capital-atlas_{국가}_{자산}_{분기}.csv`. 전부 로컬 Blob — 외부 요청 없음.
+- **커맨드 팔레트** (P2-11): `Cmd/Ctrl+K`. 계기 코드가 곧 명령어 —
+  `KOR EQTY`(한국 상장주식 STATION 점프), `2018-Q1`, `OBS`, `ISS`, `SYNOPTIC`,
+  한글 국가명(`미국 EQTY`)·`TUTORIAL` 지원. 최근 명령 상단, 완전 키보드.
+- **풀스크린 차트** (P3-15): 흐름 분해·구성 스트림의 `전체/FULL` — 브러시·
+  크로스헤어·범례·바로그래프 유지, Esc 복귀.
+- **첫 방문 튜토리얼** (P3-16): 4단계 계기 안내(1회, `atlas.tutorial.v1`),
+  팔레트 `TUTORIAL`로 재호출.
+- **Small multiples** (P3-17): STATION ALL 탭 `STREAM / MULTIPLES` 전환 —
+  자산별 미니 흐름 격자, 공유 y-스케일 기본, 셀 클릭 = 자산 탭 진입.
+
+![커맨드 팔레트 — 계기 코드가 곧 명령어](docs/screenshots/09-palette.png)
+
+| 첫 방문 튜토리얼 | Small multiples |
+|---|---|
+| ![튜토리얼](docs/screenshots/09-tutorial.png) | ![멀티플즈](docs/screenshots/09-multiples.png) |
 
 ## 알려진 한계 (v1 — 의도된 결정)
 

@@ -121,6 +121,59 @@
       "covid": "COVID-19",
       "tightening": "2022 TIGHTENING"
     },
-    "railShare": "{{asset}} · {{pct}} of country cross-border stock"
+    "railShare": "{{asset}} · {{pct}} of country cross-border stock",
+    "viewModeAria": "Composition view mode",
+    "sharedYAria": "Toggle shared y-scale across multiples",
+    "multiplesNoFlow": "NO FLOW OBSERVATIONS",
+    "multipleAria": "Open {{asset}} asset detail"
+  },
+  "export": {
+    "pngAria": "Download chart as PNG with source attribution",
+    "csvAria": "Download current series as CSV",
+    "fullAria": "Expand chart to full screen",
+    "exitFullAria": "Exit full-screen chart",
+    "full": "FULL",
+    "exitFull": "EXIT"
+  },
+  "palette": {
+    "aria": "Command palette",
+    "inputAria": "Command input",
+    "placeholder": "TYPE A COMMAND — KOR EQTY · 2018-Q1 · OBS · SYNOPTIC",
+    "empty": "NO MATCHING COMMAND",
+    "footer": "↵ RUN · ESC CLOSE · CODES ARE THE LANGUAGE",
+    "kind": {
+      "view": "surface",
+      "country": "station",
+      "asset": "asset tab",
+      "period": "quarter",
+      "basis": "basis",
+      "measure": "measure",
+      "vis": "visibility",
+      "lang": "language",
+      "tutorial": "tutorial"
+    }
+  },
+  "tutorial": {
+    "aria": "First-visit tutorial",
+    "skip": "SKIP",
+    "next": "NEXT",
+    "done": "DONE",
+    "stepOf": "{{n}} / {{total}}",
+    "s1": {
+      "title": "INSTRUMENT CLUSTER",
+      "body": "Basis, measure, currency and visibility dials. Every surface reacts immediately — OBS mode literally removes estimated data from the pixels."
+    },
+    "s2": {
+      "title": "BAROGRAPH TIMELINE",
+      "body": "The timeline is itself a chart of global flow intensity. Drag the needle to time-travel 2010→today; every instrument follows."
+    },
+    "s3": {
+      "title": "THREE SURFACES",
+      "body": "GLOBE is the living map, SYNOPTIC the world bulletin, STATION the per-country analysis console. Cmd+K jumps anywhere — try KOR EQTY."
+    },
+    "s4": {
+      "title": "EVERY NUMBER OPENS ITS LINEAGE",
+      "body": "Click any figure to raise its calibration sheet: source, method, confidence grade, range and dates. No number ships without provenance."
+    }
   }
 }
