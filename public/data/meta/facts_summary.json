@@ -1,0 +1,1 @@
+{"records":410678,"by_table":{"stocks":78717,"flows_country":116255,"flows_bilateral":215706},"by_grade":{"A":193717,"D":26259,"E":5863,"B":151965,"C":32874},"gzip_bytes":4922368,"schema":"docs/DATA_CONTRACT.md#factsndjsongz"}
