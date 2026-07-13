@@ -22,7 +22,9 @@ const TONE = {
 export function GaugeStrip({ gauges }: { gauges: Gauge[] }) {
   const openDossier = useViewStore((s) => s.openDossier)
   return (
-    <div className="flex shrink-0 items-baseline gap-0 border-y border-paper/10">
+    // flex-wrap: 좁은 폭에서 스트립이 우측 계기 클러스터 레일을 침범하지 않고
+    // 둘째 줄로 접힌다 (감사 1200px 겹침)
+    <div className="flex shrink-0 flex-wrap items-baseline gap-0 border-y border-paper/10">
       {gauges.map((g, i) => (
         <button
           key={g.label}
