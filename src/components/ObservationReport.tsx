@@ -477,7 +477,7 @@ export function ObservationReport() {
                       onClick={() =>
                         openDossier({
                           title: `${r.owner_country} → ${r.issuer_country} · ${ASSET_LABELS[r.asset]}`,
-                          subtitle: `CPIS bilateral position · ${r.period}`,
+                          subtitle: `${r.source_id === 'bis_lbs' ? 'LBS banking' : 'CPIS'} bilateral position · ${r.period}`,
                           value_usd: r.value_usd,
                           grade: r.confidence_grade,
                           method: r.estimate_method,

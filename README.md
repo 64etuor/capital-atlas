@@ -93,15 +93,20 @@ pnpm build          # tsc -b && vite build
 | **IMF IIP** | 대외 자산·부채 잔액, 국가×분기 (2010~) | A | IMF terms — attribution |
 | **IMF BOP** | 금융계정 실거래 흐름 (바로그래프 실루엣) | A | IMF terms — attribution |
 | **IMF PIP** (CPIS 후속) | 양자 포트폴리오 포지션 (연간) | A | IMF terms — attribution |
+| **BIS LBS** | 국경 간 은행 loans&deposits 양자 회랑 (분기, Phase M) | B | BIS terms — attribution |
 | **World Bank WDI** | 상장주식 시총(발행국 총액)·GDP | B | CC BY-4.0 |
 | **CoinGecko** | 암호자산 글로벌 통제값 | B | free API — attribution |
 | 내부 폴백 모델 | 롤포워드 / 지역-중앙값 GDP비율 / 주택자산 | D–E | internal estimate, ±20~35% |
 
-신 IMF API(`api.imf.org/external/sdmx/2.1`, SDMX XML)에서 수집. BIS(채권·은행)는 v1 제외.
-스냅샷 기준일 **2026-07-12**, 최신 관측 분기 **2026-Q1**(IIP), WB 시총은 2024년까지.
+신 IMF API(`api.imf.org/external/sdmx/2.1`, SDMX XML)와 BIS Data Portal API
+(`stats.bis.org/api/v2`, SDMX-CSV)에서 수집. BIS 채무증권(DSS)은 후속.
+최신 관측 분기 **2026-Q1**(IIP), WB 시총은 2024년까지. 명판의 "추정 기준"
+날짜는 데이터 스냅샷 빈티지(`index.generated_at`)다.
 
-현재 스냅샷 규모: 198개국 마스터, 그중 127개국 대외잔액 관측, PIP 보고국 81개.
-분기 65개(2010-Q1~2026-Q1) 샤딩, 총 산출 ~56.6 MB(샤드당 ≤~1.6 MB, lazy-load).
+현재 스냅샷 규모: 198개국 마스터, 그중 127개국 대외잔액 관측, PIP 보고국 81개,
+BIS 은행 보고국 39개(회랑 15만 건 — 마스터 밖 역외센터 BM/GG/IM/JE/KY는 정직
+드랍, `pipeline_report.bis_lbs` 기록). 분기 65개(2010-Q1~2026-Q1) 샤딩, 총 산출
+~183 MB(파일당 ≤~2.2 MB, 전부 lazy-load). 은행 회랑 갱신: `pnpm data:bis`(멱등).
 
 ## 신뢰등급 A–E와 안개 렌더링
 

@@ -21,7 +21,8 @@ pnpm data:check   # 계약 스키마(zod) + 상식 범위 게이트 (CI-able)
 | `imf_pip` | 양자 포트폴리오 포지션 (CPIS), 연간 2013~ | ✅ 81개 보고국, 273,743 obs | A |
 | `wb_wdi` | 상장주식 시총(발행국 총액)·GDP, 연간 | ✅ 1,150 / 3,071 obs | B |
 | `coingecko_global` | 암호자산 글로벌 통제값 | ✅ (국가배분은 v2) | B |
-| BIS (LBS/DSS) | 국제은행·채무증권 | ❌ v1 제외 | — |
+| `bis_lbs` | 국경 간 은행 loans&deposits 양자 회랑, 분기 (Phase M) | ✅ 39개 보고국, 150,815 회랑 | B |
+| BIS DSS | 채무증권 발행잔액 | ❌ 미착수 (후속) | — |
 
 **IMF API 주의**: 구 `dataservices.imf.org`는 DNS까지 폐기됨. 신 API는
 `api.imf.org/external/sdmx/2.1` — **데이터는 SDMX StructureSpecificData XML만**
@@ -31,7 +32,20 @@ pnpm data:check   # 계약 스키마(zod) + 상식 범위 게이트 (CI-able)
 - 잔액 엔트리: `A_P`/`L_P`. **흐름 엔트리는 `A_NFA_T`(자산 순취득)/`L_NIL_T`(부채 순발생)** — `A_T`/`L_T` 아님(1차 실행 0건의 원인).
 - PIP 키: `COUNTRY.ACCOUNTING_ENTRY.INDICATOR.SECTOR.COUNTERPART_SECTOR.COUNTERPART_COUNTRY.FREQUENCY` — `{iso3}.A.P_F51_P_USD+P_F3_P_USD.S1.S1..A`
 - OBS_VALUE는 절대 USD (KOR D A_P 2024-Q4 ≈ $769.5B로 검증).
-- BIS 제외 사유: 15차원 DSD 역공학 비용 대비 v1 기여도 낮음(채권 발행잔액은 v2).
+
+**BIS API (Phase M, 2026-07-13 실호출 프로브)**: `stats.bis.org/api/v2/data/dataflow/`
+SDMX 2.1 REST, `format=csv`(SDMX-CSV) 지원 — IMF와 달리 CSV가 나와 파싱이 쉽다.
+
+- LBS dataflow: `BIS/WS_LBS_D_PUB/1.0`, key **12차원**
+  `Q.S.{C|L}.G.TO1.A.5J.A.{REP}.A.{CP}.N` (S=잔액, C/L=claims/liabilities,
+  G=loans and deposits, TO1=전통화, 5J=전체 모행 소재국, N=cross-border).
+- 값은 `OBS_VALUE × 10^UNIT_MULT`(=6, 백만 USD). 검증: KR→US claims 2024-Q4
+  = $47.670B, KR liabilities to US = $14.191B (샤드 병합값과 정확 일치).
+- 보고국은 런타임 발견(1분기 전체 와일드카드) — 39개국 채택, **BM/GG/IM/JE/KY
+  5곳은 국가 마스터 밖(역외센터)이라 정직 드랍** + `pipeline_report.bis_lbs`에 기록.
+- 상품 G는 loans+deposits 합산 — 포지션 방향으로 분류(claims=loans/
+  liabilities=deposits), grade B + estimate_method로 공개. 수집: `pnpm data:bis`
+  (멱등 병합, 전체 재수집 불요).
 
 ## 자산 매핑 (BPM6 → 계약 asset)
 
@@ -77,6 +91,10 @@ pnpm data:check   # 계약 스키마(zod) + 상식 범위 게이트 (CI-able)
 - `value_usd_constant_fx` 미산출(환율 시계열 미수집) — 계약상 optional.
 - IIP `P_F5`에 펀드지분 포함 → `funds` asset은 미분리.
 - PIP 파생 flow는 가격효과 미조정(D등급으로 정직 표기).
-- 총 산출 ~54MB(65분기 샤드) — git에는 무겁지만 정적 서빙엔 문제없음. 샤드당 최대
-  ~1.6MB로 5MB 조항 준수. lazy-load 전제.
+- 총 산출 ~183MB(Phase M 은행 회랑 합류 후; station 사전집계 85.9MiB 포함) —
+  git에는 무겁지만 정적 서빙엔 문제없음. 파일당 최대 ~2.2MB(bilateral Q4)로
+  5MB 조항 준수. 전부 lazy-load 전제. station 용량이 부담되면 후속에서 은행
+  파트너 시계열 상한(top-N) 검토.
+- BIS 양자합 ↔ IIP 국가 총계는 보고국 커버리지 차이로 불일치 — 조정하지 않고
+  `pipeline_report.bis_lbs`에 기록(§12 폐합 정신, §5 중복 가드).
 - 2026-Q1이 최신 분기(IIP 기준). WB 시총은 2024년까지.

@@ -79,8 +79,10 @@ TS 미러: `src/types/data.ts` — 문서와 타입이 다르면 이 문서가 �
 }
 ```
 
-- `estimate_method`/`lower_bound`/`upper_bound`는 **추정치(C~E)에서 필수**,
-  관측치(A/B)에선 생략.
+- `estimate_method`/`lower_bound`/`upper_bound`는 **추정치(C~E)에서 필수**.
+- A에선 셋 다 생략. **B는 `estimate_method`를 분류·매핑 주석 용도로 가질 수
+  있다**(값 자체는 직접 관측인데 분류에 매핑 가정이 개입한 경우 — 예: BIS LBS
+  G 상품의 포지션 방향 분류). `lower/upper_bound`는 여전히 D/E 전용.
 
 ### stocks_{basis}.json
 
@@ -128,6 +130,19 @@ TS 미러: `src/types/data.ts` — 문서와 타입이 다르면 이 문서가 �
 - CPIS 원자료는 **포지션(stock)**. 파생 순거래(`measure: "flow"`)를 실을 땐
   `confidence_grade: "C"` 이상 불가 + `estimate_method: "position_change_adjusted_for_price_and_fx"`.
 
+**은행 채널 (Phase M — BIS LBS)**: `flows_bilateral`에 분기 은행 회랑이 병합된다
+(`source_id: "bis_lbs"`, `asset: loans|deposits`, `measure: "stock"`, grade B).
+- 방향 매핑: LBS claims(보고국 은행의 대외 채권) → `asset=loans`,
+  owner=보고국 / liabilities(상대국의 예치) → `asset=deposits`, owner=상대국.
+  LBS G(loans and deposits) 합산 상품의 포지션-방향 분류이므로 grade B +
+  `estimate_method: "lbs_loans_and_deposits_instrument_mapped_by_position_side"`.
+- **중복 가드(§5)**: `stocks_owner`의 deposits/loans 국가 총계(IIP, A)는 불변 —
+  BIS는 양자 분해만 담당. 총계↔양자합 불일치는 보고국 커버리지 차이로 자연스럽고,
+  조정하지 않고 `pipeline_report.bis_lbs`에 기록한다(§12).
+- 이 병합으로 `flows_bilateral` 가용 기간이 연(Q4)에서 **분기**로 확장된다
+  (분기 샤드는 은행 채널만, Q4 샤드는 CPIS+은행 혼합). 재생성: `pnpm data:bis`
+  (전체 재수집 불요, 멱등) 또는 `data:fetch` 체인.
+
 ### meta/sources.json — 수집 분류 포함
 
 SSOT는 `scripts/fetch/registry.ts`. 발행 파일은 `pnpm data:sources`(retrieved_at 보존)
@@ -154,7 +169,7 @@ SSOT는 `scripts/fetch/registry.ts`. 발행 파일은 `pnpm data:sources`(retrie
 | mode | 의미 | cadence 허용값 | v1 소스 |
 |---|---|---|---|
 | `live_market` | 실시간·일중 시장 데이터. 발표 지연 없음, 폴링/스트림 대상 | intraday, daily | coingecko_global |
-| `batch_official` | 공식 통계 배치. 분기/연간 + 발표 지연이 본질 — "실시간" 개념 없음 | monthly, quarterly, annual | imf_iip, imf_bop, imf_pip, wb_wdi |
+| `batch_official` | 공식 통계 배치. 분기/연간 + 발표 지연이 본질 — "실시간" 개념 없음 | monthly, quarterly, annual | imf_iip, imf_bop, imf_pip, imf_ifs_fx, bis_lbs, wb_wdi |
 | `derived_model` | 파이프라인 내부 파생·모델. 수집이 아니라 계산 (grade C–E) | quarterly, annual | model_regional_median, model_gdp_ratio |
 | `static_reference` | 정적 참조 (지오메트리·국가 마스터, vendored 패키지) | static | natural_earth, world_countries |
 

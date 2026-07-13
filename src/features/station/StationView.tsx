@@ -450,7 +450,7 @@ function StationBody({
             dossier: cp
               ? {
                   title: `${name} · ${assetLabel} — top-5 counterparty share`,
-                  subtitle: `CPIS positions · ${cp.period}`,
+                  subtitle: `Bilateral positions · ${cp.period}`,
                   value_usd: cp.gross_usd,
                   grade: cp.grade,
                   method: cp.method,
@@ -468,12 +468,12 @@ function StationBody({
                 }
               : {
                   title: `${name} · ${assetLabel} — top-5 counterparty share`,
-                  subtitle: 'no CPIS bilateral positions for this scope',
+                  subtitle: 'no bilateral positions for this scope',
                   value_usd: 0,
                   grade: 'A',
-                  source_ids: ['imf_pip'],
+                  source_ids: ['imf_pip', 'bis_lbs'],
                   context: [
-                    ['Reason', 'not a CPIS reporter, or asset not covered'],
+                    ['Reason', 'no CPIS/LBS bilateral reporting for this scope'],
                   ],
                 },
           },
@@ -484,7 +484,7 @@ function StationBody({
             dossier: cp
               ? {
                   title: `${name} · ${assetLabel} — counterparty HHI`,
-                  subtitle: `CPIS positions · ${cp.period}`,
+                  subtitle: `Bilateral positions · ${cp.period}`,
                   value_usd: cp.gross_usd,
                   grade: cp.grade,
                   method: cp.method,
@@ -499,12 +499,12 @@ function StationBody({
                 }
               : {
                   title: `${name} · ${assetLabel} — counterparty HHI`,
-                  subtitle: 'no CPIS bilateral positions for this scope',
+                  subtitle: 'no bilateral positions for this scope',
                   value_usd: 0,
                   grade: 'A',
-                  source_ids: ['imf_pip'],
+                  source_ids: ['imf_pip', 'bis_lbs'],
                   context: [
-                    ['Reason', 'not a CPIS reporter, or asset not covered'],
+                    ['Reason', 'no CPIS/LBS bilateral reporting for this scope'],
                   ],
                 },
           },
