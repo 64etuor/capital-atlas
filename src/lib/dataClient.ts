@@ -31,19 +31,49 @@ export interface CountriesGeo {
   }>
 }
 
+/**
+ * Bounded LRU for period shards — timeline scrubbing across 65 quarters must
+ * not grow memory forever. Meta files (index/countries/geometry/sources/
+ * flow_intensity) are pinned: tiny, needed everywhere, never evicted.
+ */
+export const MAX_SHARD_CACHE = 16
+
+const isShardPath = (path: string) => /^\/data\/(stocks_|flows_)/.test(path)
+
 const inflight = new Map<string, Promise<unknown>>()
 
 function fetchJson<T>(path: string): Promise<T> {
-  let p = inflight.get(path)
-  if (!p) {
-    p = fetch(path).then((res) => {
-      if (!res.ok) throw new Error(`${path}: HTTP ${res.status}`)
-      return res.json() as Promise<T>
-    })
-    p.catch(() => inflight.delete(path)) // allow retry after a failed load
-    inflight.set(path, p)
+  const cached = inflight.get(path)
+  if (cached) {
+    if (isShardPath(path)) {
+      // LRU refresh: re-insert as most recent (Map preserves insertion order)
+      inflight.delete(path)
+      inflight.set(path, cached)
+    }
+    return cached as Promise<T>
   }
-  return p as Promise<T>
+  const p = fetch(path).then((res) => {
+    if (!res.ok) throw new Error(`${path}: HTTP ${res.status}`)
+    return res.json() as Promise<T>
+  })
+  // allow retry after a failed load — identity-guarded so a late rejection
+  // of an evicted promise cannot delete a newer entry under the same path
+  p.catch(() => {
+    if (inflight.get(path) === p) inflight.delete(path)
+  })
+  inflight.set(path, p)
+  if (isShardPath(path)) {
+    let excess = -MAX_SHARD_CACHE
+    for (const k of inflight.keys()) if (isShardPath(k)) excess++
+    for (const k of inflight.keys()) {
+      if (excess <= 0) break
+      if (k !== path && isShardPath(k)) {
+        inflight.delete(k)
+        excess--
+      }
+    }
+  }
+  return p
 }
 
 export const getIndex = () => fetchJson<PeriodIndexFile>('/data/index.json')
@@ -56,17 +86,30 @@ export const getFlowIntensity = () =>
 
 let countriesP: Promise<Map<string, CountryMaster>> | null = null
 export function getCountries(): Promise<Map<string, CountryMaster>> {
-  countriesP ??= fetchJson<CountryMaster[]>('/data/countries.json').then(
-    (arr) => new Map(arr.map((c) => [c.iso3, c])),
-  )
+  if (!countriesP) {
+    const p = fetchJson<CountryMaster[]>('/data/countries.json').then(
+      (arr) => new Map(arr.map((c) => [c.iso3, c])),
+    )
+    // a transient failure must not poison the singleton — clear for retry
+    p.catch(() => {
+      if (countriesP === p) countriesP = null
+    })
+    countriesP = p
+  }
   return countriesP
 }
 
 let sourcesP: Promise<Map<string, SourceRegistryEntry>> | null = null
 export function getSources(): Promise<Map<string, SourceRegistryEntry>> {
-  sourcesP ??= fetchJson<SourceRegistryEntry[]>('/data/meta/sources.json').then(
-    (arr) => new Map(arr.map((s) => [s.source_id, s])),
-  )
+  if (!sourcesP) {
+    const p = fetchJson<SourceRegistryEntry[]>(
+      '/data/meta/sources.json',
+    ).then((arr) => new Map(arr.map((s) => [s.source_id, s])))
+    p.catch(() => {
+      if (sourcesP === p) sourcesP = null
+    })
+    sourcesP = p
+  }
   return sourcesP
 }
 

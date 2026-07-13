@@ -28,7 +28,7 @@ export const failures: FetchFailure[] = []
 const sleep = (ms: number) => new Promise((r) => setTimeout(r, ms))
 
 /**
- * Bounded-retry fetch: 3 attempts, backoff 1s/3s (+0–500ms jitter).
+ * Bounded-retry fetch: 3 attempts, backoff 3s/5s (+0–500ms jitter).
  * Returns null on terminal failure (recorded in `failures`).
  */
 export async function fetchBounded(
@@ -37,7 +37,9 @@ export async function fetchBounded(
 ): Promise<string | null> {
   const { accept, timeoutMs = 90_000 } = opts
   let lastError = ''
+  let attemptsMade = 0
   for (let attempt = 1; attempt <= 3; attempt++) {
+    attemptsMade = attempt
     try {
       const res = await fetch(url, {
         headers: accept ? { accept } : undefined,
@@ -52,7 +54,7 @@ export async function fetchBounded(
     }
     if (attempt < 3) await sleep(attempt * 2000 + 1000 + Math.random() * 500)
   }
-  failures.push({ url, attempts: 3, lastError, at: new Date().toISOString() })
+  failures.push({ url, attempts: attemptsMade, lastError, at: new Date().toISOString() })
   console.error(`[fetch] TERMINAL FAILURE ${url} — ${lastError}`)
   return null
 }
@@ -120,7 +122,8 @@ export function parseSdmxSeries(xml: string): SdmxSeries[] {
     const attrs: Record<string, string> = {}
     for (const [, k, v] of m[1].matchAll(/([A-Z_0-9]+)="([^"]*)"/g)) attrs[k] = v
     const obs: SdmxObs[] = []
-    for (const [, o] of m[2].matchAll(/<Obs ([^/>]*)\/>/g)) {
+    // lazy [^>]*? (not [^/>]*): attribute values may contain "/" characters
+    for (const [, o] of m[2].matchAll(/<Obs ([^>]*?)\/>/g)) {
       const period = /TIME_PERIOD="([^"]*)"/.exec(o)?.[1]
       const value = /OBS_VALUE="([^"]*)"/.exec(o)?.[1]
       if (period && value !== undefined && value !== '' && value !== 'NaN') {
@@ -142,7 +145,10 @@ export function toQuarter(period: string): string | null {
   const y = /^(\d{4})$/.exec(period)
   if (y) return `${y[1]}-Q4` // annual figures land on year-end
   const m = /^(\d{4})-(\d{2})$/.exec(period)
-  if (m) return `${m[1]}-Q${Math.ceil(Number(m[2]) / 3)}`
+  if (m) {
+    const month = Number(m[2])
+    if (month >= 1 && month <= 12) return `${m[1]}-Q${Math.ceil(month / 3)}`
+  }
   return null
 }
 
