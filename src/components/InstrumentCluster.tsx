@@ -88,7 +88,9 @@ const ESTIMATES: readonly DialOption<EstimateView>[] = [
 
 /** 우측 계기 클러스터 — basis · measure · currency · estimates 수직 스택. */
 export function InstrumentCluster() {
-  const reportOpen = useViewStore((s) => s.selectedCountry !== null)
+  const reportOpen = useViewStore(
+    (s) => s.selectedCountry !== null && s.appView === 'globe',
+  )
   const basis = useViewStore((s) => s.basis)
   const measure = useViewStore((s) => s.measure)
   const currency = useViewStore((s) => s.currency)

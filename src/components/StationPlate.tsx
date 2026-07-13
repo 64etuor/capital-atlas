@@ -4,6 +4,7 @@ import { useViewStore } from '../store/viewStore'
 const SURFACES = [
   { value: 'globe', label: 'GLOBE' },
   { value: 'synoptic', label: 'SYNOPTIC' },
+  { value: 'station', label: 'STATION' },
 ] as const
 
 /** 좌상 관측소 명판 — 워드마크 + 이중 시각 스탬프 + 관측 표면 전환 (§5). */

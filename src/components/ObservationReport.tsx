@@ -71,7 +71,9 @@ export function ObservationReport() {
   const basis = useViewStore((s) => s.basis)
   const includeEstimates = useViewStore((s) => s.includeEstimates)
   const periodIndex = useViewStore((s) => s.periodIndex)
-  const open = selectedCountry !== null
+  const appView = useViewStore((s) => s.appView)
+  // STATION/SYNOPTIC은 자체 표면이 국가 데이터를 보여준다 — 리포트는 지구본 전용
+  const open = selectedCountry !== null && appView === 'globe'
 
   const [countries, setCountries] = useState<Map<string, CountryMaster>>(
     () => new Map(),

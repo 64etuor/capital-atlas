@@ -8,8 +8,8 @@ import { periodCount } from '../lib/periods'
  * detail panels read from here.
  */
 interface ViewState {
-  /** 관측 표면: 지구본(GLOBE) 또는 종관도(SYNOPTIC) */
-  appView: 'globe' | 'synoptic'
+  /** 관측 표면: 지구본(GLOBE) / 종관도(SYNOPTIC) / 관측 분석(STATION) */
+  appView: 'globe' | 'synoptic' | 'station'
   basis: Basis
   measure: MeasureType
   currency: CurrencyView
@@ -23,7 +23,7 @@ interface ViewState {
   dossier: DossierPayload | null
   dossierOpen: boolean
 
-  setAppView: (view: 'globe' | 'synoptic') => void
+  setAppView: (view: 'globe' | 'synoptic' | 'station') => void
   setBasis: (basis: Basis) => void
   setMeasure: (measure: MeasureType) => void
   setCurrency: (currency: CurrencyView) => void

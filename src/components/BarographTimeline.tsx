@@ -39,7 +39,9 @@ function buildAreaPath(series: FlowIntensityPoint[], count: number): string {
 export function BarographTimeline() {
   const periodIndex = useViewStore((s) => s.periodIndex)
   const setPeriodIndex = useViewStore((s) => s.setPeriodIndex)
-  const reportOpen = useViewStore((s) => s.selectedCountry !== null)
+  const reportOpen = useViewStore(
+    (s) => s.selectedCountry !== null && s.appView === 'globe',
+  )
   const [series, setSeries] = useState<FlowIntensityPoint[]>([])
 
   useEffect(() => {
