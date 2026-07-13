@@ -64,8 +64,11 @@ export function CirculationChart({
             : t('synoptic.circulationAwaiting')}
         </div>
       ) : (
+        // 라벨은 HTML 오버레이 — 비균등 스트레치 SVG 안의 <text>는 글리프가
+        // 함께 늘어나 뭉개진다(아크는 non-scaling-stroke로 무관).
+        <div className="relative mt-1 min-h-0 w-full flex-1">
         <svg
-          className="mt-1 min-h-0 w-full flex-1"
+          className="absolute inset-0 h-full w-full"
           viewBox="0 0 100 100"
           preserveAspectRatio="none"
           role="img"
@@ -110,33 +113,26 @@ export function CirculationChart({
               />
             )
           })}
+        </svg>
           {owners.map((c, i) => (
-            <text
+            <span
               key={`o-${c}`}
-              x={10.5}
-              y={y(i, owners.length)}
-              textAnchor="end"
-              dominantBaseline="middle"
-              className="fill-paper-dim font-mono"
-              fontSize={3.2}
+              className="readout absolute left-0 w-[10.5%] -translate-y-1/2 pr-1 text-right text-[10px] leading-none tracking-[0.08em] text-paper-dim"
+              style={{ top: `${y(i, owners.length)}%` }}
             >
               {c}
-            </text>
+            </span>
           ))}
           {issuers.map((c, i) => (
-            <text
+            <span
               key={`i-${c}`}
-              x={89.5}
-              y={y(i, issuers.length)}
-              textAnchor="start"
-              dominantBaseline="middle"
-              className="fill-paper-dim font-mono"
-              fontSize={3.2}
+              className="readout absolute right-0 w-[10.5%] -translate-y-1/2 pl-1 text-left text-[10px] leading-none tracking-[0.08em] text-paper-dim"
+              style={{ top: `${y(i, issuers.length)}%` }}
             >
               {c}
-            </text>
+            </span>
           ))}
-        </svg>
+        </div>
       )}
       {rows.length > 0 && (
         <p className="readout shrink-0 text-[10px] text-paper-dim/70">
