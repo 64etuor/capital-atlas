@@ -68,8 +68,12 @@ pnpm i
 pnpm dev            # Vite dev 서버 → http://localhost:5173
 
 # 데이터 파이프라인 (선택 — 스냅샷은 이미 public/data/에 커밋돼 있음)
-pnpm data:fetch     # 공개 API 수집(24h 캐시) + 조립 → public/data/
-pnpm data:check     # 계약 스키마(zod) + 상식 범위 게이트 (CI-able)
+# 재수집 시 아래 순서 전체를 실행해야 파생 파일(synoptic/station/sources)이 샤드와 정합한다.
+pnpm data:fetch     # ① 공개 API 수집(24h 캐시) + 조립 → public/data/ 샤드
+pnpm data:synoptic  # ② SYNOPTIC 사전 집계 재생성 (커밋된 샤드에서, 네트워크 없음)
+pnpm data:station   # ③ STATION 국가별 집계 + 집중도(§14) 재생성 (네트워크 없음)
+pnpm data:sources   # ④ meta/sources.json 재발행 (retrieved_at 보존)
+pnpm data:check     # ⑤ 계약 스키마(zod) + 상식 범위 게이트 (CI-able)
 
 # 검증
 pnpm typecheck      # tsc -b
@@ -200,8 +204,9 @@ pnpm build          # tsc -b && vite build
   시계열은 v2.
 - **극지 통과 입자류.** 대권항로가 극점 부근을 지날 때의 스파이크는 고도를 극지에서
   0으로 테이퍼링해 크게 완화했으나, 북극 상공 흐름 밀집 구간엔 잔여 번들이 남는다.
-- **번들 청크.** deck.gl/echarts를 별도 청크로 분리(앱 청크 230 KB)했으나 `deck.js`
-  단독이 여전히 ~713 KB(> 500 KB 경고) — deck.gl 자체 크기. 내부 분할은 v2 리스크.
+- **번들 청크.** deck.gl/echarts를 별도 청크로 분리(앱 청크 ~386 KB)했으나 `deck.js`
+  단독 ~713 KB · `echarts` ~605 KB로 둘 다 > 500 KB 경고 — 라이브러리 자체 크기.
+  내부 분할은 v2 리스크.
 - **데이터 정밀도 한계**(파이프라인 상세): IIP `P_F5`에 펀드지분 포함 →`funds` 미분리 ·
   PIP 파생 flow는 가격효과 미조정(D등급) · 양자 레코드 |값| < $100M 프루닝(가치의 99.8%
   보존, 드롭 수는 `meta/pipeline_report.json`에 기록).

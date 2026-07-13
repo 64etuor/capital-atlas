@@ -350,7 +350,9 @@ function StationBody({
         method: 'net_flow_4q / avg(open,close stock)',
         effective_date: quarterEnd(period),
         source_ids: ['imf_bop', 'imf_iip'],
-        context: [['Charter §14', '흐름강도 = 기간순유입 / 기초·기말평균잔액']],
+        context: [
+          ['Charter §14', 'intensity = period net inflow / mean(open, close) balance'],
+        ],
       },
     },
     {
@@ -409,7 +411,7 @@ function StationBody({
                         ? `${(worldShare * 100).toFixed(2)}%`
                         : '— (observed-only mode)',
                     ],
-                    ['Charter §14', '국가비중 = 조정잔액_c / Σ_c 조정잔액'],
+                    ['Charter §14', 'world share = adjusted balance_c / Σ_c adjusted balance'],
                   ],
                 }
               : {
@@ -470,7 +472,7 @@ function StationBody({
                   source_ids: cp.source_ids,
                   context: [
                     ['HHI', cp.hhi.toFixed(4)],
-                    ['Class', `${hhiClass(cp.hhi)} (0.15 / 0.25 관용 구간)`],
+                    ['Class', `${hhiClass(cp.hhi)} (0.15 / 0.25 bands)`],
                     ['Top counterparty', cp.top5[0]?.country ?? '—'],
                     ['Counterparties', String(cp.n_partners)],
                   ],
