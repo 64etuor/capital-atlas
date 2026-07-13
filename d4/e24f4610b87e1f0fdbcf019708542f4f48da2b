@@ -1,0 +1,151 @@
+scripts/build/reconcile.test.ts
+  s_e47a5eda862f84::t_0ef1b91d73d12c 1-129
+scripts/build/reconcile.ts
+  s_e47a5eda862f84::t_a4173287f0ca06 1-172
+public/data/meta/reconciliation.json
+  s_e47a5eda862f84::t_d470e01c82a57a 1
+public/data/reconciliation/2010-Q1.json
+  s_e47a5eda862f84::t_7497ab8d4f180f 1
+public/data/reconciliation/2010-Q2.json
+  s_e47a5eda862f84::t_1f6550d47d94ad 1
+public/data/reconciliation/2010-Q3.json
+  s_e47a5eda862f84::t_9a0a38d2a6bae4 1
+public/data/reconciliation/2010-Q4.json
+  s_e47a5eda862f84::t_16e6f31934416b 1
+public/data/reconciliation/2011-Q1.json
+  s_e47a5eda862f84::t_64ace66345e2c6 1
+public/data/reconciliation/2011-Q2.json
+  s_e47a5eda862f84::t_b2ecf77cff30a1 1
+public/data/reconciliation/2011-Q3.json
+  s_e47a5eda862f84::t_f2c382371b826c 1
+public/data/reconciliation/2011-Q4.json
+  s_e47a5eda862f84::t_986ce15416497e 1
+public/data/reconciliation/2012-Q1.json
+  s_e47a5eda862f84::t_6303b2514f225a 1
+public/data/reconciliation/2012-Q2.json
+  s_e47a5eda862f84::t_58a24a9aeba71b 1
+public/data/reconciliation/2012-Q3.json
+  s_e47a5eda862f84::t_84fc5f8726efa0 1
+public/data/reconciliation/2012-Q4.json
+  s_e47a5eda862f84::t_9bc9453fb55e92 1
+public/data/reconciliation/2013-Q1.json
+  s_e47a5eda862f84::t_89bafc527ea016 1
+public/data/reconciliation/2013-Q2.json
+  s_e47a5eda862f84::t_24e1fe0acc3af2 1
+public/data/reconciliation/2013-Q3.json
+  s_e47a5eda862f84::t_89ee8c846a4ada 1
+public/data/reconciliation/2013-Q4.json
+  s_e47a5eda862f84::t_660dbf3b37536b 1
+public/data/reconciliation/2014-Q1.json
+  s_e47a5eda862f84::t_92b7c4600e9193 1
+public/data/reconciliation/2014-Q2.json
+  s_e47a5eda862f84::t_5ca9d2198639dd 1
+public/data/reconciliation/2014-Q3.json
+  s_e47a5eda862f84::t_1abb9009e268d3 1
+public/data/reconciliation/2014-Q4.json
+  s_e47a5eda862f84::t_ab1951b1f266f9 1
+public/data/reconciliation/2015-Q1.json
+  s_e47a5eda862f84::t_fdf2388096e4c1 1
+public/data/reconciliation/2015-Q2.json
+  s_e47a5eda862f84::t_596be1cc8b99d0 1
+public/data/reconciliation/2015-Q3.json
+  s_e47a5eda862f84::t_65908f577f288f 1
+public/data/reconciliation/2015-Q4.json
+  s_e47a5eda862f84::t_45ae02b93e9690 1
+public/data/reconciliation/2016-Q1.json
+  s_e47a5eda862f84::t_838098542ae6ff 1
+public/data/reconciliation/2016-Q2.json
+  s_e47a5eda862f84::t_6741d20eb4c10a 1
+public/data/reconciliation/2016-Q3.json
+  s_e47a5eda862f84::t_e388e1654566b8 1
+public/data/reconciliation/2016-Q4.json
+  s_e47a5eda862f84::t_fec964f510928b 1
+public/data/reconciliation/2017-Q1.json
+  s_e47a5eda862f84::t_913a47dd38794e 1
+public/data/reconciliation/2017-Q2.json
+  s_e47a5eda862f84::t_9e80e6e2cb5af8 1
+public/data/reconciliation/2017-Q3.json
+  s_e47a5eda862f84::t_942ad143c83eb5 1
+public/data/reconciliation/2017-Q4.json
+  s_e47a5eda862f84::t_5953888b30639c 1
+public/data/reconciliation/2018-Q1.json
+  s_e47a5eda862f84::t_8ca85d41d01d6e 1
+public/data/reconciliation/2018-Q2.json
+  s_e47a5eda862f84::t_bc4ea03c151983 1
+public/data/reconciliation/2018-Q3.json
+  s_e47a5eda862f84::t_c99077cde47a6e 1
+public/data/reconciliation/2018-Q4.json
+  s_e47a5eda862f84::t_492e3e07fd7183 1
+public/data/reconciliation/2019-Q1.json
+  s_e47a5eda862f84::t_74309fea08cfd5 1
+public/data/reconciliation/2019-Q2.json
+  s_e47a5eda862f84::t_a260aeca781352 1
+public/data/reconciliation/2019-Q3.json
+  s_e47a5eda862f84::t_c16c20823ed269 1
+public/data/reconciliation/2019-Q4.json
+  s_e47a5eda862f84::t_5998872debfaac 1
+public/data/reconciliation/2020-Q1.json
+  s_e47a5eda862f84::t_09175530a3f909 1
+public/data/reconciliation/2020-Q2.json
+  s_e47a5eda862f84::t_8c35db56bdc9e7 1
+public/data/reconciliation/2020-Q3.json
+  s_e47a5eda862f84::t_5c81ec135a2d80 1
+public/data/reconciliation/2020-Q4.json
+  s_e47a5eda862f84::t_abb398695f4af5 1
+public/data/reconciliation/2021-Q1.json
+  s_e47a5eda862f84::t_493c97d04586b1 1
+public/data/reconciliation/2021-Q2.json
+  s_e47a5eda862f84::t_08b4c72ae46774 1
+public/data/reconciliation/2021-Q3.json
+  s_e47a5eda862f84::t_af6711d8461148 1
+public/data/reconciliation/2021-Q4.json
+  s_e47a5eda862f84::t_ae9e766938fdfc 1
+public/data/reconciliation/2022-Q1.json
+  s_e47a5eda862f84::t_936985a7dcb780 1
+public/data/reconciliation/2022-Q2.json
+  s_e47a5eda862f84::t_dae95629fc47c7 1
+public/data/reconciliation/2022-Q3.json
+  s_e47a5eda862f84::t_7f02b3213f7d64 1
+public/data/reconciliation/2022-Q4.json
+  s_e47a5eda862f84::t_882f673d087f98 1
+public/data/reconciliation/2023-Q1.json
+  s_e47a5eda862f84::t_15f61fd879fca8 1
+public/data/reconciliation/2023-Q2.json
+  s_e47a5eda862f84::t_2e7279f2fa8585 1
+public/data/reconciliation/2023-Q3.json
+  s_e47a5eda862f84::t_856594107b9554 1
+public/data/reconciliation/2023-Q4.json
+  s_e47a5eda862f84::t_97d39089fe2ad5 1
+public/data/reconciliation/2024-Q1.json
+  s_e47a5eda862f84::t_4ef122607a5151 1
+public/data/reconciliation/2024-Q2.json
+  s_e47a5eda862f84::t_5cf857c6464613 1
+public/data/reconciliation/2024-Q3.json
+  s_e47a5eda862f84::t_460392cb455ca9 1
+public/data/reconciliation/2024-Q4.json
+  s_e47a5eda862f84::t_ff460ab137de4e 1
+public/data/reconciliation/2025-Q1.json
+  s_e47a5eda862f84::t_a4085209a93858 1
+public/data/reconciliation/2025-Q2.json
+  s_e47a5eda862f84::t_ed43c1c1c84ef3 1
+public/data/reconciliation/2025-Q3.json
+  s_e47a5eda862f84::t_0062405075daf5 1
+public/data/reconciliation/2025-Q4.json
+  s_e47a5eda862f84::t_33af5e9d20879f 1
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.13",
+  "base_commit_sha": "d4e24f4610b87e1f0fdbcf019708542f4f48da2b",
+  "prompts": {},
+  "sessions": {
+    "s_e47a5eda862f84": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "a46a31a4-8363-4a90-b740-7e96b4bf3615",
+        "model": "claude-fable-5"
+      },
+      "human_author": "64etuor <130260521+64etuor@users.noreply.github.com>"
+    }
+  }
+}
