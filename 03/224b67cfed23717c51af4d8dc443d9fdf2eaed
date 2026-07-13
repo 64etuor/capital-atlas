@@ -1,0 +1,48 @@
+src/types/data.ts
+  s_e47a5eda862f84::t_9ef18e8f8ec4ad 81-93,101-110
+package.json
+  s_e47a5eda862f84::t_d494c02b71a32b 15
+docs/DATA_CONTRACT.md
+  s_e47a5eda862f84::t_0f55b91ca6676a 128-131,136-137,139-143,149-160
+  s_bc598d61f0e8c3::t_33495fc927bc19 161
+scripts/fetch/registry.test.ts
+  s_e47a5eda862f84::t_184e4fb7d4e2f2 1-121
+scripts/run.ts
+  s_e47a5eda862f84::t_028cb14bac3f0a 10-11
+  s_e47a5eda862f84::t_fd8af57a15a826 25-31
+src/components/LineageDossier.tsx
+  s_e47a5eda862f84::t_3be7141e695995 139-150
+  s_e47a5eda862f84::t_67cf56dca422c0 6-14
+scripts/fetch/registry.ts
+  s_e47a5eda862f84::t_b7035ef88ad0d7 72,74
+  s_e47a5eda862f84::t_78783602fe64ee 92,94-95,102,104-105,112,115
+  s_e47a5eda862f84::t_3473427b6f7ebd 1-71,73,75-91,93,96-101,103,106-111,113-114,116-144
+scripts/build/sources.ts
+  s_e47a5eda862f84::t_2a5f4b035b4ac4 1-38
+public/data/meta/sources.json
+  s_e47a5eda862f84::t_29b1f93cbf184f 1
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.12",
+  "base_commit_sha": "03224b67cfed23717c51af4d8dc443d9fdf2eaed",
+  "prompts": {},
+  "sessions": {
+    "s_bc598d61f0e8c3": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "019f598d-a831-7c01-be74-e28fe6f7fa24",
+        "model": "gpt-5.6-sol"
+      },
+      "human_author": "64etuor <130260521+64etuor@users.noreply.github.com>"
+    },
+    "s_e47a5eda862f84": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "a46a31a4-8363-4a90-b740-7e96b4bf3615",
+        "model": "claude-fable-5"
+      },
+      "human_author": "64etuor <130260521+64etuor@users.noreply.github.com>"
+    }
+  }
+}
