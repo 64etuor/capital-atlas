@@ -92,7 +92,8 @@
       "retrieved": "수집일",
       "license": "라이선스",
       "coverage": "커버리지",
-      "view": "보기"
+      "view": "보기",
+      "revisions": "개정 이력"
     },
     "observedValue": "— (관측값)",
     "directObservation": "직접 관측",
@@ -101,6 +102,10 @@
       "batch_official": "공식 배치",
       "derived_model": "파생 모델",
       "static_reference": "정적 참조"
+    },
+    "revisions": {
+      "none": "{{date}} 이후 개정 없음",
+      "notTracked": "{{date}} 이전은 미추적"
     }
   },
   "synoptic": {

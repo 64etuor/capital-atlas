@@ -215,6 +215,15 @@ export function ObservationReport() {
       upper_bound: bounds?.[1],
       effective_date: current.stocks[0]?.effective_date,
       source_ids: [...new Set(current.stocks.map((r) => r.source_id))],
+      // Phase N §15.5 — 헤드라인 총계는 빈티지 개정 대조 대상
+      revision_key: selectedCountry
+        ? {
+            basis,
+            country: selectedCountry,
+            asset: 'total',
+            period: current.stocksEff ?? period,
+          }
+        : undefined,
       context: [
         [
           t('report.ctxCoverage'),

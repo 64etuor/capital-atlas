@@ -1,10 +1,49 @@
 import { useEffect, useState } from 'react'
 import { useViewStore } from '../store/viewStore'
-import { getSources } from '../lib/dataClient'
+import { getSources, getVintage, getVintagesIndex } from '../lib/dataClient'
 import { formatUsd } from '../lib/format'
 import { fogAlpha } from '../lib/tokens'
 import { useTranslation } from 'react-i18next'
 import type { SourceRegistryEntry } from '../types/data'
+import type { DossierPayload } from '../types/dossier'
+
+/**
+ * REVISIONS (Phase N, §15.5) — 빈티지 다이제스트와 현재 값을 대조해 소급
+ * 개정을 노출한다. 흐름/파생 지표는 revision_key가 없어 행 자체가 생략된다.
+ */
+type RevisionState =
+  | { kind: 'loading' }
+  | { kind: 'none'; since: string }
+  | { kind: 'notTracked'; first: string }
+  | { kind: 'rows'; rows: Array<{ date: string; from: number; to: number }> }
+
+const MAX_REVISION_VINTAGES = 6
+
+async function loadRevisions(
+  key: NonNullable<DossierPayload['revision_key']>,
+  current: number,
+): Promise<RevisionState> {
+  const { vintages } = await getVintagesIndex()
+  if (vintages.length === 0) return { kind: 'notTracked', first: '—' }
+  const recent = vintages.slice(-MAX_REVISION_VINTAGES).reverse()
+  const rows: Array<{ date: string; from: number; to: number }> = []
+  let tracked = false
+  for (const date of recent) {
+    const d = await getVintage(date)
+    const entry =
+      key.asset === 'total'
+        ? d.totals[key.basis]?.[key.country]
+        : d.stocks[key.basis]?.[key.country]?.[key.asset]
+    if (!entry || entry.p !== key.period) continue // 분기 불일치 = 비교 불가
+    tracked = true
+    if (Math.abs(entry.v - current) / (Math.abs(current) || 1) > 1e-4)
+      rows.push({ date, from: entry.v, to: current })
+  }
+  if (!tracked) return { kind: 'notTracked', first: vintages[0] }
+  return rows.length > 0
+    ? { kind: 'rows', rows }
+    : { kind: 'none', since: vintages[0] }
+}
 
 function Row({ label, children }: { label: string; children: React.ReactNode }) {
   return (
@@ -30,12 +69,45 @@ export function LineageDossier() {
   const [sources, setSources] = useState<Map<string, SourceRegistryEntry>>(
     () => new Map(),
   )
+  const [revResult, setRevResult] = useState<{
+    id: string
+    state: RevisionState
+  } | null>(null)
 
   useEffect(() => {
     getSources().then(setSources).catch(() => {
       /* dossier still renders source_ids raw if the registry fails */
     })
   }, [])
+
+  // REVISIONS (§15.5) — 열릴 때만 빈티지 다이제스트 lazy-load, 날조 금지.
+  // 로딩 상태는 결과 id 불일치로 파생(effect 내 동기 setState 금지 규칙 준수).
+  const revisionKey = payload?.revision_key
+  const revisionValue = payload?.value_usd
+  const revId = revisionKey
+    ? `${revisionKey.basis}|${revisionKey.country}|${revisionKey.asset}|${revisionKey.period}|${revisionValue}`
+    : null
+  useEffect(() => {
+    if (!open || !revisionKey || revisionValue === undefined || revId === null)
+      return
+    let alive = true
+    loadRevisions(revisionKey, revisionValue)
+      .then((state) => {
+        if (alive) setRevResult({ id: revId, state })
+      })
+      .catch(() => {
+        // 빈티지 인덱스 부재 = 아직 추적 이력 없음 (정직 표기)
+        if (alive)
+          setRevResult({ id: revId, state: { kind: 'notTracked', first: '—' } })
+      })
+    return () => {
+      alive = false
+    }
+  }, [open, revisionKey, revisionValue, revId])
+  const revisions: RevisionState =
+    revResult && revResult.id === revId
+      ? revResult.state
+      : { kind: 'loading' }
 
   useEffect(() => {
     if (!open) return
@@ -159,6 +231,26 @@ export function LineageDossier() {
           {payload.effective_date && (
             <Row label={t('dossier.rows.effective')}>
               {payload.effective_date}
+            </Row>
+          )}
+          {payload.revision_key && (
+            <Row label={t('dossier.rows.revisions')}>
+              {revisions.kind === 'loading' && '…'}
+              {revisions.kind === 'none' &&
+                t('dossier.revisions.none', { date: revisions.since })}
+              {revisions.kind === 'notTracked' &&
+                t('dossier.revisions.notTracked', { date: revisions.first })}
+              {revisions.kind === 'rows' &&
+                revisions.rows.map((r) => {
+                  const pct = ((r.to - r.from) / Math.abs(r.from)) * 100
+                  return (
+                    <span key={r.date} className="block">
+                      {r.date} · {formatUsd(r.from)} → {formatUsd(r.to)} ·{' '}
+                      {pct >= 0 ? '+' : ''}
+                      {pct.toFixed(2)}%
+                    </span>
+                  )
+                })}
             </Row>
           )}
           {firstSource && (

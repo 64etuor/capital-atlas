@@ -249,6 +249,32 @@ live 데이터는 `meta/` 통제값·오버레이 전용.
 - `value_usd_constant_fx`(stocks)는 **미산출 유지** — IIP 통화구성 없이 constant-FX는
   가정 주입(허위 정밀도). v3에서 통화구성 확보 후 재검토.
 
+### 결정론적 샤드 + vintages/ — 이중 시간 (Phase N, 초안 §10)
+
+**결정론 계약**: 개별 샤드(`stocks_*`·`flows_*`·`station/*`)와 파생 파일
+(`meta/synoptic.json`·`meta/flow_intensity.json`·`meta/fx_rates.json`)은
+**타임스탬프를 갖지 않는다** — 동일 상류 데이터 = 동일 바이트(테스트
+`scripts/build/deterministic.test.ts`가 바이트 수준 강제). 타임스탬프 보유는
+`index.json generated_at`(데이터 빈티지 정본)·`meta/sources.json retrieved_at`
+(수집 시각)·`meta/pipeline_report.json`·`meta/global_crypto.json`뿐.
+
+**커밋 게이트**: `pnpm data:changed`가 워킹트리↔HEAD를 대조해
+실질(substantive) / 타임스탬프-전용 / 메타데이터로 분류한다. 일일 크론
+(`data-refresh.yml`)은 실질 변경일 때만 커밋·배포한다.
+
+**빈티지 다이제스트** (`public/data/vintages/{YYYY-MM-DD}.json` + `index.json`):
+실질 변경 커밋마다 `pnpm data:vintage`가 스냅샷 요약을 보존한다 — TS 미러
+`VintageDigestFile`. 내용: (basis→국가→자산) 최신 관측 `{p,v,g}`, (basis→국가)
+최신분기 총계 `{p,v}`, 글로벌 요약, flow_intensity `(p,v)`. 날짜 =
+`index.generated_at` 날짜부(내부 타임스탬프 없음 = 다이제스트도 결정론적).
+파일당 5MB 조항 준수(현행 ~150KB).
+
+**REVISIONS 행**(도시에, §15.5): `DossierPayload.revision_key`
+(`{basis, country, asset|'total', period}`)가 있는 수치는 빈티지 다이제스트와
+대조된다 — 분기 일치 + 상대차 >1e-4일 때만 개정으로 표기(다른 분기 값을
+개정으로 오인 금지). 미추적 키는 "not tracked before {date}" 정직 표기.
+stock 계열만 추적(흐름·파생 지표는 revision_key 없음 = 행 생략).
+
 ## enum 정본
 
 - `basis`: `owner` | `issuer` | `location`

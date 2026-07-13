@@ -92,7 +92,8 @@
       "retrieved": "Retrieved",
       "license": "License",
       "coverage": "Coverage",
-      "view": "View"
+      "view": "View",
+      "revisions": "Revisions"
     },
     "observedValue": "— (observed value)",
     "directObservation": "DIRECT OBSERVATION",
@@ -101,6 +102,10 @@
       "batch_official": "OFFICIAL BATCH",
       "derived_model": "DERIVED MODEL",
       "static_reference": "STATIC REFERENCE"
+    },
+    "revisions": {
+      "none": "no revisions since {{date}}",
+      "notTracked": "not tracked before {{date}}"
     }
   },
   "synoptic": {

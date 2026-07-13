@@ -68,13 +68,16 @@ pnpm i
 pnpm dev            # Vite dev 서버 → http://localhost:5173
 
 # 데이터 파이프라인 (선택 — 스냅샷은 이미 public/data/에 커밋돼 있음)
-# 재수집 시 아래 순서 전체를 실행해야 파생 파일(synoptic/station/sources)이 샤드와 정합한다.
+# 재수집 시 아래 순서 전체를 실행해야 파생 파일이 샤드와 정합한다.
 pnpm data:fetch     # ① 공개 API 수집(24h 캐시) + 조립 → public/data/ 샤드 (환율 포함)
 pnpm data:fx        # ①-b (선택) 환율만 단독 재수집 — data:fetch에 이미 포함
-pnpm data:synoptic  # ② SYNOPTIC 사전 집계 재생성 (커밋된 샤드에서, 네트워크 없음)
-pnpm data:station   # ③ STATION 국가별 집계 + 집중도(§14) 재생성 (네트워크 없음)
-pnpm data:sources   # ④ meta/sources.json 재발행 (retrieved_at 보존)
-pnpm data:check     # ⑤ 계약 스키마(zod) + 상식 범위 게이트 (CI-able)
+pnpm data:bis       # ② BIS 은행 회랑 재병합 (assemble이 bilateral을 재생성하므로 필수)
+pnpm data:synoptic  # ③ SYNOPTIC 사전 집계 재생성 (커밋된 샤드에서, 네트워크 없음)
+pnpm data:station   # ④ STATION 국가별 집계 + 집중도(§14) 재생성 (네트워크 없음)
+pnpm data:sources   # ⑤ meta/sources.json 재발행 (retrieved_at 보존)
+pnpm data:check     # ⑥ 계약 스키마(zod) + 상식 범위 게이트 (CI-able)
+pnpm data:changed   # ⑦ 실질 변경 vs 타임스탬프-전용 분류 (커밋 게이트)
+pnpm data:vintage   # ⑧ 실질 변경 시 빈티지 다이제스트 보존 (개정 이력의 원천)
 
 # 검증
 pnpm typecheck      # tsc -b
@@ -85,6 +88,22 @@ pnpm build          # tsc -b && vite build
 `data:fetch`가 굽는 원시 응답은 `data-raw/`(gitignore)에 보존되고 24h 내 재사용된다.
 파이프라인 상세는 [`docs/DATA_PIPELINE.md`](./docs/DATA_PIPELINE.md),
 데이터 계약(정본)은 [`docs/DATA_CONTRACT.md`](./docs/DATA_CONTRACT.md).
+
+### 결정론·빈티지·개정 이력 (Phase N — 초안 §10 이중 시간)
+
+- **샤드는 결정론적이다**: 개별 샤드/파생 파일에 타임스탬프가 없다 — 같은 상류
+  데이터면 같은 바이트(재빌드 198파일 md5 동일 실증). 데이터 빈티지는
+  `index.json generated_at`이 유일 정본(명판 "추정 기준"의 근거).
+- **일일 크론은 실질 변경일 때만 커밋한다**: `data:changed`가 타임스탬프-전용
+  변경(index.generated_at·sources.retrieved_at)과 실질 변경을 구분 — 데이터가
+  안 바뀐 날은 커밋·배포가 발생하지 않는다(레포 비대화 방지).
+- **실질 변경 커밋마다 빈티지 다이제스트**(`public/data/vintages/{날짜}.json`,
+  ~150KB)를 보존한다: (basis·국가·자산) 최신분기 값+등급, 국가 총계, 글로벌
+  요약. IMF/WB의 소급 개정은 계보 도시에의 **REVISIONS** 행이 이 다이제스트와
+  현재 값을 대조해 노출한다(`2026-07-12 $41.02T → $41.06T · +0.10%` 식).
+  아직 개정이 관측되지 않았으면 "no revisions since {최초 빈티지}"로 정직 표기.
+- **스크린샷 정책**: 문서 스크린샷의 명판 날짜는 촬영 시점의 데이터 빈티지다.
+  일일 크론 운영상 날짜-단독 드리프트는 정상이며 재촬영 사유가 아니다.
 
 ## 데이터 소스
 

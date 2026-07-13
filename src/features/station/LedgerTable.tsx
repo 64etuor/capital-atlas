@@ -21,6 +21,8 @@ interface Props {
     valueUsd: number,
     period: StationPoint['period'],
   ) => Array<[string, string]>
+  /** Phase N §15.5 — 있으면 원장 행 도시에에 빈티지 개정 대조 키 부여 */
+  assetKey?: string
 }
 
 export function LedgerTable({
@@ -30,6 +32,7 @@ export function LedgerTable({
   fmtAt = (v, _p, d) => formatUsd(v, d ?? 1),
   fmtNetAt = (v, _p, d) => formatUsdNet(v, d ?? 1),
   fxRowsAt,
+  assetKey,
 }: Props) {
   const openDossier = useViewStore((s) => s.openDossier)
   const rows = [...points]
@@ -66,6 +69,16 @@ export function LedgerTable({
                 upper_bound: p.stock_upper,
                 effective_date: quarterEnd(p.period),
                 source_ids: [p.source_id ?? 'imf_iip'],
+                // Phase N §15.5 — stock 원장 행은 빈티지 개정 대조 대상
+                revision_key:
+                  assetKey && iso3 !== 'WLD'
+                    ? {
+                        basis: 'owner',
+                        country: iso3,
+                        asset: assetKey,
+                        period: p.period,
+                      }
+                    : undefined,
                 context: [
                   ['Net flow', formatUsdNet(p.flow_in - p.flow_out)],
                   ['Valuation', formatUsdNet(p.valuation)],
