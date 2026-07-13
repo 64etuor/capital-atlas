@@ -42,6 +42,62 @@ function walk(dir: string): string[] {
   })
 }
 
+/**
+ * 비ASCII 리터럴 게이트 (Phase K — 감사가 적발한 구조적 사각 보수):
+ * 기존 게이트는 JSX 텍스트/속성만 봐서 JS 배열 리터럴 속 한글 하드코딩
+ * (예: 도시에 context 행)을 놓쳤다. 주석을 제거한 뒤 UI 소스(.ts 포함)에
+ * 남는 한글은 전부 위반 — 5353f2a의 실누수 3건을 적발하는 패턴임을 검증함.
+ */
+const NONASCII_DIRS = ['components', 'features', 'lib', 'store'].map((d) =>
+  join(new URL('..', import.meta.url).pathname, d),
+)
+
+/** 파일 단위 화이트리스트 — 사유 필수. */
+const NONASCII_ALLOW: ReadonlyArray<{ file: RegExp; why: string }> = [
+  {
+    file: /lib\/palette\.ts$/,
+    why: '국가 한글 별칭 검색 데이터 — 입력 매칭용, 표시 프로즈 아님',
+  },
+  {
+    file: /lib\/format\.ts$/,
+    why: 'ko 로케일 분기 포맷터 구현("년/분기") — 로케일 인자로 게이트됨',
+  },
+]
+
+function stripComments(src: string): string {
+  return src
+    .replace(/\/\*[\s\S]*?\*\//g, '')
+    .replace(/(^|\s)\/\/[^\n]*/g, '$1') // "://"(URL)는 보존
+}
+
+function walkTs(dir: string): string[] {
+  return readdirSync(dir).flatMap((name) => {
+    const p = join(dir, name)
+    if (statSync(p).isDirectory()) return walkTs(p)
+    return /\.tsx?$/.test(name) && !/\.test\./.test(name) ? [p] : []
+  })
+}
+
+describe('non-ASCII literal gate', () => {
+  it('no Hangul survives outside comments in UI sources (.ts and .tsx)', () => {
+    const offenders: string[] = []
+    for (const dir of NONASCII_DIRS) {
+      for (const file of walkTs(dir)) {
+        if (NONASCII_ALLOW.some((a) => a.file.test(file))) continue
+        const body = stripComments(readFileSync(file, 'utf8'))
+        for (const [i, line] of body.split('\n').entries()) {
+          if (/[ㄱ-힝]/.test(line)) {
+            offenders.push(
+              `${file.split('/src/')[1]}:${i + 1}: ${line.trim().slice(0, 80)}`,
+            )
+          }
+        }
+      }
+    }
+    expect(offenders).toEqual([])
+  })
+})
+
 describe('hardcoded prose gate', () => {
   it('UI prose goes through t() — no literal aria/placeholder/title/multi-word text', () => {
     const offenders: string[] = []
