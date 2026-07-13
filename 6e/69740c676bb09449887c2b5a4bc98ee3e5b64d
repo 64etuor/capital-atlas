@@ -1,0 +1,39 @@
+scripts/build/vintage.test.ts
+  s_e47a5eda862f84::t_4a48d22b5e066a 1-11,13-121
+  s_e47a5eda862f84::t_5a816a7aa5f5f4 12
+scripts/check/changed.ts
+  s_e47a5eda862f84::t_23163f2b17fee2 1-8,10-39,41,44-46,49,51-90,98-107,109-138
+  s_e47a5eda862f84::t_162b002bd139d1 9
+  s_e47a5eda862f84::t_ac3be2ba57dbab 40,42-43,47-48,50
+  s_e47a5eda862f84::t_7efb55bde32415 108
+  s_e47a5eda862f84::t_8d4a2732b34ef5 93-94,96-97
+  s_e47a5eda862f84::t_67db9d06b097aa 91-92,95
+scripts/check/changed.test.ts
+  s_e47a5eda862f84::t_cceb8a8e9423c0 1-94
+scripts/build/vintage.ts
+  s_e47a5eda862f84::t_6547c67f81bf01 1-173
+package.json
+  s_e47a5eda862f84::t_217ec48c301a6d 19-20
+.github/workflows/data-refresh.yml
+  s_e47a5eda862f84::t_a7da7011813a60 31-33,38-44,46-51
+public/data/vintages/2026-07-13.json
+  s_e47a5eda862f84::t_a5696824047c87 1
+public/data/vintages/index.json
+  s_e47a5eda862f84::t_65d384edd8c337 1
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.13",
+  "base_commit_sha": "6e69740c676bb09449887c2b5a4bc98ee3e5b64d",
+  "prompts": {},
+  "sessions": {
+    "s_e47a5eda862f84": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "a46a31a4-8363-4a90-b740-7e96b4bf3615",
+        "model": "claude-fable-5"
+      },
+      "human_author": "64etuor <130260521+64etuor@users.noreply.github.com>"
+    }
+  }
+}
