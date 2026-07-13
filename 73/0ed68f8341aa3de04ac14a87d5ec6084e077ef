@@ -1,0 +1,39 @@
+scripts/run.ts
+  s_e47a5eda862f84::t_05068b2b082f1f 10,12
+  s_e47a5eda862f84::t_0b3a6e0d9df6a3 29-40
+scripts/build/concentration.ts
+  s_e47a5eda862f84::t_62fa15de26a328 33-34
+  s_e47a5eda862f84::t_f999c49f4c271f 21-22
+scripts/build/bank_merge.ts
+  s_e47a5eda862f84::t_7d0377ea947517 12-17
+  s_e47a5eda862f84::t_65c0aa1403b127 53
+  s_e47a5eda862f84::t_ccf1f41c3d17bb 41
+  s_e47a5eda862f84::t_32d89a3f76bc57 1-11,18-40,42-52,54-105
+scripts/fetch/bis.ts
+  s_e47a5eda862f84::t_3a9586f93ae8db 1-169
+scripts/check/sanity.ts
+  s_e47a5eda862f84::t_337f3ec849f5b0 53-73
+package.json
+  s_e47a5eda862f84::t_70bc248addecc5 17
+scripts/fetch/bis.test.ts
+  s_e47a5eda862f84::t_d1096fa57343b0 1-151
+scripts/fetch/registry.ts
+  s_e47a5eda862f84::t_8b007b7ab38122 91-100
+  s_e47a5eda862f84::t_6e333ae9e0428f 90
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.13",
+  "base_commit_sha": "730ed68f8341aa3de04ac14a87d5ec6084e077ef",
+  "prompts": {},
+  "sessions": {
+    "s_e47a5eda862f84": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "a46a31a4-8363-4a90-b740-7e96b4bf3615",
+        "model": "claude-fable-5"
+      },
+      "human_author": "64etuor <130260521+64etuor@users.noreply.github.com>"
+    }
+  }
+}
