@@ -1,0 +1,25 @@
+scripts/build/facts.ts
+  s_e47a5eda862f84::t_b55023c4f8d11a 1-168
+scripts/build/facts.test.ts
+  s_e47a5eda862f84::t_ccc71199c59c2f 1-158
+package.json
+  s_e47a5eda862f84::t_0c62306f6d416b 23-25
+public/data/meta/facts_summary.json
+  s_e47a5eda862f84::t_26b4e3145f6de8 1
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.13",
+  "base_commit_sha": "90999c9793d81477ed82bbeceb2fb2b84f1fa651",
+  "prompts": {},
+  "sessions": {
+    "s_e47a5eda862f84": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "a46a31a4-8363-4a90-b740-7e96b4bf3615",
+        "model": "claude-fable-5"
+      },
+      "human_author": "64etuor <130260521+64etuor@users.noreply.github.com>"
+    }
+  }
+}
