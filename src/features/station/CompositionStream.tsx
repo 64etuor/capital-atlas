@@ -3,7 +3,7 @@
  * 추정 점이 문자 그대로 소멸(§6 — null 갭). 추정 비중이 큰 시리즈는
  * 안개(투명도)로 가라앉는다. DOM 미니 범례(mono) — 카드 아님.
  */
-import { useEffect, useRef } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import type { AssetClass, StationPoint } from '../../types/data'
 import { indexFromPeriod } from '../../lib/periods'
 import { formatUsd } from '../../lib/format'
@@ -37,6 +37,8 @@ export function CompositionStream({
 }: Props) {
   const holder = useRef<HTMLDivElement>(null)
   const chartRef = useRef<echarts.ECharts | null>(null)
+  // 인터랙티브 범례(P1-6) — 시리즈 숨김/고립
+  const [hidden, setHidden] = useState<ReadonlySet<AssetClass>>(new Set())
   const pickRef = useRef(onPickPeriod)
   useEffect(() => {
     pickRef.current = onPickPeriod
@@ -47,7 +49,9 @@ export function CompositionStream({
   useEffect(() => {
     const el = holder.current
     // effect 내부에서 재파생 — 렌더 스코프 배열 identity에 의존하지 않는다
-    const assetsIn = STATION_ASSET_ORDER.filter((a) => series[a]?.length)
+    const assetsIn = STATION_ASSET_ORDER.filter(
+      (a) => series[a]?.length && !hidden.has(a),
+    )
     if (!el || assetsIn.length === 0) return
     const chart = echarts.init(el, null, { renderer: 'canvas' })
     chartRef.current = chart
@@ -112,7 +116,7 @@ export function CompositionStream({
       chart.dispose()
       chartRef.current = null
     }
-  }, [series, observedOnly])
+  }, [series, observedOnly, hidden])
 
   useEffect(() => {
     chartRef.current?.setOption({
@@ -128,16 +132,35 @@ export function CompositionStream({
         </p>
         <div className="flex items-baseline gap-3">
           {assets.map((a) => (
-            <span key={a} className="flex items-center gap-1">
+            <button
+              key={a}
+              type="button"
+              aria-pressed={!hidden.has(a)}
+              onClick={() =>
+                setHidden((prev) => {
+                  const next = new Set(prev)
+                  if (next.has(a)) next.delete(a)
+                  else next.add(a)
+                  return next
+                })
+              }
+              className="flex items-center gap-1 transition-opacity duration-140"
+              style={{ opacity: hidden.has(a) ? 0.3 : 1 }}
+            >
               <span
                 aria-hidden="true"
                 className="h-1.5 w-1.5"
                 style={{ background: rgbaCss(assetRgb(a), 0.9) }}
               />
-              <span className="dial-label text-[9px] text-paper-dim/70">
+              <span
+                className={
+                  'dial-label text-[9px] text-paper-dim/70 ' +
+                  (hidden.has(a) ? 'line-through' : '')
+                }
+              >
                 {ASSET_ABBR[a]}
               </span>
-            </span>
+            </button>
           ))}
         </div>
       </div>

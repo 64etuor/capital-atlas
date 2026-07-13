@@ -4,10 +4,12 @@
  * 어법) — 실거래 막대에 절대 합산하지 않는다. 클릭 = 그 분기로 스크럽.
  * 수치 리드아웃은 버튼 — 어떤 숫자든 계보 도시에(§1.5).
  */
-import { useEffect, useRef } from 'react'
+import { useEffect, useRef, useState } from 'react'
+import { useTranslation } from 'react-i18next'
 import { formatUsdNet } from '../../lib/format'
 import { rgbVar, rgbaCss } from '../../lib/tokens'
 import {
+  annotationMarkLine,
   echarts,
   fullPeriods,
   monoTooltip,
@@ -52,9 +54,13 @@ export function FlowChart({
   onPickPeriod,
   readouts,
 }: Props) {
+  const { t, i18n } = useTranslation()
   const holder = useRef<HTMLDivElement>(null)
   const chartRef = useRef<echarts.ECharts | null>(null)
   const pickRef = useRef(onPickPeriod)
+  // 브러시 드래그 직후의 zr click 오발동 차단 (P1-8)
+  const brushRef = useRef(false)
+  const [zoomed, setZoomed] = useState(false)
   useEffect(() => {
     pickRef.current = onPickPeriod
   })
@@ -100,6 +106,17 @@ export function FlowChart({
       },
       xAxis: periodAxis(periods),
       yAxis: usdAxis(),
+      // 브러시 전용 줌 창(P1-8) — 휠/팬은 비활성, dispatchAction으로만 구동
+      dataZoom: [
+        {
+          type: 'inside',
+          xAxisIndex: 0,
+          filterMode: 'none',
+          zoomOnMouseWheel: false,
+          moveOnMouseMove: false,
+          moveOnMouseWheel: false,
+        },
+      ],
       series: [
         {
           name: 'IN',
@@ -124,6 +141,12 @@ export function FlowChart({
           data: net,
           showSymbol: false,
           lineStyle: { color: rgbaCss(paper, 0.9), width: 1.4 },
+          // 역사적 이벤트 주석 (P2-13) — 흐름 급변 판독 앵커
+          markLine: annotationMarkLine({
+            euro: t('station.annotations.euro'),
+            covid: t('station.annotations.covid'),
+            tightening: t('station.annotations.tightening'),
+          }),
         },
         {
           name: 'VAL',
@@ -138,15 +161,76 @@ export function FlowChart({
         },
       ],
     })
-    wireClickToPeriod(chart, (i) => pickRef.current(i), periods.length)
+    wireClickToPeriod(
+      chart,
+      (i) => pickRef.current(i),
+      periods.length,
+      () => brushRef.current,
+    )
+
+    // ── 기간 브러시(P1-8): 수평 드래그 ≥8px = 구간 확대, 클릭은 스크럽 유지 ──
+    const sel = document.createElement('div')
+    sel.style.cssText =
+      'position:absolute;top:0;bottom:20px;display:none;pointer-events:none;' +
+      `background:${rgbaCss(amber, 0.07)};` +
+      `border-left:1px solid ${rgbaCss(amber, 0.5)};` +
+      `border-right:1px solid ${rgbaCss(amber, 0.5)};`
+    el.appendChild(sel)
+    const zr = chart.getZr()
+    let downX: number | null = null
+    let dragging = false
+    const toIndex = (x: number): number => {
+      const conv = chart.convertFromPixel({ gridIndex: 0 }, [x, 0]) as unknown as
+        | [number, number]
+        | null
+      const idx = conv ? Math.round(conv[0]) : 0
+      return Math.min(Math.max(idx, 0), periods.length - 1)
+    }
+    const onDown = (e: { offsetX: number }) => {
+      downX = e.offsetX
+      dragging = false
+      brushRef.current = false
+    }
+    const onMove = (e: { offsetX: number }) => {
+      if (downX === null) return
+      if (Math.abs(e.offsetX - downX) > 8) {
+        dragging = true
+        sel.style.display = 'block'
+        sel.style.left = `${Math.min(downX, e.offsetX)}px`
+        sel.style.width = `${Math.abs(e.offsetX - downX)}px`
+      }
+    }
+    const onUp = (e: { offsetX: number }) => {
+      if (downX !== null && dragging) {
+        const a = toIndex(downX)
+        const b = toIndex(e.offsetX)
+        if (Math.abs(b - a) >= 1) {
+          chart.dispatchAction({
+            type: 'dataZoom',
+            startValue: Math.min(a, b),
+            endValue: Math.max(a, b),
+          })
+          setZoomed(true)
+        }
+        brushRef.current = true // 이어지는 zr click 1회 무시
+      }
+      sel.style.display = 'none'
+      downX = null
+      dragging = false
+    }
+    zr.on('mousedown', onDown)
+    zr.on('mousemove', onMove)
+    zr.on('mouseup', onUp)
+
     const ro = new ResizeObserver(() => chart.resize())
     ro.observe(el)
     return () => {
       ro.disconnect()
+      sel.remove()
       chart.dispose()
       chartRef.current = null
     }
-  }, [flowIn, flowOut, valuation, observedOnly])
+  }, [flowIn, flowOut, valuation, observedOnly, t, i18n.language])
 
   useEffect(() => {
     chartRef.current?.setOption({
@@ -157,8 +241,29 @@ export function FlowChart({
   return (
     <section className="flex min-h-0 flex-col">
       <div className="flex shrink-0 items-baseline justify-between gap-4">
-        <p className="dial-label text-paper-dim/70">{title}</p>
+        <p className="dial-label text-paper-dim/70">
+          {title}
+          <span className="ml-2 normal-case tracking-normal text-paper-dim/40">
+            {t('station.brushHint')}
+          </span>
+        </p>
         <div className="flex items-baseline gap-4">
+          {zoomed && (
+            <button
+              type="button"
+              onClick={() => {
+                chartRef.current?.dispatchAction({
+                  type: 'dataZoom',
+                  start: 0,
+                  end: 100,
+                })
+                setZoomed(false)
+              }}
+              className="dial-label text-flow-in transition-colors duration-140 hover:text-paper"
+            >
+              {t('station.brushReset')}
+            </button>
+          )}
           {readouts.map((r) => (
             <button
               key={r.label}
@@ -176,7 +281,7 @@ export function FlowChart({
           ))}
         </div>
       </div>
-      <div ref={holder} className="min-h-0 flex-1" />
+      <div ref={holder} className="relative min-h-0 flex-1" />
     </section>
   )
 }

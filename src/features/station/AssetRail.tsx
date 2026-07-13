@@ -1,20 +1,26 @@
 /**
- * 자산 탭 레일 — mono 탭 + 밑줄 니들 이동(§4 이징). 데이터가 있는
- * 자산군만 노출한다.
+ * 자산 탭 레일 — mono 탭 + 밑줄 니들 이동(§4 이징).
+ * 데이터 없는 자산은 숨기지 않고 회색+사유(UX_RESEARCH P1-7, OECD 관행):
+ * "왜 없는지"가 보여야 한다.
  */
 import { useEffect, useRef, useState } from 'react'
+import { useTranslation } from 'react-i18next'
 import type { AssetClass } from '../../types/data'
 import { ASSET_ABBR } from '../synoptic/shared'
 
 export type AssetTab = AssetClass | 'all'
 
 interface Props {
+  /** 레일에 표시할 전체 자산 순서 */
   assets: AssetClass[]
+  /** 현재 관측소에 데이터가 있는 자산 */
+  available: ReadonlySet<AssetClass>
   tab: AssetTab
   onTab: (tab: AssetTab) => void
 }
 
-export function AssetRail({ assets, tab, onTab }: Props) {
+export function AssetRail({ assets, available, tab, onTab }: Props) {
+  const { t } = useTranslation()
   const railRef = useRef<HTMLDivElement>(null)
   const [needle, setNeedle] = useState<{ left: number; width: number } | null>(
     null,
@@ -34,21 +40,34 @@ export function AssetRail({ assets, tab, onTab }: Props) {
 
   return (
     <div ref={railRef} className="relative flex items-baseline gap-4">
-      {tabs.map((t) => (
-        <button
-          key={t}
-          type="button"
-          data-tab={t}
-          aria-pressed={tab === t}
-          onClick={() => onTab(t)}
-          className={
-            'dial-label pb-1.5 transition-colors duration-140 ' +
-            (tab === t ? 'text-flow-in' : 'text-paper-dim hover:text-paper')
-          }
-        >
-          {t === 'all' ? 'ALL' : ASSET_ABBR[t]}
-        </button>
-      ))}
+      {tabs.map((tb) => {
+        const off = tb !== 'all' && !available.has(tb)
+        return (
+          <button
+            key={tb}
+            type="button"
+            data-tab={tb}
+            aria-pressed={tab === tb}
+            aria-disabled={off}
+            title={
+              off
+                ? t('station.railNoData', { asset: ASSET_ABBR[tb as AssetClass] })
+                : undefined
+            }
+            onClick={off ? undefined : () => onTab(tb)}
+            className={
+              'dial-label pb-1.5 transition-colors duration-140 ' +
+              (tab === tb
+                ? 'text-flow-in'
+                : off
+                  ? 'cursor-not-allowed text-paper-dim/25'
+                  : 'text-paper-dim hover:text-paper')
+            }
+          >
+            {tb === 'all' ? 'ALL' : ASSET_ABBR[tb]}
+          </button>
+        )
+      })}
       {needle && (
         <span
           aria-hidden="true"

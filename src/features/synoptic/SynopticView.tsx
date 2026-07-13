@@ -26,6 +26,8 @@ export function SynopticView() {
   const [syn, setSyn] = useState<SynopticFile | null>(null)
   const [loadError, setLoadError] = useState<string | null>(null)
   const [filter, setFilter] = useState<AssetClass | null>(null)
+  // hover 연결 하이라이트(P2-12) — 선택(filter)이 아닌 시선 수준의 동기화
+  const [hovered, setHovered] = useState<AssetClass | null>(null)
 
   const visible = appView === 'synoptic'
   const observedOnly = !includeEstimates
@@ -80,6 +82,7 @@ export function SynopticView() {
             observedOnly={observedOnly}
             filter={filter}
             onFilter={setFilter}
+            onHover={setHovered}
           />
           <div className="grid min-h-0 grid-cols-[minmax(0,11fr)_minmax(0,9fr)] gap-10">
             <CirculationChart
@@ -95,11 +98,12 @@ export function SynopticView() {
               syn={syn}
               periodIndex={periodIndex}
               observedOnly={observedOnly}
-              filter={filter}
+              filter={filter ?? hovered}
               onFilter={setFilter}
             />
           </div>
           <AnomalyBulletin
+            highlight={hovered}
             period={period}
             anomalies={syn.anomalies[period] ?? []}
             observedOnly={observedOnly}

@@ -42,7 +42,7 @@ import {
   stockAt,
   yoyStock,
 } from './derive'
-import { OBSERVED_GRADES, quarterEnd } from './shared'
+import { OBSERVED_GRADES, STATION_ASSET_ORDER, quarterEnd } from './shared'
 
 const INK_BG =
   'linear-gradient(180deg, var(--atlas-ink-0) 0%, var(--atlas-ink-1) 55%, var(--atlas-ink-2) 130%)'
@@ -434,7 +434,12 @@ function StationBody({
             {(file.summary.obs_share * 100).toFixed(0)}% OBSERVED
           </p>
         </div>
-        <AssetRail assets={present} tab={tab} onTab={onTab} />
+        <AssetRail
+          assets={[...STATION_ASSET_ORDER]}
+          available={new Set(present)}
+          tab={tab}
+          onTab={onTab}
+        />
       </header>
 
       <GaugeStrip gauges={gauges} />

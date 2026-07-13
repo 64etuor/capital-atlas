@@ -6,6 +6,7 @@
 import * as echarts from 'echarts/core'
 import { BarChart, LineChart } from 'echarts/charts'
 import {
+  DataZoomComponent,
   GridComponent,
   MarkLineComponent,
   TooltipComponent,
@@ -16,13 +17,18 @@ import type {
   ConfidenceGrade,
   PeriodKey,
 } from '../../types/data'
-import { periodCount, periodFromIndex } from '../../lib/periods'
+import {
+  indexFromPeriod,
+  periodCount,
+  periodFromIndex,
+} from '../../lib/periods'
 import { formatUsd } from '../../lib/format'
 import { pressureColor, rgbVar, rgbaCss, type RGB } from '../../lib/tokens'
 
 echarts.use([
   BarChart,
   LineChart,
+  DataZoomComponent,
   GridComponent,
   MarkLineComponent,
   TooltipComponent,
@@ -142,13 +148,18 @@ export function needleMarkLine(periodIndex: number) {
   }
 }
 
-/** 차트 여백 클릭 = 그 분기로 스크럽 (지도 빨리감기와 같은 문법). */
+/**
+ * 차트 여백 클릭 = 그 분기로 스크럽 (지도 빨리감기와 같은 문법).
+ * suppressed: 직전 제스처가 브러시 드래그였을 때 클릭 오발동 차단 (P1-8).
+ */
 export function wireClickToPeriod(
   chart: echarts.ECharts,
   onPick: (index: number) => void,
   count: number,
+  suppressed?: () => boolean,
 ): void {
   chart.getZr().on('click', (e: { offsetX: number; offsetY: number }) => {
+    if (suppressed?.()) return
     const converted = chart.convertFromPixel({ gridIndex: 0 }, [
       e.offsetX,
       e.offsetY,
@@ -156,4 +167,38 @@ export function wireClickToPeriod(
     const idx = converted ? Math.round(converted[0]) : Number.NaN
     if (Number.isFinite(idx) && idx >= 0 && idx < count) onPick(idx)
   })
+}
+
+// ------------------------------------------------------- event pins (P2-13) ----
+
+/** 흐름 급변 판독 앵커 — 라벨 번역은 호출부(t) 책임. */
+export const EVENT_PINS = [
+  { period: '2011-Q3' as PeriodKey, key: 'euro' as const },
+  { period: '2020-Q1' as PeriodKey, key: 'covid' as const },
+  { period: '2022-Q1' as PeriodKey, key: 'tightening' as const },
+]
+
+export function annotationMarkLine(labels: Record<string, string>) {
+  return {
+    silent: true,
+    symbol: 'none',
+    animation: false,
+    lineStyle: {
+      color: rgbaCss(rgbVar('--color-paper-dim'), 0.3),
+      width: 1,
+      type: [2, 4] as [number, number],
+    },
+    label: {
+      show: true,
+      position: 'insideEndTop' as const,
+      color: rgbaCss(rgbVar('--color-paper-dim'), 0.75),
+      fontFamily: '"Spline Sans Mono Variable", monospace',
+      fontSize: 8,
+      formatter: (p: { name?: string }) => p.name ?? '',
+    },
+    data: EVENT_PINS.map((pin) => ({
+      name: labels[pin.key],
+      xAxis: indexFromPeriod(pin.period),
+    })),
+  }
 }

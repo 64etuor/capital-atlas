@@ -18,6 +18,8 @@ interface Props {
   observedOnly: boolean
   filter: AssetClass | null
   onFilter: (asset: AssetClass | null) => void
+  /** hover 연결 하이라이트(P2-12) — 지진계·특보가 같은 자산을 함께 밝힌다 */
+  onHover?: (asset: AssetClass | null) => void
 }
 
 export function BarometerBank({
@@ -27,6 +29,7 @@ export function BarometerBank({
   observedOnly,
   filter,
   onFilter,
+  onHover,
 }: Props) {
   const { t } = useTranslation()
   const openDossier = useViewStore((s) => s.openDossier)
@@ -94,6 +97,8 @@ export function BarometerBank({
           return (
             <div
               key={asset}
+              onPointerEnter={() => onHover?.(asset)}
+              onPointerLeave={() => onHover?.(null)}
               className={
                 'flex w-20 min-w-0 flex-col items-center justify-end transition-opacity duration-140 ' +
                 (dimmed ? 'opacity-35' : 'opacity-100')

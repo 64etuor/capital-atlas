@@ -21,6 +21,8 @@ interface BulletinProps {
   anomalies: SynopticAnomaly[]
   observedOnly: boolean
   filter: AssetClass | null
+  /** hover 연결 하이라이트(P2-12) */
+  highlight?: AssetClass | null
 }
 
 export function AnomalyBulletin({
@@ -28,6 +30,7 @@ export function AnomalyBulletin({
   anomalies,
   observedOnly,
   filter,
+  highlight,
 }: BulletinProps) {
   const openDossier = useViewStore((s) => s.openDossier)
   // anomalies는 자산별 top-12의 |value| 내림차순 합본 — 전역 뷰는 앞 12개만
@@ -52,7 +55,14 @@ export function AnomalyBulletin({
               key={`${a.country}-${a.asset}-${a.entry}-${i}`}
               type="button"
               style={{ opacity: 1 - fogAlpha(a.grade) * 0.9 }}
-              className="group flex items-baseline gap-2 border-t border-paper/8 py-1 text-left transition-colors duration-140 first:border-t-0 [&:nth-child(2)]:border-t-0 hover:bg-ink-2/50"
+              className={
+                'group flex items-baseline gap-2 border-t border-paper/8 py-1 text-left transition-all duration-140 first:border-t-0 [&:nth-child(2)]:border-t-0 hover:bg-ink-2/50 ' +
+                (highlight
+                  ? a.asset === highlight
+                    ? 'bg-ink-2/60'
+                    : 'opacity-40'
+                  : '')
+              }
               onClick={() =>
                 openDossier({
                   title: `${a.country} · ${ASSET_LABELS[a.asset]} — quarterly flow`,
