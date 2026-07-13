@@ -1,0 +1,991 @@
+scripts/build/bank_merge.ts
+  s_e47a5eda862f84::t_a7ec182dc5735e 63-64
+src/features/station/StationView.tsx
+  s_e47a5eda862f84::t_876fdb9b78271e 535-536
+  s_e47a5eda862f84::t_45c50d7857f0e3 18
+  s_e47a5eda862f84::t_1fbf945aa6b716 750
+  s_e47a5eda862f84::t_0b7df5adc96691 327-336
+scripts/fetch/fx.ts
+  s_e47a5eda862f84::t_116fd2fec6a3b9 95
+scripts/build/station.ts
+  s_e47a5eda862f84::t_5ce08e4ccba100 395
+  s_e47a5eda862f84::t_baca505e725e14 445
+scripts/build/synoptic.ts
+  s_e47a5eda862f84::t_a9862459a851f2 259
+scripts/build/deterministic.test.ts
+  s_e47a5eda862f84::t_4305c9ca700805 1-47
+src/types/data.ts
+  s_e47a5eda862f84::t_25a58477c0db51 388-414
+  s_e47a5eda862f84::t_1d216bf0d18ff5 163-167
+scripts/build/assemble.ts
+  s_e47a5eda862f84::t_2245f04fc97d1e 439-440
+  s_e47a5eda862f84::t_5853f71a9f527b 450
+  s_e47a5eda862f84::t_be78e08c3275c4 446
+  s_e47a5eda862f84::t_ba032aa8efecec 463
+public/data/flows_bilateral/2010-Q1.json
+  s_e47a5eda862f84::t_70398ae45cdc4c 1
+public/data/flows_bilateral/2010-Q2.json
+  s_e47a5eda862f84::t_758516527f9b5b 1
+public/data/flows_bilateral/2010-Q3.json
+  s_e47a5eda862f84::t_92cf4f774dfbb0 1
+public/data/flows_bilateral/2010-Q4.json
+  s_e47a5eda862f84::t_23e6e0349bc4f7 1
+public/data/flows_bilateral/2011-Q1.json
+  s_e47a5eda862f84::t_e16552c0761b46 1
+public/data/flows_bilateral/2011-Q2.json
+  s_e47a5eda862f84::t_cb50571f67575c 1
+public/data/flows_bilateral/2011-Q3.json
+  s_e47a5eda862f84::t_ab3cbd40d7a57a 1
+public/data/flows_bilateral/2011-Q4.json
+  s_e47a5eda862f84::t_9ef449a164396a 1
+public/data/flows_bilateral/2012-Q1.json
+  s_e47a5eda862f84::t_717164f3192fd4 1
+public/data/flows_bilateral/2012-Q2.json
+  s_e47a5eda862f84::t_7b9c72298bb8c3 1
+public/data/flows_bilateral/2012-Q3.json
+  s_e47a5eda862f84::t_8cc552174530e3 1
+public/data/flows_bilateral/2012-Q4.json
+  s_e47a5eda862f84::t_2fea349fcbe14d 1
+public/data/flows_bilateral/2013-Q1.json
+  s_e47a5eda862f84::t_910c2d2565d8e8 1
+public/data/flows_bilateral/2013-Q2.json
+  s_e47a5eda862f84::t_402b2120b48577 1
+public/data/flows_bilateral/2013-Q3.json
+  s_e47a5eda862f84::t_8c3eb1f02e0a61 1
+public/data/flows_bilateral/2013-Q4.json
+  s_e47a5eda862f84::t_28255725ac1c17 1
+public/data/flows_bilateral/2014-Q1.json
+  s_e47a5eda862f84::t_45d3cad790e911 1
+public/data/flows_bilateral/2014-Q2.json
+  s_e47a5eda862f84::t_91c317708a37b6 1
+public/data/flows_bilateral/2014-Q3.json
+  s_e47a5eda862f84::t_eb61f5ac1d059b 1
+public/data/flows_bilateral/2014-Q4.json
+  s_e47a5eda862f84::t_db9c737054b634 1
+public/data/flows_bilateral/2015-Q1.json
+  s_e47a5eda862f84::t_73b5796e6b2db0 1
+public/data/flows_bilateral/2015-Q2.json
+  s_e47a5eda862f84::t_e1a82eb7cffe0c 1
+public/data/flows_bilateral/2015-Q3.json
+  s_e47a5eda862f84::t_282b97b1c68d5a 1
+public/data/flows_bilateral/2015-Q4.json
+  s_e47a5eda862f84::t_78a47d38bdf816 1
+public/data/flows_bilateral/2016-Q1.json
+  s_e47a5eda862f84::t_b45fc52ea4a132 1
+public/data/flows_bilateral/2016-Q2.json
+  s_e47a5eda862f84::t_3af525e41e68de 1
+public/data/flows_bilateral/2016-Q3.json
+  s_e47a5eda862f84::t_ad4efb5b092253 1
+public/data/flows_bilateral/2016-Q4.json
+  s_e47a5eda862f84::t_1d81ea6773c6d9 1
+public/data/flows_bilateral/2017-Q1.json
+  s_e47a5eda862f84::t_d2b59525c44246 1
+public/data/flows_bilateral/2017-Q2.json
+  s_e47a5eda862f84::t_cbcec2564e96c2 1
+public/data/flows_bilateral/2017-Q3.json
+  s_e47a5eda862f84::t_f523bbb2ab846f 1
+public/data/flows_bilateral/2017-Q4.json
+  s_e47a5eda862f84::t_cb4d47e78aecf9 1
+public/data/flows_bilateral/2018-Q1.json
+  s_e47a5eda862f84::t_607c275af7e78b 1
+public/data/flows_bilateral/2018-Q2.json
+  s_e47a5eda862f84::t_482e98a60c96aa 1
+public/data/flows_bilateral/2018-Q3.json
+  s_e47a5eda862f84::t_8002dbec1b64a6 1
+public/data/flows_bilateral/2018-Q4.json
+  s_e47a5eda862f84::t_8460064dabcf28 1
+public/data/flows_bilateral/2019-Q1.json
+  s_e47a5eda862f84::t_2cd5efc6b3c5f2 1
+public/data/flows_bilateral/2019-Q2.json
+  s_e47a5eda862f84::t_4ba4b1e82232bc 1
+public/data/flows_bilateral/2019-Q3.json
+  s_e47a5eda862f84::t_986de8b274fd74 1
+public/data/flows_bilateral/2019-Q4.json
+  s_e47a5eda862f84::t_e117c6fabbd369 1
+public/data/flows_bilateral/2020-Q1.json
+  s_e47a5eda862f84::t_11066cdf5a50c2 1
+public/data/flows_bilateral/2020-Q2.json
+  s_e47a5eda862f84::t_396f4aa95b534d 1
+public/data/flows_bilateral/2020-Q3.json
+  s_e47a5eda862f84::t_12d7d8af2f2c37 1
+public/data/flows_bilateral/2020-Q4.json
+  s_e47a5eda862f84::t_a4c5481fcb26b7 1
+public/data/flows_bilateral/2021-Q1.json
+  s_e47a5eda862f84::t_8e0a3fc1e987c5 1
+public/data/flows_bilateral/2021-Q2.json
+  s_e47a5eda862f84::t_d1b3bbddf937ec 1
+public/data/flows_bilateral/2021-Q3.json
+  s_e47a5eda862f84::t_bf33086ec4925f 1
+public/data/flows_bilateral/2021-Q4.json
+  s_e47a5eda862f84::t_9feb2b2c122b64 1
+public/data/flows_bilateral/2022-Q1.json
+  s_e47a5eda862f84::t_9e5c2b63923e34 1
+public/data/flows_bilateral/2022-Q2.json
+  s_e47a5eda862f84::t_dfff32df25b84f 1
+public/data/flows_bilateral/2022-Q3.json
+  s_e47a5eda862f84::t_948ffbbdd92f0d 1
+public/data/flows_bilateral/2022-Q4.json
+  s_e47a5eda862f84::t_f23882cd521a30 1
+public/data/flows_bilateral/2023-Q1.json
+  s_e47a5eda862f84::t_9a4284bfdea277 1
+public/data/flows_bilateral/2023-Q2.json
+  s_e47a5eda862f84::t_f9f67432e891ca 1
+public/data/flows_bilateral/2023-Q3.json
+  s_e47a5eda862f84::t_468e313aaa6953 1
+public/data/flows_bilateral/2023-Q4.json
+  s_e47a5eda862f84::t_ae178b91222933 1
+public/data/flows_bilateral/2024-Q1.json
+  s_e47a5eda862f84::t_b38a64e4a5bdf4 1
+public/data/flows_bilateral/2024-Q2.json
+  s_e47a5eda862f84::t_17723452eea528 1
+public/data/flows_bilateral/2024-Q3.json
+  s_e47a5eda862f84::t_4a9ca435c7b023 1
+public/data/flows_bilateral/2024-Q4.json
+  s_e47a5eda862f84::t_ad9ef510eb76e0 1
+public/data/flows_bilateral/2025-Q1.json
+  s_e47a5eda862f84::t_1b3aa9a91344b9 1
+public/data/flows_bilateral/2025-Q2.json
+  s_e47a5eda862f84::t_d776226634fd3c 1
+public/data/flows_bilateral/2025-Q3.json
+  s_e47a5eda862f84::t_f44361c85d024f 1
+public/data/flows_bilateral/2025-Q4.json
+  s_e47a5eda862f84::t_577ed2f061cddf 1
+public/data/flows_country/2010-Q1.json
+  s_e47a5eda862f84::t_509144da81b1a7 1
+public/data/flows_country/2010-Q2.json
+  s_e47a5eda862f84::t_be8743979b55d3 1
+public/data/flows_country/2010-Q3.json
+  s_e47a5eda862f84::t_15c762df6a05cd 1
+public/data/flows_country/2010-Q4.json
+  s_e47a5eda862f84::t_caa5bf2108afce 1
+public/data/flows_country/2011-Q1.json
+  s_e47a5eda862f84::t_2888bd4276ebd9 1
+public/data/flows_country/2011-Q2.json
+  s_e47a5eda862f84::t_5a8caacfbd5efe 1
+public/data/flows_country/2011-Q3.json
+  s_e47a5eda862f84::t_ddba5c02d19ec3 1
+public/data/flows_country/2011-Q4.json
+  s_e47a5eda862f84::t_a263efe052001b 1
+public/data/flows_country/2012-Q1.json
+  s_e47a5eda862f84::t_cde12424505f0a 1
+public/data/flows_country/2012-Q2.json
+  s_e47a5eda862f84::t_483b6bb8f03b97 1
+public/data/flows_country/2012-Q3.json
+  s_e47a5eda862f84::t_2ee1e1d78c1cbd 1
+public/data/flows_country/2012-Q4.json
+  s_e47a5eda862f84::t_2136607f1936b1 1
+public/data/flows_country/2013-Q1.json
+  s_e47a5eda862f84::t_019fe31c996d31 1
+public/data/flows_country/2013-Q2.json
+  s_e47a5eda862f84::t_1f437415f1cce7 1
+public/data/flows_country/2013-Q3.json
+  s_e47a5eda862f84::t_4e663ddfec1b6a 1
+public/data/flows_country/2013-Q4.json
+  s_e47a5eda862f84::t_0548a0224a1422 1
+public/data/flows_country/2014-Q1.json
+  s_e47a5eda862f84::t_8583663e56dfa0 1
+public/data/flows_country/2014-Q2.json
+  s_e47a5eda862f84::t_930a52074449c8 1
+public/data/flows_country/2014-Q3.json
+  s_e47a5eda862f84::t_31df636f3d8d61 1
+public/data/flows_country/2014-Q4.json
+  s_e47a5eda862f84::t_1fda627a6d2f33 1
+public/data/flows_country/2015-Q1.json
+  s_e47a5eda862f84::t_57edc1896b707e 1
+public/data/flows_country/2015-Q2.json
+  s_e47a5eda862f84::t_93cefaea909fa0 1
+public/data/flows_country/2015-Q3.json
+  s_e47a5eda862f84::t_c797eddf547e06 1
+public/data/flows_country/2015-Q4.json
+  s_e47a5eda862f84::t_727b1d81ca4de0 1
+public/data/flows_country/2016-Q1.json
+  s_e47a5eda862f84::t_51225f42547d9e 1
+public/data/flows_country/2016-Q2.json
+  s_e47a5eda862f84::t_6f759a65fc8130 1
+public/data/flows_country/2016-Q3.json
+  s_e47a5eda862f84::t_268dc42a9f924f 1
+public/data/flows_country/2016-Q4.json
+  s_e47a5eda862f84::t_d24d26f1cc5b8c 1
+public/data/flows_country/2017-Q1.json
+  s_e47a5eda862f84::t_50ee8b2b068540 1
+public/data/flows_country/2017-Q2.json
+  s_e47a5eda862f84::t_35104b9af346d9 1
+public/data/flows_country/2017-Q3.json
+  s_e47a5eda862f84::t_60f31374d0cc26 1
+public/data/flows_country/2017-Q4.json
+  s_e47a5eda862f84::t_3d2d075f1a7954 1
+public/data/flows_country/2018-Q1.json
+  s_e47a5eda862f84::t_7933f3b557260f 1
+public/data/flows_country/2018-Q2.json
+  s_e47a5eda862f84::t_9a3ed43b220f45 1
+public/data/flows_country/2018-Q3.json
+  s_e47a5eda862f84::t_cd18989cc69225 1
+public/data/flows_country/2018-Q4.json
+  s_e47a5eda862f84::t_4ca360c8715a5b 1
+public/data/flows_country/2019-Q1.json
+  s_e47a5eda862f84::t_a8cd155d278749 1
+public/data/flows_country/2019-Q2.json
+  s_e47a5eda862f84::t_fa5857693499fe 1
+public/data/flows_country/2019-Q3.json
+  s_e47a5eda862f84::t_9c09431622f6bf 1
+public/data/flows_country/2019-Q4.json
+  s_e47a5eda862f84::t_85cb3e562de9af 1
+public/data/flows_country/2020-Q1.json
+  s_e47a5eda862f84::t_0b360ef834857e 1
+public/data/flows_country/2020-Q2.json
+  s_e47a5eda862f84::t_554db726b8d3ef 1
+public/data/flows_country/2020-Q3.json
+  s_e47a5eda862f84::t_ebae077b7b219f 1
+public/data/flows_country/2020-Q4.json
+  s_e47a5eda862f84::t_0d4b7207169bc2 1
+public/data/flows_country/2021-Q1.json
+  s_e47a5eda862f84::t_bafee7ce3c7650 1
+public/data/flows_country/2021-Q2.json
+  s_e47a5eda862f84::t_c44dc56361ba1f 1
+public/data/flows_country/2021-Q3.json
+  s_e47a5eda862f84::t_91a9e6aca58696 1
+public/data/flows_country/2021-Q4.json
+  s_e47a5eda862f84::t_ee9cd2dd8721ad 1
+public/data/flows_country/2022-Q1.json
+  s_e47a5eda862f84::t_873db3bddaabc3 1
+public/data/flows_country/2022-Q2.json
+  s_e47a5eda862f84::t_6db311feb7a2fe 1
+public/data/flows_country/2022-Q3.json
+  s_e47a5eda862f84::t_fbd7751fbe57df 1
+public/data/flows_country/2022-Q4.json
+  s_e47a5eda862f84::t_300f93fee58c79 1
+public/data/flows_country/2023-Q1.json
+  s_e47a5eda862f84::t_e6706380ec9755 1
+public/data/flows_country/2023-Q2.json
+  s_e47a5eda862f84::t_e8d8bcb526cba8 1
+public/data/flows_country/2023-Q3.json
+  s_e47a5eda862f84::t_149b3386efd9a2 1
+public/data/flows_country/2023-Q4.json
+  s_e47a5eda862f84::t_9c31cebc13c400 1
+public/data/flows_country/2024-Q1.json
+  s_e47a5eda862f84::t_da5974d17f4caf 1
+public/data/flows_country/2024-Q2.json
+  s_e47a5eda862f84::t_6c0aefa95f9b38 1
+public/data/flows_country/2024-Q3.json
+  s_e47a5eda862f84::t_958eb2c011e233 1
+public/data/flows_country/2024-Q4.json
+  s_e47a5eda862f84::t_4926e01c51ca2d 1
+public/data/flows_country/2025-Q1.json
+  s_e47a5eda862f84::t_9c7323c20091c8 1
+public/data/flows_country/2025-Q2.json
+  s_e47a5eda862f84::t_ff4e0407a05a03 1
+public/data/flows_country/2025-Q3.json
+  s_e47a5eda862f84::t_203a631cdb1e6d 1
+public/data/flows_country/2025-Q4.json
+  s_e47a5eda862f84::t_92653352b60b02 1
+public/data/flows_country/2026-Q1.json
+  s_e47a5eda862f84::t_5a633e025e3a01 1
+public/data/meta/flow_intensity.json
+  s_e47a5eda862f84::t_ad40cc3a575e26 1
+public/data/meta/fx_rates.json
+  s_e47a5eda862f84::t_09b94bf6844fe0 1
+public/data/meta/synoptic.json
+  s_e47a5eda862f84::t_45962fb3ef096b 1
+public/data/station/AFG.json
+  s_e47a5eda862f84::t_8d269849c1b60b 1
+public/data/station/AGO.json
+  s_e47a5eda862f84::t_38e0a3c291439a 1
+public/data/station/ALB.json
+  s_e47a5eda862f84::t_69dae2c0a1d37b 1
+public/data/station/AND.json
+  s_e47a5eda862f84::t_f926148a5ad5b4 1
+public/data/station/ARE.json
+  s_e47a5eda862f84::t_84e68b5c703ebb 1
+public/data/station/ARG.json
+  s_e47a5eda862f84::t_b26a2ba81478c1 1
+public/data/station/ARM.json
+  s_e47a5eda862f84::t_9c9c696bf6df31 1
+public/data/station/ATG.json
+  s_e47a5eda862f84::t_8c2b41b0ce58ad 1
+public/data/station/AUS.json
+  s_e47a5eda862f84::t_c8ad4516444910 1
+public/data/station/AUT.json
+  s_e47a5eda862f84::t_5f66b5b7fd2cb3 1
+public/data/station/AZE.json
+  s_e47a5eda862f84::t_3c6529d22031f6 1
+public/data/station/BDI.json
+  s_e47a5eda862f84::t_89abe9d9ae309b 1
+public/data/station/BEL.json
+  s_e47a5eda862f84::t_fde847d147d16e 1
+public/data/station/BEN.json
+  s_e47a5eda862f84::t_773bbfd994d15c 1
+public/data/station/BFA.json
+  s_e47a5eda862f84::t_fc2ed03c0a9b53 1
+public/data/station/BGD.json
+  s_e47a5eda862f84::t_4b5b6109e95837 1
+public/data/station/BGR.json
+  s_e47a5eda862f84::t_4958068f44429e 1
+public/data/station/BHR.json
+  s_e47a5eda862f84::t_487e91c40421b9 1
+public/data/station/BHS.json
+  s_e47a5eda862f84::t_ba153574322669 1
+public/data/station/BIH.json
+  s_e47a5eda862f84::t_e336c106112f64 1
+public/data/station/BLR.json
+  s_e47a5eda862f84::t_4647a846c8acba 1
+public/data/station/BLZ.json
+  s_e47a5eda862f84::t_b87b903115f504 1
+public/data/station/BOL.json
+  s_e47a5eda862f84::t_93918218d0c48c 1
+public/data/station/BRA.json
+  s_e47a5eda862f84::t_28bc4670eb33cc 1
+public/data/station/BRB.json
+  s_e47a5eda862f84::t_f375e299c9cdf4 1
+public/data/station/BRN.json
+  s_e47a5eda862f84::t_15fc00bbb4471b 1
+public/data/station/BTN.json
+  s_e47a5eda862f84::t_826aa7bf19e7a3 1
+public/data/station/BWA.json
+  s_e47a5eda862f84::t_85f0a868616b13 1
+public/data/station/CAF.json
+  s_e47a5eda862f84::t_e7404978bf920e 1
+public/data/station/CAN.json
+  s_e47a5eda862f84::t_b893ae5ed51c1c 1
+public/data/station/CHE.json
+  s_e47a5eda862f84::t_634312aee522c6 1
+public/data/station/CHL.json
+  s_e47a5eda862f84::t_857db4dadac689 1
+public/data/station/CHN.json
+  s_e47a5eda862f84::t_f3c4d0ef6f5a3f 1
+public/data/station/CIV.json
+  s_e47a5eda862f84::t_81936e56c8bd65 1
+public/data/station/CMR.json
+  s_e47a5eda862f84::t_fbe71d501aa728 1
+public/data/station/COD.json
+  s_e47a5eda862f84::t_915ecb052bf447 1
+public/data/station/COG.json
+  s_e47a5eda862f84::t_6f81b34f4ffbed 1
+public/data/station/COL.json
+  s_e47a5eda862f84::t_3daffca56054a7 1
+public/data/station/COM.json
+  s_e47a5eda862f84::t_dc48522222b6c7 1
+public/data/station/CPV.json
+  s_e47a5eda862f84::t_a58f28d6a202d7 1
+public/data/station/CRI.json
+  s_e47a5eda862f84::t_616bd40d290002 1
+public/data/station/CUB.json
+  s_e47a5eda862f84::t_5dc640dbe61ff9 1
+public/data/station/CYP.json
+  s_e47a5eda862f84::t_2e8db3fc38e227 1
+public/data/station/CZE.json
+  s_e47a5eda862f84::t_5469a88a6f788f 1
+public/data/station/DEU.json
+  s_e47a5eda862f84::t_21ce5bf3fb42d3 1
+public/data/station/DJI.json
+  s_e47a5eda862f84::t_a551444cec339f 1
+public/data/station/DMA.json
+  s_e47a5eda862f84::t_ef5ccf9fddaabb 1
+public/data/station/DNK.json
+  s_e47a5eda862f84::t_b9542ba7057b7a 1
+public/data/station/DOM.json
+  s_e47a5eda862f84::t_490ad685a9ee64 1
+public/data/station/DZA.json
+  s_e47a5eda862f84::t_3809e476cb9de7 1
+public/data/station/ECU.json
+  s_e47a5eda862f84::t_da3346805c7eae 1
+public/data/station/EGY.json
+  s_e47a5eda862f84::t_368e6ddcf96e10 1
+public/data/station/ERI.json
+  s_e47a5eda862f84::t_f43c53d8b2d27c 1
+public/data/station/ESP.json
+  s_e47a5eda862f84::t_5c51d9a4d3a24e 1
+public/data/station/EST.json
+  s_e47a5eda862f84::t_4be26e70c2b058 1
+public/data/station/ETH.json
+  s_e47a5eda862f84::t_cc81bf5e03457a 1
+public/data/station/FIN.json
+  s_e47a5eda862f84::t_abadcb5ddb0c31 1
+public/data/station/FJI.json
+  s_e47a5eda862f84::t_28b069f4cf122d 1
+public/data/station/FRA.json
+  s_e47a5eda862f84::t_e1ee5c874476d1 1
+public/data/station/FSM.json
+  s_e47a5eda862f84::t_9a0557047a18ec 1
+public/data/station/GAB.json
+  s_e47a5eda862f84::t_212805f7628b1a 1
+public/data/station/GBR.json
+  s_e47a5eda862f84::t_1a30f8751b1d92 1
+public/data/station/GEO.json
+  s_e47a5eda862f84::t_96b9e4928565f8 1
+public/data/station/GHA.json
+  s_e47a5eda862f84::t_6e2e71ec06f337 1
+public/data/station/GIN.json
+  s_e47a5eda862f84::t_8b4716f3601531 1
+public/data/station/GMB.json
+  s_e47a5eda862f84::t_7ee6d76157a8b6 1
+public/data/station/GNB.json
+  s_e47a5eda862f84::t_44969affe875ad 1
+public/data/station/GNQ.json
+  s_e47a5eda862f84::t_bfd826777dc15c 1
+public/data/station/GRC.json
+  s_e47a5eda862f84::t_2517b045aeaa21 1
+public/data/station/GRD.json
+  s_e47a5eda862f84::t_7eaef563757a8a 1
+public/data/station/GTM.json
+  s_e47a5eda862f84::t_bc7572dda1cd52 1
+public/data/station/GUY.json
+  s_e47a5eda862f84::t_1cb6209966b562 1
+public/data/station/HKG.json
+  s_e47a5eda862f84::t_0982a5f7dc5bd7 1
+public/data/station/HND.json
+  s_e47a5eda862f84::t_e8811e714ae877 1
+public/data/station/HRV.json
+  s_e47a5eda862f84::t_cc87e868d57463 1
+public/data/station/HTI.json
+  s_e47a5eda862f84::t_16325f62cbbfdb 1
+public/data/station/HUN.json
+  s_e47a5eda862f84::t_d8b0802b48f6a7 1
+public/data/station/IDN.json
+  s_e47a5eda862f84::t_9a022d88364eba 1
+public/data/station/IND.json
+  s_e47a5eda862f84::t_3c0599a2e233a4 1
+public/data/station/IRL.json
+  s_e47a5eda862f84::t_59fa1a780c97ff 1
+public/data/station/IRN.json
+  s_e47a5eda862f84::t_0ed1a9856b985e 1
+public/data/station/IRQ.json
+  s_e47a5eda862f84::t_931b9cf22d4464 1
+public/data/station/ISL.json
+  s_e47a5eda862f84::t_e5e35ef5f5582f 1
+public/data/station/ISR.json
+  s_e47a5eda862f84::t_ae0dc1519c5b65 1
+public/data/station/ITA.json
+  s_e47a5eda862f84::t_9149726eee82de 1
+public/data/station/JAM.json
+  s_e47a5eda862f84::t_c6fdd3c4ac3d30 1
+public/data/station/JOR.json
+  s_e47a5eda862f84::t_effee23b207527 1
+public/data/station/JPN.json
+  s_e47a5eda862f84::t_05e7e307f4f3b1 1
+public/data/station/KAZ.json
+  s_e47a5eda862f84::t_783d8112150277 1
+public/data/station/KEN.json
+  s_e47a5eda862f84::t_73ba6557c599ad 1
+public/data/station/KGZ.json
+  s_e47a5eda862f84::t_d12da3346c5e3e 1
+public/data/station/KHM.json
+  s_e47a5eda862f84::t_0ba4ea284a5df1 1
+public/data/station/KIR.json
+  s_e47a5eda862f84::t_ab5b135983a228 1
+public/data/station/KNA.json
+  s_e47a5eda862f84::t_b80a7a91349af5 1
+public/data/station/KOR.json
+  s_e47a5eda862f84::t_e5e1beb77835ac 1
+public/data/station/KWT.json
+  s_e47a5eda862f84::t_fc8d56e201b23c 1
+public/data/station/LAO.json
+  s_e47a5eda862f84::t_f1f728d87a0abb 1
+public/data/station/LBN.json
+  s_e47a5eda862f84::t_e8be3ca2bc8177 1
+public/data/station/LBR.json
+  s_e47a5eda862f84::t_4d111c50bec511 1
+public/data/station/LBY.json
+  s_e47a5eda862f84::t_8a5bb0c67bbea8 1
+public/data/station/LCA.json
+  s_e47a5eda862f84::t_43c7cee158fbb8 1
+public/data/station/LIE.json
+  s_e47a5eda862f84::t_265238e434fb7d 1
+public/data/station/LKA.json
+  s_e47a5eda862f84::t_b9f94e4ead3089 1
+public/data/station/LSO.json
+  s_e47a5eda862f84::t_890be7a4b9608b 1
+public/data/station/LTU.json
+  s_e47a5eda862f84::t_ea65c9e42600b8 1
+public/data/station/LUX.json
+  s_e47a5eda862f84::t_32518097618285 1
+public/data/station/LVA.json
+  s_e47a5eda862f84::t_c01542848b771b 1
+public/data/station/MAC.json
+  s_e47a5eda862f84::t_84f922b69741af 1
+public/data/station/MAR.json
+  s_e47a5eda862f84::t_6380c0e4431cfc 1
+public/data/station/MCO.json
+  s_e47a5eda862f84::t_d62ff52eb49459 1
+public/data/station/MDA.json
+  s_e47a5eda862f84::t_1efa10dc7f3763 1
+public/data/station/MDG.json
+  s_e47a5eda862f84::t_85ca3c525eb1bc 1
+public/data/station/MDV.json
+  s_e47a5eda862f84::t_737df6c405c96b 1
+public/data/station/MEX.json
+  s_e47a5eda862f84::t_ea47518a3dbc18 1
+public/data/station/MHL.json
+  s_e47a5eda862f84::t_067aae2ffede4b 1
+public/data/station/MKD.json
+  s_e47a5eda862f84::t_71ec4e5baab938 1
+public/data/station/MLI.json
+  s_e47a5eda862f84::t_d17f3ffc56d592 1
+public/data/station/MLT.json
+  s_e47a5eda862f84::t_d069f62b8c8167 1
+public/data/station/MMR.json
+  s_e47a5eda862f84::t_858481bff90000 1
+public/data/station/MNE.json
+  s_e47a5eda862f84::t_6cf03019e66d94 1
+public/data/station/MNG.json
+  s_e47a5eda862f84::t_d960fe83ea4197 1
+public/data/station/MOZ.json
+  s_e47a5eda862f84::t_f5b244720d9ba2 1
+public/data/station/MRT.json
+  s_e47a5eda862f84::t_6f154f55ece59e 1
+public/data/station/MUS.json
+  s_e47a5eda862f84::t_8a7da592f701a3 1
+public/data/station/MWI.json
+  s_e47a5eda862f84::t_4ec2bf63bcc668 1
+public/data/station/MYS.json
+  s_e47a5eda862f84::t_f1d3e554b0ef2e 1
+public/data/station/NAM.json
+  s_e47a5eda862f84::t_e677aa89a8d58e 1
+public/data/station/NER.json
+  s_e47a5eda862f84::t_10869cac244229 1
+public/data/station/NGA.json
+  s_e47a5eda862f84::t_6452e80d9142db 1
+public/data/station/NIC.json
+  s_e47a5eda862f84::t_d8a1de030da49c 1
+public/data/station/NLD.json
+  s_e47a5eda862f84::t_70a55602d85636 1
+public/data/station/NOR.json
+  s_e47a5eda862f84::t_3c02a6dfcb25d0 1
+public/data/station/NPL.json
+  s_e47a5eda862f84::t_b2f02f03587697 1
+public/data/station/NRU.json
+  s_e47a5eda862f84::t_e6b94ad5abfe48 1
+public/data/station/NZL.json
+  s_e47a5eda862f84::t_55b5205e8a4a4c 1
+public/data/station/OMN.json
+  s_e47a5eda862f84::t_53f5e1f483f9b7 1
+public/data/station/PAK.json
+  s_e47a5eda862f84::t_ae4b9e832cc1c9 1
+public/data/station/PAN.json
+  s_e47a5eda862f84::t_2364fe32fc8f78 1
+public/data/station/PER.json
+  s_e47a5eda862f84::t_95360c03154c9b 1
+public/data/station/PHL.json
+  s_e47a5eda862f84::t_ce9f75894650eb 1
+public/data/station/PLW.json
+  s_e47a5eda862f84::t_732e608503f152 1
+public/data/station/PNG.json
+  s_e47a5eda862f84::t_e0327750230867 1
+public/data/station/POL.json
+  s_e47a5eda862f84::t_ab52f9b6f9b8d7 1
+public/data/station/PRT.json
+  s_e47a5eda862f84::t_5ab1260e04b7c3 1
+public/data/station/PRY.json
+  s_e47a5eda862f84::t_a70f6db4563898 1
+public/data/station/PSE.json
+  s_e47a5eda862f84::t_0ba2412a76ec39 1
+public/data/station/QAT.json
+  s_e47a5eda862f84::t_6ccf1dde767b41 1
+public/data/station/ROU.json
+  s_e47a5eda862f84::t_a152477904ac15 1
+public/data/station/RUS.json
+  s_e47a5eda862f84::t_aefdc69be52d36 1
+public/data/station/RWA.json
+  s_e47a5eda862f84::t_9b598e9fb76170 1
+public/data/station/SAU.json
+  s_e47a5eda862f84::t_3374784ae0ed05 1
+public/data/station/SDN.json
+  s_e47a5eda862f84::t_63f0de29eb23be 1
+public/data/station/SEN.json
+  s_e47a5eda862f84::t_c7d28402773ca8 1
+public/data/station/SGP.json
+  s_e47a5eda862f84::t_a9c22c012b0633 1
+public/data/station/SLB.json
+  s_e47a5eda862f84::t_0d9e7287b1d31d 1
+public/data/station/SLE.json
+  s_e47a5eda862f84::t_13f7c373c68d6f 1
+public/data/station/SLV.json
+  s_e47a5eda862f84::t_ec4c35cf482c6f 1
+public/data/station/SMR.json
+  s_e47a5eda862f84::t_a1b9b99851daae 1
+public/data/station/SOM.json
+  s_e47a5eda862f84::t_138005630a4e43 1
+public/data/station/SRB.json
+  s_e47a5eda862f84::t_7b065f01482a2b 1
+public/data/station/SSD.json
+  s_e47a5eda862f84::t_0649dcfe40de49 1
+public/data/station/STP.json
+  s_e47a5eda862f84::t_be8e337f5827df 1
+public/data/station/SUR.json
+  s_e47a5eda862f84::t_88170e8c372059 1
+public/data/station/SVK.json
+  s_e47a5eda862f84::t_ed283e315ca469 1
+public/data/station/SVN.json
+  s_e47a5eda862f84::t_0cd18086e5e9fd 1
+public/data/station/SWE.json
+  s_e47a5eda862f84::t_f7b677530430e2 1
+public/data/station/SWZ.json
+  s_e47a5eda862f84::t_a151d87a9b8f17 1
+public/data/station/SYC.json
+  s_e47a5eda862f84::t_12297c19e14894 1
+public/data/station/SYR.json
+  s_e47a5eda862f84::t_11b34db41cb6a6 1
+public/data/station/TCD.json
+  s_e47a5eda862f84::t_851b2285640960 1
+public/data/station/TGO.json
+  s_e47a5eda862f84::t_4bcd65838adac0 1
+public/data/station/THA.json
+  s_e47a5eda862f84::t_5c4339f592f318 1
+public/data/station/TJK.json
+  s_e47a5eda862f84::t_5cbfe375089125 1
+public/data/station/TKM.json
+  s_e47a5eda862f84::t_4926b59e35499a 1
+public/data/station/TLS.json
+  s_e47a5eda862f84::t_bf116d92b8c642 1
+public/data/station/TON.json
+  s_e47a5eda862f84::t_40c9cd53bd380f 1
+public/data/station/TTO.json
+  s_e47a5eda862f84::t_763c10ad7d1b23 1
+public/data/station/TUN.json
+  s_e47a5eda862f84::t_4c7dbbaaa1dc0c 1
+public/data/station/TUR.json
+  s_e47a5eda862f84::t_feb03ec4c3490a 1
+public/data/station/TUV.json
+  s_e47a5eda862f84::t_9bc053b9f1c06d 1
+public/data/station/TZA.json
+  s_e47a5eda862f84::t_04e936c946151a 1
+public/data/station/UGA.json
+  s_e47a5eda862f84::t_ff071944517cd3 1
+public/data/station/UKR.json
+  s_e47a5eda862f84::t_a3f758a5df9b24 1
+public/data/station/URY.json
+  s_e47a5eda862f84::t_b362df4b322be1 1
+public/data/station/USA.json
+  s_e47a5eda862f84::t_d9913f75db183d 1
+public/data/station/UZB.json
+  s_e47a5eda862f84::t_49d687683a0e04 1
+public/data/station/VCT.json
+  s_e47a5eda862f84::t_5187feac461197 1
+public/data/station/VEN.json
+  s_e47a5eda862f84::t_96acf7f5653662 1
+public/data/station/VNM.json
+  s_e47a5eda862f84::t_1296b28baa5778 1
+public/data/station/VUT.json
+  s_e47a5eda862f84::t_f8c16732f95a01 1
+public/data/station/WLD.json
+  s_e47a5eda862f84::t_0077cd83296bb6 1
+public/data/station/WSM.json
+  s_e47a5eda862f84::t_b1478594943b97 1
+public/data/station/YEM.json
+  s_e47a5eda862f84::t_6f80ee6cd25847 1
+public/data/station/ZAF.json
+  s_e47a5eda862f84::t_4651992a08e0e9 1
+public/data/station/ZMB.json
+  s_e47a5eda862f84::t_8109a5cfbe8cd3 1
+public/data/station/ZWE.json
+  s_e47a5eda862f84::t_68740a21636cfa 1
+public/data/station/index.json
+  s_e47a5eda862f84::t_7869cf0cc5a79a 1
+public/data/stocks_issuer/2010-Q1.json
+  s_e47a5eda862f84::t_50fc66a6258a4e 1
+public/data/stocks_issuer/2010-Q2.json
+  s_e47a5eda862f84::t_7940e762c7787e 1
+public/data/stocks_issuer/2010-Q3.json
+  s_e47a5eda862f84::t_f4887ee11b619f 1
+public/data/stocks_issuer/2010-Q4.json
+  s_e47a5eda862f84::t_be9dd1ffde9609 1
+public/data/stocks_issuer/2011-Q1.json
+  s_e47a5eda862f84::t_e12b90ef7818da 1
+public/data/stocks_issuer/2011-Q2.json
+  s_e47a5eda862f84::t_d0e9b38e884f8a 1
+public/data/stocks_issuer/2011-Q3.json
+  s_e47a5eda862f84::t_c6cad17e3d7ee0 1
+public/data/stocks_issuer/2011-Q4.json
+  s_e47a5eda862f84::t_ad9c9977e61086 1
+public/data/stocks_issuer/2012-Q1.json
+  s_e47a5eda862f84::t_c01ef18c333a90 1
+public/data/stocks_issuer/2012-Q2.json
+  s_e47a5eda862f84::t_ef852281069c1f 1
+public/data/stocks_issuer/2012-Q3.json
+  s_e47a5eda862f84::t_2bd7989bdfe688 1
+public/data/stocks_issuer/2012-Q4.json
+  s_e47a5eda862f84::t_09f3a26c3645b6 1
+public/data/stocks_issuer/2013-Q1.json
+  s_e47a5eda862f84::t_1f735ca9cb578c 1
+public/data/stocks_issuer/2013-Q2.json
+  s_e47a5eda862f84::t_e8bb83acfc0762 1
+public/data/stocks_issuer/2013-Q3.json
+  s_e47a5eda862f84::t_ac17c1d1ef8ec9 1
+public/data/stocks_issuer/2013-Q4.json
+  s_e47a5eda862f84::t_c0c1701cd09a48 1
+public/data/stocks_issuer/2014-Q1.json
+  s_e47a5eda862f84::t_194f5c169106d1 1
+public/data/stocks_issuer/2014-Q2.json
+  s_e47a5eda862f84::t_ce8d5c5d646f80 1
+public/data/stocks_issuer/2014-Q3.json
+  s_e47a5eda862f84::t_fd8129a32c287e 1
+public/data/stocks_issuer/2014-Q4.json
+  s_e47a5eda862f84::t_c846fc6281035b 1
+public/data/stocks_issuer/2015-Q1.json
+  s_e47a5eda862f84::t_4d90c3c1b90180 1
+public/data/stocks_issuer/2015-Q2.json
+  s_e47a5eda862f84::t_cc6df7287eb392 1
+public/data/stocks_issuer/2015-Q3.json
+  s_e47a5eda862f84::t_9f07ab98a659c0 1
+public/data/stocks_issuer/2015-Q4.json
+  s_e47a5eda862f84::t_351c7f14e5f5fa 1
+public/data/stocks_issuer/2016-Q1.json
+  s_e47a5eda862f84::t_443f6276b26ec8 1
+public/data/stocks_issuer/2016-Q2.json
+  s_e47a5eda862f84::t_fe97ec71ba45a3 1
+public/data/stocks_issuer/2016-Q3.json
+  s_e47a5eda862f84::t_1a1dbbf7283af8 1
+public/data/stocks_issuer/2016-Q4.json
+  s_e47a5eda862f84::t_5475a173aa91e2 1
+public/data/stocks_issuer/2017-Q1.json
+  s_e47a5eda862f84::t_b4b7eb07a0a8c7 1
+public/data/stocks_issuer/2017-Q2.json
+  s_e47a5eda862f84::t_750af19ca9d6d0 1
+public/data/stocks_issuer/2017-Q3.json
+  s_e47a5eda862f84::t_2e04e245d03809 1
+public/data/stocks_issuer/2017-Q4.json
+  s_e47a5eda862f84::t_62689ed2d643c1 1
+public/data/stocks_issuer/2018-Q1.json
+  s_e47a5eda862f84::t_b39cf670a5f45c 1
+public/data/stocks_issuer/2018-Q2.json
+  s_e47a5eda862f84::t_94915675b256cd 1
+public/data/stocks_issuer/2018-Q3.json
+  s_e47a5eda862f84::t_9d07c77cb4ba89 1
+public/data/stocks_issuer/2018-Q4.json
+  s_e47a5eda862f84::t_92f51ae7bf3b4b 1
+public/data/stocks_issuer/2019-Q1.json
+  s_e47a5eda862f84::t_8248b62ef39dac 1
+public/data/stocks_issuer/2019-Q2.json
+  s_e47a5eda862f84::t_b679861d8dfa58 1
+public/data/stocks_issuer/2019-Q3.json
+  s_e47a5eda862f84::t_cd4b76ec6c6091 1
+public/data/stocks_issuer/2019-Q4.json
+  s_e47a5eda862f84::t_05b30ff5b31c77 1
+public/data/stocks_issuer/2020-Q1.json
+  s_e47a5eda862f84::t_61f229f0387c4f 1
+public/data/stocks_issuer/2020-Q2.json
+  s_e47a5eda862f84::t_c55d3227699277 1
+public/data/stocks_issuer/2020-Q3.json
+  s_e47a5eda862f84::t_1053448b1164a4 1
+public/data/stocks_issuer/2020-Q4.json
+  s_e47a5eda862f84::t_9f35deaf90a0c0 1
+public/data/stocks_issuer/2021-Q1.json
+  s_e47a5eda862f84::t_56ccc37f90e60e 1
+public/data/stocks_issuer/2021-Q2.json
+  s_e47a5eda862f84::t_6aa455e2c93075 1
+public/data/stocks_issuer/2021-Q3.json
+  s_e47a5eda862f84::t_a2cbf4a51af616 1
+public/data/stocks_issuer/2021-Q4.json
+  s_e47a5eda862f84::t_fbf901ff67bcc3 1
+public/data/stocks_issuer/2022-Q1.json
+  s_e47a5eda862f84::t_7421fd2d2b8a28 1
+public/data/stocks_issuer/2022-Q2.json
+  s_e47a5eda862f84::t_4401337d01f0fd 1
+public/data/stocks_issuer/2022-Q3.json
+  s_e47a5eda862f84::t_43e963f925b000 1
+public/data/stocks_issuer/2022-Q4.json
+  s_e47a5eda862f84::t_e43e8d8f88bcfe 1
+public/data/stocks_issuer/2023-Q1.json
+  s_e47a5eda862f84::t_3c7bdb29631220 1
+public/data/stocks_issuer/2023-Q2.json
+  s_e47a5eda862f84::t_fcdade69e16441 1
+public/data/stocks_issuer/2023-Q3.json
+  s_e47a5eda862f84::t_c11ccf09cf3bbe 1
+public/data/stocks_issuer/2023-Q4.json
+  s_e47a5eda862f84::t_bfe75429e685c4 1
+public/data/stocks_issuer/2024-Q1.json
+  s_e47a5eda862f84::t_ab28591f192f7c 1
+public/data/stocks_issuer/2024-Q2.json
+  s_e47a5eda862f84::t_b21d726e570083 1
+public/data/stocks_issuer/2024-Q3.json
+  s_e47a5eda862f84::t_e02acbd752a6ac 1
+public/data/stocks_issuer/2024-Q4.json
+  s_e47a5eda862f84::t_1fcfcab89c79f9 1
+public/data/stocks_issuer/2025-Q1.json
+  s_e47a5eda862f84::t_eb863289ec869d 1
+public/data/stocks_issuer/2025-Q2.json
+  s_e47a5eda862f84::t_983aed74124f52 1
+public/data/stocks_issuer/2025-Q3.json
+  s_e47a5eda862f84::t_a684c1241b75dd 1
+public/data/stocks_issuer/2025-Q4.json
+  s_e47a5eda862f84::t_d9af13c044f46c 1
+public/data/stocks_issuer/2026-Q1.json
+  s_e47a5eda862f84::t_43ff30289d9e56 1
+public/data/stocks_location/2010-Q4.json
+  s_e47a5eda862f84::t_8244e588319c90 1
+public/data/stocks_location/2011-Q4.json
+  s_e47a5eda862f84::t_40cc6ec40e45ea 1
+public/data/stocks_location/2012-Q4.json
+  s_e47a5eda862f84::t_41038a183ffbcd 1
+public/data/stocks_location/2013-Q4.json
+  s_e47a5eda862f84::t_5f81c28d777c2b 1
+public/data/stocks_location/2014-Q4.json
+  s_e47a5eda862f84::t_2470b4a063e68a 1
+public/data/stocks_location/2015-Q4.json
+  s_e47a5eda862f84::t_33f85635a9a191 1
+public/data/stocks_location/2016-Q4.json
+  s_e47a5eda862f84::t_f199158dda3af5 1
+public/data/stocks_location/2017-Q4.json
+  s_e47a5eda862f84::t_dc2c632941fa0a 1
+public/data/stocks_location/2018-Q4.json
+  s_e47a5eda862f84::t_ea152994b08136 1
+public/data/stocks_location/2019-Q4.json
+  s_e47a5eda862f84::t_677427bd40cb9f 1
+public/data/stocks_location/2020-Q4.json
+  s_e47a5eda862f84::t_017348f6e483b1 1
+public/data/stocks_location/2021-Q4.json
+  s_e47a5eda862f84::t_4af0dad9b72609 1
+public/data/stocks_location/2022-Q4.json
+  s_e47a5eda862f84::t_0967d19348bec6 1
+public/data/stocks_location/2023-Q4.json
+  s_e47a5eda862f84::t_e5e28a8f5ea0b4 1
+public/data/stocks_location/2024-Q4.json
+  s_e47a5eda862f84::t_ec3d152f5b97fe 1
+public/data/stocks_location/2025-Q4.json
+  s_e47a5eda862f84::t_e27ce3ebc99c38 1
+public/data/stocks_owner/2010-Q1.json
+  s_e47a5eda862f84::t_aad08e88473455 1
+public/data/stocks_owner/2010-Q2.json
+  s_e47a5eda862f84::t_e8a406cf2b76f6 1
+public/data/stocks_owner/2010-Q3.json
+  s_e47a5eda862f84::t_5f1f054f4ea38c 1
+public/data/stocks_owner/2010-Q4.json
+  s_e47a5eda862f84::t_3564b9ae8ab54c 1
+public/data/stocks_owner/2011-Q1.json
+  s_e47a5eda862f84::t_b5b36b1d499260 1
+public/data/stocks_owner/2011-Q2.json
+  s_e47a5eda862f84::t_e67b748c3ee6fa 1
+public/data/stocks_owner/2011-Q3.json
+  s_e47a5eda862f84::t_bb96fda027553a 1
+public/data/stocks_owner/2011-Q4.json
+  s_e47a5eda862f84::t_32f4b161f529b8 1
+public/data/stocks_owner/2012-Q1.json
+  s_e47a5eda862f84::t_219cd3a914e02f 1
+public/data/stocks_owner/2012-Q2.json
+  s_e47a5eda862f84::t_b90032e69add57 1
+public/data/stocks_owner/2012-Q3.json
+  s_e47a5eda862f84::t_de758f98f527d6 1
+public/data/stocks_owner/2012-Q4.json
+  s_e47a5eda862f84::t_c1bc7b18494224 1
+public/data/stocks_owner/2013-Q1.json
+  s_e47a5eda862f84::t_40d0af89ecfcc4 1
+public/data/stocks_owner/2013-Q2.json
+  s_e47a5eda862f84::t_68973b377ae310 1
+public/data/stocks_owner/2013-Q3.json
+  s_e47a5eda862f84::t_39658bb9acc0f1 1
+public/data/stocks_owner/2013-Q4.json
+  s_e47a5eda862f84::t_76a443e95dbfd6 1
+public/data/stocks_owner/2014-Q1.json
+  s_e47a5eda862f84::t_52637ef246089d 1
+public/data/stocks_owner/2014-Q2.json
+  s_e47a5eda862f84::t_f3d494f91ad8c7 1
+public/data/stocks_owner/2014-Q3.json
+  s_e47a5eda862f84::t_77017370d48073 1
+public/data/stocks_owner/2014-Q4.json
+  s_e47a5eda862f84::t_59af5ebab36072 1
+public/data/stocks_owner/2015-Q1.json
+  s_e47a5eda862f84::t_cdb3b5f725824b 1
+public/data/stocks_owner/2015-Q2.json
+  s_e47a5eda862f84::t_41aecd1c62cdf5 1
+public/data/stocks_owner/2015-Q3.json
+  s_e47a5eda862f84::t_db254e6a2d0ba1 1
+public/data/stocks_owner/2015-Q4.json
+  s_e47a5eda862f84::t_2a72f6a50b2af2 1
+public/data/stocks_owner/2016-Q1.json
+  s_e47a5eda862f84::t_721d53d1a2308c 1
+public/data/stocks_owner/2016-Q2.json
+  s_e47a5eda862f84::t_b75f77887eb144 1
+public/data/stocks_owner/2016-Q3.json
+  s_e47a5eda862f84::t_21a47268fcd026 1
+public/data/stocks_owner/2016-Q4.json
+  s_e47a5eda862f84::t_13580e47c2cdd3 1
+public/data/stocks_owner/2017-Q1.json
+  s_e47a5eda862f84::t_a5e4fea3fe143f 1
+public/data/stocks_owner/2017-Q2.json
+  s_e47a5eda862f84::t_0c64f287663fa3 1
+public/data/stocks_owner/2017-Q3.json
+  s_e47a5eda862f84::t_192f394b9afb6d 1
+public/data/stocks_owner/2017-Q4.json
+  s_e47a5eda862f84::t_a20eabb5cae876 1
+public/data/stocks_owner/2018-Q1.json
+  s_e47a5eda862f84::t_86505be3256415 1
+public/data/stocks_owner/2018-Q2.json
+  s_e47a5eda862f84::t_2f5ac6b75fc4b9 1
+public/data/stocks_owner/2018-Q3.json
+  s_e47a5eda862f84::t_f1ebf81add57fa 1
+public/data/stocks_owner/2018-Q4.json
+  s_e47a5eda862f84::t_d53756bca89411 1
+public/data/stocks_owner/2019-Q1.json
+  s_e47a5eda862f84::t_c1f73dd3f9a89a 1
+public/data/stocks_owner/2019-Q2.json
+  s_e47a5eda862f84::t_252fd1dd544737 1
+public/data/stocks_owner/2019-Q3.json
+  s_e47a5eda862f84::t_eabab063b98cf4 1
+public/data/stocks_owner/2019-Q4.json
+  s_e47a5eda862f84::t_2ce0b9293e0b8a 1
+public/data/stocks_owner/2020-Q1.json
+  s_e47a5eda862f84::t_e8ba0c7e5be9e4 1
+public/data/stocks_owner/2020-Q2.json
+  s_e47a5eda862f84::t_c21f90fcc733f1 1
+public/data/stocks_owner/2020-Q3.json
+  s_e47a5eda862f84::t_aea4b4048a7218 1
+public/data/stocks_owner/2020-Q4.json
+  s_e47a5eda862f84::t_5fdac2d3299438 1
+public/data/stocks_owner/2021-Q1.json
+  s_e47a5eda862f84::t_593ad10760a95b 1
+public/data/stocks_owner/2021-Q2.json
+  s_e47a5eda862f84::t_34c8ae4ba7c75c 1
+public/data/stocks_owner/2021-Q3.json
+  s_e47a5eda862f84::t_9c2ab0b14b29c8 1
+public/data/stocks_owner/2021-Q4.json
+  s_e47a5eda862f84::t_141a292fa784ad 1
+public/data/stocks_owner/2022-Q1.json
+  s_e47a5eda862f84::t_7f9116db50aab1 1
+public/data/stocks_owner/2022-Q2.json
+  s_e47a5eda862f84::t_03b6dd2ae3f269 1
+public/data/stocks_owner/2022-Q3.json
+  s_e47a5eda862f84::t_53825edcf556d7 1
+public/data/stocks_owner/2022-Q4.json
+  s_e47a5eda862f84::t_8f65ce34f9b4e7 1
+public/data/stocks_owner/2023-Q1.json
+  s_e47a5eda862f84::t_188ae62b8a2f62 1
+public/data/stocks_owner/2023-Q2.json
+  s_e47a5eda862f84::t_0e2413e6d4b5c3 1
+public/data/stocks_owner/2023-Q3.json
+  s_e47a5eda862f84::t_d17f9c44d9e69c 1
+public/data/stocks_owner/2023-Q4.json
+  s_e47a5eda862f84::t_ba2923c3b8a12f 1
+public/data/stocks_owner/2024-Q1.json
+  s_e47a5eda862f84::t_a082c29a9095ec 1
+public/data/stocks_owner/2024-Q2.json
+  s_e47a5eda862f84::t_a99b0913aff095 1
+public/data/stocks_owner/2024-Q3.json
+  s_e47a5eda862f84::t_9476d4921c158d 1
+public/data/stocks_owner/2024-Q4.json
+  s_e47a5eda862f84::t_9f290d2aef0593 1
+public/data/stocks_owner/2025-Q1.json
+  s_e47a5eda862f84::t_b0169a4edf8122 1
+public/data/stocks_owner/2025-Q2.json
+  s_e47a5eda862f84::t_7c1c2d490b8840 1
+public/data/stocks_owner/2025-Q3.json
+  s_e47a5eda862f84::t_b95858ab90eccc 1
+public/data/stocks_owner/2025-Q4.json
+  s_e47a5eda862f84::t_a4a42f0d106e56 1
+public/data/stocks_owner/2026-Q1.json
+  s_e47a5eda862f84::t_e69aa5285bcbbe 1
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.13",
+  "base_commit_sha": "1a587c2871ba9c9af00e7c6ba650e37dc031c7b8",
+  "prompts": {},
+  "sessions": {
+    "s_e47a5eda862f84": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "a46a31a4-8363-4a90-b740-7e96b4bf3615",
+        "model": "claude-fable-5"
+      },
+      "human_author": "64etuor <130260521+64etuor@users.noreply.github.com>"
+    }
+  }
+}
