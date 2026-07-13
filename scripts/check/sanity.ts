@@ -109,6 +109,7 @@ else ok(`countries.json ${countries.length} economies`)
 // ---- stocks ---------------------------------------------------------------
 const index = JSON.parse(readFileSync(join(OUT_DIR, 'index.json'), 'utf8'))
 const latest: string = index.latest_quarter
+let stockTotal = 0 // Phase P — facts 정합 게이트용 누계
 for (const basis of ['owner', 'issuer', 'location'] as const) {
   const shards = loadShards(`stocks_${basis}`)
   let n = 0
@@ -129,6 +130,7 @@ for (const basis of ['owner', 'issuer', 'location'] as const) {
   }
   ok(`stocks_${basis}: ${shards.length} shards, ${n} records, ${countriesSeen.size} countries`)
   if (basis === 'owner' && countriesSeen.size < 60) fail(`owner coverage ${countriesSeen.size} < 60 countries`)
+  stockTotal += n
 }
 
 // world total plausibility: owner-basis external assets at latest quarter
@@ -237,6 +239,59 @@ else {
     }
   }
   ok(`flowmatrix: ${fmFiles.length} periods, ${fmCountries} country-matrices (margins closed)`)
+}
+
+// ---- facts (Phase P-1 — 사실 테이블 정합: 엔진의 존재 이유) --------------------
+const factsGz = join(OUT_DIR, 'facts.ndjson.gz')
+const factsSummaryPath = join(OUT_DIR, 'meta/facts_summary.json')
+if (!existsSync(factsGz) || !existsSync(factsSummaryPath)) {
+  fail('facts.ndjson.gz / meta/facts_summary.json missing — run pnpm data:facts')
+} else {
+  const fs = JSON.parse(readFileSync(factsSummaryPath, 'utf8')) as {
+    records: number
+    by_table: Record<string, number>
+    by_grade: Record<string, number>
+    gzip_bytes: number
+  }
+  const expected: Record<string, number> = {
+    stocks: stockTotal,
+    flows_country: flowN,
+    flows_bilateral: biN,
+  }
+  for (const [table, n] of Object.entries(expected))
+    if (fs.by_table[table] !== n)
+      fail(`facts.${table}: ${fs.by_table[table]} ≠ shard sum ${n}`)
+  const gradeMismatch = Object.keys({ ...gradeDist, ...fs.by_grade }).filter(
+    (g) => (gradeDist[g] ?? 0) !== (fs.by_grade[g] ?? 0),
+  )
+  if (gradeMismatch.length > 0)
+    fail(`facts grade distribution mismatch: ${gradeMismatch.join(',')}`)
+  const gzBytes = statSync(factsGz).size
+  if (gzBytes !== fs.gzip_bytes) fail('facts.ndjson.gz size ≠ summary.gzip_bytes')
+  if (gzBytes > 100 * 1024 * 1024) fail('facts.ndjson.gz exceeds Vercel 100MB file limit')
+  if (fs.records !== stockTotal + flowN + biN)
+    fail(`facts total ${fs.records} ≠ ${stockTotal + flowN + biN}`)
+  else ok(`facts table: ${fs.records} records = shard sums, ${(gzBytes / 1e6).toFixed(1)}MB gz`)
+}
+
+// ---- mirror reconciliation (Phase P-2 — §12-3, 조정 없이 기록) -----------------
+const reconPath = join(OUT_DIR, 'meta/reconciliation.json')
+if (!existsSync(reconPath)) {
+  fail('meta/reconciliation.json missing — run pnpm data:reconcile')
+} else {
+  const recon = JSON.parse(readFileSync(reconPath, 'utf8')) as {
+    periods: Record<string, { pairs: number; median_gap_share: number }>
+  }
+  const latestRecon = Object.keys(recon.periods).sort().at(-1)
+  const rs = latestRecon ? recon.periods[latestRecon] : undefined
+  if (!rs || rs.pairs < 100) fail(`mirror pairs @latest ${rs?.pairs ?? 0} < 100`)
+  // 관대 임계(실측 중앙값 ~36% — BIS creditor/debtor 비교는 부문 커버리지 차로 수십%가 정상)
+  else if (rs.median_gap_share <= 0 || rs.median_gap_share >= 0.9)
+    fail(`mirror median gap ${(rs.median_gap_share * 100).toFixed(1)}% outside lenient (0, 90%)`)
+  else
+    ok(
+      `mirror reconciliation @${latestRecon}: ${rs.pairs} pairs, median gap ${(rs.median_gap_share * 100).toFixed(1)}% (recorded, not adjusted)`,
+    )
 }
 
 // ---- meta -------------------------------------------------------------------

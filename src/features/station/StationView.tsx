@@ -750,6 +750,7 @@ function StationBody({
               emptyHint={partnerEmpty}
               fmt={(v, d) => money.fmtAt(v, partnerEff ?? period, d)}
               fxRows={(v) => money.fxRows(v, partnerEff ?? period)}
+              asset={tab}
             />
             <LedgerTable
               points={

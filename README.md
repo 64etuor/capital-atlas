@@ -75,10 +75,12 @@ pnpm data:bis       # ② BIS 은행 회랑 재병합 (assemble이 bilateral을 
 pnpm data:synoptic  # ③ SYNOPTIC 사전 집계 재생성 (커밋된 샤드에서, 네트워크 없음)
 pnpm data:station   # ④ STATION 국가별 집계 + 집중도(§14) 재생성 (네트워크 없음)
 pnpm data:flowmatrix # ⑤ 자산 간 재배분 행렬(§8, 모델 배분) 재생성 (네트워크 없음)
-pnpm data:sources   # ⑥ meta/sources.json 재발행 (retrieved_at 보존)
-pnpm data:check     # ⑦ 계약 스키마(zod) + 상식 범위 게이트 (CI-able)
-pnpm data:changed   # ⑧ 실질 변경 vs 타임스탬프-전용 분류 (커밋 게이트)
-pnpm data:vintage   # ⑨ 실질 변경 시 빈티지 다이제스트 보존 (개정 이력의 원천)
+pnpm data:facts     # ⑥ 정본 사실 테이블 facts.ndjson.gz 재발행 (Phase P, 네트워크 없음)
+pnpm data:reconcile # ⑦ BIS 미러 폐합(§12-3) 재계산 (네트워크 없음)
+pnpm data:sources   # ⑧ meta/sources.json 재발행 (retrieved_at 보존)
+pnpm data:check     # ⑨ 계약 스키마(zod) + 상식 범위 + 사실테이블·미러 정합 게이트
+pnpm data:changed   # ⑩ 실질 변경 vs 타임스탬프-전용 분류 (커밋 게이트)
+pnpm data:vintage   # ⑪ 실질 변경 시 빈티지 다이제스트 보존 (개정 이력의 원천)
 
 # 검증
 pnpm typecheck      # tsc -b
@@ -105,6 +107,40 @@ pnpm build          # tsc -b && vite build
   아직 개정이 관측되지 않았으면 "no revisions since {최초 빈티지}"로 정직 표기.
 - **스크린샷 정책**: 문서 스크린샷의 명판 날짜는 촬영 시점의 데이터 빈티지다.
   일일 크론 운영상 날짜-단독 드리프트는 정상이며 재촬영 사유가 아니다.
+
+### 데이터 다운로드 — 정본 사실 테이블 (Phase P, §16-6)
+
+전 수치 레코드(410k+)를 단일 NDJSON 사실 테이블로 내려받을 수 있다:
+
+```
+https://ca.yanghapark.com/data/facts.ndjson.gz   (~5MB gzip, 라인당 JSON 1개)
+```
+
+| 필드 | 의미 |
+|---|---|
+| `table` | `stocks` \| `flows_country` \| `flows_bilateral` |
+| `basis` | stocks 전용 — `owner` \| `issuer` \| `location` |
+| `country` / `owner_country`·`issuer_country` | ISO3 (테이블별) |
+| `asset` · `period` · `measure` · `entry` | 자산군 · `YYYY-Qn` · stock/flow/valuation · BPM6 측 |
+| `value_usd` | USD 절대값 (스케일 접미사 없음) |
+| `source_id` · `effective_date` · `confidence_grade` | lineage — `meta/sources.json`으로 해석 |
+| `estimate_method` · `lower_bound` · `upper_bound` | 추정치(C–E)만 |
+
+파생물(synoptic/station/flowmatrix)은 이 테이블에서 재계산 가능한 2차 산출이라
+포함하지 않는다. 정합은 `pnpm data:check`가 강제한다(레코드 수·등급 분포 = 샤드 합).
+**재배포 주의**: 원 데이터는 IMF terms(attribution)·World Bank CC BY-4.0·BIS
+terms를 따른다 — 이 파일을 재배포할 때 원 출처 표기를 유지하라(`meta/sources.json`
+의 license_note가 소스별 정본).
+
+### 미러 폐합 — §12-3 (Phase P)
+
+BIS LBS는 같은 포지션을 두 나라가 각자 보고한다(A국 보고 claims vs B국 보고
+liabilities). `meta/reconciliation.json`(분포 요약)과 `reconciliation/{분기}.json`
+(쌍 상세)이 그 gap을 **조정 없이 기록**하고, 은행 양자 수치의 계보 도시에에
+**MIRROR** 행으로 노출된다(예: KOR→USA 2024-Q4 — KOR 보고 $47.7B vs USA 보고
+$41.4B, 격차 13.1%). gap은 상대국 부문 커버리지 차이와 실제 불일치가 섞인 값이라
+수십%가 정상이다(최신 분기 중앙값 ~36%). CPIS는 소유자 단방향 보고라 미러가
+불가능하다.
 
 ## 데이터 소스
 

@@ -28,4 +28,15 @@ export interface DossierPayload {
     asset: string | 'total'
     period: string
   }
+  /**
+   * 미러 폐합 조회 키 (Phase P, §12-3) — bis_lbs 양자 레코드에만 부여.
+   * side: 이 레코드가 어느 보고 관점인가(claims=owner국 보고 loans /
+   * liabilities=issuer국 보고 deposits) — MIRROR 행은 반대편 관측을 보여준다.
+   */
+  mirror_key?: {
+    owner: string
+    issuer: string
+    period: string
+    side: 'claims' | 'liabilities'
+  }
 }

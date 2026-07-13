@@ -1,6 +1,12 @@
 import { useEffect, useState } from 'react'
 import { useViewStore } from '../store/viewStore'
-import { getSources, getVintage, getVintagesIndex } from '../lib/dataClient'
+import {
+  getReconciliation,
+  getSources,
+  getVintage,
+  getVintagesIndex,
+} from '../lib/dataClient'
+import type { PeriodKey } from '../types/data'
 import { formatUsd } from '../lib/format'
 import { fogAlpha } from '../lib/tokens'
 import { useTranslation } from 'react-i18next'
@@ -43,6 +49,38 @@ async function loadRevisions(
   return rows.length > 0
     ? { kind: 'rows', rows }
     : { kind: 'none', since: vintages[0] }
+}
+
+/**
+ * MIRROR (Phase P, §12-3) — bis_lbs 양자 레코드의 반대편 보고 관측을 대조한다.
+ * gap은 상대국 부문 커버리지 차이 + 실제 불일치의 혼합 — 조정 없이 표시만.
+ */
+type MirrorState =
+  | { kind: 'loading' }
+  | { kind: 'none' }
+  | { kind: 'pair'; counterpart: number; reporter: string; gapPct: number }
+
+async function loadMirror(
+  key: NonNullable<DossierPayload['mirror_key']>,
+): Promise<MirrorState> {
+  const shard = await getReconciliation(key.period as PeriodKey)
+  const pair = shard.pairs.find(
+    (p) => p.owner === key.owner && p.issuer === key.issuer,
+  )
+  if (!pair) return { kind: 'none' }
+  return key.side === 'claims'
+    ? {
+        kind: 'pair',
+        counterpart: pair.liabilities_usd,
+        reporter: key.issuer,
+        gapPct: pair.gap_share * 100,
+      }
+    : {
+        kind: 'pair',
+        counterpart: pair.claims_usd,
+        reporter: key.owner,
+        gapPct: pair.gap_share * 100,
+      }
 }
 
 function Row({ label, children }: { label: string; children: React.ReactNode }) {
@@ -108,6 +146,33 @@ export function LineageDossier() {
     revResult && revResult.id === revId
       ? revResult.state
       : { kind: 'loading' }
+
+  // MIRROR (§12-3) — 열릴 때만 폐합 샤드 lazy-load, REVISIONS와 동일 패턴
+  const mirrorKey = payload?.mirror_key
+  const [mirResult, setMirResult] = useState<{
+    id: string
+    state: MirrorState
+  } | null>(null)
+  const mirId = mirrorKey
+    ? `${mirrorKey.owner}|${mirrorKey.issuer}|${mirrorKey.period}|${mirrorKey.side}`
+    : null
+  useEffect(() => {
+    if (!open || !mirrorKey || mirId === null) return
+    let alive = true
+    loadMirror(mirrorKey)
+      .then((state) => {
+        if (alive) setMirResult({ id: mirId, state })
+      })
+      .catch(() => {
+        // 폐합 샤드 부재(초기 연도 등) = 미러 없음 (정직 표기)
+        if (alive) setMirResult({ id: mirId, state: { kind: 'none' } })
+      })
+    return () => {
+      alive = false
+    }
+  }, [open, mirrorKey, mirId])
+  const mirror: MirrorState =
+    mirResult && mirResult.id === mirId ? mirResult.state : { kind: 'loading' }
 
   useEffect(() => {
     if (!open) return
@@ -250,6 +315,18 @@ export function LineageDossier() {
                       {pct.toFixed(2)}%
                     </span>
                   )
+                })}
+            </Row>
+          )}
+          {payload.mirror_key && (
+            <Row label={t('dossier.rows.mirror')}>
+              {mirror.kind === 'loading' && '…'}
+              {mirror.kind === 'none' && t('dossier.mirror.none')}
+              {mirror.kind === 'pair' &&
+                t('dossier.mirror.line', {
+                  value: formatUsd(mirror.counterpart),
+                  reporter: mirror.reporter,
+                  gap: mirror.gapPct.toFixed(1),
                 })}
             </Row>
           )}

@@ -93,7 +93,8 @@
       "license": "라이선스",
       "coverage": "커버리지",
       "view": "보기",
-      "revisions": "개정 이력"
+      "revisions": "개정 이력",
+      "mirror": "미러 폐합"
     },
     "observedValue": "— (관측값)",
     "directObservation": "직접 관측",
@@ -106,6 +107,10 @@
     "revisions": {
       "none": "{{date}} 이후 개정 없음",
       "notTracked": "{{date}} 이전은 미추적"
+    },
+    "mirror": {
+      "line": "{{value}} · {{reporter}} 보고 반대편 관측 · 격차 {{gap}}%",
+      "none": "미러 보고 없음 (상대국이 BIS 보고국이 아니거나 $100M 미만)"
     }
   },
   "synoptic": {

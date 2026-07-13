@@ -13,6 +13,7 @@ import type {
   FxRatesFile,
   PeriodIndexFile,
   PeriodKey,
+  ReconciliationShard,
   SourceRegistryEntry,
   StationFile,
   StationIndexFile,
@@ -48,7 +49,8 @@ export const MAX_SHARD_CACHE = 16
 
 const isShardPath = (path: string) =>
   /^\/data\/(stocks_|flows_)/.test(path) ||
-  (/^\/data\/(station|flowmatrix)\//.test(path) && !path.endsWith('/index.json'))
+  (/^\/data\/(station|flowmatrix|reconciliation)\//.test(path) &&
+    !path.endsWith('/index.json'))
 
 const inflight = new Map<string, Promise<unknown>>()
 
@@ -122,6 +124,10 @@ export const getStation = (iso3: string) =>
 /** Phase O — 자산 간 재배분 행렬 인덱스(가용 분기) — 핀 고정 */
 export const getFlowMatrixIndex = () =>
   fetchJson<FlowMatrixIndexFile>('/data/flowmatrix/index.json')
+
+/** Phase P — §12-3 미러 폐합 샤드(LRU 대상). bis_lbs 양방향 관측 쌍 */
+export const getReconciliation = (period: PeriodKey) =>
+  fetchJson<ReconciliationShard>(`/data/reconciliation/${period}.json`)
 
 /** Phase O — 분기 재배분 행렬 샤드(LRU 대상). 전 셀 grade E 모델 배분 */
 export const getFlowMatrix = (period: PeriodKey) =>

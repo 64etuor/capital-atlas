@@ -449,3 +449,24 @@ export interface FlowMatrixFile {
 export interface FlowMatrixIndexFile {
   periods: PeriodKey[]
 }
+
+// ----------------------------------------------------------------- mirror ----
+
+/**
+ * public/data/reconciliation/{period}.json — §12-3 미러 폐합 (Phase P).
+ * bis_lbs 양방향: owner국 보고 claims(loans) vs issuer국 보고
+ * liabilities(deposits) — 같은 방향의 두 독립 관측. 조정하지 않고 기록.
+ */
+export interface MirrorPairRecord {
+  owner: string
+  issuer: string
+  claims_usd: number
+  liabilities_usd: number
+  gap_usd: number
+  /** |gap| / max(두 관측) — 0=완전 폐합 */
+  gap_share: number
+}
+
+export interface ReconciliationShard {
+  pairs: MirrorPairRecord[]
+}

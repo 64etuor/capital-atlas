@@ -27,6 +27,11 @@ interface Props {
   fmt?: (v: number, digits?: number) => string
   /** LCU 활성 시 도시에에 붙는 FX RATE·LCU/USD VALUE 행 */
   fxRows?: (valueUsd: number) => Array<[string, string]>
+  /**
+   * 구체 자산 스코프(자산 탭) — 은행 채널(deposits/loans)일 때만 도시에
+   * MIRROR 행(§12-3)의 조회 키를 부여한다. ALL 스코프는 자산 모호 → 미부여.
+   */
+  asset?: string
 }
 
 interface Row {
@@ -45,6 +50,7 @@ export function PartnerMatrix({
   emptyHint,
   fmt = formatUsd,
   fxRows,
+  asset,
 }: Props) {
   const openDossier = useViewStore((s) => s.openDossier)
 
@@ -118,6 +124,21 @@ export function PartnerMatrix({
                     upper_bound: main.upper,
                     effective_date: main.effective_date,
                     source_ids: [main.source_id],
+                    // §12-3 미러 폐합 — bis_lbs 레코드만, 방향은 보유/피보유로 결정
+                    ...(main.source_id === 'bis_lbs' &&
+                    effPeriod &&
+                    (asset === 'deposits' || asset === 'loans')
+                      ? {
+                          mirror_key: {
+                            owner: main === r.holding ? iso3 : r.country,
+                            issuer: main === r.holding ? r.country : iso3,
+                            period: effPeriod,
+                            side: (asset === 'loans'
+                              ? 'claims'
+                              : 'liabilities') as 'claims' | 'liabilities',
+                          },
+                        }
+                      : {}),
                     context: [
                       [
                         `${iso3} holds ${r.country}`,

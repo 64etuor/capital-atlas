@@ -93,7 +93,8 @@
       "license": "License",
       "coverage": "Coverage",
       "view": "View",
-      "revisions": "Revisions"
+      "revisions": "Revisions",
+      "mirror": "Mirror"
     },
     "observedValue": "— (observed value)",
     "directObservation": "DIRECT OBSERVATION",
@@ -106,6 +107,10 @@
     "revisions": {
       "none": "no revisions since {{date}}",
       "notTracked": "not tracked before {{date}}"
+    },
+    "mirror": {
+      "line": "{{value}} · {{reporter}}-reported counterpart view · gap {{gap}}%",
+      "none": "no mirror report (counterparty not a BIS reporter or below $100M)"
     }
   },
   "synoptic": {

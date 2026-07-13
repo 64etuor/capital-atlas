@@ -34,6 +34,10 @@ TS 미러: `src/types/data.ts` — 문서와 타입이 다르면 이 문서가 �
 | `meta/synoptic.json` | SYNOPTIC 대시보드 사전 집계 (`pnpm data:synoptic`) | 수집 후 |
 | `station/index.json` | STATION 가용 국가 목록 | 수집 후 |
 | `station/{ISO3}.json` | STATION 국가별 사전 집계 (`pnpm data:station`, WLD=세계) | 수집 후 |
+| `facts.ndjson.gz` | **정본 사실 테이블** — 전 수치 레코드 평탄화 (`pnpm data:facts`, Phase P) | 수집 후 |
+| `meta/facts_summary.json` | 사실 테이블 정합 요약(수·테이블·등급 분포) — sanity 게이트 대상 | 수집 후 |
+| `reconciliation/{period}.json` | §12-3 미러 폐합 쌍 상세 (`pnpm data:reconcile`, Phase P) | 수집 후 |
+| `meta/reconciliation.json` | 미러 폐합 분포 요약(중앙값·사분위·상위 gap) | 수집 후 |
 
 - 인코딩: UTF-8 JSON. 값 단위: **USD (current)**, 절대값(백만 아님 — 스케일 접미사 금지).
 - `period`: `"YYYY-Qn"` (2010-Q1 ~). 연간 원자료(WB 시총, PIP)는 해당 연도 **Q4**에 표기.
@@ -296,6 +300,39 @@ stock 계열만 추적(흐름·파생 지표는 revision_key 없음 = 행 생략
   **VIS=OBS에서 구역 통째 소멸**(전부 모델 — §6의 가장 순수한 적용).
 - 결정론(N1): 타임스탬프 없음, 재실행 바이트 동일(테스트 강제). 65분기 ·
   파일당 ~110KB(5MB 조항 준수). 갱신 체인: `data:station` 다음.
+
+### facts.ndjson.gz — 정본 사실 테이블 (Phase P, 초안 §11.2 축소 + §16-6)
+
+`scripts/build/facts.ts`가 stocks(3 basis)·flows_country·flows_bilateral 전
+레코드를 라인당 JSON 1개(NDJSON)로 평탄화해 gzip 발행한다(~410k 레코드, ~5MB).
+TS 미러: `FactLine`(scripts/build/facts.ts). 규칙:
+
+- **파생물 비포함**: synoptic/station/flowmatrix는 이 테이블에서 재계산 가능한
+  2차 산출(§11 Gold 집계층) — 사실이 아니라 뷰다.
+- **결정론**: 타임스탬프 없음, gzip 헤더 MTIME=0 고정 — 같은 상류면 같은 바이트.
+- **정합 게이트**: 레코드 수(테이블별)·등급 분포 = 원 샤드 합. `data:facts`
+  self-check + `data:check` + vitest 삼중 강제. 요약은 `meta/facts_summary.json`.
+- 옵셔널 lineage 필드(estimate_method/bounds)는 **생략이지 null이 아니다**.
+- 재배포 시 원 소스 라이선스(IMF attribution·WB CC BY-4.0·BIS terms) 표기 유지.
+
+### reconciliation — §12-3 미러 폐합 (Phase P)
+
+BIS LBS 양방향: **owner국 보고 claims(asset=loans)** vs **issuer국 보고
+liabilities(asset=deposits)** 는 같은 방향(owner→issuer) 은행 포지션의 두 독립
+관측. `scripts/build/reconcile.ts`가 커밋된 bilateral 샤드에서 계산한다(네트워크
+없음, 결정론).
+
+- `reconciliation/{period}.json`: `{ pairs: [{owner, issuer, claims_usd,
+  liabilities_usd, gap_usd, gap_share}] }` — (owner,issuer) 정렬. 양쪽 관측이
+  모두 있는 쌍만(§12 정신 — 조정하지 않고 기록, 한쪽뿐이면 정직 생략).
+- `meta/reconciliation.json`: 분기별 분포(median/p25/p75 gap_share)·최신 상위
+  gap 10쌍·method/caveat. sanity 게이트: 최신 분기 쌍≥100, 중앙 gap∈(0, 90%)
+  (관대 임계 — gap은 상대국 부문 커버리지 차이가 섞여 수십%가 정상, 실측 ~36%).
+- **CPIS(imf_pip)는 소유자 단방향 보고라 미러 불가** — 이 한계는 구조적이다.
+- 프루닝(|값|≥$100M)으로 한쪽이 임계 미만인 쌍은 비교 불가 → 생략(도시에
+  MIRROR 행 문구에 명시).
+- UI: bis_lbs 양자 레코드의 계보 도시에 **MIRROR** 행(`mirror_key` — 자산 탭
+  DEP/LOAN에서 부여, ALL 스코프는 자산 모호로 미부여).
 
 ## enum 정본
 
