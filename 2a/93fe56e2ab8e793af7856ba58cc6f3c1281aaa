@@ -1,0 +1,111 @@
+src/i18n/ko.json
+  s_e47a5eda862f84::t_a5e9f724273ac8 67-77
+  s_e47a5eda862f84::t_32f14b41d852ce 1-25,28-66,78-124
+  s_e47a5eda862f84::t_8e7ef2141b1658 26-27
+  s_e47a5eda862f84::t_4bff29ecf100ef 125
+src/lib/format.ts
+  s_e47a5eda862f84::t_e3874c3cb2b68d 37-46
+  s_e47a5eda862f84::t_cdbfe03184fd00 1-9,33-36,47-70
+src/lib/urlState.ts
+  s_e47a5eda862f84::t_61cc2bc061373e 1-127
+src/store/viewStore.ts
+  s_e47a5eda862f84::t_216839880031e6 27-28
+  s_e47a5eda862f84::t_b4224c251b1372 2-7
+  s_e47a5eda862f84::t_5531f9d86f3386 53
+  s_e47a5eda862f84::t_5e818eebacf5aa 39
+  s_e47a5eda862f84::t_c02c5465eb260e 65
+src/components/LineageDossier.tsx
+  s_e47a5eda862f84::t_7e1e85c2f05fdc 67,71
+  s_e47a5eda862f84::t_409b33d09f11ba 57
+  s_e47a5eda862f84::t_20a573f6c87759 6-7
+  s_e47a5eda862f84::t_9d9572fa70b850 133,140,145-146,148,152,155-157,160,164-167
+  s_e47a5eda862f84::t_dcc74cfeeeffe9 111
+  s_e47a5eda862f84::t_a945eff252d4b9 25
+  s_e47a5eda862f84::t_ee8652f35cb1b3 168
+src/components/StationPlate.tsx
+  s_e47a5eda862f84::t_b310c0886002db 1,4,6,15,18,21-47,50-51,54-55,58-62
+src/i18n/index.ts
+  s_e47a5eda862f84::t_31d7e327b1ed16 1-44
+src/lib/urlState.test.ts
+  s_e47a5eda862f84::t_83eab9065e5aec 1-68
+src/lib/format.test.ts
+  s_e47a5eda862f84::t_ffef5335b54931 1-53
+src/features/station/CountryDial.tsx
+  s_e47a5eda862f84::t_832ecc42173f0a 135
+  s_e47a5eda862f84::t_532d7498b50c7e 164-168
+  s_e47a5eda862f84::t_10370ab628fd58 109-110
+  s_e47a5eda862f84::t_1eba4bbbe39823 44,52-62,64-66
+  s_e47a5eda862f84::t_00a7226d696fb3 80
+  s_e47a5eda862f84::t_bd4a6ab7557dff 140
+  s_e47a5eda862f84::t_ba91e1e5001899 96
+  s_e47a5eda862f84::t_07b7cfb6ffec4e 6,13-29
+  s_e47a5eda862f84::t_133372b9f6cca4 30
+src/i18n/en.json
+  s_e47a5eda862f84::t_1269cb94ec969c 1-27,30-66,78-124
+  s_e47a5eda862f84::t_c4b0c5bb024f3e 67-77
+  s_e47a5eda862f84::t_d5043af2143811 28-29
+  s_e47a5eda862f84::t_1a97d3f2ede8d9 125
+src/components/ObservationReport.tsx
+  s_e47a5eda862f84::t_c0f0596ed63c99 302
+  s_e47a5eda862f84::t_4ec047416e1958 438-440
+  s_e47a5eda862f84::t_572f1dda850f6f 386
+  s_e47a5eda862f84::t_eb04255ed6497f 523-524
+  s_e47a5eda862f84::t_f3de1ccf0e0c78 48,54
+  s_e47a5eda862f84::t_9ac2bc6f5ec71b 335,338-339
+  s_e47a5eda862f84::t_8275d772b42da4 376-377
+  s_e47a5eda862f84::t_cceb0901a7d784 348-350
+  s_e47a5eda862f84::t_9cdc70d29db942 456
+  s_e47a5eda862f84::t_baf1d149dfcfca 2
+  s_e47a5eda862f84::t_c9d5f24b9a55d4 216-223
+  s_e47a5eda862f84::t_4615a663379f86 479-484
+  s_e47a5eda862f84::t_51595d096d5726 551
+  s_e47a5eda862f84::t_8af8331111150c 293
+  s_e47a5eda862f84::t_93a9a2afccddc8 319-323,325-328
+  s_e47a5eda862f84::t_fc4befaf57170c 260
+  s_e47a5eda862f84::t_f39569217024ce 446-447
+  s_e47a5eda862f84::t_7c65582f91d55a 402-405,409-413
+  s_e47a5eda862f84::t_fa978896032b7c 532
+  s_e47a5eda862f84::t_1407a8f36d4a8b 272-279,284
+  s_e47a5eda862f84::t_3304e1d8e19a04 70,73
+src/i18n/i18n.test.ts
+  s_e47a5eda862f84::t_24498568183f2c 1-66
+src/main.tsx
+  s_e47a5eda862f84::t_cbea669a11bb8a 8-12
+  s_e47a5eda862f84::t_b68be0765641b1 25-27
+src/components/BarographTimeline.tsx
+  s_e47a5eda862f84::t_aa767ee5c0697c 2,41,149
+src/components/InstrumentCluster.tsx
+  s_e47a5eda862f84::t_03536ef8f4faa7 1,22,43,52,67-69,73-76,80-81,86-87,92,107,114,116,122,128
+src/features/station/StationView.tsx
+  s_e47a5eda862f84::t_ab5abee8f63a1c 10,51,149,202,403-404
+src/features/synoptic/AnomalyBulletin.tsx
+  s_e47a5eda862f84::t_5887de42b1c4e9 7,110,121
+src/features/synoptic/BarometerBank.tsx
+  s_e47a5eda862f84::t_e2c727247972a9 7,31,105
+src/features/synoptic/CirculationChart.tsx
+  s_e47a5eda862f84::t_f055052a0af614 7,32,48,54-55,63
+src/features/synoptic/StripBank.tsx
+  s_e47a5eda862f84::t_00d36aa04a9b9b 6,28,57
+src/features/synoptic/SynopticView.tsx
+  s_e47a5eda862f84::t_30e69b3da79b51 10,21,72
+package.json
+  s_e47a5eda862f84::t_7f32613f952495 26,30
+pnpm-lock.yaml
+  s_e47a5eda862f84::t_61d6634d248bbb 26-28,38-40,43,53,80,247-250,2120-2130,2562-2577,2791-2795,2883-2886,3156-3157,4046,4052,4581,4586,5354-5361,5724-5734,5947-5950,5994-5995,6041,6045
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.12",
+  "base_commit_sha": "2a93fe56e2ab8e793af7856ba58cc6f3c1281aaa",
+  "prompts": {},
+  "sessions": {
+    "s_e47a5eda862f84": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "a46a31a4-8363-4a90-b740-7e96b4bf3615",
+        "model": "claude-fable-5"
+      },
+      "human_author": "64etuor <130260521+64etuor@users.noreply.github.com>"
+    }
+  }
+}
