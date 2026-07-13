@@ -222,6 +222,79 @@ export interface SynopticAnomaly {
   upper?: number
 }
 
+// -------------------------------------------------------------- station ----
+
+/**
+ * public/data/station/{ISO3}.json — 국가별 관측 분석 사전 집계
+ * (scripts/build/station.ts, `pnpm data:station`). STATION 뷰는 국가당
+ * 파일 하나만 lazy-load 한다(LRU 샤드 취급). WLD.json = 세계 집계.
+ */
+export interface StationPoint {
+  period: PeriodKey
+  stock: number
+  grade: ConfidenceGrade
+  /** D/E 추정 잔액의 신뢰구간 밴드 — 관측(A/B)에선 없음 */
+  stock_lower?: number
+  stock_upper?: number
+  stock_issuer?: number
+  issuer_grade?: ConfidenceGrade
+  /** BOP 부호 보존: flow_in=비거주자 유입측, flow_out=거주자 유출측 */
+  flow_in: number
+  flow_out: number
+  flow_grade?: ConfidenceGrade
+  valuation: number
+  source_id?: string
+  method?: string
+  /** WLD 집계 전용: 가치가중 관측(A/B) 비중 (grade는 이 비중의 매핑) */
+  obs_share?: number
+}
+
+export interface StationPartner {
+  country: string
+  value: number
+  grade: ConfidenceGrade
+  source_id: string
+  effective_date: string
+  method?: string
+  lower?: number
+  upper?: number
+}
+
+export interface StationPartnerSides {
+  holdings: StationPartner[]
+  holders: StationPartner[]
+}
+
+export interface StationPartnersEntry {
+  all: StationPartnerSides
+  assets: Partial<Record<AssetClass, StationPartnerSides>>
+}
+
+export interface StationSummary {
+  latest: PeriodKey | null
+  first: PeriodKey | null
+  stock_total: number
+  flow_in: number
+  flow_out: number
+  valuation: number
+  composition: Partial<Record<AssetClass, number>>
+  obs_share: number
+  n_points: number
+}
+
+export interface StationFile {
+  iso3: string
+  generated_at: string
+  summary: StationSummary
+  series: Partial<Record<AssetClass, StationPoint[]>>
+  partners: Record<PeriodKey, StationPartnersEntry>
+}
+
+export interface StationIndexFile {
+  generated_at: string
+  countries: string[]
+}
+
 export interface SynopticFile {
   generated_at: string
   periods: PeriodKey[]

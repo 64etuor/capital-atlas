@@ -157,6 +157,24 @@ describe('shard cache bound — timeline scrubbing must not grow memory forever'
     expect(fetchMock).toHaveBeenCalledTimes(max + 2)
   })
 
+  it('station country files join the shard LRU while station/index.json stays pinned', async () => {
+    const client = await freshClient()
+    const fetchMock = vi.fn().mockResolvedValue(okJson({}))
+    vi.stubGlobal('fetch', fetchMock)
+    await client.getStationIndex()
+    const base = fetchMock.mock.calls.length
+    const max = client.MAX_SHARD_CACHE
+    for (let i = 0; i < max; i++) await client.getStation(`C${i}`)
+    expect(fetchMock).toHaveBeenCalledTimes(base + max)
+    await client.getStation('C0') // refresh recency — still cached
+    expect(fetchMock).toHaveBeenCalledTimes(base + max)
+    await client.getStation('EXTRA') // evicts the true LRU victim (C1)
+    await client.getStationIndex() // pinned — must still be a cache hit
+    expect(fetchMock).toHaveBeenCalledTimes(base + max + 1)
+    await client.getStation('C1')
+    expect(fetchMock).toHaveBeenCalledTimes(base + max + 2)
+  })
+
   it('never evicts pinned meta files (index/countries/geometry/sources)', async () => {
     const client = await freshClient()
     const fetchMock = vi.fn().mockResolvedValue(okJson({ periods: {} }))

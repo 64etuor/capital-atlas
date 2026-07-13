@@ -11,6 +11,8 @@ import type {
   PeriodIndexFile,
   PeriodKey,
   SourceRegistryEntry,
+  StationFile,
+  StationIndexFile,
   StocksFile,
   SynopticFile,
 } from '../types/data'
@@ -39,7 +41,9 @@ export interface CountriesGeo {
  */
 export const MAX_SHARD_CACHE = 16
 
-const isShardPath = (path: string) => /^\/data\/(stocks_|flows_)/.test(path)
+const isShardPath = (path: string) =>
+  /^\/data\/(stocks_|flows_)/.test(path) ||
+  (/^\/data\/station\//.test(path) && !path.endsWith('/index.json'))
 
 const inflight = new Map<string, Promise<unknown>>()
 
@@ -88,6 +92,14 @@ export const getFlowIntensity = () =>
 /** SYNOPTIC 사전 집계 — meta 경로라 핀 고정(LRU 비대상), 단일 lazy-load */
 export const getSynoptic = () =>
   fetchJson<SynopticFile>('/data/meta/synoptic.json')
+
+/** STATION 인덱스(가용 국가 목록) — 핀 고정 */
+export const getStationIndex = () =>
+  fetchJson<StationIndexFile>('/data/station/index.json')
+
+/** STATION 국가 파일 — 샤드 취급(LRU 대상). 'WLD' = 세계 집계 */
+export const getStation = (iso3: string) =>
+  fetchJson<StationFile>(`/data/station/${iso3}.json`)
 
 let countriesP: Promise<Map<string, CountryMaster>> | null = null
 export function getCountries(): Promise<Map<string, CountryMaster>> {

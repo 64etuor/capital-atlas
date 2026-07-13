@@ -14,7 +14,8 @@
     "data:geometry": "tsx scripts/build/geometry.ts",
     "data:sources": "tsx scripts/build/sources.ts",
     "data:synoptic": "tsx scripts/build/synoptic.ts",
-    "data:check": "tsx scripts/check/sanity.ts"
+    "data:check": "tsx scripts/check/sanity.ts",
+    "data:station": "tsx scripts/build/station.ts"
   },
   "dependencies": {
     "@fontsource-variable/archivo": "^5.2.8",

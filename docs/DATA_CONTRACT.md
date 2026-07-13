@@ -32,6 +32,8 @@ TS 미러: `src/types/data.ts` — 문서와 타입이 다르면 이 문서가 �
 | `meta/pipeline_report.json` | 커버리지·등급 분포·수집 실패 기록 | 수집 시 |
 | `meta/global_crypto.json` | 암호자산 글로벌 통제값 (국가 배분은 v2) | 수집 시 |
 | `meta/synoptic.json` | SYNOPTIC 대시보드 사전 집계 (`pnpm data:synoptic`) | 수집 후 |
+| `station/index.json` | STATION 가용 국가 목록 | 수집 후 |
+| `station/{ISO3}.json` | STATION 국가별 사전 집계 (`pnpm data:station`, WLD=세계) | 수집 후 |
 
 - 인코딩: UTF-8 JSON. 값 단위: **USD (current)**, 절대값(백만 아님 — 스케일 접미사 금지).
 - `period`: `"YYYY-Qn"` (2010-Q1 ~). 연간 원자료(WB 시총, PIP)는 해당 연도 **Q4**에 표기.
@@ -177,6 +179,25 @@ live 데이터는 `meta/` 통제값·오버레이 전용.
 - `grade_mix[period]`: A~E 레코드 수 (시정 바).
 - 계약 테스트: `scripts/build/synoptic.test.ts` (표본 분기 합계 = 샤드 직접
   합산 대조 포함). 5MB 초과 시 샤딩 조항.
+
+### station/{ISO3}.json — STATION 관측 분석 사전 집계
+
+`scripts/build/station.ts`가 커밋된 샤드에서 **네트워크 없이** 생성
+(`pnpm data:station`, 데이터 재수집 후 반드시 재실행). STATION 뷰는 국가당
+파일 하나만 lazy-load 한다 — 클라이언트 LRU에서 **샤드 취급**(`station/index.json`만
+핀). TS 미러: `src/types/data.ts`의 `StationFile`.
+
+- `series[asset][]`: 분기점 {stock(owner), grade, **D/E면 stock_lower/upper
+  신뢰구간 밴드 + method**, source_id, stock_issuer 병렬(의미는 issuer 표),
+  flow_in/flow_out(BPM6 부호 보존), flow_grade, valuation}. §1.5 — 점 단위 계보.
+- `partners[period]`: CPIS **포지션(stock)만** — 파생 flow(D)는 매트릭스 비대상.
+  `all`(자산 합산, 등급=구성 worst, 합산 행은 산식/범위 미주장) + 자산별,
+  holdings(보유)/holders(피보유) 각 상위 15.
+- `summary`: 최신 분기 총잔액·양측 흐름·구성·가치가중 관측 비중.
+- `WLD.json` = 세계 집계. 점 등급은 가치가중 관측 비중의 매핑(≥.95 A / ≥.8 B /
+  ≥.5 C / ≥.25 D / 그 외 E), `obs_share` 동반 — 개별 레코드 주장 아님.
+- 계약 테스트: `scripts/build/station.test.ts` (표본 KOR 샤드 대조 + WLD↔synoptic
+  교차 대조 포함). 파일당 5MB 조항.
 
 ## enum 정본
 
