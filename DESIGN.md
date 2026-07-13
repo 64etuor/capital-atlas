@@ -85,6 +85,9 @@ Serif ↔ 라벨 `11px` mono uppercase `letter-spacing: 0.12em`. 중간 크기�
 
 - **좌상 — 관측소 명판**: 워드마크 `CAPITAL ATLAS`(Instrument Serif) + 이중 시각
   스탬프(mono 2줄): `마지막 공식 관측 2025-Q4` / `현재 추정 기준 2026-07-12`.
+  "현재 추정 기준" = **데이터 스냅샷 빈티지**(`index.generated_at`). 나우캐스팅
+  도입 전까지 월클럭 날짜 금지 — 정적 스냅샷에 오늘 날짜를 붙이면 허위 신선도
+  주장이 된다.
 - **우측 — 계기 클러스터**: basis(소유자/발행자/소재지) · measure(잔액/흐름/평가변동/
   거래량) · 통화(명목USD/고정환율USD) · 관측만/추정포함 토글의 수직 스택.
   접힌 상태 = mono 약어(OWN/ISS/LOC…), hover/focus 시 확장. 세그먼트 컨트롤이 아니라

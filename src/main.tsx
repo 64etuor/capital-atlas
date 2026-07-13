@@ -3,7 +3,7 @@ import { createRoot } from 'react-dom/client'
 import './index.css'
 import App from './App.tsx'
 import { getIndex } from './lib/dataClient'
-import { initPeriods, periodCount } from './lib/periods'
+import { initDataVintage, initPeriods, periodCount } from './lib/periods'
 import { useViewStore } from './store/viewStore'
 import { applyLocale, detectLocale } from './i18n'
 import { applyUrlState, startUrlSync } from './lib/urlState'
@@ -18,6 +18,7 @@ const root = createRoot(document.getElementById('root')!)
 getIndex()
   .then((idx) => {
     initPeriods(idx.latest_quarter)
+    initDataVintage(idx.generated_at)
     useViewStore.setState({ periodIndex: periodCount() - 1 })
   })
   .catch(() => {})

@@ -8,9 +8,7 @@ import { TutorialOverlay } from './components/TutorialOverlay'
 import { MapCanvas } from './features/map/MapCanvas'
 import { SynopticView } from './features/synoptic/SynopticView'
 import { StationView } from './features/station/StationView'
-
-/** "현재 추정 기준" 스탬프 — 모듈 초기화 시 1회 (렌더 순수성 유지) */
-const ESTIMATED_AS_OF = new Date().toISOString().slice(0, 10)
+import { dataVintageDate } from './lib/periods'
 
 function App() {
   return (
@@ -18,7 +16,9 @@ function App() {
       <MapCanvas />
       <SynopticView />
       <StationView />
-      <StationPlate estimatedAsOf={ESTIMATED_AS_OF} />
+      {/* "현재 추정 기준" = 데이터 스냅샷 빈티지(index.generated_at). 월클럭
+          금지 — 정적 스냅샷에 오늘 날짜를 붙이면 허위 신선도 주장(감사 F1). */}
+      <StationPlate estimatedAsOf={dataVintageDate()} />
       <InstrumentCluster />
       <BarographTimeline />
       <ObservationReport />

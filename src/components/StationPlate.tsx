@@ -10,8 +10,14 @@ const SURFACES = [
   { value: 'station', label: 'STATION' },
 ] as const
 
-/** 좌상 관측소 명판 — 워드마크 + 이중 시각 스탬프 + 관측 표면 전환 (§5). */
-export function StationPlate({ estimatedAsOf }: { estimatedAsOf: string }) {
+/** 좌상 관측소 명판 — 워드마크 + 이중 시각 스탬프 + 관측 표면 전환 (§5).
+ *  estimatedAsOf = 데이터 스냅샷 빈티지(index.generated_at); index 로드
+ *  실패 시 null → 날짜를 지어내지 않고 '—'로 표시한다. */
+export function StationPlate({
+  estimatedAsOf,
+}: {
+  estimatedAsOf: string | null
+}) {
   const { t } = useTranslation()
   const appView = useViewStore((s) => s.appView)
   const setAppView = useViewStore((s) => s.setAppView)
@@ -52,7 +58,7 @@ export function StationPlate({ estimatedAsOf }: { estimatedAsOf: string }) {
         </p>
         <p>
           <span className="opacity-60">{t('plate.estimatedAsOf')}</span>{' '}
-          {estimatedAsOf}
+          {estimatedAsOf ?? '—'}
         </p>
       </div>
       <div
