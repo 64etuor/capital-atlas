@@ -1,0 +1,103 @@
+src/components/BarographTimeline.tsx
+  s_e47a5eda862f84::t_f9bbfa6157e499 78
+src/components/StationPlate.tsx
+  s_e47a5eda862f84::t_db7281061e6252 60
+src/components/InstrumentCluster.tsx
+  s_e47a5eda862f84::t_7c86938a949e15 107
+src/components/LineageDossier.tsx
+  s_e47a5eda862f84::t_88652e98bae442 43-47
+src/lib/palette.test.ts
+  s_e47a5eda862f84::t_e33a9db710bc9a 1-89,95-136
+  s_e47a5eda862f84::t_dac0ef8e3474eb 90-94
+src/components/ChartControls.tsx
+  s_e47a5eda862f84::t_be987c3b1d630a 19
+  s_e47a5eda862f84::t_159edf813d1cfa 1-18,20-51
+src/features/station/SmallMultiples.tsx
+  s_e47a5eda862f84::t_5ad8344754b799 1-165
+src/lib/exportChart.ts
+  s_e47a5eda862f84::t_61fae0689e7f78 7
+  s_e47a5eda862f84::t_344ca854ebcba2 32-46
+  s_e47a5eda862f84::t_1fa11ef852b90f 1-6,8-31,47-103,117-120,122,125-128,130-131,133-134,136-139,174
+  s_e47a5eda862f84::t_e616b894149e27 104-116,121,123-124,129,132,135,140-173
+src/features/station/shared.ts
+  s_e47a5eda862f84::t_37271fe7b7b221 203,206-207
+  s_e47a5eda862f84::t_a8c8e14bd32e96 44-47
+src/i18n/en.json
+  s_e47a5eda862f84::t_bd9e439617286c 124-177
+src/lib/palette.ts
+  s_e47a5eda862f84::t_bd0a07081510e6 241-242
+  s_e47a5eda862f84::t_bd4ed60fa72ece 1-240,243-309
+src/App.tsx
+  s_e47a5eda862f84::t_21366069759440 26-27
+  s_e47a5eda862f84::t_445baa598f7b3e 6-7
+src/features/station/FlowChart.tsx
+  s_e47a5eda862f84::t_15968235b78ad0 12-17,20-22
+  s_e47a5eda862f84::t_d53021336b88c9 77,86-139
+  s_e47a5eda862f84::t_1ebf8ae7a80de7 18-19
+  s_e47a5eda862f84::t_3eff9d3b2f1c56 320-321,323
+  s_e47a5eda862f84::t_77f3f4b831ff7b 40-48,58
+  s_e47a5eda862f84::t_c5b6bf29ab3310 368-374
+  s_e47a5eda862f84::t_693f0d4b7ae509 331-333
+  s_e47a5eda862f84::t_cc107cf53d047e 318-319,322,324-327
+src/lib/exportChart.test.ts
+  s_e47a5eda862f84::t_54ff7b72dc562c 1-104
+src/store/viewStore.ts
+  s_e47a5eda862f84::t_6b9548fae99cf2 32-35
+  s_e47a5eda862f84::t_8803d73b81f4d1 81-82
+  s_e47a5eda862f84::t_0ec9f8a1fb2606 47-48
+  s_e47a5eda862f84::t_9216241a791aa9 62-63
+src/features/station/CompositionStream.tsx
+  s_e47a5eda862f84::t_7e020cdadb09bd 218-219,221,223-226
+  s_e47a5eda862f84::t_937a68168d3850 7,12-18,22,24,37-38,44-46,54-56,58,63-64,70-119
+  s_e47a5eda862f84::t_c503b474d01cb9 220,222
+  s_e47a5eda862f84::t_a61f8a181045cc 19-20
+  s_e47a5eda862f84::t_130a500b91570d 266-295
+  s_e47a5eda862f84::t_fc70dbc10143b7 120
+src/features/station/StationView.tsx
+  s_e47a5eda862f84::t_a188c40ed7910d 604,606-625
+  s_e47a5eda862f84::t_e70673f1d287cd 662
+  s_e47a5eda862f84::t_73169a24a79e86 31-40
+  s_e47a5eda862f84::t_e7c06b1a9fda0c 215-216,219-229
+  s_e47a5eda862f84::t_7643c826f83750 81-83
+src/features/synoptic/StripBank.tsx
+  s_e47a5eda862f84::t_57fc3449b5ccbc 8-17
+  s_e47a5eda862f84::t_3f269354f6fdb0 42-115,118-123
+src/components/CommandPalette.tsx
+  s_e47a5eda862f84::t_105b14926b0a16 153
+  s_e47a5eda862f84::t_f35f604f00bf60 1-3,6,8-15,17-26,30-36,40-53,55,57-61,66-76,89,92-110,115-120,122-126,128-129,131-137,143-152,155-167,173-190,194-209
+  s_e47a5eda862f84::t_1d9af0baf7d39c 4-5,7,16,27-29,37-39,54,56,62-65,77-88,90-91,111-114,121,127,130,138-142,154,168-172,191-193
+src/components/TutorialOverlay.tsx
+  s_e47a5eda862f84::t_93befeb93c9c72 4-5,37-59,61-69,71-74,78-86,98,114,117-121,125-150,154-159,170-172
+  s_e47a5eda862f84::t_300928fac66ade 1-3,6-36,60,70,75,89-92,95-97,99-113,115-116,122-124,151-153,160-169,173-200
+  s_e47a5eda862f84::t_448bcf50dafc70 76-77,87-88,93-94
+README.md
+  s_e47a5eda862f84::t_86a46dc058aa78 165-188
+src/i18n/ko.json
+  s_e47a5eda862f84::t_d94cb2c17d1c52 124-177
+src/lib/useFullscreenEsc.ts
+  s_5d0c7b43738dac::t_35feb0df828a42 1-21
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.12",
+  "base_commit_sha": "5353f2aa869af45a32be2bad0ea9e805f6e8df9a",
+  "prompts": {},
+  "sessions": {
+    "s_5d0c7b43738dac": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "3b489689-95d8-41c6-b330-cbe3a808fc7b",
+        "model": "claude-opus-4-8"
+      },
+      "human_author": "64etuor <130260521+64etuor@users.noreply.github.com>"
+    },
+    "s_e47a5eda862f84": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "a46a31a4-8363-4a90-b740-7e96b4bf3615",
+        "model": "claude-fable-5"
+      },
+      "human_author": "64etuor <130260521+64etuor@users.noreply.github.com>"
+    }
+  }
+}
