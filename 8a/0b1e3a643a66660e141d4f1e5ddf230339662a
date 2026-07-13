@@ -1,0 +1,48 @@
+src/features/station/CompositionStream.tsx
+  s_e47a5eda862f84::t_f64d5506a0d10f 275
+  s_e47a5eda862f84::t_84efb909a56550 288
+  s_e47a5eda862f84::t_200799058912d6 37
+docs/DATA_CONTRACT.md
+  s_e47a5eda862f84::t_05b130cf975237 278-299
+src/i18n/ko.json
+  s_e47a5eda862f84::t_ac5ed033777c63 135-147
+src/i18n/en.json
+  s_e47a5eda862f84::t_0050bd17d66a75 135-147
+README.md
+  s_e47a5eda862f84::t_af132cdbde3d84 77-81
+  s_e47a5eda862f84::t_fbceb74c8b6d58 195-210
+src/features/station/SmallMultiples.tsx
+  s_e47a5eda862f84::t_f81d6996295cd4 89,102
+src/features/station/ReallocationMatrix.tsx
+  s_e47a5eda862f84::t_a7566c61e68af8 1-83,91-96,98-99,101-104,111-231
+  s_e47a5eda862f84::t_053d732eb4e881 84-90,97,100,105-110
+scripts/fetch/registry.test.ts
+  s_e47a5eda862f84::t_e4af444842f735 67-69
+scripts/fetch/registry.ts
+  s_e47a5eda862f84::t_a5d3eeb340eeed 132-141
+  s_e47a5eda862f84::t_3f310554694408 131
+src/features/station/StationView.tsx
+  s_e47a5eda862f84::t_aa9c84e7fa4b4f 665,675-684
+  s_e47a5eda862f84::t_0f194a6f9edad9 42
+  s_e47a5eda862f84::t_f02017395b7875 685
+docs/DATA_PIPELINE.md
+  s_e47a5eda862f84::t_f6a7c5d2bedfce 101-111
+public/data/meta/sources.json
+  s_e47a5eda862f84::t_847ebc76831f3e 1
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.13",
+  "base_commit_sha": "8a0b1e3a643a66660e141d4f1e5ddf230339662a",
+  "prompts": {},
+  "sessions": {
+    "s_e47a5eda862f84": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "a46a31a4-8363-4a90-b740-7e96b4bf3615",
+        "model": "claude-fable-5"
+      },
+      "human_author": "64etuor <130260521+64etuor@users.noreply.github.com>"
+    }
+  }
+}
