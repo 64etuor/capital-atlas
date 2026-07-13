@@ -1,0 +1,25 @@
+src/components/LineageDossier.tsx
+  s_e47a5eda862f84::t_7912aa585c5b55 63
+src/components/ObservationReport.tsx
+  s_e47a5eda862f84::t_fa30c4109a979a 252
+src/features/station/StationView.tsx
+  s_e47a5eda862f84::t_58cf483de1391f 139
+src/features/synoptic/SynopticView.tsx
+  s_e47a5eda862f84::t_79d43b1e577071 71
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.12",
+  "base_commit_sha": "48cd7fcd182debf919aa62cc1db6c722070ccef0",
+  "prompts": {},
+  "sessions": {
+    "s_e47a5eda862f84": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "a46a31a4-8363-4a90-b740-7e96b4bf3615",
+        "model": "unknown"
+      },
+      "human_author": "64etuor <130260521+64etuor@users.noreply.github.com>"
+    }
+  }
+}
