@@ -3,7 +3,15 @@ import { useViewStore } from '../store/viewStore'
 import { getSources } from '../lib/dataClient'
 import { formatUsd } from '../lib/format'
 import { fogAlpha } from '../lib/tokens'
-import type { SourceRegistryEntry } from '../types/data'
+import type { CollectionMode, SourceRegistryEntry } from '../types/data'
+
+/** 수집 분류 표기 — 실시간 시장 데이터 vs 공식 통계 배치를 도시에에서 구분 */
+const MODE_LABELS: Record<CollectionMode, string> = {
+  live_market: 'LIVE MARKET',
+  batch_official: 'OFFICIAL BATCH',
+  derived_model: 'DERIVED MODEL',
+  static_reference: 'STATIC REFERENCE',
+}
 
 function Row({ label, children }: { label: string; children: React.ReactNode }) {
   return (
@@ -127,6 +135,18 @@ export function LineageDossier() {
                 </span>
               ),
             )}
+          </Row>
+          <Row label="Collection">
+            {[
+              ...new Set(
+                resolved
+                  .filter((s) => s != null)
+                  .map(
+                    (s) =>
+                      `${MODE_LABELS[s.collection_mode]} · ${s.update_frequency.toUpperCase()}`,
+                  ),
+              ),
+            ].join(' / ') || '—'}
           </Row>
           <Row label="Method">
             {payload.method ?? 'DIRECT OBSERVATION'}

@@ -125,21 +125,39 @@ TS 미러: `src/types/data.ts` — 문서와 타입이 다르면 이 문서가 �
 - CPIS 원자료는 **포지션(stock)**. 파생 순거래(`measure: "flow"`)를 실을 땐
   `confidence_grade: "C"` 이상 불가 + `estimate_method: "position_change_adjusted_for_price_and_fx"`.
 
-### meta/sources.json
+### meta/sources.json — 수집 분류 포함
+
+SSOT는 `scripts/fetch/registry.ts`. 발행 파일은 `pnpm data:sources`(retrieved_at 보존)
+또는 `pnpm data:fetch`(전 소스 now 스탬프)로만 재생성한다. 손편집 금지.
 
 ```json
 [
   {
-    "source_id": "imf_cpis",
-    "name": "Coordinated Portfolio Investment Survey",
+    "source_id": "imf_pip",
+    "name": "Portfolio Investment Positions (PIP, CPIS successor) — bilateral",
     "publisher": "IMF",
-    "url": "https://data.imf.org/...",
-    "license_note": "IMF data terms — attribution, no redistribution restrictions for aggregates",
-    "update_frequency": "quarterly",
+    "url": "https://api.imf.org/external/sdmx/2.1/data/IMF.STA,PIP",
+    "license_note": "IMF terms — attribution",
+    "collection_mode": "batch_official",
+    "update_frequency": "annual",
+    "expected_release_lag": "~2–3 quarters after year end",
     "retrieved_at": "2026-07-12T08:30:00Z"
   }
 ]
 ```
+
+**`collection_mode` — 실시간/비실시간 분류 (테스트로 강제):**
+
+| mode | 의미 | cadence 허용값 | v1 소스 |
+|---|---|---|---|
+| `live_market` | 실시간·일중 시장 데이터. 발표 지연 없음, 폴링/스트림 대상 | intraday, daily | coingecko_global |
+| `batch_official` | 공식 통계 배치. 분기/연간 + 발표 지연이 본질 — "실시간" 개념 없음 | monthly, quarterly, annual | imf_iip, imf_bop, imf_pip, wb_wdi |
+| `derived_model` | 파이프라인 내부 파생·모델. 수집이 아니라 계산 (grade C–E) | quarterly, annual | model_regional_median, model_gdp_ratio |
+| `static_reference` | 정적 참조 (지오메트리·국가 마스터, vendored 패키지) | static | natural_earth, world_countries |
+
+규칙: **`live_market`·`static_reference` 소스는 stocks/flows 수치 레코드를 뒷받침할 수
+없다** — 시장 데이터가 공식 통계로 위장하지 않는다(`scripts/fetch/registry.test.ts`).
+live 데이터는 `meta/` 통제값·오버레이 전용.
 
 ## enum 정본
 

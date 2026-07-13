@@ -78,6 +78,19 @@ export interface BilateralRecord extends Lineage {
   value_usd: number
 }
 
+/**
+ * 수집 분류 — 실시간 시장 데이터와 공식 통계를 데이터 계층에서 구분한다.
+ * live_market: 실시간·일중 시장 데이터 (발표 지연 없음, 폴링/스트림 대상)
+ * batch_official: 공식 통계 배치 (분기/연간 + 발표 지연이 본질 — 실시간 없음)
+ * derived_model: 파이프라인 내부 파생·모델 (수집이 아니라 계산, grade C–E)
+ * static_reference: 정적 참조 (지오메트리·국가 마스터 — vendored 패키지)
+ */
+export type CollectionMode =
+  | 'live_market'
+  | 'batch_official'
+  | 'derived_model'
+  | 'static_reference'
+
 /** public/data/meta/sources.json */
 export interface SourceRegistryEntry {
   source_id: string
@@ -85,7 +98,16 @@ export interface SourceRegistryEntry {
   publisher: string
   url: string
   license_note: string
-  update_frequency: 'daily' | 'monthly' | 'quarterly' | 'annual'
+  collection_mode: CollectionMode
+  update_frequency:
+    | 'intraday'
+    | 'daily'
+    | 'monthly'
+    | 'quarterly'
+    | 'annual'
+    | 'static'
+  /** 공식 발표 지연의 정직한 기대치 (그대로 표시 가능한 문구) */
+  expected_release_lag: string
   retrieved_at: string // ISO datetime the snapshot was fetched
 }
 
