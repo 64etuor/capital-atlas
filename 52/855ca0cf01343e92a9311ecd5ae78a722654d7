@@ -1,0 +1,21 @@
+.github/workflows/data-refresh.yml
+  s_e47a5eda862f84::t_2e0ba20d5538f2 1-45
+.github/workflows/ci.yml
+  s_e47a5eda862f84::t_2f89e7309125ff 1-26
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.12",
+  "base_commit_sha": "52855ca0cf01343e92a9311ecd5ae78a722654d7",
+  "prompts": {},
+  "sessions": {
+    "s_e47a5eda862f84": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "a46a31a4-8363-4a90-b740-7e96b4bf3615",
+        "model": "claude-fable-5"
+      },
+      "human_author": "64etuor <130260521+64etuor@users.noreply.github.com>"
+    }
+  }
+}
