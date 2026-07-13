@@ -1,0 +1,52 @@
+src/features/station/StationView.tsx
+  s_e47a5eda862f84::t_6b3f9ad8deb344 45
+  s_e47a5eda862f84::t_8041a6e3dad32e 437-442
+src/features/station/AssetRail.tsx
+  s_e47a5eda862f84::t_0bce48146f461e 2-4,7,14,16-17,22-23,43-70
+src/features/station/FlowChart.tsx
+  s_e47a5eda862f84::t_cd995ae4b9544f 164-224,229,233
+  s_e47a5eda862f84::t_8066be0919fe67 244-249,251-266
+  s_e47a5eda862f84::t_5da365c8fde2f8 57,61-63
+  s_e47a5eda862f84::t_6a632bf1b018e0 7-8,12
+  s_e47a5eda862f84::t_0e30095385335b 109-119
+  s_e47a5eda862f84::t_4aa194070e253c 144-149
+  s_e47a5eda862f84::t_383ae86eff1103 284
+src/features/station/shared.ts
+  s_e47a5eda862f84::t_749e51dab4c550 31
+  s_e47a5eda862f84::t_bbebfdf8edc5bc 9
+  s_e47a5eda862f84::t_8a650b6523cae6 20-24
+  s_e47a5eda862f84::t_8f7960cb0f7f8c 151-154,159,162,171-203
+  s_5d0c7b43738dac::t_442136f3ffdbfa 204
+src/features/station/CompositionStream.tsx
+  s_e47a5eda862f84::t_a4f20d10f86f62 6,40-41,52-54,119,135-149,155-160,163
+src/features/synoptic/AnomalyBulletin.tsx
+  s_e47a5eda862f84::t_81f539750e9273 24-25,33,58-65
+src/features/synoptic/BarometerBank.tsx
+  s_e47a5eda862f84::t_fc081284dd18f3 21-22,32,100-101
+src/features/synoptic/SynopticView.tsx
+  s_e47a5eda862f84::t_694352114c1aa0 29-30,85,101,106
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.12",
+  "base_commit_sha": "f4ee9909344a137e475d1e4ad1423ed002622b0e",
+  "prompts": {},
+  "sessions": {
+    "s_5d0c7b43738dac": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "3b489689-95d8-41c6-b330-cbe3a808fc7b",
+        "model": "claude-opus-4-8"
+      },
+      "human_author": "64etuor <130260521+64etuor@users.noreply.github.com>"
+    },
+    "s_e47a5eda862f84": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "a46a31a4-8363-4a90-b740-7e96b4bf3615",
+        "model": "claude-fable-5"
+      },
+      "human_author": "64etuor <130260521+64etuor@users.noreply.github.com>"
+    }
+  }
+}
