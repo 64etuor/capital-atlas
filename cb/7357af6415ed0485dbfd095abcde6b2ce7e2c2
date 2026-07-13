@@ -1,0 +1,53 @@
+src/features/synoptic/shared.ts
+  s_e47a5eda862f84::t_b18cad46e3c8f3 1-66
+src/store/viewStore.ts
+  s_e47a5eda862f84::t_4f7d2ac94e9806 11-12
+  s_e47a5eda862f84::t_9776c4f96bbead 26
+  s_e47a5eda862f84::t_7a97f55ae50c3c 48
+  s_e47a5eda862f84::t_192d96602e8178 38
+src/features/synoptic/SynopticView.tsx
+  s_e47a5eda862f84::t_0144a0ae2777f4 1-57,59-111
+  s_e47a5eda862f84::t_e57dee1d3fd49f 58
+src/features/synoptic/StripBank.tsx
+  s_e47a5eda862f84::t_ccfc0830e66cd2 1-109
+src/App.tsx
+  s_e47a5eda862f84::t_0e4bf6d7cbdf5e 7
+  s_e47a5eda862f84::t_d607598ce332a3 16
+src/features/synoptic/BarometerBank.tsx
+  s_e47a5eda862f84::t_0b19d2a0446b4b 1-187
+src/features/synoptic/CirculationChart.tsx
+  s_e47a5eda862f84::t_ca06719fc071c9 1-138
+src/features/synoptic/AnomalyBulletin.tsx
+  s_e47a5eda862f84::t_0d92914ee0b457 32,36
+  s_e47a5eda862f84::t_55d0ca5f7a79e6 1-7,9-31,33-35,37-157
+  s_e47a5eda862f84::t_4a30634f46f5ff 8
+src/components/StationPlate.tsx
+  s_e47a5eda862f84::t_536657fed625bc 2,4-9,11-12,26-42
+  s_e47a5eda862f84::t_8e135ebb193234 43
+README.md
+  s_5d0c7b43738dac::t_07be36ead6aea1 26-35
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.12",
+  "base_commit_sha": "cb7357af6415ed0485dbfd095abcde6b2ce7e2c2",
+  "prompts": {},
+  "sessions": {
+    "s_5d0c7b43738dac": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "3b489689-95d8-41c6-b330-cbe3a808fc7b",
+        "model": "claude-opus-4-8"
+      },
+      "human_author": "64etuor <130260521+64etuor@users.noreply.github.com>"
+    },
+    "s_e47a5eda862f84": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "a46a31a4-8363-4a90-b740-7e96b4bf3615",
+        "model": "claude-fable-5"
+      },
+      "human_author": "64etuor <130260521+64etuor@users.noreply.github.com>"
+    }
+  }
+}
