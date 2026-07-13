@@ -1,0 +1,62 @@
+src/features/station/PartnerMatrix.tsx
+  s_e47a5eda862f84::t_36634049886645 30-34
+  s_e47a5eda862f84::t_6c0f6bc8d57e9d 127-141
+  s_e47a5eda862f84::t_d344ef893b187c 53
+docs/architecture.md
+  s_e47a5eda862f84::t_f3c66152f0ff31 1-79
+.github/workflows/data-refresh.yml
+  s_e47a5eda862f84::t_dc7f26ed54db27 38-40
+src/components/LineageDossier.tsx
+  s_e47a5eda862f84::t_e7a94bc36dd3fe 54-85
+  s_e47a5eda862f84::t_707464e2204c17 150-175
+  s_e47a5eda862f84::t_a7b64dc86e12ee 321-329
+  s_e47a5eda862f84::t_f58c98c7dc9019 3-9
+  s_e47a5eda862f84::t_98941624c1fa0e 176
+  s_e47a5eda862f84::t_fede379e6f5ecc 330-332
+docs/DATA_CONTRACT.md
+  s_e47a5eda862f84::t_50921e6b99f8f6 37-40
+  s_e47a5eda862f84::t_e7f98d3d2e9634 304-335
+  s_e47a5eda862f84::t_bb4e18ef3ccf7f 336
+src/features/station/StationView.tsx
+  s_e47a5eda862f84::t_f89d1a16578c32 753
+src/lib/dataClient.ts
+  s_e47a5eda862f84::t_4302c84c301346 128-130
+  s_e47a5eda862f84::t_2833e9cfce21c8 16
+  s_e47a5eda862f84::t_cd01173210eeea 52-53
+  s_e47a5eda862f84::t_4eacae29802045 131
+src/i18n/en.json
+  s_e47a5eda862f84::t_aa8012681fa030 96-97
+  s_e47a5eda862f84::t_c5c0c6416ad94b 110-113
+scripts/check/sanity.ts
+  s_e47a5eda862f84::t_6e389e05f5233e 133
+  s_e47a5eda862f84::t_e87770df287e46 244-295
+  s_e47a5eda862f84::t_4acaaf29f51223 112
+  s_e47a5eda862f84::t_4425ca2686b5be 296
+src/i18n/ko.json
+  s_e47a5eda862f84::t_c6fa2bccf92aba 96-97
+  s_e47a5eda862f84::t_35e29c48f8fb24 110-113
+README.md
+  s_e47a5eda862f84::t_28412d897e5cd6 111-143
+  s_e47a5eda862f84::t_274058b362c01e 78-83
+  s_e47a5eda862f84::t_9fffc821b8266b 144
+src/types/data.ts
+  s_e47a5eda862f84::t_ab38eff3181472 452-472
+src/types/dossier.ts
+  s_e47a5eda862f84::t_840d4ba33ddabc 31-41
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.13",
+  "base_commit_sha": "4cfea93d5db564898f0ea7b4b4af9c2c7f2a1979",
+  "prompts": {},
+  "sessions": {
+    "s_e47a5eda862f84": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "a46a31a4-8363-4a90-b740-7e96b4bf3615",
+        "model": "claude-fable-5"
+      },
+      "human_author": "64etuor <130260521+64etuor@users.noreply.github.com>"
+    }
+  }
+}
