@@ -1,0 +1,45 @@
+scripts/fetch/registry.test.ts
+  s_e47a5eda862f84::t_db550be4b4f323 57-59
+src/types/data.ts
+  s_e47a5eda862f84::t_2438f68098622e 73-74
+  s_e47a5eda862f84::t_2becd0ec8364ae 17-23
+  s_e47a5eda862f84::t_28666f6d35e4c1 184-211
+scripts/fetch/registry.ts
+  s_e47a5eda862f84::t_10cd021e126371 81-89
+  s_e47a5eda862f84::t_b6717ff370cd5b 80
+scripts/fetch/fx.test.ts
+  s_e47a5eda862f84::t_ee70485b52f455 46
+  s_e47a5eda862f84::t_0e194f21f004d1 1-12,14-45,47-88,90-108,110-115
+  s_e47a5eda862f84::t_6262bc88654d10 13
+  s_e47a5eda862f84::t_61c01f65c0f992 89
+  s_e47a5eda862f84::t_ee8a6bff7423b5 109
+scripts/run.ts
+  s_e47a5eda862f84::t_408ee1c97835e7 23
+  s_e47a5eda862f84::t_62f8c3cf1487cc 9
+package.json
+  s_e47a5eda862f84::t_5a2f96bbafa014 15
+scripts/fetch/fx.ts
+  s_e47a5eda862f84::t_ea693500acb04d 1-164
+docs/DATA_CONTRACT.md
+  s_e47a5eda862f84::t_11c0ea134a0712 221-236
+public/data/meta/fx_rates.json
+  s_e47a5eda862f84::t_cc2eed3f803552 1
+public/data/meta/sources.json
+  s_e47a5eda862f84::t_6b4356d8369101 1
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.13",
+  "base_commit_sha": "e22ed72159cbd5e16478738f163e3e4f4685f096",
+  "prompts": {},
+  "sessions": {
+    "s_e47a5eda862f84": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "a46a31a4-8363-4a90-b740-7e96b4bf3615",
+        "model": "claude-fable-5"
+      },
+      "human_author": "64etuor <130260521+64etuor@users.noreply.github.com>"
+    }
+  }
+}
