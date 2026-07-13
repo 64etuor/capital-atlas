@@ -345,7 +345,7 @@ export function FlowChart({
                 })
                 setZoomed(false)
               }}
-              className="dial-label text-flow-in transition-colors duration-140 hover:text-paper"
+              className="dial-label whitespace-nowrap text-flow-in transition-colors duration-140 hover:text-paper"
             >
               {t('station.brushReset')}
             </button>
