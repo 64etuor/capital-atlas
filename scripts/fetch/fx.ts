@@ -92,8 +92,8 @@ export function assembleFx(
     }
   }
 
+  // 결정론(Phase N): 수집 시각은 sources.json retrieved_at이 정본 — 여기엔 금지
   return {
-    generated_at: new Date().toISOString(),
     base: 'USD',
     countries,
   }

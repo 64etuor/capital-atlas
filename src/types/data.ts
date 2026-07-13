@@ -160,24 +160,25 @@ export interface FlowIntensityPoint {
   confidence_grade: ConfidenceGrade
 }
 
+/**
+ * 결정론적 샤드 (Phase N): 샤드·파생 파일은 타임스탬프를 갖지 않는다 —
+ * 동일 상류 데이터 = 동일 바이트. 데이터 빈티지는 index.json generated_at이
+ * 유일 정본이고, 일일 크론은 실질 변경(data:changed)일 때만 커밋한다.
+ */
 export interface FlowIntensityFile {
-  generated_at: string
   series: FlowIntensityPoint[]
 }
 
 export interface StocksFile {
   basis: Basis
-  generated_at: string
   records: StockRecord[]
 }
 
 export interface FlowsCountryFile {
-  generated_at: string
   records: FlowRecord[]
 }
 
 export interface BilateralFile {
-  generated_at: string
   records: BilateralRecord[]
 }
 
@@ -204,7 +205,6 @@ export interface FxCountry {
 }
 
 export interface FxRatesFile {
-  generated_at: string
   base: 'USD'
   countries: Record<string, FxCountry>
 }
@@ -363,7 +363,6 @@ export interface StationConcentration {
 
 export interface StationFile {
   iso3: string
-  generated_at: string
   summary: StationSummary
   series: Partial<Record<AssetClass, StationPoint[]>>
   partners: Record<PeriodKey, StationPartnersEntry>
@@ -371,12 +370,10 @@ export interface StationFile {
 }
 
 export interface StationIndexFile {
-  generated_at: string
   countries: string[]
 }
 
 export interface SynopticFile {
-  generated_at: string
   periods: PeriodKey[]
   assets: AssetClass[]
   per_quarter: Record<PeriodKey, Partial<Record<AssetClass, SynopticCell>>>
@@ -387,4 +384,31 @@ export interface SynopticFile {
   corridor_concentration: Record<PeriodKey, SynopticCorridorConcentration>
   anomalies: Record<PeriodKey, SynopticAnomaly[]>
   grade_mix: Record<PeriodKey, Partial<Record<ConfidenceGrade, number>>>
+}
+
+// ------------------------------------------------------------- vintages ----
+
+/**
+ * public/data/vintages/{YYYY-MM-DD}.json — 빈티지 다이제스트 (Phase N,
+ * 초안 §10 이중 시간). 실질 변경 커밋마다 스냅샷의 경량 요약을 보존해
+ * 도시에 REVISIONS 행이 소급 개정을 노출한다. 정본 빌더:
+ * scripts/build/vintage.ts (`pnpm data:vintage`) — 이 타입은 그 미러.
+ */
+export interface VintageEntry {
+  p: string
+  v: number
+  g?: string
+}
+
+export interface VintageDigestFile {
+  vintage: string // YYYY-MM-DD
+  latest_quarter: PeriodKey
+  totals: Record<Basis, Record<string, VintageEntry>>
+  stocks: Record<Basis, Record<string, Record<string, VintageEntry>>>
+  global: { total_usd: number; per_asset: Record<string, number> }
+  flow_intensity: Array<{ p: string; v: number }>
+}
+
+export interface VintagesIndexFile {
+  vintages: string[] // 오름차순 YYYY-MM-DD
 }

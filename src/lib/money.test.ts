@@ -17,7 +17,6 @@ import type { FxRatesFile, PeriodKey } from '../types/data'
 const q = (s: string) => s as PeriodKey
 
 const FX: FxRatesFile = {
-  generated_at: '2026-07-13T00:00:00Z',
   base: 'USD',
   countries: {
     KOR: {

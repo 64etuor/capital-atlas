@@ -436,27 +436,18 @@ export function assemble({ countries, wb, iip, bop, pip }: AssembleInputs): void
   for (const [k, records] of shards) {
     const [basis, period] = k.split('/')
     stockPeriods[basis].push(period)
-    totalBytes += writeJson(`stocks_${basis}/${period}.json`, {
-      basis,
-      generated_at: GENERATED_AT,
-      records,
-    })
+    // 결정론(Phase N): 샤드에 타임스탬프 금지 — 빈티지는 index.json이 정본
+    totalBytes += writeJson(`stocks_${basis}/${period}.json`, { basis, records })
   }
   for (const arr of Object.values(stockPeriods)) arr.sort(compareQuarters)
 
   const flowPeriods = [...flowShards.keys()].sort(compareQuarters)
   for (const [period, records] of flowShards)
-    totalBytes += writeJson(`flows_country/${period}.json`, {
-      generated_at: GENERATED_AT,
-      records,
-    })
+    totalBytes += writeJson(`flows_country/${period}.json`, { records })
 
   const bilateralPeriods = [...bilateralShards.keys()].sort(compareQuarters)
   for (const [period, records] of bilateralShards)
-    totalBytes += writeJson(`flows_bilateral/${period}.json`, {
-      generated_at: GENERATED_AT,
-      records,
-    })
+    totalBytes += writeJson(`flows_bilateral/${period}.json`, { records })
 
   // barograph: global gross cross-border transaction intensity per quarter
   const intensity = flowPeriods.map((period) => {
@@ -469,7 +460,7 @@ export function assemble({ countries, wb, iip, bop, pip }: AssembleInputs): void
       confidence_grade: 'A' as const,
     }
   })
-  writeJson('meta/flow_intensity.json', { generated_at: GENERATED_AT, series: intensity })
+  writeJson('meta/flow_intensity.json', { series: intensity })
 
   writeJson('index.json', {
     generated_at: GENERATED_AT,

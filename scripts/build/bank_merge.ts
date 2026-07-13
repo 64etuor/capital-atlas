@@ -60,10 +60,8 @@ export function applyBankMerge(
     const merged = mergeBankCorridors(existing, byPeriod.get(period) ?? [])
     if (merged.length === 0) continue
     corridorCount += merged.length
-    writeJson(`flows_bilateral/${period}.json`, {
-      generated_at: now,
-      records: merged,
-    })
+    // 결정론(Phase N): 샤드에 타임스탬프 금지 — 병합이 멱등이면 바이트 동일
+    writeJson(`flows_bilateral/${period}.json`, { records: merged })
     written.push(period)
   }
 

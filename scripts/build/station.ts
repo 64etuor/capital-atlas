@@ -392,7 +392,7 @@ export function buildStation(): void {
     ...new Set([...ownerBy.keys(), ...issuerBy.keys(), ...flowsBy.keys()]),
   ].sort()
 
-  const generated_at = new Date().toISOString()
+  // 결정론(Phase N): station 파생 파일에 타임스탬프 금지 — 빈티지는 index.json
   let totalBytes = 0
 
   // 1패스: 시리즈 계산 (세계 집계가 concentration 분모라 쓰기 전에 필요)
@@ -414,7 +414,6 @@ export function buildStation(): void {
     const series = seriesBy.get(iso3)!
     const bytes = writeJson(`station/${iso3}.json`, {
       iso3,
-      generated_at,
       summary: stationSummary(series),
       series,
       partners: stationPartners(bilatBy.get(iso3) ?? [], iso3),
@@ -431,7 +430,6 @@ export function buildStation(): void {
 
   const wldBytes = writeJson('station/WLD.json', {
     iso3: 'WLD',
-    generated_at,
     summary: stationSummary(wld),
     series: wld,
     partners: {},
@@ -444,7 +442,7 @@ export function buildStation(): void {
   if (wldBytes >= 5 * 1024 * 1024)
     throw new Error('[station] WLD.json exceeds the 5MB clause')
 
-  writeJson('station/index.json', { generated_at, countries })
+  writeJson('station/index.json', { countries })
   console.log(
     `[station] ${countries.length} countries + WLD — ` +
       `${(totalBytes / 1024 / 1024).toFixed(1)}MiB total`,

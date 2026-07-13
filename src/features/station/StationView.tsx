@@ -15,7 +15,7 @@ import {
   getStationIndex,
   nearestAvailable,
 } from '../../lib/dataClient'
-import { periodFromIndex } from '../../lib/periods'
+import { dataVintageDate, periodFromIndex } from '../../lib/periods'
 import { formatUsd, formatUsdNet } from '../../lib/format'
 import { useMoney } from '../../lib/money'
 import { ASSET_LABELS } from '../../lib/assetLabels'
@@ -324,6 +324,16 @@ function StationBody({
       upper_bound: single?.stock_upper,
       effective_date: quarterEnd(single?.period ?? period),
       source_ids: single?.source_id ? [single.source_id] : ['imf_iip'],
+      // Phase N §15.5 — stock 수치는 빈티지 대조 대상 (owner basis 사전집계)
+      revision_key:
+        iso === 'WLD'
+          ? undefined // 세계 집계는 국가 키가 아님 — 미추적(정직)
+          : {
+              basis: 'owner',
+              country: iso,
+              asset: tab === 'all' ? 'total' : tab,
+              period: single?.period ?? period,
+            },
       context: [
         ['Observed share', `${((stock.obsTotal / (stock.total || 1)) * 100).toFixed(0)}%`],
         ['Constituents', `${stock.points.length} asset series`],
@@ -522,7 +532,8 @@ function StationBody({
         source_ids: ['imf_iip', 'imf_bop'],
         context: [
           ['Points', String(file.summary.n_points)],
-          ['Generated', file.generated_at.slice(0, 10)],
+          // 결정론(Phase N): station 파일엔 타임스탬프 없음 — 빈티지는 index 정본
+          ['Vintage', dataVintageDate() ?? '—'],
         ],
       },
     },
@@ -736,6 +747,7 @@ function StationBody({
               }
               iso3={iso}
               assetLabel={ASSET_LABELS[tab]}
+              assetKey={tab}
               fmtAt={money.fmtAt}
               fmtNetAt={money.fmtNetAt}
               fxRowsAt={money.fxRows}

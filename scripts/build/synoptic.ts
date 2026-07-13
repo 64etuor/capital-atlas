@@ -256,8 +256,8 @@ export function buildSynoptic(): void {
     }
   }
 
+  // 결정론(Phase N): 파생 파일에 타임스탬프 금지 — 동일 샤드 = 동일 바이트
   const bytes = writeJson('meta/synoptic.json', {
-    generated_at: new Date().toISOString(),
     periods,
     assets: [...assets].sort(),
     per_quarter,
