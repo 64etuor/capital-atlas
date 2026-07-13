@@ -1,0 +1,24 @@
+README.md
+  s_7db9f3f38e03ac::t_dea13ff89e2ef4 71-76
+  s_7db9f3f38e03ac::t_e5ea98d6c69190 207-209
+src/features/station/StationView.tsx
+  s_7db9f3f38e03ac::t_b15c63ffaaa256 475
+  s_7db9f3f38e03ac::t_f79a22a0ea77f9 353-355
+  s_7db9f3f38e03ac::t_62f3a0b3ad856c 414
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.12",
+  "base_commit_sha": "fd2900414da44b51fb69e66a3f7b88125d0fc9c1",
+  "prompts": {},
+  "sessions": {
+    "s_7db9f3f38e03ac": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "a84e4c7a-ac25-4ac3-8348-d9bd9bab3577",
+        "model": "claude-opus-4-8"
+      },
+      "human_author": "64etuor <130260521+64etuor@users.noreply.github.com>"
+    }
+  }
+}
