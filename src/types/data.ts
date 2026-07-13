@@ -194,6 +194,20 @@ export interface SynopticCell {
   records: number
   /** value-weighted A/B share of stock, 0..1 */
   obs_share: number
+  /** asset stock ÷ quarter total stock (§14 자산 비중) */
+  share: number
+  /** observed-only variant (VIS=OBS 근거) */
+  share_obs: number
+}
+
+/** §14 회랑 집중도 — 분모는 샤드 전체 gross(top-20 리스트 아님) */
+export interface SynopticCorridorConcentration {
+  top10_share: number
+  top20_share: number
+  gross_usd: number
+  top10_share_obs: number
+  top20_share_obs: number
+  gross_obs_usd: number
 }
 
 export interface SynopticCorridor {
@@ -282,12 +296,43 @@ export interface StationSummary {
   n_points: number
 }
 
+/** §14 상대국 집중도 — 발행 bilateral 샤드 전체에서 계산 (top-15 리스트 아님) */
+export interface StationCpConcentration {
+  period: PeriodKey
+  scope: 'all' | AssetClass
+  hhi: number
+  top5_share: number
+  top5: Array<{ country: string; share: number }>
+  gross_usd: number
+  n_partners: number
+  grade: ConfidenceGrade
+  source_ids: string[]
+  method: string
+}
+
+/** §14 분기별 세계 대비·자산 구성 비중 */
+export interface StationQuarterlyConcentration {
+  period: PeriodKey
+  share_of_world: number
+  share_of_world_assets: Partial<Record<AssetClass, number>>
+  asset_shares: Partial<Record<AssetClass, number>>
+  grade: ConfidenceGrade
+  source_ids: string[]
+  method: string
+}
+
+export interface StationConcentration {
+  quarterly: StationQuarterlyConcentration[]
+  counterparty: StationCpConcentration[]
+}
+
 export interface StationFile {
   iso3: string
   generated_at: string
   summary: StationSummary
   series: Partial<Record<AssetClass, StationPoint[]>>
   partners: Record<PeriodKey, StationPartnersEntry>
+  concentration: StationConcentration
 }
 
 export interface StationIndexFile {
@@ -304,6 +349,7 @@ export interface SynopticFile {
     PeriodKey,
     { stock: SynopticCorridor[]; flow: SynopticCorridor[] }
   >
+  corridor_concentration: Record<PeriodKey, SynopticCorridorConcentration>
   anomalies: Record<PeriodKey, SynopticAnomaly[]>
   grade_mix: Record<PeriodKey, Partial<Record<ConfidenceGrade, number>>>
 }

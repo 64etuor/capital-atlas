@@ -10,6 +10,10 @@ import { existsSync, readFileSync } from 'node:fs'
 import { join } from 'node:path'
 import { OUT_DIR, writeJson } from '../fetch/lib.ts'
 import type { BilateralRecord, FlowRecord, StockRecord } from './synoptic.ts'
+import {
+  counterpartyConcentration,
+  quarterlyConcentration,
+} from './concentration.ts'
 
 export const PARTNER_LIMIT = 15
 
@@ -390,34 +394,51 @@ export function buildStation(): void {
 
   const generated_at = new Date().toISOString()
   let totalBytes = 0
-  const allSeries: StationSeries[] = []
 
+  // 1패스: 시리즈 계산 (세계 집계가 concentration 분모라 쓰기 전에 필요)
+  const seriesBy = new Map<string, StationSeries>()
   for (const iso3 of countries) {
-    const series = stationSeries(
-      ownerBy.get(iso3) ?? [],
-      issuerBy.get(iso3) ?? [],
-      flowsBy.get(iso3) ?? [],
+    seriesBy.set(
+      iso3,
+      stationSeries(
+        ownerBy.get(iso3) ?? [],
+        issuerBy.get(iso3) ?? [],
+        flowsBy.get(iso3) ?? [],
+      ),
     )
-    allSeries.push(series)
+  }
+  const wld = worldSeries([...seriesBy.values()])
+
+  // 2패스: concentration(§14 — 세계 대비·자산 구성·상대국 HHI) 포함 쓰기
+  for (const iso3 of countries) {
+    const series = seriesBy.get(iso3)!
     const bytes = writeJson(`station/${iso3}.json`, {
       iso3,
       generated_at,
       summary: stationSummary(series),
       series,
       partners: stationPartners(bilatBy.get(iso3) ?? [], iso3),
+      concentration: {
+        quarterly: quarterlyConcentration(series, wld),
+        // 발행 샤드 전체에서 계산 — top-15 partners 리스트 기반 금지
+        counterparty: counterpartyConcentration(bilatBy.get(iso3) ?? [], iso3),
+      },
     })
     totalBytes += bytes
     if (bytes >= 5 * 1024 * 1024)
       throw new Error(`[station] ${iso3}.json exceeds the 5MB clause`)
   }
 
-  const wld = worldSeries(allSeries)
   const wldBytes = writeJson('station/WLD.json', {
     iso3: 'WLD',
     generated_at,
     summary: stationSummary(wld),
     series: wld,
     partners: {},
+    concentration: {
+      quarterly: quarterlyConcentration(wld, wld), // share_of_world ≡ 1
+      counterparty: [], // 세계의 '상대국' 집중도는 정의 불가 — 정직한 공백
+    },
   })
   totalBytes += wldBytes
   if (wldBytes >= 5 * 1024 * 1024)

@@ -10,6 +10,10 @@
 import { existsSync, readFileSync } from 'node:fs'
 import { join } from 'node:path'
 import { OUT_DIR, writeJson } from '../fetch/lib.ts'
+import {
+  corridorConcentration,
+  type CorridorConcentration,
+} from './concentration.ts'
 
 export const CORRIDOR_LIMIT = 20
 export const ANOMALY_LIMIT = 12
@@ -64,6 +68,8 @@ export interface SynopticCell {
   valuation: number // Σ signed valuation change (grade C)
   records: number
   obs_share: number // value-weighted stock A/B share, 0..1
+  share: number // asset stock ÷ quarter total stock (§14 자산 비중)
+  share_obs: number // observed-only variant (VIS=OBS 근거)
 }
 
 export interface Corridor {
@@ -104,6 +110,8 @@ const emptyCell = (): SynopticCell => ({
   valuation: 0,
   records: 0,
   obs_share: 0,
+  share: 0,
+  share_obs: 0,
 })
 
 export function aggregateQuarter(
@@ -141,8 +149,16 @@ export function aggregateQuarter(
     c.records++
     count(r.confidence_grade)
   }
+  let totalStock = 0
+  let totalObs = 0
+  for (const c of Object.values(cells)) {
+    totalStock += c.stock
+    totalObs += c.stock_obs
+  }
   for (const c of Object.values(cells)) {
     c.obs_share = c.stock > 0 ? Math.min(c.stock_obs / c.stock, 1) : 0
+    c.share = totalStock > 0 ? c.stock / totalStock : 0
+    c.share_obs = totalObs > 0 ? c.stock_obs / totalObs : 0
   }
   return { cells, gradeMix }
 }
@@ -219,6 +235,7 @@ export function buildSynoptic(): void {
 
   const per_quarter: Record<string, Record<string, SynopticCell>> = {}
   const corridors: Record<string, { stock: Corridor[]; flow: Corridor[] }> = {}
+  const corridor_concentration: Record<string, CorridorConcentration> = {}
   const anomalies: Record<string, Anomaly[]> = {}
   const grade_mix: Record<string, Partial<Record<Grade, number>>> = {}
   const assets = new Set<string>()
@@ -232,7 +249,10 @@ export function buildSynoptic(): void {
     anomalies[p] = topAnomalies(flows)
     for (const a of Object.keys(cells)) assets.add(a)
     if (bilateralPeriods.has(p)) {
-      corridors[p] = topCorridors(readShard<BilateralRecord>('flows_bilateral', p))
+      const bilat = readShard<BilateralRecord>('flows_bilateral', p)
+      corridors[p] = topCorridors(bilat)
+      // §14 회랑 집중도 — 분모는 샤드 전체 gross (top-20 리스트가 아님)
+      corridor_concentration[p] = corridorConcentration(bilat)
     }
   }
 
@@ -242,6 +262,7 @@ export function buildSynoptic(): void {
     assets: [...assets].sort(),
     per_quarter,
     corridors,
+    corridor_concentration,
     anomalies,
     grade_mix,
   })

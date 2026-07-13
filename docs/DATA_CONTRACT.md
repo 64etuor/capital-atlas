@@ -198,6 +198,25 @@ live 데이터는 `meta/` 통제값·오버레이 전용.
   ≥.5 C / ≥.25 D / 그 외 E), `obs_share` 동반 — 개별 레코드 주장 아님.
 - 계약 테스트: `scripts/build/station.test.ts` (표본 KOR 샤드 대조 + WLD↔synoptic
   교차 대조 포함). 파일당 5MB 조항.
+- **`concentration` (§14 집중도 — Phase H)**:
+  - `quarterly[]`: {period, share_of_world(국가 총액÷세계 총액),
+    share_of_world_assets(자산별 국가÷세계), asset_shares(자산÷국가 총액, 합=1),
+    grade=구성 worst, source_ids, method}. 정확-기간 합.
+  - `counterparty[]`: {period(CPIS 연간·Q4), scope('all'|자산), hhi, top5_share,
+    top5[{country,share}], gross_usd, n_partners, grade, source_ids, method}.
+    **발행 bilateral 샤드 전체에서 계산** — station의 top-15 리스트 기반 계산 금지
+    (꼬리 절단 = HHI 과대평가). 단 샤드 자체가 |값|≥$100M 프루닝본인 한계는
+    method 문구에 명시(가치 99.8% 보존).
+  - WLD: quarterly share_of_world ≡ 1, counterparty = [](세계의 상대국은 정의 불가).
+  - 계약 테스트: `scripts/build/concentration.test.ts` (HHI 알려진 분포·KOR 샤드
+    독립 재계산 대조·WLD≡1·synoptic 교차).
+
+### meta/synoptic.json §14 확장 (Phase H)
+
+- `per_quarter[period][asset]`에 `share`(자산÷분기 총 잔액, 합=1)와
+  `share_obs`(관측-한정 변형 — VIS=OBS 근거) 추가.
+- `corridor_concentration[period]`: {top10_share, top20_share, gross_usd,
+  `*_obs` 변형, gross_obs_usd} — 분모는 샤드 전체 stock gross(top-20 리스트 아님).
 
 ## enum 정본
 
