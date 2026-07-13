@@ -28,18 +28,24 @@ jobs:
           cache: pnpm
       - run: pnpm install --frozen-lockfile
       - run: pnpm data:fetch
+      # BIS 은행 회랑 재병합 — assemble이 bilateral을 PIP-only로 재생성하므로
+      # 이 단계가 빠지면 은행 데이터 15만 건이 조용히 소실된다 (Phase N fix)
+      - run: pnpm data:bis
       - run: pnpm data:synoptic
       - run: pnpm data:station
       - run: pnpm data:sources
       - run: pnpm data:check
-      - name: Commit refreshed snapshot
+      # 실질 변경 게이트 (Phase N) — 샤드는 결정론적이라 데이터가 안 바뀌면
+      # 바이트가 안 바뀐다. 타임스탬프-전용(index.generated_at 등)이면 커밋 생략.
+      - name: Classify changes
+        id: changed
+        run: pnpm -s data:changed
+      - name: Commit refreshed snapshot (+vintage digest)
+        if: steps.changed.outputs.substantive == 'true'
         run: |
-          if git diff --quiet -- public/data; then
-            echo "no data changes — skipping commit"
-          else
-            git config user.name "capital-atlas-bot"
-            git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-            git add public/data
-            git commit -m "data: $(date -u +%F) 스냅샷 자동 갱신 (scheduled refresh)"
-            git push
-          fi
+          pnpm data:vintage
+          git config user.name "capital-atlas-bot"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add public/data
+          git commit -m "data: $(date -u +%F) 스냅샷 자동 갱신 (scheduled refresh)"
+          git push
