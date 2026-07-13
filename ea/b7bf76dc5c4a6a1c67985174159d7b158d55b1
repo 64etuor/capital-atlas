@@ -1,0 +1,20 @@
+src/features/synoptic/CirculationChart.tsx
+  s_e47a5eda862f84::t_99db6b35415921 67-69,71
+  s_e47a5eda862f84::t_1c3d8755aba3a4 116,118,120-121,124,127,129-130,133,135
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.13",
+  "base_commit_sha": "eab7bf76dc5c4a6a1c67985174159d7b158d55b1",
+  "prompts": {},
+  "sessions": {
+    "s_e47a5eda862f84": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "a46a31a4-8363-4a90-b740-7e96b4bf3615",
+        "model": "claude-fable-5"
+      },
+      "human_author": "64etuor <130260521+64etuor@users.noreply.github.com>"
+    }
+  }
+}
