@@ -68,6 +68,7 @@ export function SynopticView() {
   return (
     <div
       aria-hidden={!visible}
+      inert={!visible}
       className={
         'absolute inset-0 z-[6] transition-opacity duration-280 ease-baro ' +
         (visible ? 'opacity-100' : 'pointer-events-none opacity-0')

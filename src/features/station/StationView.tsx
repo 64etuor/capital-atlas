@@ -136,6 +136,7 @@ export function StationView() {
   return (
     <div
       aria-hidden={!visible}
+      inert={!visible}
       className={
         'absolute inset-0 z-[7] transition-opacity duration-280 ease-(--ease-baro) ' +
         (visible ? 'opacity-100' : 'pointer-events-none opacity-0')

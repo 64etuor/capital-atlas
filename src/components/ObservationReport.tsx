@@ -249,6 +249,7 @@ export function ObservationReport() {
   return (
     <aside
       aria-hidden={!open}
+      inert={!open}
       className={
         'absolute inset-y-0 right-0 z-20 flex w-[420px] max-w-full flex-col overflow-y-auto border-l border-paper/10 bg-ink-2/95 transition-transform duration-280 ease-(--ease-baro) ' +
         (open ? 'translate-x-0' : 'pointer-events-none translate-x-full')

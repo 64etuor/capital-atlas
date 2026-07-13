@@ -60,6 +60,7 @@ export function LineageDossier() {
       role="dialog"
       aria-label={t('dossier.aria')}
       aria-hidden={!open}
+      inert={!open}
       className={
         'absolute bottom-24 left-1/2 z-30 w-[min(720px,92vw)] -translate-x-1/2 border border-paper/12 bg-ink-0/95 transition-all duration-280 ease-(--ease-baro) ' +
         (open
