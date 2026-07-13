@@ -8,6 +8,8 @@ import { periodCount } from '../lib/periods'
  * detail panels read from here.
  */
 interface ViewState {
+  /** 관측 표면: 지구본(GLOBE) 또는 종관도(SYNOPTIC) */
+  appView: 'globe' | 'synoptic'
   basis: Basis
   measure: MeasureType
   currency: CurrencyView
@@ -21,6 +23,7 @@ interface ViewState {
   dossier: DossierPayload | null
   dossierOpen: boolean
 
+  setAppView: (view: 'globe' | 'synoptic') => void
   setBasis: (basis: Basis) => void
   setMeasure: (measure: MeasureType) => void
   setCurrency: (currency: CurrencyView) => void
@@ -32,6 +35,7 @@ interface ViewState {
 }
 
 export const useViewStore = create<ViewState>()((set) => ({
+  appView: 'globe',
   basis: 'owner',
   measure: 'stock',
   currency: 'usd_current',
@@ -41,6 +45,7 @@ export const useViewStore = create<ViewState>()((set) => ({
   dossier: null,
   dossierOpen: false,
 
+  setAppView: (appView) => set({ appView }),
   setBasis: (basis) => set({ basis }),
   setMeasure: (measure) => set({ measure }),
   setCurrency: (currency) => set({ currency }),
