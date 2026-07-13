@@ -173,3 +173,64 @@ export interface BilateralFile {
   generated_at: string
   records: BilateralRecord[]
 }
+
+// ------------------------------------------------------------- synoptic ----
+
+/**
+ * public/data/meta/synoptic.json — SYNOPTIC 대시보드 전용 사전 집계
+ * (scripts/build/synoptic.ts, `pnpm data:synoptic`). 대시보드는 이 파일
+ * 하나만 로드한다. 모든 셀은 관측(A/B)-한정 변형을 함께 갖는다.
+ */
+export interface SynopticCell {
+  stock: number
+  stock_obs: number
+  flow_in: number
+  flow_in_obs: number
+  flow_out: number
+  flow_out_obs: number
+  flow_gross: number
+  flow_gross_obs: number
+  valuation: number
+  records: number
+  /** value-weighted A/B share of stock, 0..1 */
+  obs_share: number
+}
+
+export interface SynopticCorridor {
+  owner: string
+  issuer: string
+  asset: AssetClass
+  value: number
+  grade: ConfidenceGrade
+  source_id: string
+  effective_date: string
+  method?: string
+  lower?: number
+  upper?: number
+}
+
+export interface SynopticAnomaly {
+  country: string
+  asset: AssetClass
+  entry: 'assets' | 'liabilities'
+  value: number
+  grade: ConfidenceGrade
+  source_id: string
+  effective_date: string
+  method?: string
+  lower?: number
+  upper?: number
+}
+
+export interface SynopticFile {
+  generated_at: string
+  periods: PeriodKey[]
+  assets: AssetClass[]
+  per_quarter: Record<PeriodKey, Partial<Record<AssetClass, SynopticCell>>>
+  corridors: Record<
+    PeriodKey,
+    { stock: SynopticCorridor[]; flow: SynopticCorridor[] }
+  >
+  anomalies: Record<PeriodKey, SynopticAnomaly[]>
+  grade_mix: Record<PeriodKey, Partial<Record<ConfidenceGrade, number>>>
+}

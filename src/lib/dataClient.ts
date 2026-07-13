@@ -12,6 +12,7 @@ import type {
   PeriodKey,
   SourceRegistryEntry,
   StocksFile,
+  SynopticFile,
 } from '../types/data'
 import { indexFromPeriod } from './periods'
 
@@ -83,6 +84,10 @@ export const getGeometry = () =>
 
 export const getFlowIntensity = () =>
   fetchJson<FlowIntensityFile>('/data/meta/flow_intensity.json')
+
+/** SYNOPTIC 사전 집계 — meta 경로라 핀 고정(LRU 비대상), 단일 lazy-load */
+export const getSynoptic = () =>
+  fetchJson<SynopticFile>('/data/meta/synoptic.json')
 
 let countriesP: Promise<Map<string, CountryMaster>> | null = null
 export function getCountries(): Promise<Map<string, CountryMaster>> {

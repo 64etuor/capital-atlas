@@ -31,6 +31,7 @@ TS 미러: `src/types/data.ts` — 문서와 타입이 다르면 이 문서가 �
 | `meta/flow_intensity.json` | 분기별 글로벌 총 흐름 강도 (바로그래프용) | 분기 |
 | `meta/pipeline_report.json` | 커버리지·등급 분포·수집 실패 기록 | 수집 시 |
 | `meta/global_crypto.json` | 암호자산 글로벌 통제값 (국가 배분은 v2) | 수집 시 |
+| `meta/synoptic.json` | SYNOPTIC 대시보드 사전 집계 (`pnpm data:synoptic`) | 수집 후 |
 
 - 인코딩: UTF-8 JSON. 값 단위: **USD (current)**, 절대값(백만 아님 — 스케일 접미사 금지).
 - `period`: `"YYYY-Qn"` (2010-Q1 ~). 연간 원자료(WB 시총, PIP)는 해당 연도 **Q4**에 표기.
@@ -158,6 +159,24 @@ SSOT는 `scripts/fetch/registry.ts`. 발행 파일은 `pnpm data:sources`(retrie
 규칙: **`live_market`·`static_reference` 소스는 stocks/flows 수치 레코드를 뒷받침할 수
 없다** — 시장 데이터가 공식 통계로 위장하지 않는다(`scripts/fetch/registry.test.ts`).
 live 데이터는 `meta/` 통제값·오버레이 전용.
+
+### meta/synoptic.json — SYNOPTIC 대시보드 사전 집계
+
+`scripts/build/synoptic.ts`가 커밋된 샤드에서 **네트워크 없이** 생성
+(`pnpm data:synoptic`, 데이터 재수집 후 반드시 재실행). 대시보드는 이 파일
+하나만 lazy-load 한다 — 클라이언트의 65분기 샤드 순회 금지. TS 미러:
+`src/types/data.ts`의 `SynopticFile`.
+
+- `per_quarter[period][asset]`: 글로벌 stock/flow(양측)/valuation 합계 —
+  **모든 값에 관측(A/B)-한정 `*_obs` 변형 동반** (VIS=OBS 다이얼 근거),
+  `obs_share`(가치가중 관측 비중 0..1) 포함.
+- `corridors[period]`: bilateral 상위 20 회랑 — `stock`(CPIS 포지션 A)과
+  `flow`(파생 D) 분리. lineage(등급·산식·범위) 운반.
+- `anomalies[period]`: |flow| 상위 — **자산별 상한 12** (자산 필터가 구성상
+  빈 화면이 되지 않게), 전역 표시는 UI가 앞 12개만 자른다.
+- `grade_mix[period]`: A~E 레코드 수 (시정 바).
+- 계약 테스트: `scripts/build/synoptic.test.ts` (표본 분기 합계 = 샤드 직접
+  합산 대조 포함). 5MB 초과 시 샤딩 조항.
 
 ## enum 정본
 
