@@ -1,0 +1,35 @@
+src/features/station/StationView.tsx
+  s_e47a5eda862f84::t_c682e9fb56e935 471,474,476
+  s_e47a5eda862f84::t_cf8934326bd583 502,505,507
+  s_e47a5eda862f84::t_a8266ed805d568 453,487
+README.md
+  s_e47a5eda862f84::t_c7c1172687444e 101-104,106-109
+  s_e47a5eda862f84::t_e73cee7327e462 96
+docs/DATA_CONTRACT.md
+  s_e47a5eda862f84::t_52ffa416211440 133-145
+  s_e47a5eda862f84::t_88dafe81b5a3e4 82-85
+  s_e47a5eda862f84::t_f3fc9d28f8634e 172
+docs/DATA_PIPELINE.md
+  s_e47a5eda862f84::t_7eefc986327f2a 24-25
+  s_e47a5eda862f84::t_d9d4e981e8fd76 94-99
+  s_e47a5eda862f84::t_552421e0780e66 36-48
+  s_e47a5eda862f84::t_8338cc374e0463 35
+src/components/ObservationReport.tsx
+  s_e47a5eda862f84::t_3917532372833f 480
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.13",
+  "base_commit_sha": "4948c9015df451568fc42333a85650e573b15bce",
+  "prompts": {},
+  "sessions": {
+    "s_e47a5eda862f84": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "a46a31a4-8363-4a90-b740-7e96b4bf3615",
+        "model": "claude-fable-5"
+      },
+      "human_author": "64etuor <130260521+64etuor@users.noreply.github.com>"
+    }
+  }
+}
