@@ -376,7 +376,7 @@ export function MapCanvas() {
         },
         pickable: true,
         autoHighlight: true,
-        highlightColor: [232, 228, 216, 26],
+        highlightColor: [...rgbVar('--atlas-paper'), 26],
         onHover: (info: PickingInfo) => {
           const obj = info.object as {
             properties: CountryFeatureProps
