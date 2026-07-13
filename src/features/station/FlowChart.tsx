@@ -6,7 +6,7 @@
  */
 import { useEffect, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { formatUsdNet } from '../../lib/format'
+import { formatUsd, formatUsdNet } from '../../lib/format'
 import { rgbVar, rgbaCss } from '../../lib/tokens'
 import {
   attributionFor,
@@ -56,6 +56,9 @@ interface Props {
   onPickPeriod: (index: number) => void
   readouts: FlowReadout[]
   exportCtx: ChartExportCtx
+  /** Phase L: LCU 표시 — 이미 변환된 수의 포맷터 (기본 USD) */
+  fmtNet?: (v: number, digits?: number) => string
+  fmtValue?: (v: number, digits?: number) => string
 }
 
 const TONE: Record<FlowReadout['tone'], string> = {
@@ -75,6 +78,8 @@ export function FlowChart({
   onPickPeriod,
   readouts,
   exportCtx,
+  fmtNet = formatUsdNet,
+  fmtValue = formatUsd,
 }: Props) {
   const { t, i18n } = useTranslation()
   const holder = useRef<HTMLDivElement>(null)
@@ -171,17 +176,17 @@ export function FlowChart({
           const i = params[0]?.dataIndex ?? 0
           const rows = [
             `<b>${periods[i]}</b>`,
-            `IN&nbsp;&nbsp;${formatUsdNet(flowIn[i] ?? 0)}`,
-            `OUT&nbsp;${formatUsdNet(flowOut[i] ?? 0)}`,
-            `NET&nbsp;${formatUsdNet(net[i] ?? 0)}`,
+            `IN&nbsp;&nbsp;${fmtNet(flowIn[i] ?? 0)}`,
+            `OUT&nbsp;${fmtNet(flowOut[i] ?? 0)}`,
+            `NET&nbsp;${fmtNet(net[i] ?? 0)}`,
           ]
           if (!observedOnly && valuation[i] !== null)
-            rows.push(`VAL&nbsp;${formatUsdNet(valuation[i] ?? 0)} · derived C`)
+            rows.push(`VAL&nbsp;${fmtNet(valuation[i] ?? 0)} · derived C`)
           return rows.join('<br/>')
         },
       },
       xAxis: periodAxis(periods),
-      yAxis: usdAxis(),
+      yAxis: usdAxis(fmtValue),
       // 브러시 전용 줌 창(P1-8) — 휠/팬은 비활성, dispatchAction으로만 구동
       dataZoom: [
         {
@@ -306,7 +311,7 @@ export function FlowChart({
       chart.dispose()
       chartRef.current = null
     }
-  }, [flowIn, flowOut, valuation, observedOnly, t, i18n.language])
+  }, [flowIn, flowOut, valuation, observedOnly, t, i18n.language, fmtNet, fmtValue])
 
   useEffect(() => {
     chartRef.current?.setOption({

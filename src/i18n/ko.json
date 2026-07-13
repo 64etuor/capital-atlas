@@ -37,11 +37,13 @@
       "flow": "실거래 흐름",
       "valuation": "평가변동",
       "turnover": "거래량",
-      "usd_current": "명목 USD",
-      "usd_constant_fx": "고정환율 USD",
+      "usd": "US 달러",
+      "lcu": "현지통화 (선택 관측소)",
       "est": "관측 + 추정",
       "obs": "관측만"
-    }
+    },
+    "lcuMixed": "혼합 통화 — USD 고정",
+    "lcuNoFx": "환율 시계열 없음 — USD 고정"
   },
   "report": {
     "title": "관측 리포트",

@@ -44,6 +44,8 @@ interface Props {
   exportCtx: ChartExportCtx
   mode: CompositionMode
   onMode: (m: CompositionMode) => void
+  /** Phase L: LCU 표시 — 이미 변환된 수의 포맷터 (기본 USD) */
+  fmtValue?: (v: number, digits?: number) => string
 }
 
 export function CompositionStream({
@@ -54,6 +56,7 @@ export function CompositionStream({
   exportCtx,
   mode,
   onMode,
+  fmtValue = formatUsd,
 }: Props) {
   const { t } = useTranslation()
   const holder = useRef<HTMLDivElement>(null)
@@ -190,12 +193,12 @@ export function CompositionStream({
           const i = params[0]?.dataIndex ?? 0
           const rows = params
             .filter((p) => p.value !== null && p.value !== undefined)
-            .map((p) => `${p.seriesName}&nbsp;${formatUsd(p.value ?? 0, 1)}`)
+            .map((p) => `${p.seriesName}&nbsp;${fmtValue(p.value ?? 0, 1)}`)
           return [`<b>${periods[i]}</b>`, ...rows].join('<br/>')
         },
       },
       xAxis: periodAxis(periods),
-      yAxis: usdAxis(),
+      yAxis: usdAxis(fmtValue),
       series: chartSeries,
     })
     wireClickToPeriod(chart, (i) => pickRef.current(i), periods.length)
@@ -206,7 +209,7 @@ export function CompositionStream({
       chart.dispose()
       chartRef.current = null
     }
-  }, [series, observedOnly, hidden])
+  }, [series, observedOnly, hidden, fmtValue])
 
   useEffect(() => {
     chartRef.current?.setOption({

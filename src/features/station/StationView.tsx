@@ -17,6 +17,7 @@ import {
 } from '../../lib/dataClient'
 import { periodFromIndex } from '../../lib/periods'
 import { formatUsd, formatUsdNet } from '../../lib/format'
+import { useMoney } from '../../lib/money'
 import { ASSET_LABELS } from '../../lib/assetLabels'
 import type {
   CountryMaster,
@@ -45,6 +46,7 @@ import { GaugeStrip, type Gauge } from './GaugeStrip'
 import {
   assetsPresent,
   concentrationAt,
+  convertStationFile,
   flowArrays,
   flowIntensity,
   hhiClass,
@@ -215,6 +217,11 @@ function StationBody({
   const { t } = useTranslation()
   // I-5: ALL 탭 구성 영역 보기 전환 (STREAM/MULTIPLES)
   const [compMode, setCompMode] = useState<CompositionMode>('stream')
+  // Phase L: CURR=LCU — 표시 층만 변환, 도시에 원값·집계는 항상 USD
+  const money = useMoney(
+    iso === 'WLD' ? null : iso,
+    iso === 'WLD' ? 'global' : 'country',
+  )
   const present = assetsPresent(file)
   const assetLabel = tab === 'all' ? 'ALL ASSETS' : ASSET_LABELS[tab]
   const exportBase = {
@@ -229,6 +236,11 @@ function StationBody({
   }
   const compExportCtx: ChartExportCtx = { ...exportBase, sourceIds: ['imf_iip'] }
   const flows = flowArrays(file, tab, observedOnly)
+  // LCU 활성 시 차트 전용 변환 사본 — 축·툴팁·바가 전부 같은 통화가 되게
+  const chartFile =
+    money.mode === 'lcu' ? convertStationFile(file, money.convertAt) : file
+  const chartFlows =
+    money.mode === 'lcu' ? flowArrays(chartFile, tab, observedOnly) : flows
   const stock = stockAt(file, tab, periodIndex, observedOnly)
   const intensity = flowIntensity(file, tab, periodIndex, observedOnly)
   const yoy = yoyStock(file, tab, periodIndex, observedOnly)
@@ -322,18 +334,25 @@ function StationBody({
   const gauges: Gauge[] = [
     {
       label: 'STOCK',
-      value: stock.total > 0 ? formatUsd(stock.total, 2) : '—',
+      value: stock.total > 0 ? money.fmtAt(stock.total, period, 2) : '—',
       tone: 'paper',
-      dossier: stockDossier(),
+      dossier: {
+        ...stockDossier(),
+        context: [...stockDossier().context, ...money.fxRows(stock.total, period)],
+      },
     },
     {
       label: 'NET 4Q',
-      value: formatUsdNet(intensity.net4),
+      value: money.fmtNetAt(intensity.net4, period),
       tone: intensity.net4 >= 0 ? 'in' : 'out',
       dossier: {
         ...flowDossier('NET', intensity.net4),
         title: `${name} · ${assetLabel} — trailing 4Q net flow`,
         method: 'sum_net_flow_trailing_4_quarters',
+        context: [
+          ...flowDossier('NET', intensity.net4).context,
+          ...money.fxRows(intensity.net4, period),
+        ],
       },
     },
     {
@@ -509,33 +528,40 @@ function StationBody({
     },
   ]
 
+  const flowDossierFx = (
+    kind: 'IN' | 'OUT' | 'NET' | 'VAL',
+    value: number,
+  ): DossierPayload => {
+    const p = flowDossier(kind, value)
+    return { ...p, context: [...p.context, ...money.fxRows(value, period)] }
+  }
   const readouts: FlowReadout[] = [
     {
       label: 'IN',
-      value: flowInNow === null ? '—' : formatUsdNet(flowInNow),
+      value: flowInNow === null ? '—' : money.fmtNetAt(flowInNow, period),
       tone: 'in',
-      onClick: () => openDossier(flowDossier('IN', flowInNow ?? 0)),
+      onClick: () => openDossier(flowDossierFx('IN', flowInNow ?? 0)),
     },
     {
       label: 'OUT',
-      value: flowOutNow === null ? '—' : formatUsdNet(flowOutNow),
+      value: flowOutNow === null ? '—' : money.fmtNetAt(flowOutNow, period),
       tone: 'out',
-      onClick: () => openDossier(flowDossier('OUT', flowOutNow ?? 0)),
+      onClick: () => openDossier(flowDossierFx('OUT', flowOutNow ?? 0)),
     },
     {
       label: 'NET',
-      value: netNow === null ? '—' : formatUsdNet(netNow),
+      value: netNow === null ? '—' : money.fmtNetAt(netNow, period),
       tone: 'paper',
-      onClick: () => openDossier(flowDossier('NET', netNow ?? 0)),
+      onClick: () => openDossier(flowDossierFx('NET', netNow ?? 0)),
     },
     ...(observedOnly
       ? []
       : [
           {
             label: 'VAL',
-            value: valNow === null ? '—' : formatUsdNet(valNow),
+            value: valNow === null ? '—' : money.fmtNetAt(valNow, period),
             tone: 'dim' as const,
-            onClick: () => openDossier(flowDossier('VAL', valNow ?? 0)),
+            onClick: () => openDossier(flowDossierFx('VAL', valNow ?? 0)),
           },
         ]),
   ]
@@ -576,8 +602,13 @@ function StationBody({
             )}
           </h2>
           <p className="readout mt-1.5 text-[10px] tracking-[0.12em] text-paper-dim">
-            CROSS-BORDER {formatUsd(file.summary.stock_total, 2)} · LATEST{' '}
-            {file.summary.latest ?? '—'} · OWNER BASIS ·{' '}
+            CROSS-BORDER{' '}
+            {money.fmtAt(
+              file.summary.stock_total,
+              (file.summary.latest ?? period) as PeriodKey,
+              2,
+            )}{' '}
+            · LATEST {file.summary.latest ?? '—'} · OWNER BASIS ·{' '}
             {(file.summary.obs_share * 100).toFixed(0)}% OBSERVED
           </p>
         </div>
@@ -597,33 +628,37 @@ function StationBody({
           <div className="grid min-h-0 grid-rows-[minmax(0,11fr)_minmax(0,9fr)] gap-3">
             <FlowChart
               title={`FLOW DECOMPOSITION · IN/OUT/NET · VALUATION SEPARATE · ${period}`}
-              flowIn={flows.flowIn}
-              flowOut={flows.flowOut}
-              valuation={flows.valuation}
+              flowIn={chartFlows.flowIn}
+              flowOut={chartFlows.flowOut}
+              valuation={chartFlows.valuation}
               observedOnly={observedOnly}
               periodIndex={periodIndex}
               onPickPeriod={onPickPeriod}
               readouts={readouts}
               exportCtx={flowExportCtx}
+              fmtNet={money.displayNet}
+              fmtValue={money.display}
             />
             {compMode === 'stream' ? (
               <CompositionStream
-                series={file.series}
+                series={chartFile.series}
                 observedOnly={observedOnly}
                 periodIndex={periodIndex}
                 onPickPeriod={onPickPeriod}
                 exportCtx={compExportCtx}
                 mode={compMode}
                 onMode={setCompMode}
+                fmtValue={money.display}
               />
             ) : (
               <SmallMultiples
-                file={file}
+                file={chartFile}
                 observedOnly={observedOnly}
                 periodIndex={periodIndex}
                 onTab={onTab}
                 mode={compMode}
                 onMode={setCompMode}
+                fmtNet={money.displayNet}
               />
             )}
           </div>
@@ -634,35 +669,52 @@ function StationBody({
             assetLabel="ALL ASSETS"
             observedOnly={observedOnly}
             emptyHint={partnerEmpty}
+            fmt={(v, d) => money.fmtAt(v, partnerEff ?? period, d)}
+            fxRows={(v) => money.fxRows(v, partnerEff ?? period)}
           />
         </div>
       ) : (
         <div className="grid min-h-0 flex-1 grid-cols-[minmax(0,7fr)_minmax(0,5fr)] gap-8">
           <div className="grid min-h-0 grid-rows-[minmax(0,11fr)_minmax(0,9fr)] gap-3">
             <StockBandChart
-              points={tabPoints}
+              points={chartFile.series[tab] ?? []}
               observedOnly={observedOnly}
               periodIndex={periodIndex}
               onPickPeriod={onPickPeriod}
+              fmtValue={money.display}
               currentLabel={
                 currentPoint
-                  ? `${formatUsd(currentPoint.stock, 2)} · ${currentPoint.grade}`
+                  ? `${money.fmtAt(currentPoint.stock, currentPoint.period, 2)} · ${currentPoint.grade}`
                   : null
               }
               onOpenCurrent={
-                currentPoint ? () => openDossier(stockDossier()) : null
+                currentPoint
+                  ? () =>
+                      openDossier({
+                        ...stockDossier(),
+                        context: [
+                          ...stockDossier().context,
+                          ...money.fxRows(
+                            currentPoint.stock,
+                            currentPoint.period,
+                          ),
+                        ],
+                      })
+                  : null
               }
             />
             <FlowChart
               title={`FLOW DECOMPOSITION · ${ASSET_LABELS[tab].toUpperCase()} · ${period}`}
-              flowIn={flows.flowIn}
-              flowOut={flows.flowOut}
-              valuation={flows.valuation}
+              flowIn={chartFlows.flowIn}
+              flowOut={chartFlows.flowOut}
+              valuation={chartFlows.valuation}
               observedOnly={observedOnly}
               periodIndex={periodIndex}
               onPickPeriod={onPickPeriod}
               readouts={readouts}
               exportCtx={flowExportCtx}
+              fmtNet={money.displayNet}
+              fmtValue={money.display}
             />
           </div>
           <div className="grid min-h-0 grid-rows-[minmax(0,1fr)_minmax(0,1fr)] gap-3">
@@ -673,6 +725,8 @@ function StationBody({
               assetLabel={ASSET_LABELS[tab]}
               observedOnly={observedOnly}
               emptyHint={partnerEmpty}
+              fmt={(v, d) => money.fmtAt(v, partnerEff ?? period, d)}
+              fxRows={(v) => money.fxRows(v, partnerEff ?? period)}
             />
             <LedgerTable
               points={
@@ -682,6 +736,9 @@ function StationBody({
               }
               iso3={iso}
               assetLabel={ASSET_LABELS[tab]}
+              fmtAt={money.fmtAt}
+              fmtNetAt={money.fmtNetAt}
+              fxRowsAt={money.fxRows}
             />
           </div>
         </div>

@@ -23,6 +23,10 @@ interface Props {
   observedOnly: boolean
   /** WLD 등 양자 데이터가 구조적으로 없는 경우의 정직한 안내 */
   emptyHint: string
+  /** Phase L: LCU 표시 포맷터 (기본 USD) — 행 표시 전용, 도시에 원값은 USD */
+  fmt?: (v: number, digits?: number) => string
+  /** LCU 활성 시 도시에에 붙는 FX RATE·LCU/USD VALUE 행 */
+  fxRows?: (valueUsd: number) => Array<[string, string]>
 }
 
 interface Row {
@@ -39,6 +43,8 @@ export function PartnerMatrix({
   assetLabel,
   observedOnly,
   emptyHint,
+  fmt = formatUsd,
+  fxRows,
 }: Props) {
   const openDossier = useViewStore((s) => s.openDossier)
 
@@ -121,6 +127,7 @@ export function PartnerMatrix({
                         `${r.country} holds ${iso3}`,
                         r.holder ? formatUsd(r.holder.value, 1) : 'no observation',
                       ],
+                      ...(fxRows?.(main.value) ?? []),
                     ],
                   })
                 }}
@@ -149,10 +156,10 @@ export function PartnerMatrix({
                   )}
                 </span>
                 <span className="readout w-14 shrink-0 text-right text-[10px] text-flow-out/90">
-                  {r.holder ? formatUsd(r.holder.value, 1) : '·'}
+                  {r.holder ? fmt(r.holder.value, 1) : '·'}
                 </span>
                 <span className="readout w-14 shrink-0 text-right text-[10px] text-flow-in">
-                  {r.holding ? formatUsd(r.holding.value, 1) : '·'}
+                  {r.holding ? fmt(r.holding.value, 1) : '·'}
                 </span>
                 <span className="readout w-3 shrink-0 text-right text-[10px] text-paper-dim">
                   {grade}

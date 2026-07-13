@@ -14,9 +14,23 @@ interface Props {
   points: StationPoint[]
   iso3: string
   assetLabel: string
+  /** Phase L: LCU 표시 — 행별 분기 환율 적용 (기본 USD) */
+  fmtAt?: (v: number, period: StationPoint['period'], digits?: number) => string
+  fmtNetAt?: (v: number, period: StationPoint['period'], digits?: number) => string
+  fxRowsAt?: (
+    valueUsd: number,
+    period: StationPoint['period'],
+  ) => Array<[string, string]>
 }
 
-export function LedgerTable({ points, iso3, assetLabel }: Props) {
+export function LedgerTable({
+  points,
+  iso3,
+  assetLabel,
+  fmtAt = (v, _p, d) => formatUsd(v, d ?? 1),
+  fmtNetAt = (v, _p, d) => formatUsdNet(v, d ?? 1),
+  fxRowsAt,
+}: Props) {
   const openDossier = useViewStore((s) => s.openDossier)
   const rows = [...points]
     .sort((a, b) => b.period.localeCompare(a.period))
@@ -60,13 +74,14 @@ export function LedgerTable({ points, iso3, assetLabel }: Props) {
                         [string, string]
                       >)
                     : []),
+                  ...(fxRowsAt?.(p.stock, p.period) ?? []),
                 ],
               })
             }
           >
             <span className="readout text-[10px] text-paper">{p.period}</span>
             <span className="readout text-right text-[10px] text-paper">
-              {formatUsd(p.stock, 1)}
+              {fmtAt(p.stock, p.period, 1)}
             </span>
             <span
               className={
@@ -74,7 +89,7 @@ export function LedgerTable({ points, iso3, assetLabel }: Props) {
                 (p.flow_in - p.flow_out >= 0 ? 'text-flow-in' : 'text-flow-out')
               }
             >
-              {p.flow_grade ? formatUsdNet(p.flow_in - p.flow_out) : '·'}
+              {p.flow_grade ? fmtNetAt(p.flow_in - p.flow_out, p.period) : '·'}
             </span>
             <span className="readout text-right text-[10px] text-paper-dim">
               {p.grade}

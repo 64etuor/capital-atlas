@@ -10,7 +10,8 @@ import {
   nearestAvailable,
 } from '../lib/dataClient'
 import { indexFromPeriod, periodFromIndex } from '../lib/periods'
-import { formatUsd, formatUsdNet } from '../lib/format'
+import { formatUsdNet } from '../lib/format'
+import { useMoney } from '../lib/money'
 import { fogAlpha } from '../lib/tokens'
 import { OBSERVED_GRADES, summarizeStocks } from '../features/map/aggregate'
 import { Odometer } from './Odometer'
@@ -85,6 +86,8 @@ export function ObservationReport() {
   const [data, setData] = useState<ReportData | null>(null)
 
   const period = periodFromIndex(periodIndex)
+  // Phase L: CURR=LCU — 표시 층만 변환, 도시에 원값은 USD + FX 행 병기
+  const money = useMoney(selectedCountry, 'country')
   const desiredKey = `${selectedCountry}|${basis}|${period}|${includeEstimates}`
 
   useEffect(() => {
@@ -221,6 +224,7 @@ export function ObservationReport() {
           t('report.ctxView'),
           includeEstimates ? t('report.viewEst') : t('report.viewObs'),
         ],
+        ...money.fxRows(reading.value, current.stocksEff ?? period),
       ],
     }
   }
@@ -312,7 +316,7 @@ export function ObservationReport() {
               style={{ opacity: 1 - reading.fog * 0.6 }}
             >
               <Odometer
-                text={formatUsd(reading.value)}
+                text={money.fmtAt(reading.value, current.stocksEff ?? period)}
                 className="font-display text-[clamp(2.6rem,5vw,3.6rem)] leading-none text-paper"
               />
             </button>
@@ -324,8 +328,8 @@ export function ObservationReport() {
               })}
               {bounds
                 ? ` · ${t('report.rangeLine', {
-                    low: formatUsd(bounds[0]),
-                    high: formatUsd(bounds[1]),
+                    low: money.fmtAt(bounds[0], current.stocksEff ?? period),
+                    high: money.fmtAt(bounds[1], current.stocksEff ?? period),
                   })}`
                 : ''}
             </p>
@@ -352,6 +356,7 @@ export function ObservationReport() {
             <div className="mt-3">
               <AssetTreemap
                 items={treemapItems}
+                fmt={(v, d) => money.fmtAt(v, current.stocksEff ?? period, d)}
                 onPick={(asset) => {
                   const r = current.stocks.find((s) => s.asset === asset)
                   if (!r) return
@@ -365,7 +370,10 @@ export function ObservationReport() {
                     upper_bound: r.upper_bound,
                     effective_date: r.effective_date,
                     source_ids: [r.source_id],
-                    context: [['Measure', 'stock']],
+                    context: [
+                      ['Measure', 'stock'],
+                      ...money.fxRows(r.value_usd, r.period),
+                    ],
                   })
                 }}
               />
@@ -404,13 +412,14 @@ export function ObservationReport() {
                         [t('report.ctxOutflowSide'), formatUsdNet(f.outflow)],
                         [t('report.ctxRecords'), String(f.n)],
                         [t('report.ctxSign'), 'BPM6 — net acquisition basis'],
+                        ...money.fxRows(f.inflow - f.outflow, f.period),
                       ],
                     })
                   }
                   title={t('report.flowBarTitle', {
                     period: f.period,
-                    inflow: formatUsdNet(f.inflow),
-                    outflow: formatUsdNet(f.outflow),
+                    inflow: money.fmtNetAt(f.inflow, f.period),
+                    outflow: money.fmtNetAt(f.outflow, f.period),
                   })}
                   className="group flex h-24 flex-1 flex-col items-center justify-center gap-px"
                 >
@@ -483,6 +492,7 @@ export function ObservationReport() {
                                 ? t('report.directionIn')
                                 : t('report.directionOut'),
                             ],
+                            ...money.fxRows(r.value_usd, r.period),
                           ],
                         })
                       }
@@ -510,7 +520,7 @@ export function ObservationReport() {
                         }}
                       >
                         {gradeMark(r.confidence_grade)}{' '}
-                        {formatUsd(Math.abs(r.value_usd), 1)}
+                        {money.fmtAt(Math.abs(r.value_usd), r.period, 1)}
                       </span>
                     </button>
                   </li>

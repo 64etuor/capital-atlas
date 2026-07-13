@@ -28,6 +28,8 @@ interface Props {
   /** 현재 분기 잔액 리드아웃 클릭 → 계보 도시에 (§1.5) */
   onOpenCurrent: (() => void) | null
   currentLabel: string | null
+  /** Phase L: LCU 표시 — 이미 변환된 수의 포맷터 (기본 USD) */
+  fmtValue?: (v: number, digits?: number) => string
 }
 
 export function StockBandChart({
@@ -37,6 +39,7 @@ export function StockBandChart({
   onPickPeriod,
   onOpenCurrent,
   currentLabel,
+  fmtValue = formatUsd,
 }: Props) {
   const holder = useRef<HTMLDivElement>(null)
   const chartRef = useRef<echarts.ECharts | null>(null)
@@ -101,19 +104,19 @@ export function StockBandChart({
           if (!p) return periods[i]
           const rows = [
             `<b>${periods[i]}</b>`,
-            `STOCK ${formatUsd(p.stock, 1)} · ${p.grade}`,
+            `STOCK ${fmtValue(p.stock, 1)} · ${p.grade}`,
           ]
           if (p.stock_lower !== undefined && p.stock_upper !== undefined)
             rows.push(
-              `BAND ${formatUsd(p.stock_lower, 1)}–${formatUsd(p.stock_upper, 1)}`,
+              `BAND ${fmtValue(p.stock_lower, 1)}–${fmtValue(p.stock_upper, 1)}`,
             )
           if (p.stock_issuer !== undefined)
-            rows.push(`ISSUER ${formatUsd(p.stock_issuer, 1)}`)
+            rows.push(`ISSUER ${fmtValue(p.stock_issuer, 1)}`)
           return rows.join('<br/>')
         },
       },
       xAxis: periodAxis(periods),
-      yAxis: usdAxis(),
+      yAxis: usdAxis(fmtValue),
       series: [
         // D/E 신뢰구간 밴드 — lower(투명) 위에 diff를 쌓는 고전 기법
         {
@@ -169,7 +172,7 @@ export function StockBandChart({
       chart.dispose()
       chartRef.current = null
     }
-  }, [points, observedOnly])
+  }, [points, observedOnly, fmtValue])
 
   useEffect(() => {
     chartRef.current?.setOption({

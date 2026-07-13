@@ -15,6 +15,7 @@ const DEFAULTS = {
   basis: 'owner',
   measure: 'stock',
   vis: 'est',
+  curr: 'usd',
   lang: 'en',
 } as const
 
@@ -22,7 +23,7 @@ describe('parseUrlState', () => {
   it('accepts a full valid deep link', () => {
     expect(
       parseUrlState(
-        '?view=station&country=KOR&asset=listed_equity&period=2024-Q4&basis=issuer&measure=flow&vis=obs&lang=ko',
+        '?view=station&country=KOR&asset=listed_equity&period=2024-Q4&basis=issuer&measure=flow&vis=obs&curr=lcu&lang=ko',
       ),
     ).toEqual({
       view: 'station',
@@ -32,13 +33,14 @@ describe('parseUrlState', () => {
       basis: 'issuer',
       measure: 'flow',
       vis: 'obs',
+      curr: 'lcu',
       lang: 'ko',
     })
   })
   it('silently drops invalid values instead of breaking the app', () => {
     expect(
       parseUrlState(
-        '?view=hack&country=kor&asset=nfts&period=2026-Q9&basis=me&measure=x&vis=all&lang=jp',
+        '?view=hack&country=kor&asset=nfts&period=2026-Q9&basis=me&measure=x&vis=all&curr=krw&lang=jp',
       ),
     ).toEqual({})
   })
@@ -55,6 +57,7 @@ describe('serializeUrlState', () => {
       country: 'KOR',
       asset: 'deposits',
       vis: 'obs',
+      curr: 'lcu',
       lang: 'ko',
     })
     expect(parseUrlState(q)).toEqual({
@@ -62,6 +65,7 @@ describe('serializeUrlState', () => {
       country: 'KOR',
       asset: 'deposits',
       vis: 'obs',
+      curr: 'lcu',
       lang: 'ko',
     })
   })

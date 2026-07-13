@@ -8,6 +8,7 @@ import type {
   CountryMaster,
   FlowIntensityFile,
   FlowsCountryFile,
+  FxRatesFile,
   PeriodIndexFile,
   PeriodKey,
   SourceRegistryEntry,
@@ -92,6 +93,9 @@ export const getFlowIntensity = () =>
 /** SYNOPTIC 사전 집계 — meta 경로라 핀 고정(LRU 비대상), 단일 lazy-load */
 export const getSynoptic = () =>
   fetchJson<SynopticFile>('/data/meta/synoptic.json')
+
+/** 분기 환율 (Phase L, CURR=LCU 근거) — meta 핀 고정, 단일 lazy-load */
+export const getFxRates = () => fetchJson<FxRatesFile>('/data/meta/fx_rates.json')
 
 /** STATION 인덱스(가용 국가 목록) — 핀 고정 */
 export const getStationIndex = () =>

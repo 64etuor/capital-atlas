@@ -69,7 +69,8 @@ pnpm dev            # Vite dev 서버 → http://localhost:5173
 
 # 데이터 파이프라인 (선택 — 스냅샷은 이미 public/data/에 커밋돼 있음)
 # 재수집 시 아래 순서 전체를 실행해야 파생 파일(synoptic/station/sources)이 샤드와 정합한다.
-pnpm data:fetch     # ① 공개 API 수집(24h 캐시) + 조립 → public/data/ 샤드
+pnpm data:fetch     # ① 공개 API 수집(24h 캐시) + 조립 → public/data/ 샤드 (환율 포함)
+pnpm data:fx        # ①-b (선택) 환율만 단독 재수집 — data:fetch에 이미 포함
 pnpm data:synoptic  # ② SYNOPTIC 사전 집계 재생성 (커밋된 샤드에서, 네트워크 없음)
 pnpm data:station   # ③ STATION 국가별 집계 + 집중도(§14) 재생성 (네트워크 없음)
 pnpm data:sources   # ④ meta/sources.json 재발행 (retrieved_at 보존)
@@ -199,9 +200,13 @@ pnpm build          # tsc -b && vite build
   (E등급, 연 Q4만). 등기·센서스 기반은 v2 — 짙은 안개가 그 저신뢰를 정직하게 말한다.
 - **계보 도시에 = 열린 시점의 스냅샷.** 도시에는 클릭 당시의 basis/period/VIS 상태를
   고정 캡처한다. 이후 계기를 바꿔도 열린 도시에는 갱신되지 않는다(닫고 다시 연다).
-- **통화(CURR) 다이얼은 v1 플레이스홀더.** `USD current`만 실데이터. `USD fx-fixed`는
-  고정환율 시계열(`value_usd_constant_fx`) 미수집이라 화면이 바뀌지 않는다. 환율
-  시계열은 v2.
+- **통화(CURR) 다이얼 = USD | LCU (Phase L).** LCU는 선택 국가의 현지통화로 분기
+  기말 환율(IMF ER, A등급 174개국 · WB 연간 Q4 폴백 B등급 18개국)을 곱한 정확 산술.
+  국가 스코프(STATION 국가 선택·GLOBE 리포트)에서만 활성 — 글로벌 집계는 통화 합산이
+  무의미해 다이얼이 회색+사유("MIXED CURRENCIES — USD ONLY")가 된다. LCU 표시 수치의
+  도시에엔 FX RATE·LCU/USD VALUE 행이 병기된다. **고정환율 USD(FXD)는 도입하지 않았다**
+  — IIP 잔액에 통화구성이 없어 가정 없인 계산 불가(허위 정밀도 금지). 통화구성 확보(v3)
+  전까지 `value_usd_constant_fx`는 미산출.
 - **극지 통과 입자류.** 대권항로가 극점 부근을 지날 때의 스파이크는 고도를 극지에서
   0으로 테이퍼링해 크게 완화했으나, 북극 상공 흐름 밀집 구간엔 잔여 번들이 남는다.
 - **번들 청크.** deck.gl/echarts를 별도 청크로 분리(앱 청크 ~386 KB)했으나 `deck.js`
@@ -224,7 +229,7 @@ pnpm build          # tsc -b && vite build
   국가별 암호자산 배분.
 - **자산 간 흐름 행렬**: 소유자↔발행자↔소재지 3장부를 잇는 룩스루(펀드·ETF·SPV·토큰).
 - **엔진화**: 정적 스냅샷 → 개정 이력 보존 + 추정 엔진(폴백 사다리를 서버 파이프라인으로).
-- 상장주식 비거주자 보유분 별도 축(IIP L_P P_F5), 고정환율 시계열, 관측/추정 diff 뷰.
+- 상장주식 비거주자 보유분 별도 축(IIP L_P P_F5), IIP 통화구성 확보 후 constant-FX(v3), 관측/추정 diff 뷰.
 
 ## 문서
 

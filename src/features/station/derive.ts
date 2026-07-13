@@ -20,6 +20,41 @@ export function assetsPresent(file: StationFile): AssetClass[] {
   return STATION_ASSET_ORDER.filter((a) => file.series[a]?.length)
 }
 
+/**
+ * LCU 차트 데이터 (Phase L): 전 금액 필드를 그 점의 분기 환율로 변환한 사본.
+ * 환율이 없는 분기의 점은 드랍(정직한 갭 — 통화 혼합 금지). USD 모드에선
+ * 호출하지 않는다. 도시에 원값은 항상 원본(USD) 파일에서 만든다.
+ */
+export function convertStationFile(
+  file: StationFile,
+  convertAt: (valueUsd: number, period: StationPoint['period']) => number | null,
+): StationFile {
+  const series: StationFile['series'] = {}
+  for (const [asset, points] of Object.entries(file.series) as Array<
+    [AssetClass, StationPoint[]]
+  >) {
+    series[asset] = points.flatMap((p) => {
+      const rate1 = convertAt(1, p.period)
+      if (rate1 === null) return []
+      const cv = (v: number) => v * rate1
+      return [
+        {
+          ...p,
+          stock: cv(p.stock),
+          stock_lower: p.stock_lower !== undefined ? cv(p.stock_lower) : undefined,
+          stock_upper: p.stock_upper !== undefined ? cv(p.stock_upper) : undefined,
+          stock_issuer:
+            p.stock_issuer !== undefined ? cv(p.stock_issuer) : undefined,
+          flow_in: cv(p.flow_in),
+          flow_out: cv(p.flow_out),
+          valuation: cv(p.valuation),
+        },
+      ]
+    })
+  }
+  return { ...file, series }
+}
+
 const tabAssets = (file: StationFile, tab: AssetTab): AssetClass[] =>
   tab === 'all' ? assetsPresent(file) : [tab]
 

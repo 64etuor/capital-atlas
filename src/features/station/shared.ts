@@ -126,12 +126,12 @@ export function periodAxis(periods: readonly PeriodKey[]) {
   }
 }
 
-export function usdAxis() {
+export function usdAxis(fmt?: (v: number, digits?: number) => string) {
   return {
     type: 'value' as const,
     axisLabel: {
       ...monoAxisLabel(),
-      formatter: (v: number) => formatUsd(v, 0),
+      formatter: (v: number) => (fmt ?? formatUsd)(v, 0),
     },
     axisLine: { show: false },
     splitLine: {

@@ -16,6 +16,7 @@ export interface UrlState {
   basis?: Basis
   measure?: MeasureType
   vis?: 'est' | 'obs'
+  curr?: 'usd' | 'lcu'
   lang?: 'en' | 'ko'
 }
 
@@ -54,6 +55,8 @@ export function parseUrlState(search: string): UrlState {
   if (measure && MEASURES.has(measure)) out.measure = measure as MeasureType
   const vis = p.get('vis')
   if (vis === 'est' || vis === 'obs') out.vis = vis
+  const curr = p.get('curr')
+  if (curr === 'usd' || curr === 'lcu') out.curr = curr
   const lang = p.get('lang')
   if (lang === 'en' || lang === 'ko') out.lang = lang
   return out
@@ -71,6 +74,7 @@ export function serializeUrlState(s: Required<Omit<UrlState, 'country'>> & {
   if (s.basis !== 'owner') p.set('basis', s.basis)
   if (s.measure !== 'stock') p.set('measure', s.measure)
   if (s.vis !== 'est') p.set('vis', s.vis)
+  if (s.curr !== 'usd') p.set('curr', s.curr)
   if (s.lang !== 'en') p.set('lang', s.lang)
   const q = p.toString()
   return q ? `?${q}` : ''
@@ -88,6 +92,7 @@ export function applyUrlState(store: ViewStore): void {
     basis: u.basis ?? prev.basis,
     measure: u.measure ?? prev.measure,
     includeEstimates: u.vis ? u.vis === 'est' : prev.includeEstimates,
+    currency: u.curr ?? prev.currency,
     periodIndex: u.period
       ? Math.min(
           Math.max(indexFromPeriod(u.period as never), 0),
@@ -112,6 +117,7 @@ export function startUrlSync(store: ViewStore): void {
         basis: s.basis,
         measure: s.measure,
         vis: s.includeEstimates ? 'est' : 'obs',
+        curr: s.currency,
         lang: i18n.language === 'ko' ? 'ko' : 'en',
       }) || window.location.pathname
     if (window.location.search !== (next.startsWith('?') ? next : '')) {

@@ -37,11 +37,13 @@
       "flow": "Transaction flows",
       "valuation": "Valuation changes",
       "turnover": "Turnover",
-      "usd_current": "Current USD",
-      "usd_constant_fx": "USD fx-fixed",
+      "usd": "US dollars",
+      "lcu": "Local currency (selected station)",
       "est": "Observed + estimated",
       "obs": "Observed only"
-    }
+    },
+    "lcuMixed": "MIXED CURRENCIES — USD ONLY",
+    "lcuNoFx": "NO FX SERIES — USD ONLY"
   },
   "report": {
     "title": "OBSERVATION REPORT",

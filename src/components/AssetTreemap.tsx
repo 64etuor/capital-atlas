@@ -25,9 +25,12 @@ const LABEL_MIN_SHARE = 0.08
 export function AssetTreemap({
   items,
   onPick,
+  fmt = formatUsd,
 }: {
   items: TreemapItem[]
   onPick: (asset: AssetClass) => void
+  /** Phase L: LCU 표시 포맷터 (기본 USD) */
+  fmt?: (v: number, digits?: number) => string
 }) {
   const holder = useRef<HTMLDivElement>(null)
   const pickRef = useRef(onPick)
@@ -63,7 +66,7 @@ export function AssetTreemap({
         extraCssText: 'border-radius:0;box-shadow:none;',
         // §14 자산 비중 % 병기 — hover 승격 원칙(UX_RESEARCH P1)
         formatter: (p: { name: string; value: number }) =>
-          `${p.name.toUpperCase()} · ${formatUsd(p.value, 1)} · ${((p.value / total) * 100).toFixed(1)}%`,
+          `${p.name.toUpperCase()} · ${fmt(p.value, 1)} · ${((p.value / total) * 100).toFixed(1)}%`,
       },
       series: [
         {
@@ -86,7 +89,7 @@ export function AssetTreemap({
             lineHeight: 14,
             color: rgbaCss(paper, 0.92),
             formatter: (p: { name: string; value: number }) =>
-              `${p.name.toUpperCase()}\n${formatUsd(p.value, 1)}`,
+              `${p.name.toUpperCase()}\n${fmt(p.value, 1)}`,
           },
           data: items.map((i) => {
             const base = pressureColor(0.25 + scale(i.value) * 0.6)
@@ -114,7 +117,7 @@ export function AssetTreemap({
       ro.disconnect()
       chart.dispose()
     }
-  }, [items])
+  }, [items, fmt])
 
   return <div ref={holder} className="h-44 w-full" />
 }

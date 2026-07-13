@@ -52,7 +52,7 @@ export const useViewStore = create<ViewState>()((set) => ({
   appView: 'globe',
   basis: 'owner',
   measure: 'stock',
-  currency: 'usd_current',
+  currency: 'usd',
   includeEstimates: true,
   periodIndex: periodCount() - 1,
   selectedCountry: null,

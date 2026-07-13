@@ -22,6 +22,8 @@ interface Props {
   onTab: (asset: AssetClass) => void
   mode: CompositionMode
   onMode: (m: CompositionMode) => void
+  /** Phase L: LCU 표시 — 이미 변환된 수의 포맷터 (기본 USD) */
+  fmtNet?: (v: number, digits?: number) => string
 }
 
 const H = 30 // viewBox height
@@ -34,6 +36,7 @@ export function SmallMultiples({
   onTab,
   mode,
   onMode,
+  fmtNet = formatUsdNet,
 }: Props) {
   const { t } = useTranslation()
   const [sharedY, setSharedY] = useState(true)
@@ -116,7 +119,7 @@ export function SmallMultiples({
                 {ASSET_ABBR[asset]}
               </span>
               <span className="readout text-[9px] text-paper-dim/60">
-                {latestNet === null ? '—' : formatUsdNet(latestNet)}
+                {latestNet === null ? '—' : fmtNet(latestNet)}
               </span>
             </span>
             {empty ? (

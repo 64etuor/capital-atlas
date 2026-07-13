@@ -1,6 +1,8 @@
+import { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useViewStore } from '../store/viewStore'
-import type { Basis, CurrencyView, MeasureType } from '../types/data'
+import { getFxRates } from '../lib/dataClient'
+import type { Basis, CurrencyView, FxRatesFile, MeasureType } from '../types/data'
 
 interface DialOption<T extends string> {
   value: T
@@ -12,50 +14,81 @@ interface DialProps<T extends string> {
   options: readonly DialOption<T>[]
   value: T
   onChange: (value: T) => void
+  /** 사용 불가 옵션 → 사유 (회색+hover 사유 — OECD 패턴, 숨기지 않는다) */
+  disabledValues?: Partial<Record<T, string>>
 }
 
 /**
  * 계기 다이얼 (DESIGN.md §5) — 접힌 상태는 mono 약어, hover/focus 시 좌측으로
- * 트레이 확장. 다이얼 면 클릭 = 다음 값으로 스텝(키보드 Enter 포함).
+ * 트레이 확장. 다이얼 면 클릭 = 다음 "가용" 값으로 스텝(키보드 Enter 포함).
  */
-function Dial<T extends string>({ label, options, value, onChange }: DialProps<T>) {
+function Dial<T extends string>({
+  label,
+  options,
+  value,
+  onChange,
+  disabledValues,
+}: DialProps<T>) {
   const { t } = useTranslation()
   const idx = options.findIndex((o) => o.value === value)
   const current = options[idx]
+  const currentReason = disabledValues?.[current.value]
+  const step = () => {
+    for (let i = 1; i <= options.length; i++) {
+      const next = options[(idx + i) % options.length]
+      if (!disabledValues?.[next.value]) {
+        if (next.value !== value) onChange(next.value)
+        return
+      }
+    }
+  }
 
   return (
     <div className="group relative flex items-center justify-end">
       {/* expanded tray */}
       <div className="pointer-events-none absolute right-full mr-2 flex items-center gap-px opacity-0 transition-opacity duration-140 group-focus-within:pointer-events-auto group-focus-within:opacity-100 group-hover:pointer-events-auto group-hover:opacity-100">
-        {options.map((opt) => (
-          <button
-            key={opt.value}
-            type="button"
-            onClick={() => onChange(opt.value)}
-            aria-pressed={opt.value === value}
-            className={
-              'dial-label whitespace-nowrap border-y border-paper/10 bg-ink-1/90 px-2.5 py-1.5 transition-colors duration-140 ' +
-              (opt.value === value
-                ? 'text-flow-in'
-                : 'text-paper-dim hover:text-paper')
-            }
-          >
-            {t(`cluster.opts.${opt.value}`)}
-          </button>
-        ))}
+        {options.map((opt) => {
+          const reason = disabledValues?.[opt.value]
+          return (
+            <button
+              key={opt.value}
+              type="button"
+              onClick={() => !reason && onChange(opt.value)}
+              aria-pressed={opt.value === value}
+              aria-disabled={!!reason}
+              title={reason}
+              className={
+                'dial-label whitespace-nowrap border-y border-paper/10 bg-ink-1/90 px-2.5 py-1.5 transition-colors duration-140 ' +
+                (reason
+                  ? 'cursor-not-allowed text-paper-dim/40'
+                  : opt.value === value
+                    ? 'text-flow-in'
+                    : 'text-paper-dim hover:text-paper')
+              }
+            >
+              {t(`cluster.opts.${opt.value}`)}
+            </button>
+          )
+        })}
       </div>
 
-      {/* dial face — click/Enter steps to the next value */}
+      {/* dial face — click/Enter steps to the next available value */}
       <button
         type="button"
-        onClick={() => onChange(options[(idx + 1) % options.length].value)}
+        onClick={step}
+        title={currentReason}
         aria-label={t('cluster.optionAria', { label, text: t(`cluster.opts.${current.value}`) })}
         className="w-16 border-y border-paper/10 bg-ink-1/70 py-2 text-center transition-colors duration-140 hover:bg-ink-2/80"
       >
         <span className="dial-label block text-[9px] text-paper-dim/70">
           {label}
         </span>
-        <span className="readout mt-0.5 block text-[13px] tracking-[0.14em] text-paper">
+        <span
+          className={
+            'readout mt-0.5 block text-[13px] tracking-[0.14em] ' +
+            (currentReason ? 'text-paper-dim/40' : 'text-paper')
+          }
+        >
           {current.abbr}
         </span>
       </button>
@@ -77,8 +110,8 @@ const MEASURE: readonly DialOption<MeasureType>[] = [
 ]
 
 const CURRENCY: readonly DialOption<CurrencyView>[] = [
-  { value: 'usd_current', abbr: 'USD' },
-  { value: 'usd_constant_fx', abbr: 'FXD' },
+  { value: 'usd', abbr: 'USD' },
+  { value: 'lcu', abbr: 'LCU' },
 ]
 
 type EstimateView = 'obs' | 'est'
@@ -102,6 +135,35 @@ export function InstrumentCluster() {
   const setCurrency = useViewStore((s) => s.setCurrency)
   const toggleEstimates = useViewStore((s) => s.toggleEstimates)
 
+  // LCU 가용성 (Phase L): 국가 스코프 + 환율 시계열 보유국에서만.
+  // 불가 시 회색+사유 — 숨기지 않는다(OECD 패턴). 스토어 값은 보존.
+  const appView = useViewStore((s) => s.appView)
+  const selectedCountry = useViewStore((s) => s.selectedCountry)
+  const [fx, setFx] = useState<FxRatesFile | null>(null)
+  useEffect(() => {
+    let alive = true
+    getFxRates()
+      .then((f) => {
+        if (alive) setFx(f)
+      })
+      .catch(() => {
+        /* nofx 사유로 표시될 뿐 — USD 표시는 무영향 */
+      })
+    return () => {
+      alive = false
+    }
+  }, [])
+  const countryScope = appView !== 'synoptic' && selectedCountry !== null
+  const lcuReason = !countryScope
+    ? t('cluster.lcuMixed')
+    : fx && !fx.countries[selectedCountry]
+      ? t('cluster.lcuNoFx')
+      : fx
+        ? undefined
+        : t('cluster.lcuNoFx')
+  const currencyDisabled: Partial<Record<CurrencyView, string>> | undefined =
+    lcuReason ? { lcu: lcuReason } : undefined
+
   return (
     <nav
       data-tour="cluster"
@@ -124,6 +186,7 @@ export function InstrumentCluster() {
         options={CURRENCY}
         value={currency}
         onChange={setCurrency}
+        disabledValues={currencyDisabled}
       />
       <Dial
         label={t('cluster.labels.estimates')}
