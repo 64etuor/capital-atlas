@@ -1,0 +1,54 @@
+src/components/LineageDossier.tsx
+  s_e47a5eda862f84::t_6fe6cd871eae2f 72-75,83-84,87-89,91-92,95-96,100-101,106-110
+  s_e47a5eda862f84::t_7751581cdc9695 3,8-46
+  s_e47a5eda862f84::t_3b5d161cc36ab4 236-253
+  s_e47a5eda862f84::t_387b0de71ad2e4 85-86,90,93-94,97-99,102-105
+  s_e47a5eda862f84::t_40087d0c024f5d 111
+  s_e47a5eda862f84::t_1ccd0c3983eee8 254-255
+README.md
+  s_e47a5eda862f84::t_5d9ca03ee4cb2f 71,74-80
+  s_e47a5eda862f84::t_3c7b70b4f41b3c 92-106
+  s_85e824578be646::t_c395ed2934a806 107
+src/components/ObservationReport.tsx
+  s_e47a5eda862f84::t_6b83197af2c4f1 218-226
+src/types/dossier.ts
+  s_e47a5eda862f84::t_d148914e24eee8 21-30
+docs/DATA_CONTRACT.md
+  s_e47a5eda862f84::t_c18ef2b6053dd0 252-277
+src/features/station/LedgerTable.tsx
+  s_e47a5eda862f84::t_b140ac8e6b8248 35
+  s_e47a5eda862f84::t_35d4d76977e908 24-25
+  s_e47a5eda862f84::t_bb1b896ea1a2dc 72-81
+src/lib/dataClient.ts
+  s_e47a5eda862f84::t_73a1d6e3b30d12 99-107
+  s_e47a5eda862f84::t_f9fe294aae3eb9 19-20
+  s_e47a5eda862f84::t_24dc39fc31dfb9 108
+src/i18n/en.json
+  s_e47a5eda862f84::t_247cbfdf537469 95-96,105-108
+src/i18n/ko.json
+  s_e47a5eda862f84::t_56c47a4beb73db 95-96,105-108
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.13",
+  "base_commit_sha": "363c6a7848879b5729863b6378c23332a7a5c92d",
+  "prompts": {},
+  "sessions": {
+    "s_85e824578be646": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "019f5b82-7912-7f41-8edd-b8c26c3d836d",
+        "model": "gpt-5.6-sol"
+      },
+      "human_author": "64etuor <130260521+64etuor@users.noreply.github.com>"
+    },
+    "s_e47a5eda862f84": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "a46a31a4-8363-4a90-b740-7e96b4bf3615",
+        "model": "claude-fable-5"
+      },
+      "human_author": "64etuor <130260521+64etuor@users.noreply.github.com>"
+    }
+  }
+}
