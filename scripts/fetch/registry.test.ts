@@ -60,6 +60,8 @@ describe('SOURCE_REGISTRY — shape and classification', () => {
     expect(mode('imf_bop')).toBe('batch_official')
     expect(mode('imf_pip')).toBe('batch_official')
     expect(cadence('imf_pip')).toBe('annual')
+    expect(mode('imf_iipcc')).toBe('batch_official')
+    expect(cadence('imf_iipcc')).toBe('quarterly')
     expect(mode('wb_wdi')).toBe('batch_official')
     // 파이프라인 내부 파생 모델 — 수집이 아니라 계산
     expect(mode('model_regional_median')).toBe('derived_model')

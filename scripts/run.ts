@@ -5,6 +5,7 @@
 import { run as runCountries } from './fetch/countries.ts'
 import { run as runWorldBank } from './fetch/worldbank.ts'
 import { runIip, runBop, runPip } from './fetch/imf.ts'
+import { runIipcc, runPipExposure } from './fetch/imf-exposure.ts'
 import { run as runCrypto } from './fetch/crypto.ts'
 import { runFx } from './fetch/fx.ts'
 import { runBis } from './fetch/bis.ts'
@@ -21,6 +22,7 @@ const wb = await runWorldBank(new Set(iso3s))
 const iip = await runIip(iso3s)
 const bop = await runBop(iso3s)
 const pip = await runPip(iso3s)
+await Promise.all([runIipcc(iso3s), runPipExposure(iso3s)])
 const cryptoOk = await runCrypto()
 await runFx(iso3s) // Phase L: CURR=LCU 다이얼 근거 (실패는 failures에 기록)
 

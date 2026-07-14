@@ -78,6 +78,16 @@ export const SOURCE_REGISTRY: readonly SourceDef[] = [
     expected_release_lag: '~2–3 quarters after year end',
   },
   {
+    source_id: 'imf_iipcc',
+    name: 'Currency Composition of the International Investment Position (IIPCC)',
+    publisher: 'IMF',
+    url: 'https://api.imf.org/external/sdmx/2.1/data/IMF.STA,IIPCC',
+    license_note: 'IMF terms — attribution',
+    collection_mode: 'batch_official',
+    update_frequency: 'quarterly',
+    expected_release_lag: '~1–3 quarters after period end; reporting coverage varies',
+  },
+  {
     source_id: 'imf_ifs_fx',
     name: 'Exchange Rates (ER, IFS successor) — end-of-period LCU per USD',
     publisher: 'IMF',
