@@ -1,0 +1,54 @@
+src/i18n/ko.json
+  s_6cfe0f5f25d4e5::t_3d65637130a2c6 14-16
+src/App.tsx
+  s_6cfe0f5f25d4e5::t_406a0952f76aa8 12,20
+src/types/data.ts
+  s_6cfe0f5f25d4e5::t_238eb2f78dd732 172-179
+src/components/NowcastStrip.tsx
+  s_6cfe0f5f25d4e5::t_18a5e6835b68d2 82
+  s_6cfe0f5f25d4e5::t_3d65637130a2c6 7,20,69
+  s_6cfe0f5f25d4e5::t_406a0952f76aa8 1-6,8-19,21-68,70-81,83-107
+src/components/LineageDossier.tsx
+  s_6cfe0f5f25d4e5::t_18a5e6835b68d2 333,335
+scripts/fetch/registry.ts
+  s_6cfe0f5f25d4e5::t_18a5e6835b68d2 179
+src/i18n/en.json
+  s_6cfe0f5f25d4e5::t_3d65637130a2c6 14-16
+src/lib/dataClient.ts
+  s_6cfe0f5f25d4e5::t_238eb2f78dd732 12,104-105
+  s_7afcdb75c5c55c::t_d5bd48d2004c3b 106
+src/types/dossier.ts
+  s_6cfe0f5f25d4e5::t_18a5e6835b68d2 20-21
+src/lib/nowcast.ts
+  s_6cfe0f5f25d4e5::t_18a5e6835b68d2 12,59
+  s_6cfe0f5f25d4e5::t_238eb2f78dd732 1-11,13-58,60-93
+src/lib/nowcast.test.ts
+  s_6cfe0f5f25d4e5::t_18a5e6835b68d2 26
+  s_6cfe0f5f25d4e5::t_0242c3f54ed26c 1-25,27-93
+public/data/meta/sources.json
+  s_6cfe0f5f25d4e5::t_2ae485b0c299dd 1
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.13",
+  "base_commit_sha": "df014163da8d02f03bc4ac0916a65edb63f7e683",
+  "prompts": {},
+  "sessions": {
+    "s_6cfe0f5f25d4e5": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "019f5c0a-f294-78b2-af01-6c5483dbfcbe",
+        "model": "gpt-5.6-sol"
+      },
+      "human_author": "64etuor <130260521+64etuor@users.noreply.github.com>"
+    },
+    "s_7afcdb75c5c55c": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "019f5e96-cc10-7b11-8b04-c27a97550e70",
+        "model": "gpt-5.6-terra"
+      },
+      "human_author": "64etuor <130260521+64etuor@users.noreply.github.com>"
+    }
+  }
+}
