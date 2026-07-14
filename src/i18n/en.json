@@ -138,6 +138,22 @@
     "sharedYAria": "Toggle shared y-scale across multiples",
     "multiplesNoFlow": "NO FLOW OBSERVATIONS",
     "multipleAria": "Open {{asset}} asset detail",
+    "exposure": {
+      "aria": "Currency, sector and modeled exposure observatory",
+      "world": "EXPOSURE — SELECT A COUNTRY STATION",
+      "loading": "PREPARING EXPOSURE OBSERVATION",
+      "absent": "NO EXPOSURE FILE FOR THIS STATION",
+      "obs": "DIRECT OBSERVATIONS ONLY",
+      "est": "DIRECT + EXPLICIT DERIVATIONS",
+      "currency": "CURRENCY · DIRECT A",
+      "sector": "SECTOR · DIRECT A",
+      "derived": "FXD / LIABILITY · DERIVED",
+      "noCurrency": "NO DIRECT IIP CURRENCY COMPOSITION",
+      "noSector": "NO DIRECT PIP SECTOR OBSERVATION",
+      "derivedHidden": "DERIVATIONS HIDDEN — OBSERVED ONLY",
+      "noDerived": "NO COVERAGE-GATED DERIVATION",
+      "unavailable": "UNAVAILABLE"
+    },
     "realloc": {
       "aria": "Asset-to-asset reallocation model matrix",
       "hiddenObs": "MODEL ALLOCATION HIDDEN — OBSERVED ONLY",

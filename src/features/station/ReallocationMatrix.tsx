@@ -150,6 +150,7 @@ export function ReallocationMatrix({
       method: 'max_entropy_flow_allocation_ipf',
       lower_bound: c.lower,
       upper_bound: c.upper,
+      range_label: 'Fréchet bounds',
       source_ids: ['model_flow_reallocation', 'imf_bop'],
       context: [
         ['Margins', t('station.realloc.marginsNote')],

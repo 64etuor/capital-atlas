@@ -69,12 +69,11 @@ export function rasClose(
   const rowMargins = cleanMargins(rawRows)
   const columnMargins = cleanMargins(rawColumns)
   let rowTotal = sumValues(rowMargins)
-  let columnTotal = sumValues(columnMargins)
+  const columnTotal = sumValues(columnMargins)
   if (rowTotal <= 0 || columnTotal <= 0)
     throw new Error('RAS requires positive row and column margins')
   if (rowTotal > columnTotal) {
     columnMargins[DISCREPANCY_ISSUER] = rowTotal - columnTotal
-    columnTotal = rowTotal
   } else if (columnTotal > rowTotal) {
     rowMargins[DISCREPANCY_OWNER] = columnTotal - rowTotal
     rowTotal = columnTotal

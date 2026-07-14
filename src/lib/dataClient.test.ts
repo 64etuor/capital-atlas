@@ -175,6 +175,27 @@ describe('shard cache bound — timeline scrubbing must not grow memory forever'
     expect(fetchMock).toHaveBeenCalledTimes(base + max + 2)
   })
 
+  it('exposure and position-closure files are bounded shards while their indexes stay pinned', async () => {
+    const client = await freshClient()
+    const fetchMock = vi.fn().mockResolvedValue(okJson({}))
+    vi.stubGlobal('fetch', fetchMock)
+    await client.getExposureIndex()
+    await client.getPositionClosureIndex()
+    await client.getExposure('KOR')
+    await client.getPositionClosure(q('2024-Q4'))
+    expect(fetchMock.mock.calls.map(([path]) => path)).toEqual([
+      '/data/exposure/index.json',
+      '/data/position_closure/index.json',
+      '/data/exposure/KOR.json',
+      '/data/position_closure/2024-Q4.json',
+    ])
+    await client.getExposureIndex()
+    await client.getPositionClosureIndex()
+    await client.getExposure('KOR')
+    await client.getPositionClosure(q('2024-Q4'))
+    expect(fetchMock).toHaveBeenCalledTimes(4)
+  })
+
   it('never evicts pinned meta files (index/countries/geometry/sources)', async () => {
     const client = await freshClient()
     const fetchMock = vi.fn().mockResolvedValue(okJson({ periods: {} }))

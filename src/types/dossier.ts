@@ -14,6 +14,8 @@ export interface DossierPayload {
   method?: string
   lower_bound?: number
   upper_bound?: number
+  /** Meaning of the interval; omit only when the source contract defines a 95% range. */
+  range_label?: string
   effective_date?: string
   source_ids: string[]
   /** extra context rows rendered as-is: [label, value] */

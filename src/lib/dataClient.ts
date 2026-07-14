@@ -6,6 +6,8 @@ import type {
   Basis,
   BilateralFile,
   CountryMaster,
+  CountryExposureFile,
+  ExposureIndexFile,
   FlowIntensityFile,
   FlowMatrixFile,
   FlowMatrixIndexFile,
@@ -13,6 +15,8 @@ import type {
   FxRatesFile,
   PeriodIndexFile,
   PeriodKey,
+  PositionClosureFile,
+  PositionClosureIndexFile,
   ReconciliationShard,
   SourceRegistryEntry,
   StationFile,
@@ -49,7 +53,7 @@ export const MAX_SHARD_CACHE = 16
 
 const isShardPath = (path: string) =>
   /^\/data\/(stocks_|flows_)/.test(path) ||
-  (/^\/data\/(station|flowmatrix|reconciliation)\//.test(path) &&
+  (/^\/data\/(station|flowmatrix|reconciliation|exposure|position_closure)\//.test(path) &&
     !path.endsWith('/index.json'))
 
 const inflight = new Map<string, Promise<unknown>>()
@@ -120,6 +124,19 @@ export const getStationIndex = () =>
 /** STATION 국가 파일 — 샤드 취급(LRU 대상). 'WLD' = 세계 집계 */
 export const getStation = (iso3: string) =>
   fetchJson<StationFile>(`/data/station/${iso3}.json`)
+
+/** v3 direct currency/sector observations and explicitly graded derivations. */
+export const getExposureIndex = () =>
+  fetchJson<ExposureIndexFile>('/data/exposure/index.json')
+
+export const getExposure = (iso3: string) =>
+  fetchJson<CountryExposureFile>(`/data/exposure/${iso3}.json`)
+
+export const getPositionClosureIndex = () =>
+  fetchJson<PositionClosureIndexFile>('/data/position_closure/index.json')
+
+export const getPositionClosure = (period: PeriodKey) =>
+  fetchJson<PositionClosureFile>(`/data/position_closure/${period}.json`)
 
 /** Phase O — 자산 간 재배분 행렬 인덱스(가용 분기) — 핀 고정 */
 export const getFlowMatrixIndex = () =>

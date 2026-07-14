@@ -44,6 +44,7 @@ import { StockBandChart } from './StockBandChart'
 import { PartnerMatrix } from './PartnerMatrix'
 import { LedgerTable } from './LedgerTable'
 import { GaugeStrip, type Gauge } from './GaugeStrip'
+import { ExposurePanel } from './ExposurePanel'
 import {
   assetsPresent,
   concentrationAt,
@@ -685,16 +686,26 @@ function StationBody({
               />
             )}
           </div>
-          <PartnerMatrix
-            sides={partnerSides}
-            effPeriod={partnerEff}
-            iso3={iso}
-            assetLabel="ALL ASSETS"
-            observedOnly={observedOnly}
-            emptyHint={partnerEmpty}
-            fmt={(v, d) => money.fmtAt(v, partnerEff ?? period, d)}
-            fxRows={(v) => money.fxRows(v, partnerEff ?? period)}
-          />
+          <div className="grid min-h-0 grid-rows-[minmax(0,1fr)_minmax(148px,0.62fr)] gap-3">
+            <PartnerMatrix
+              sides={partnerSides}
+              effPeriod={partnerEff}
+              iso3={iso}
+              assetLabel="ALL ASSETS"
+              observedOnly={observedOnly}
+              emptyHint={partnerEmpty}
+              fmt={(v, d) => money.fmtAt(v, partnerEff ?? period, d)}
+              fxRows={(v) => money.fxRows(v, partnerEff ?? period)}
+            />
+            <ExposurePanel
+              iso={iso}
+              name={name}
+              period={period}
+              asset={tab}
+              observedOnly={observedOnly}
+              openDossier={openDossier}
+            />
+          </div>
         </div>
       ) : (
         <div className="grid min-h-0 flex-1 grid-cols-[minmax(0,7fr)_minmax(0,5fr)] gap-8">
@@ -740,7 +751,7 @@ function StationBody({
               fmtValue={money.display}
             />
           </div>
-          <div className="grid min-h-0 grid-rows-[minmax(0,1fr)_minmax(0,1fr)] gap-3">
+          <div className="grid min-h-0 grid-rows-[minmax(0,1fr)_minmax(148px,0.85fr)_minmax(0,1fr)] gap-3">
             <PartnerMatrix
               sides={partnerSides}
               effPeriod={partnerEff}
@@ -751,6 +762,14 @@ function StationBody({
               fmt={(v, d) => money.fmtAt(v, partnerEff ?? period, d)}
               fxRows={(v) => money.fxRows(v, partnerEff ?? period)}
               asset={tab}
+            />
+            <ExposurePanel
+              iso={iso}
+              name={name}
+              period={period}
+              asset={tab}
+              observedOnly={observedOnly}
+              openDossier={openDossier}
             />
             <LedgerTable
               points={
