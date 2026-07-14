@@ -290,7 +290,7 @@ export function LineageDossier() {
           <Row label={t('dossier.rows.range')}>
             {payload.lower_bound !== undefined &&
             payload.upper_bound !== undefined
-              ? `${formatUsd(payload.lower_bound)} — ${formatUsd(payload.upper_bound)} (95%)`
+              ? `${formatUsd(payload.lower_bound)} — ${formatUsd(payload.upper_bound)} (${payload.range_label ?? '95%'})`
               : t('dossier.observedValue')}
           </Row>
           {payload.effective_date && (

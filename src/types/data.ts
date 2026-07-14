@@ -351,6 +351,10 @@ export interface PositionClosureFile {
   assets: Partial<Record<'listed_equity' | 'debt_securities', PositionClosureAsset>>
 }
 
+export interface PositionClosureIndexFile {
+  periods: PeriodKey[]
+}
+
 // ------------------------------------------------------------- synoptic ----
 
 /**

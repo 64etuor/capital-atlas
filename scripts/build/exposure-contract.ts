@@ -5,7 +5,7 @@ const isoDate = z.string().regex(/^\d{4}-\d{2}-\d{2}$/)
 const iso3 = z.string().length(3)
 const coverage = z.number().finite().min(0).max(1)
 
-const directLineage = z.object({
+const directLineage = z.strictObject({
   source_id: z.string().min(1),
   effective_date: isoDate,
   confidence_grade: z.literal('A'),
@@ -20,7 +20,6 @@ export const currencyExposureRecordSchema = directLineage
     currency: z.enum(['TOTAL', 'USD', 'EUR', 'JPY', 'XDC', 'OTHC', 'UALLC']),
     value_usd: z.number().finite(),
   })
-  .strict()
 
 export const sectorPositionRecordSchema = directLineage
   .extend({
@@ -43,10 +42,9 @@ export const sectorPositionRecordSchema = directLineage
     asset: z.enum(['listed_equity', 'debt_securities']),
     value_usd: z.number().finite(),
   })
-  .strict()
 
 const fxdAvailable = z
-  .object({
+  .strictObject({
     status: z.literal('available'),
     period,
     base_period: period,
@@ -61,14 +59,13 @@ const fxdAvailable = z
     lower_bound: z.number().finite(),
     upper_bound: z.number().finite(),
   })
-  .strict()
   .refine(
     (row) => row.lower_bound <= row.value_usd && row.value_usd <= row.upper_bound,
     { message: 'FXD value must lie inside its finite range' },
   )
 
 const fxdUnavailable = z
-  .object({
+  .strictObject({
     status: z.literal('unavailable'),
     period,
     base_period: period,
@@ -77,7 +74,6 @@ const fxdUnavailable = z
     source_ids: z.array(z.string().min(1)).min(1),
     reason: z.string().trim().min(1),
   })
-  .strict()
 
 export const fxdResultSchema = z.discriminatedUnion('status', [
   fxdAvailable,
@@ -85,7 +81,7 @@ export const fxdResultSchema = z.discriminatedUnion('status', [
 ])
 
 export const positionClosureCellSchema = z
-  .object({
+  .strictObject({
     owner_country: z.union([iso3, z.literal('discrepancy_owner')]),
     issuer_country: z.union([iso3, z.literal('discrepancy_issuer')]),
     asset: z.enum(['listed_equity', 'debt_securities']),
@@ -99,14 +95,13 @@ export const positionClosureCellSchema = z
     effective_date: isoDate,
     source_ids: z.array(z.string().min(1)).min(2),
   })
-  .strict()
   .refine(
     (row) => row.lower_bound <= row.value_usd && row.value_usd <= row.upper_bound,
     { message: 'closure value must lie inside its Fréchet range' },
   )
 
 export const reconstructedLiabilitySchema = z
-  .object({
+  .strictObject({
     country: iso3,
     period,
     asset: z.enum(['listed_equity', 'debt_securities']),
@@ -121,7 +116,6 @@ export const reconstructedLiabilitySchema = z
     upper_bound: z.number().finite().nonnegative(),
     coverage_share: coverage,
   })
-  .strict()
   .refine(
     (row) => row.lower_bound <= row.value_usd && row.value_usd <= row.upper_bound,
     { message: 'reconstructed liability must lie inside its reconciliation range' },

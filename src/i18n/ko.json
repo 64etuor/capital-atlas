@@ -138,6 +138,22 @@
     "sharedYAria": "멀티플 공유 y-스케일 전환",
     "multiplesNoFlow": "흐름 관측 없음",
     "multipleAria": "{{asset}} 자산 상세 열기",
+    "exposure": {
+      "aria": "통화·부문·모델 노출 관측소",
+      "world": "노출 — 국가 관측소를 선택하세요",
+      "loading": "노출 관측 준비 중",
+      "absent": "이 관측소의 노출 파일 없음",
+      "obs": "직접 관측만",
+      "est": "직접 관측 + 명시적 파생",
+      "currency": "통화 · 직접 A",
+      "sector": "부문 · 직접 A",
+      "derived": "FXD / 부채 · 파생",
+      "noCurrency": "직접 IIP 통화구성 없음",
+      "noSector": "직접 PIP 부문 관측 없음",
+      "derivedHidden": "파생치 숨김 — 관측만 모드",
+      "noDerived": "커버리지 게이트를 통과한 파생치 없음",
+      "unavailable": "산출 불가"
+    },
     "realloc": {
       "aria": "자산 간 재배분 모델 행렬",
       "hiddenObs": "모델 배분 숨김 — 관측만 모드",
