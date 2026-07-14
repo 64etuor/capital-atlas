@@ -47,17 +47,43 @@ export function exposureAt(
       }
 }
 
-export function closureCellsForCountry(
+export interface ClosurePublication {
+  cells: PositionClosureCell[]
+  total_cells: number
+  published_cells: number
+  omitted_cells: number
+  omitted_value_usd: number
+}
+
+export function closurePublicationForCountry(
   file: PositionClosureFile,
   iso3: string,
   observedOnly: boolean,
   asset?: 'listed_equity' | 'debt_securities',
-): PositionClosureCell[] {
-  if (observedOnly) return []
-  const cells = Object.entries(file.assets).flatMap(([key, result]) =>
-    !result || (asset !== undefined && key !== asset) ? [] : result.cells,
+): ClosurePublication {
+  if (observedOnly)
+    return {
+      cells: [],
+      total_cells: 0,
+      published_cells: 0,
+      omitted_cells: 0,
+      omitted_value_usd: 0,
+    }
+  const results = Object.entries(file.assets).flatMap(([key, result]) =>
+    !result || (asset !== undefined && key !== asset) ? [] : [result],
   )
-  return cells
+  const published = results.flatMap((result) => result.cells)
+  const cells = published
     .filter((cell) => cell.owner_country === iso3 || cell.issuer_country === iso3)
     .sort((a, b) => b.value_usd - a.value_usd)
+  return {
+    cells,
+    total_cells: results.reduce((sum, result) => sum + result.total_cells, 0),
+    published_cells: published.length,
+    omitted_cells: results.reduce((sum, result) => sum + result.omitted_cells, 0),
+    omitted_value_usd: results.reduce(
+      (sum, result) => sum + result.omitted_value_usd,
+      0,
+    ),
+  }
 }

@@ -3,7 +3,7 @@ import type {
   CountryExposureFile,
   PositionClosureFile,
 } from '../../types/data'
-import { closureCellsForCountry, exposureAt } from './exposure'
+import { closurePublicationForCountry, exposureAt } from './exposure'
 
 const exposure: CountryExposureFile = {
   country: 'KOR',
@@ -91,7 +91,7 @@ describe('exposureAt — no implied precision across exposure families', () => {
   })
 })
 
-describe('closureCellsForCountry — grade-E visibility gate', () => {
+describe('closurePublicationForCountry — grade-E visibility gate', () => {
   const file: PositionClosureFile = {
     period: '2024-Q4',
     method: 'biproportional_ras_position_closure',
@@ -127,7 +127,22 @@ describe('closureCellsForCountry — grade-E visibility gate', () => {
   }
 
   it('returns modeled corridors only when estimates are enabled', () => {
-    expect(closureCellsForCountry(file, 'KOR', false)).toHaveLength(1)
-    expect(closureCellsForCountry(file, 'KOR', true)).toEqual([])
+    expect(closurePublicationForCountry(file, 'KOR', false).cells).toHaveLength(1)
+    expect(closurePublicationForCountry(file, 'KOR', true).cells).toEqual([])
+  })
+
+  it('discloses an omitted matrix tail even when this country has no published cell', () => {
+    const result = file.assets.listed_equity!
+    result.total_cells = 1010
+    result.omitted_cells = 1009
+    result.omitted_value_usd = 25
+
+    expect(closurePublicationForCountry(file, 'JPN', false)).toEqual({
+      cells: [],
+      total_cells: 1010,
+      published_cells: 1,
+      omitted_cells: 1009,
+      omitted_value_usd: 25,
+    })
   })
 })

@@ -22,7 +22,11 @@ import type {
   SectorPositionRecord,
 } from '../../types/data'
 import type { DossierPayload } from '../../types/dossier'
-import { closureCellsForCountry, exposureAt } from './exposure'
+import {
+  closurePublicationForCountry,
+  exposureAt,
+  type ClosurePublication,
+} from './exposure'
 import type { AssetTab } from './AssetRail'
 
 interface Props {
@@ -168,7 +172,11 @@ const reconstructedDossier = (
   ],
 })
 
-const closureDossier = (row: PositionClosureCell, name: string): DossierPayload => ({
+const closureDossier = (
+  row: PositionClosureCell,
+  name: string,
+  publication: ClosurePublication,
+): DossierPayload => ({
   title: `${name} · ${row.owner_country} → ${row.issuer_country} position closure`,
   subtitle: `RAS MODEL · ${row.asset} · ${row.period}`,
   value_usd: row.value_usd,
@@ -183,6 +191,14 @@ const closureDossier = (row: PositionClosureCell, name: string): DossierPayload 
     ['Direct seed coverage', `${(row.coverage_share * 100).toFixed(1)}%`],
     ['Margins', 'IMF IIP assets/liabilities'],
     ['Seed', 'IMF PIP direct bilateral positions'],
+    [
+      'Published matrix',
+      `${publication.published_cells} of ${publication.total_cells} leading cells`,
+    ],
+    [
+      'Omitted tail',
+      `${publication.omitted_cells} cells · ${formatUsd(publication.omitted_value_usd, 1)}`,
+    ],
   ],
 })
 
@@ -264,9 +280,22 @@ export function ExposurePanel({
     .filter((row) => positionAsset === undefined || row.asset === positionAsset)
     .slice(0, 1)
   const closureCurrent = closureLoaded?.key === closureKey ? closureLoaded.file : null
-  const closureRows = closureCurrent
-    ? closureCellsForCountry(closureCurrent, iso, observedOnly, positionAsset).slice(0, 1)
+  const closurePublication = closureCurrent
+    ? closurePublicationForCountry(closureCurrent, iso, observedOnly, positionAsset)
+    : null
+  const closureRows = closureCurrent && closurePublication
+    ? closurePublication.cells.slice(0, 1).map((row) => ({
+        row,
+        publication: closurePublicationForCountry(
+          closureCurrent,
+          iso,
+          false,
+          row.asset,
+        ),
+      }))
     : []
+  const hasOmittedClosureTail =
+    closureRows.length === 0 && (closurePublication?.omitted_cells ?? 0) > 0
 
   const directState =
     iso === 'WLD'
@@ -366,21 +395,27 @@ export function ExposurePanel({
                     onClick={() => openDossier(reconstructedDossier(row, name))}
                   />
                 ))}
-                {closureRows.map((row) => (
+                {closureRows.map(({ row, publication }) => (
                   <FactButton
                     key={`ras|${row.asset}|${row.owner_country}|${row.issuer_country}`}
                     label={`RAS · ${row.owner_country}→${row.issuer_country}`}
                     value={row.value_usd}
                     grade="E"
                     derived
-                    onClick={() => openDossier(closureDossier(row, name))}
+                    onClick={() => openDossier(closureDossier(row, name, publication))}
                   />
                 ))}
-                {fxdRows.length + reconstructedRows.length + closureRows.length === 0 && (
+                {hasOmittedClosureTail && (
+                  <p className="readout border-t border-dashed border-paper/12 py-1 text-[8px] leading-snug text-paper-dim/65">
+                    RAS · NO PUBLISHED CELL FOR COUNTRY — MATRIX TAIL OMITTED
+                  </p>
+                )}
+                {fxdRows.length + reconstructedRows.length + closureRows.length === 0 &&
+                  !hasOmittedClosureTail && (
                   <p className="readout text-[8px] leading-snug text-paper-dim/60">
                     {t('station.exposure.noDerived')}
                   </p>
-                )}
+                  )}
               </>
             )}
           </Column>
