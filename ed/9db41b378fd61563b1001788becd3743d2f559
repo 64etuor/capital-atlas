@@ -1,0 +1,25 @@
+docs/plans/2026-07-14-v3-honesty-contract.md
+  s_6cfe0f5f25d4e5::t_f63f470ae9189f 1-330
+.omx/ultragoal/brief.md
+  s_6cfe0f5f25d4e5::t_38b2abefa1a0e2 1
+.omx/ultragoal/goals.json
+  s_6cfe0f5f25d4e5::t_fb850961c87513 1-23
+.omx/ultragoal/ledger.jsonl
+  s_6cfe0f5f25d4e5::t_783204ea838884 1-2
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.13",
+  "base_commit_sha": "ed9db41b378fd61563b1001788becd3743d2f559",
+  "prompts": {},
+  "sessions": {
+    "s_6cfe0f5f25d4e5": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "019f5c0a-f294-78b2-af01-6c5483dbfcbe",
+        "model": "gpt-5.6-sol"
+      },
+      "human_author": "64etuor <130260521+64etuor@users.noreply.github.com>"
+    }
+  }
+}
