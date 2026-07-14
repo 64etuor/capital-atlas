@@ -248,7 +248,7 @@ live 데이터는 `meta/` 통제값·오버레이 전용.
     top5[{country,share}], gross_usd, n_partners, grade, source_ids, method}.
     **발행 bilateral 샤드 전체에서 계산** — station의 top-15 리스트 기반 계산 금지
     (꼬리 절단 = HHI 과대평가). 단 샤드 자체가 |값|≥$100M 프루닝본인 한계는
-    method 문구에 명시(가치 99.8% 보존).
+    method 문구에 명시하고, 별도로 계산하지 않는 가치 보존율은 주장하지 않는다.
   - WLD: quarterly share_of_world ≡ 1, counterparty = [](세계의 상대국은 정의 불가).
   - 계약 테스트: `scripts/build/concentration.test.ts` (HHI 알려진 분포·KOR 샤드
     독립 재계산 대조·WLD≡1·synoptic 교차).
@@ -332,7 +332,7 @@ normalized 입력과 byte-equivalent row set인지 검사하고, raw cache가 �
 `VintageDigestFile`. 내용: (basis→국가→자산) 최신 관측 `{p,v,g}`, (basis→국가)
 최신분기 총계 `{p,v}`, 글로벌 요약, flow_intensity `(p,v)`. 날짜 =
 `index.generated_at` 날짜부(내부 타임스탬프 없음 = 다이제스트도 결정론적).
-파일당 5MB 조항 준수(현행 ~150KB).
+파일당 5MB 조항을 준수하며 현재 크기는 해당 빈티지 파일이 정본이다.
 
 **REVISIONS 행**(도시에, §15.5): `DossierPayload.revision_key`
 (`{basis, country, asset|'total', period}`)가 있는 수치는 빈티지 다이제스트와
@@ -394,8 +394,8 @@ liabilities(asset=deposits)** 는 같은 방향(owner→issuer) 은행 포지션
   liabilities_usd, gap_usd, gap_share}] }` — (owner,issuer) 정렬. 양쪽 관측이
   모두 있는 쌍만(§12 정신 — 조정하지 않고 기록, 한쪽뿐이면 정직 생략).
 - `meta/reconciliation.json`: 분기별 분포(median/p25/p75 gap_share)·최신 상위
-  gap 10쌍·method/caveat. sanity 게이트: 최신 분기 쌍≥100, 중앙 gap∈(0, 90%)
-  (관대 임계 — gap은 상대국 부문 커버리지 차이가 섞여 수십%가 정상, 실측 ~36%).
+  gap 10쌍·method/caveat. sanity 게이트: 최신 분기 쌍≥100, 중앙 gap∈(0, 90%).
+  현재 중앙값은 이 파일이 정본이며 gap에는 상대국 부문 커버리지 차이가 섞인다.
 - **PIP 직접 관측은 소유자 단방향이라 독립 미러 불가** — v3
   `reconstructed_liabilities`는 상대국 정보 전치 C등급이며 직접 미러를 대체하지 않는다.
 - 프루닝(|값|≥$100M)으로 한쪽이 임계 미만인 쌍은 비교 불가 → 생략(도시에

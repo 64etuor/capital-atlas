@@ -69,9 +69,8 @@ interface BilateralRecord {
 const GENERATED_AT = new Date().toISOString()
 
 /**
- * Bilateral pruning threshold. CPIS's long tail is dust: at $100M we keep
- * 16.4% of records but 99.82% of total value (measured 2026-07-12). Dropped
- * counts are reported — never silently truncated.
+ * Bilateral pruning threshold. Dropped counts are reported — never silently
+ * truncated. Value retention is not computed, so the pipeline does not claim it.
  */
 const BILATERAL_MIN_USD = 1e8
 
@@ -427,7 +426,7 @@ export function assemble({ countries, wb, iip, bop, pip }: AssembleInputs): void
   }
   console.log(
     `[assemble] bilateral pruning <$${BILATERAL_MIN_USD / 1e6}M: ` +
-      `dropped ${biStockDropped} stock + ${biFlowDropped} flow records (~0.2% of value)`,
+      `dropped ${biStockDropped} stock + ${biFlowDropped} flow records`,
   )
 
   // ---- write shards + index + barograph series --------------------------
@@ -487,7 +486,7 @@ export function assemble({ countries, wb, iip, bop, pip }: AssembleInputs): void
       min_usd: BILATERAL_MIN_USD,
       dropped_stock_records: biStockDropped,
       dropped_flow_records: biFlowDropped,
-      note: 'threshold keeps ~99.8% of total value; dropped records are dust, not silence',
+      note: 'value retention is not computed; use the recorded dropped record counts',
     },
     terminal_fetch_failures: failures,
     total_output_bytes: totalBytes,
