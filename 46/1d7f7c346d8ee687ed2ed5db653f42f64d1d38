@@ -1,0 +1,33 @@
+scripts/fetch/imf-exposure.test.ts
+  s_6cfe0f5f25d4e5::t_93733933d76185 81-86
+  s_6cfe0f5f25d4e5::t_6aedeabed7bd1a 64,69,74
+  s_6cfe0f5f25d4e5::t_fc22b3bdbd3730 1-63,65-68,70-73,75-80,87-112
+scripts/fetch/imf-exposure.ts
+  s_6cfe0f5f25d4e5::t_83f42b92d19660 1-148,150-173,175-251
+  s_6cfe0f5f25d4e5::t_c165ba5aa22017 149,174
+scripts/run.ts
+  s_6cfe0f5f25d4e5::t_83f42b92d19660 8,25
+scripts/fetch/registry.ts
+  s_6cfe0f5f25d4e5::t_83f42b92d19660 81-89
+  s_6cfe0f5f25d4e5::t_bf38ad56098b01 80
+scripts/fetch/registry.test.ts
+  s_6cfe0f5f25d4e5::t_83f42b92d19660 63-64
+public/data/meta/sources.json
+  s_6cfe0f5f25d4e5::t_f590fd040371b9 1
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.13",
+  "base_commit_sha": "461d7f7c346d8ee687ed2ed5db653f42f64d1d38",
+  "prompts": {},
+  "sessions": {
+    "s_6cfe0f5f25d4e5": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "019f5c0a-f294-78b2-af01-6c5483dbfcbe",
+        "model": "gpt-5.6-sol"
+      },
+      "human_author": "64etuor <130260521+64etuor@users.noreply.github.com>"
+    }
+  }
+}
