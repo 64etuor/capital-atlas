@@ -127,6 +127,7 @@ export function toBankRecords(
       confidence_grade: 'B',
       estimate_method:
         'lbs_loans_and_deposits_instrument_mapped_by_position_side',
+      position_basis: 'lbs_position_side',
     })
   }
   return out

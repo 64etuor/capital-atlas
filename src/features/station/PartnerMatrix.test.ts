@@ -9,6 +9,7 @@ describe('partnerDossierPayload — side-specific lineage', () => {
     grade: 'A',
     source_id: 'imf_pip',
     effective_date: '2024-12-31',
+    position_bases: ['asset_liability'],
   }
   const reconstructed: StationPartner = {
     country: 'USA',
@@ -22,6 +23,7 @@ describe('partnerDossierPayload — side-specific lineage', () => {
     upper: 90,
     range_label: 'proportional bottom-up ↔ top-down corridor',
     coverage_share: 0.8,
+    position_bases: ['asset_liability'],
   }
 
   it('does not let the opposite side overwrite the clicked direct value grade', () => {
@@ -33,6 +35,14 @@ describe('partnerDossierPayload — side-specific lineage', () => {
         period: '2024-Q4',
       }),
     ).toMatchObject({ value_usd: 100, grade: 'A', source_ids: ['imf_pip'] })
+    expect(
+      partnerDossierPayload(direct, {
+        owner: 'KOR',
+        issuer: 'USA',
+        assetLabel: 'EQUITY',
+        period: '2024-Q4',
+      }).context,
+    ).toContainEqual(['Position basis', 'asset_liability'])
   })
 
   it('carries both IIP/PIP lineage, coverage, method, and range for the derived side', () => {
@@ -52,5 +62,26 @@ describe('partnerDossierPayload — side-specific lineage', () => {
       range_label: reconstructed.range_label,
     })
     expect(payload.context).toContainEqual(['Coverage', '80.0% of top-down margin'])
+  })
+
+  it('labels DIP directional positions as DIP rather than CPIS/PIP', () => {
+    const payload = partnerDossierPayload(
+      {
+        ...direct,
+        source_id: 'imf_dip',
+        position_bases: ['directional_principle'],
+      },
+      {
+        owner: 'KOR',
+        issuer: 'USA',
+        assetLabel: 'FDI',
+        period: '2024-Q4',
+      },
+    )
+    expect(payload.subtitle).toBe('IMF DIP · 2024-Q4')
+    expect(payload.context).toContainEqual([
+      'Position basis',
+      'directional_principle',
+    ])
   })
 })

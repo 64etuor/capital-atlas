@@ -39,7 +39,8 @@ bilateral에 BIS를 재병합하고, 그 다음 exposure/RAS와 모든 집계·�
 | `imf_iip` | 대외 자산·부채 잔액, 국가×분기 (2010~) | ✅ 런타임 발견 | A |
 | `imf_iipcc` | 대외채권·채무 통화구성 | ✅ 런타임 발견 | A |
 | `imf_bop` | 금융계정 실거래 흐름, 국가×분기 | ✅ 런타임 발견 | A |
-| `imf_pip` | 양자 포트폴리오 자산 (CPIS/PIP), 연간 2013~ | ✅ 런타임 발견 | A |
+| `imf_pip` | 양자 포트폴리오 자산 (CPIS/PIP), 연·반기 2013~ | ✅ 런타임 발견 | A |
+| `imf_dip` | 양자 직접투자 outward 포지션 (DIP/CDIS 후속), 연간 | ✅ 런타임 발견 | A |
 | `imf_pip` sector | 보고 부문별 포트폴리오 자산 | ✅ 런타임 발견 | A |
 | `imf_pip` SCC | 상대국 정보로 유도한 포트폴리오 부채 | ✅ 런타임 발견 | C |
 | `wb_wdi` | 상장주식 시총(발행국 총액)·GDP, 연간 | ✅ 런타임 발견 | B |
@@ -56,7 +57,12 @@ bilateral에 BIS를 재병합하고, 그 다음 exposure/RAS와 모든 집계·�
   보고 부문은 별도 차원이 아니라 `DCNRES_DIC_S13` 같은 indicator 코드에 포함된다.
   `A_P/L_P` debt와 비중복 통화 버킷 `USD|EUR|JPY|XDC|OTHC|UALLC`만 적재한다.
 - 잔액 엔트리: `A_P`/`L_P`. **흐름 엔트리는 `A_NFA_T`(자산 순취득)/`L_NIL_T`(부채 순발생)** — `A_T`/`L_T` 아님(1차 실행 0건의 원인).
-- PIP 키: `COUNTRY.ACCOUNTING_ENTRY.INDICATOR.SECTOR.COUNTERPART_SECTOR.COUNTERPART_COUNTRY.FREQUENCY` — `{iso3}.A.P_F51_P_USD+P_F3_P_USD.S1.S1..A`
+- PIP 키: `COUNTRY.ACCOUNTING_ENTRY.INDICATOR.SECTOR.COUNTERPART_SECTOR.COUNTERPART_COUNTRY.FREQUENCY` — `{iso3}.A.P_F51_P_USD+P_F3_P_USD.S1.S1..A+S`.
+  연간은 Q4, 반기 S1/S2는 Q2/Q4로 정규화하며 같은 Q4 충돌에서는 더 최신인 반기
+  관측을 채택한다.
+- DIP 키: `COUNTRY.DV_TYPE.INDICATOR.COUNTERPART_COUNTRY.FREQUENCY` —
+  `{iso3}.O.OTWD_D_NETAL_FALL_ALL..A`. 직접보고 `O`의 outward total만 적재하고
+  SCC·집계 상대국·self-pair·구성항목은 제외한다.
 - PIP 부문은 원 코드를 그대로 보존한다. `S1V` 같은 결합군을 가계·기업으로 나누지
   않는다. SCC 지표(`*_SCC_USD`)는 IMF가 상대국 정보로 유도한 부채이므로 C등급이며,
   직접 관측이나 독립 미러로 승격하지 않는다.
@@ -88,6 +94,7 @@ SDMX 2.1 REST, `format=csv`(SDMX-CSV) 지원 — IMF와 달리 CSV가 나와 파
 | `R` | `reserves_gold` | owner 기준만 |
 | PIP `P_F51_P_USD` | `listed_equity` | 양자 |
 | PIP `P_F3_P_USD` | `debt_securities` | 양자 |
+| DIP `OTWD_D_NETAL_FALL_ALL` | `unlisted_equity_fdi` | 양자 outward, directional principle |
 
 ## 의미 계약 (Phase C 필독)
 
@@ -96,8 +103,11 @@ SDMX 2.1 REST, `format=csv`(SDMX-CSV) 지원 — IMF와 달리 CSV가 나와 파
   나머지는 비거주자 보유 대외부채.
 - **flows_country** 부호: `entry=assets` 양수 = 거주자의 해외자산 취득(유출측),
   `entry=liabilities` 양수 = 비거주자의 국내 투자(유입측). BPM6 부호 보존.
-- **flows_bilateral**: PIP는 연간 → `YYYY-Q4`로 표기. 파생 flow는 가격효과 미조정
-  (`position_change_unadjusted_for_price`, D등급) — 가격조정 C등급은 v2.
+- **flows_bilateral**: PIP 연간은 Q4, 반기 S1/S2는 Q2/Q4로 표기한다. 인접한
+  관측 사이의 파생 변화만 가격효과 미조정
+  (`position_change_unadjusted_for_price`, D등급)으로 발행한다. DIP는 연간 Q4
+  방향원칙 포지션(A)만 발행하고 flow를 만들지 않는다. BIS는 분기 LBS 포지션(B)이다.
+  세 소스의 통계적 basis는 명시적으로 보존하며 한 정본 총계처럼 합치지 않는다.
 - **평가변동**(valuation) = ΔIIP 포지션 − BOP 거래 (둘 다 관측된 분기만, C등급).
 
 ## 폴백 사다리 ("빈칸 금지", 초안 §6 축소판)
@@ -121,7 +131,10 @@ SDMX 2.1 REST, `format=csv`(SDMX-CSV) 지원 — IMF와 달리 CSV가 나와 파
 - 핵심 `stocks.value_usd_constant_fx`는 원 관측을 덮어쓰지 않기 위해 미산출 유지.
   고정환율 수치는 별도 `exposure/*.json`에서만 coverage-gated 파생값으로 제공한다.
 - IIP `P_F5`에 펀드지분 포함 → `funds` asset은 미분리.
-- PIP 파생 flow는 가격효과 미조정(D등급으로 정직 표기).
+- PIP 파생 포지션 변화는 가격효과 미조정(D등급)이며 실제 거래 흐름으로 표기하지 않는다.
+- DIP 방향원칙 포지션과 IIP 자산/부채 원칙 총계는 통계적 basis가 달라 같은 기간에도
+  일치하지 않을 수 있다. `CP ALLOC`은 published bilateral gross ÷ exact-period
+  `stocks_owner` 진단값이지 소스 완전성이나 폐합률이 아니다.
 - 산출 규모는 station 사전집계 때문에 크지만 정적 서빙 파일은 5MB 계약 게이트를
   통과해야 한다. 다운로드용 `facts.ndjson.gz`의 현재 크기는
   `meta/facts_summary.json`의 `gzip_bytes`가 정본이다. 전부 lazy-load 전제.

@@ -59,6 +59,7 @@ export interface FactLine {
   coverage_share?: number
   residual_share?: number
   source_ids?: string[]
+  position_basis?: string
 }
 
 const lineage = (r: {
@@ -110,6 +111,7 @@ export const bilateralFact = (r: BilateralRecord): FactLine => ({
   source_id: r.source_id,
   effective_date: r.effective_date,
   confidence_grade: r.confidence_grade,
+  position_basis: r.position_basis,
   ...lineage(r),
 })
 

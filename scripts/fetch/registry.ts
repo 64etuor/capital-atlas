@@ -22,13 +22,14 @@ export type Cadence =
   | 'daily'
   | 'monthly'
   | 'quarterly'
+  | 'semiannual'
   | 'annual'
   | 'static'
 
 /** Cadences each mode may declare — mode↔cadence 정합은 테스트가 강제한다. */
 export const MODE_CADENCES: Record<CollectionMode, readonly Cadence[]> = {
   live_market: ['intraday', 'daily'],
-  batch_official: ['monthly', 'quarterly', 'annual'],
+  batch_official: ['monthly', 'quarterly', 'semiannual', 'annual'],
   derived_model: ['quarterly', 'annual'],
   static_reference: ['static'],
 }
@@ -74,8 +75,18 @@ export const SOURCE_REGISTRY: readonly SourceDef[] = [
     url: 'https://api.imf.org/external/sdmx/2.1/data/IMF.STA,PIP',
     license_note: 'IMF terms — attribution',
     collection_mode: 'batch_official',
+    update_frequency: 'semiannual',
+    expected_release_lag: '~2–3 quarters after June/year end',
+  },
+  {
+    source_id: 'imf_dip',
+    name: 'Direct Investment Positions by Counterpart Economy (DIP, formerly CDIS)',
+    publisher: 'IMF',
+    url: 'https://api.imf.org/external/sdmx/2.1/data/IMF.STA,DIP',
+    license_note: 'IMF terms — attribution',
+    collection_mode: 'batch_official',
     update_frequency: 'annual',
-    expected_release_lag: '~2–3 quarters after year end',
+    expected_release_lag: '~3–4 quarters after year end; reporting coverage varies',
   },
   {
     source_id: 'imf_iipcc',

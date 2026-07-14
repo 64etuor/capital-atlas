@@ -155,7 +155,7 @@ export function flowIntensity(
   return { intensity: seen && avg > 0 ? net4 / avg : null, net4 }
 }
 
-/** §14 집중도 — nearest≤ 규칙(상대국 지표는 연간 CPIS)으로 현재 시점 선택. */
+/** §14 집중도 — PIP/DIP/BIS 가용 샤드의 nearest≤ 시점을 선택. */
 export function concentrationAt(
   file: StationFile,
   tab: AssetTab,

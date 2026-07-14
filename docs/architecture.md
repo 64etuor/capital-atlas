@@ -17,7 +17,7 @@ Silver  scripts/fetch/*.ts        소스별 정규화 (SDMX XML/CSV 파싱, 코�
 Gold    public/data/              계약(DATA_CONTRACT.md)이 스키마인 정적 산출
         ├─ stocks_{basis}/        사실: 잔액 (국가×자산×분기, lineage 필수)
         ├─ flows_country/         사실: BOP 실거래 + 파생 평가변동
-        ├─ flows_bilateral/       사실: CPIS 증권 + BIS 은행 회랑
+        ├─ flows_bilateral/       사실: PIP 증권 + DIP 직접투자 + BIS 은행 포지션
         ├─ exposure/              직접 통화·부문 + 등급화한 FXD·재구성 부채
         ├─ position_closure/      뷰: IIP 마진↔raw PIP seed RAS 폐합 (grade E)
         ├─ meta/position_closure_inputs.json.gz  RAS clean-CI 감사 입력 미러
@@ -34,6 +34,10 @@ C–E는 산식·범위·커버리지와 함께 발행하는 파생/모델 레�
 둘을 지우지 않고 함께 보존하는 수치 원장이지, 모든 행이 관측이라는 뜻이 아니다.
 synoptic/station/flowmatrix는 이 원장에서 재계산되는 UI 집계다. 정합은
 `data:check`(zod + 상식 범위 + 사실원장·미러·RAS 마진 폐합 게이트)가 강제한다.
+양자 포지션은 소스별 통계 basis를 지우지 않는다: PIP는 asset/liability, BIS LBS는
+position side, DIP는 directional principle이다. 따라서 STATION의 all-scope 상대국
+집계는 `BILATERAL-COVERED ASSETS`로만 부르고, exact-period `CP ALLOC`을 별도 진단으로
+노출한다. 이 값은 국가 총자산 커버리지나 소스 완전성 주장이 아니다.
 
 ## 재생성 체인 (순서가 계약이다)
 

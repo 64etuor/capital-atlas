@@ -99,7 +99,7 @@ function greatCirclePath(
 export interface BuildArcsOptions {
   /** ISO3 of the selected country, or null for the global view */
   selected: string | null
-  /** true → use CPIS positions (grade A); false → derived flows (grade D) */
+  /** true → use PIP/DIP/BIS positions; false → PIP-derived position changes (grade D) */
   useStockMeasure: boolean
   includeEstimates: boolean
   capGlobal?: number
@@ -135,7 +135,7 @@ export function buildArcs(
   const arcs: FlowArc[] = []
 
   for (const r of recs) {
-    // negative derived flow = net disinvestment → capital travels back
+    // Negative PIP position change reverses the visual direction; it is not an observed flow.
     const reversed = !useStockMeasure && r.value_usd < 0
     const fromIso = reversed ? r.issuer_country : r.owner_country
     const toIso = reversed ? r.owner_country : r.issuer_country

@@ -60,6 +60,7 @@ export interface StationPartner {
   upper?: number
   range_label?: string
   coverage_share?: number
+  position_bases: import('../../src/types/data.ts').BilateralPositionBasis[]
 }
 
 export interface PartnerSides {
@@ -161,6 +162,7 @@ const toPartner = (r: BilateralRecord, country: string): StationPartner => ({
   grade: r.confidence_grade,
   source_id: r.source_id,
   effective_date: r.effective_date,
+  position_bases: [r.position_basis],
   ...(r.estimate_method !== undefined && { method: r.estimate_method }),
   ...(r.lower_bound !== undefined && { lower: r.lower_bound }),
   ...(r.upper_bound !== undefined && { upper: r.upper_bound }),
@@ -186,6 +188,7 @@ const toReconstructedPartner = (
     upper: Math.max(...scaled),
     range_label: 'proportional bottom-up ↔ top-down corridor',
     coverage_share: aggregate.coverage_share,
+    position_bases: [r.position_basis],
   }
 }
 
@@ -243,13 +246,16 @@ function aggregateAll(rows: readonly StationPartner[]): StationPartner[] {
           0,
         ),
         range_label: 'sum of component corridors; observed components are exact',
+        position_bases: [
+          ...new Set(components.flatMap((component) => component.position_bases)),
+        ].sort(),
       }
     }),
   )
 }
 
 /**
- * CPIS 포지션(measure=stock)만 사용 — 파생 flow(D)는 상대국 매트릭스에
+ * PIP/DIP/BIS 포지션(measure=stock)만 사용 — 파생 포지션 변화(D)는 상대국 매트릭스에
  * 싣지 않는다. holdings = 이 나라가 보유한 상대 / holders = 이 나라를 보유.
  */
 export function stationPartners(
@@ -274,6 +280,9 @@ export function stationPartners(
     if (r.measure !== 'stock') continue
     const mine = r.owner_country === iso3
     if (!mine && r.issuer_country !== iso3) continue
+    // IMF DIP is an outward directional-principle report. A row reported by
+    // another owner is not an independently reported inward position for iso3.
+    if (!mine && r.source_id === 'imf_dip') continue
     let assets = byPeriod.get(r.period)
     if (!assets) byPeriod.set(r.period, (assets = new Map()))
     let sides = assets.get(r.asset)
@@ -286,7 +295,8 @@ export function stationPartners(
         sides.holders.push(
           toReconstructedPartner(r, r.owner_country, total, aggregate),
         )
-    } else sides.holders.push(toPartner(r, r.owner_country))
+    } else if (r.source_id === 'bis_lbs')
+      sides.holders.push(toPartner(r, r.owner_country))
   }
 
   const out: Record<
@@ -504,7 +514,11 @@ export function buildStation(): void {
       concentration: {
         quarterly: quarterlyConcentration(series, wld),
         // 발행 샤드 전체에서 계산 — top-15 partners 리스트 기반 금지
-        counterparty: counterpartyConcentration(bilatBy.get(iso3) ?? [], iso3),
+        counterparty: counterpartyConcentration(
+          bilatBy.get(iso3) ?? [],
+          iso3,
+          series,
+        ),
       },
     })
     totalBytes += bytes

@@ -97,6 +97,7 @@ describe('topCorridors — 정렬·상한·측정 분리', () => {
         source_id: 'imf_pip',
         effective_date: '2024-12-31',
         confidence_grade: 'A',
+        position_basis: 'asset_liability',
       })
     }
     rows.push({
@@ -112,6 +113,7 @@ describe('topCorridors — 정렬·상한·측정 분리', () => {
       estimate_method: 'position_change_unadjusted',
       lower_bound: -9e9,
       upper_bound: -5e9,
+      position_basis: 'asset_liability',
     })
     const c = topCorridors(rows)
     expect(c.stock.length).toBe(CORRIDOR_LIMIT)

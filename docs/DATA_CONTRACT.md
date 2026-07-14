@@ -26,7 +26,7 @@ TS 미러: `src/types/data.ts` — 문서와 타입이 다르면 이 문서가 �
 | `stocks_issuer/{period}.json` | 발행자 기준 동일 구조 | 분기 |
 | `stocks_location/{period}.json` | 소재지 기준 (v1: 주거부동산 모델, 연 Q4만) | 연 |
 | `flows_country/{period}.json` | 국가×자산군 **실거래 흐름(BOP)** + 파생 평가변동 | 분기 |
-| `flows_bilateral/{period}.json` | 국가쌍×자산군 (PIP 포지션 + 유도 flow) | 연(Q4 표기) |
+| `flows_bilateral/{period}.json` | 국가쌍×자산군 (PIP 증권 + DIP 직접투자 + BIS 은행 포지션, PIP 유도 포지션 변화) | 분기/반기/연 |
 | `meta/sources.json` | 소스 레지스트리 | 수집 시 |
 | `meta/flow_intensity.json` | 분기별 글로벌 총 흐름 강도 (바로그래프용) | 분기 |
 | `meta/pipeline_report.json` | 커버리지·등급 분포·수집 실패 기록 | 수집 시 |
@@ -48,7 +48,9 @@ TS 미러: `src/types/data.ts` — 문서와 타입이 다르면 이 문서가 �
 | `vintages/{date}.json` | 실질 변경 시 빈티지 다이제스트 | 실질 변경 시 |
 
 - 인코딩: UTF-8 JSON. 값 단위: **USD (current)**, 절대값(백만 아님 — 스케일 접미사 금지).
-- `period`: `"YYYY-Qn"` (2010-Q1 ~). 연간 원자료(WB 시총, PIP)는 해당 연도 **Q4**에 표기.
+- `period`: `"YYYY-Qn"` (2010-Q1 ~). 연간 원자료(WB 시총, DIP, PIP A)는 해당 연도
+  **Q4**, PIP 반기 `S1/S2`는 각각 **Q2/Q4**에 표기한다. 같은 Q4에 PIP 연간·반기
+  관측이 겹치면 더 높은 빈도의 반기 관측을 채택한다.
 
 ### stocks_issuer 자산별 의미 (v1 — 중복 방지 규칙)
 
@@ -131,16 +133,24 @@ TS 미러: `src/types/data.ts` — 문서와 타입이 다르면 이 문서가 �
       "period": "2024-Q4",
       "measure": "stock",
       "value_usd": 51000000000,
-      "source_id": "imf_cpis",
+      "source_id": "imf_pip",
       "effective_date": "2024-12-31",
-      "confidence_grade": "A"
+      "confidence_grade": "A",
+      "position_basis": "asset_liability"
     }
   ]
 }
 ```
 
-- CPIS 원자료는 **포지션(stock)**. 파생 순거래(`measure: "flow"`)를 실을 땐
-  `confidence_grade: "C"` 이상 불가 + `estimate_method: "position_change_adjusted_for_price_and_fx"`.
+- PIP/CPIS 원자료는 **포지션(stock)**. 파생 변화(`measure: "flow"`)는 실제 거래가
+  아니라 가격·환율효과 미조정 포지션 차분이므로 D등급 +
+  `estimate_method: "position_change_unadjusted_for_price"` + 유한 범위를 필수로 한다.
+
+**직접투자 채널 (IMF DIP, formerly CDIS)**: 직접보고 `DV_TYPE=O`의 outward total
+`OTWD_D_NETAL_FALL_ALL`만 `asset=unlisted_equity_fdi`, grade A,
+`position_basis=directional_principle`로 발행한다. SCC 미러·세계합계·자기상대는 제외하며
+DIP에서 flow를 만들지 않는다. DIP 방향원칙 포지션은 IIP의 자산/부채 원칙 직접투자
+자산과 개념적으로 동일하지 않으므로 `stocks_owner`를 덮어쓰지 않고 양자 분해에만 쓴다.
 
 **은행 채널 (Phase M — BIS LBS)**: `flows_bilateral`에 분기 은행 회랑이 병합된다
 (`source_id: "bis_lbs"`, `asset: loans|deposits`, `measure: "stock"`, grade B).
@@ -148,11 +158,14 @@ TS 미러: `src/types/data.ts` — 문서와 타입이 다르면 이 문서가 �
   owner=보고국 / liabilities(상대국의 예치) → `asset=deposits`, owner=상대국.
   LBS G(loans and deposits) 합산 상품의 포지션-방향 분류이므로 grade B +
   `estimate_method: "lbs_loans_and_deposits_instrument_mapped_by_position_side"`.
+  모든 행은 `position_basis: "lbs_position_side"`를 가진다.
 - **중복 가드(§5)**: `stocks_owner`의 deposits/loans 국가 총계(IIP, A)는 불변 —
   BIS는 양자 분해만 담당. 총계↔양자합 불일치는 보고국 커버리지 차이로 자연스럽고,
   조정하지 않고 `pipeline_report.bis_lbs`에 기록한다(§12).
-- 이 병합으로 `flows_bilateral` 가용 기간이 연(Q4)에서 **분기**로 확장된다
-  (분기 샤드는 은행 채널만, Q4 샤드는 CPIS+은행 혼합). 재생성: `pnpm data:bis`
+- 이 병합으로 `flows_bilateral` 가용 기간이 연(Q4)에서 **분기**로 확장된다.
+  Q1/Q3은 현재 BIS만, Q2는 PIP S1+BIS, Q4는 PIP S2 또는 연간 fallback(S2가 충돌 시 우선)+
+  DIP 연간+BIS가 각 소스의 가용 연도에 따라 들어온다. 특정 샤드의 실제 source/basis는
+  레코드와 `corridor_concentration.source_ids/position_bases`가 정본이다. 재생성: `pnpm data:bis`
   (전체 재수집 불요, 멱등) 또는 `data:fetch` 체인.
 
 ### meta/sources.json — 수집 분류 포함
@@ -169,8 +182,8 @@ SSOT는 `scripts/fetch/registry.ts`. 발행 파일은 `pnpm data:sources`(retrie
     "url": "https://api.imf.org/external/sdmx/2.1/data/IMF.STA,PIP",
     "license_note": "IMF terms — attribution",
     "collection_mode": "batch_official",
-    "update_frequency": "annual",
-    "expected_release_lag": "~2–3 quarters after year end",
+    "update_frequency": "semiannual",
+    "expected_release_lag": "~2–3 quarters after June/year end",
     "retrieved_at": "2026-07-12T08:30:00Z"
   }
 ]
@@ -181,7 +194,7 @@ SSOT는 `scripts/fetch/registry.ts`. 발행 파일은 `pnpm data:sources`(retrie
 | mode | 의미 | cadence 허용값 | 대표 소스 |
 |---|---|---|---|
 | `live_market` | 실시간·일중 시장 데이터. 발표 지연 없음, 폴링/스트림 대상 | intraday, daily | coingecko_global |
-| `batch_official` | 공식 통계 배치. 분기/연간 + 발표 지연이 본질 — "실시간" 개념 없음 | monthly, quarterly, annual | imf_iip, imf_iipcc, imf_bop, imf_pip, imf_ifs_fx, bis_lbs, wb_wdi |
+| `batch_official` | 공식 통계 배치. 분기/반기/연간 + 발표 지연이 본질 — "실시간" 개념 없음 | monthly, quarterly, semiannual, annual | imf_iip, imf_iipcc, imf_bop, imf_pip, imf_dip, imf_ifs_fx, bis_lbs, wb_wdi |
 | `derived_model` | 파이프라인 내부 파생·모델. 수집이 아니라 계산 (grade C–E) | quarterly, annual | model_regional_median, model_gdp_ratio |
 | `static_reference` | 정적 참조 (지오메트리·국가 마스터, vendored 패키지) | static | natural_earth, world_countries |
 
@@ -211,8 +224,9 @@ live 데이터는 `meta/` 통제값·오버레이 전용.
 - `per_quarter[period][asset]`: 글로벌 stock/flow(양측)/valuation 합계 —
   **모든 값에 관측(A/B)-한정 `*_obs` 변형 동반** (VIS=OBS 다이얼 근거),
   `obs_share`(가치가중 관측 비중 0..1) 포함.
-- `corridors[period]`: bilateral 상위 20 회랑 — `stock`(CPIS 포지션 A)과
-  `flow`(파생 D) 분리. lineage(등급·산식·범위) 운반.
+- `corridors[period]`: bilateral 상위 20 회랑 — `stock`(PIP A·DIP A·BIS B, 서로 다른
+  position basis)과 PIP의 가격효과 미조정 `position change`(D, 저장 호환상
+  `measure: "flow"`)를 분리한다. lineage(등급·산식·범위·source·position basis) 운반.
 - `anomalies[period]`: |flow| 상위 — **자산별 상한 12** (자산 필터가 구성상
   빈 화면이 되지 않게), 전역 표시는 UI가 앞 12개만 자른다.
 - `grade_mix[period]`: A~E 레코드 수 (시정 바).
@@ -229,10 +243,11 @@ live 데이터는 `meta/` 통제값·오버레이 전용.
 - `series[asset][]`: 분기점 {stock(owner), grade, **D/E면 stock_lower/upper
   신뢰구간 밴드 + method**, source_id, stock_issuer 병렬(의미는 issuer 표),
   flow_in/flow_out(BPM6 부호 보존), flow_grade, valuation}. §1.5 — 점 단위 계보.
-- `partners[period]`: CPIS **포지션(stock)만** — 파생 flow(D)는 매트릭스 비대상.
+- `partners[period]`: PIP·DIP·BIS **포지션(stock)만** — 파생 포지션 변화(D)는 매트릭스 비대상.
   `all`(자산 합산, 등급=구성 worst, 구성 corridor 합·source IDs·합산 산식 동반) +
-  자산별, holdings(보유)/holders(피보유) 각 상위 15. holdings는 보고자 PIP 직접
-  관측(A), holders는 PIP 상대국 비중으로 reconstructed aggregate를 배분한 C등급이다.
+  자산별, holdings(보유)/holders(피보유) 각 상위 15. PIP와 DIP holdings는 보고자 직접
+  관측(A), BIS는 B, PIP holders는 상대국 비중으로 reconstructed aggregate를 배분한 C등급이다.
+  DIP는 outward만 적재하므로 inward holders로 전치하지 않는다.
   holders는 IIP 하향식 총계가 있어 유한 proportional corridor를 만들 수 있을 때만
   발행하며, 양쪽 숫자는 각각 독립 dossier를 연다.
 - `summary`: 최신 분기 총잔액·양측 흐름·구성·가치가중 관측 비중.
@@ -244,11 +259,22 @@ live 데이터는 `meta/` 통제값·오버레이 전용.
   - `quarterly[]`: {period, share_of_world(국가 총액÷세계 총액),
     share_of_world_assets(자산별 국가÷세계), asset_shares(자산÷국가 총액, 합=1),
     grade=구성 worst, source_ids, method}. 정확-기간 합.
-  - `counterparty[]`: {period(CPIS 연간·Q4), scope('all'|자산), hhi, top5_share,
-    top5[{country,share}], gross_usd, n_partners, grade, source_ids, method}.
+  - `counterparty[]`: {period, scope('all'|자산), hhi, top5_share,
+    top5[{country,share}], gross_usd, n_partners, grade, source_ids,
+    `position_bases[]`, method, `allocation_coverage`}.
     **발행 bilateral 샤드 전체에서 계산** — station의 top-15 리스트 기반 계산 금지
     (꼬리 절단 = HHI 과대평가). 단 샤드 자체가 |값|≥$100M 프루닝본인 한계는
     method 문구에 명시하고, 별도로 계산하지 않는 가치 보존율은 주장하지 않는다.
+    `allocation_coverage`는 같은 분기·같은 자산 스코프의
+    `published bilateral gross ÷ stocks_owner`이며 source completeness가 아니다. 가용 값의
+    `confidence_grade`는 양자 분자와 owner-stock 분모 중 낮은 등급을 보존하고,
+    `denominator_source_ids`와 D/E 분모의 범위를 함께 운반한다. 분모 범위가 있으면
+    비율 범위는 `gross/upper .. gross/lower`로 계산한다. OBS 모드는 D/E 분모 비율을
+    숨기고 unavailable 사유를 노출한다. 분모가
+    없으면 `{status:'unavailable', reason}`을 발행하고 0으로 채우지 않는다. 100%를 넘는
+    비율도 clamp하지 않아 basis/coverage 불일치가 보이게 한다.
+  - UI는 owner 잔액 A/B 비중을 `OBS STOCK`, 위 양자 배분비를 `CP ALLOC`으로 분리한다.
+    all counterparty 스코프는 `BILATERAL-COVERED ASSETS`로 표시한다.
   - WLD: quarterly share_of_world ≡ 1, counterparty = [](세계의 상대국은 정의 불가).
   - 계약 테스트: `scripts/build/concentration.test.ts` (HHI 알려진 분포·KOR 샤드
     독립 재계산 대조·WLD≡1·synoptic 교차).
@@ -378,8 +404,10 @@ TS 미러: `FactLine`(scripts/build/facts.ts). 규칙:
 - **UI 집계 비포함**: synoptic/station/flowmatrix는 이 테이블에서 재계산 가능한
   2차 뷰다. `position_closure`는 각 셀의 산식·범위를 감사하는 수치군이라 포함한다.
 - **결정론**: 타임스탬프 없음, gzip 헤더 MTIME=0 고정 — 같은 상류면 같은 바이트.
-- **정합 게이트**: 레코드 수(테이블별)·등급 분포 = 원 샤드 합. `data:facts`
-  self-check + `data:check` + vitest 삼중 강제. 요약은 `meta/facts_summary.json`.
+- **정합 게이트**: 레코드 수(테이블별)·등급 분포 = 원 샤드 합. 특히 모든
+  `flows_bilateral` 원장 행은 source별 grade/measure/position basis 계약을 다시 검증하고
+  원 샤드 행과 정확히 1:1 대조한다. `data:facts` self-check + `data:check` + vitest 삼중
+  강제. 요약은 `meta/facts_summary.json`.
 - 옵셔널 lineage 필드(estimate_method/bounds)는 **생략이지 null이 아니다**.
 - 재배포 시 원 소스 라이선스(IMF attribution·WB CC BY-4.0·BIS terms) 표기 유지.
 
@@ -415,6 +443,6 @@ liabilities(asset=deposits)** 는 같은 방향(owner→issuer) 은행 포지션
 ## v3 소스 우선순위 (참고)
 
 IMF IIP/BOP(잔액·흐름 골격) → IMF IIPCC(통화구성) → IMF PIP(양자·부문·SCC)
-→ BIS 채무증권·LBS(채권·은행)
+→ IMF DIP(직접보고 outward 직접투자 포지션) → BIS 채무증권·LBS(채권·은행)
 → World Bank/WFE(시가총액 통제값) → 파생·롤포워드(C) → 모델(D/E).
 모든 소스는 `meta/sources.json`에 등록 후 사용.

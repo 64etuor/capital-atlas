@@ -59,11 +59,6 @@ export function SynopticView() {
     corridorEff && filter === null
       ? (syn?.corridor_concentration[corridorEff] ?? null)
       : null
-  const top20Share = corridorConc
-    ? observedOnly
-      ? corridorConc.top20_share_obs
-      : corridorConc.top20_share
-    : null
 
   return (
     <div
@@ -104,7 +99,7 @@ export function SynopticView() {
               isFlow={isFlow}
               observedOnly={observedOnly}
               filter={filter}
-              top20Share={top20Share}
+              corridorConcentration={corridorConc}
             />
             <StripBank
               syn={syn}

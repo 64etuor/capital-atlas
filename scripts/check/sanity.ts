@@ -2,9 +2,16 @@
  * Contract + plausibility gate for public/data (pnpm data:check).
  * Fails (exit 1) on schema violations or implausible world totals.
  */
-import { readFileSync, readdirSync, statSync, existsSync } from 'node:fs'
+import {
+  createReadStream,
+  existsSync,
+  readFileSync,
+  readdirSync,
+  statSync,
+} from 'node:fs'
 import { join } from 'node:path'
-import { gunzipSync } from 'node:zlib'
+import { createInterface } from 'node:readline'
+import { createGunzip, gunzipSync } from 'node:zlib'
 import { z } from 'zod'
 import { OUT_DIR, readRawJson } from '../fetch/lib.ts'
 import {
@@ -18,10 +25,24 @@ import {
   CLOSURE_AUDIT_REL_PATH,
   rasClose,
 } from '../build/position-closure.ts'
+import {
+  BilateralCoverageCounter,
+  bilateralRecordSchema,
+  pipNormalizedObservationSchema,
+} from './bilateral-contract.ts'
+import {
+  stationConcentrationFileSchema,
+  validateStationConcentration,
+  type ExpectedCounterpartyScope,
+} from './station-concentration-contract.ts'
 
 const grade = z.enum(['A', 'B', 'C', 'D', 'E'])
 const period = z.string().regex(/^\d{4}-Q[1-4]$/)
 const isoDate = z.string().regex(/^\d{4}-\d{2}-\d{2}$/)
+type Grade = z.infer<typeof grade>
+const GRADE_ORDER: Record<Grade, number> = { A: 0, B: 1, C: 2, D: 3, E: 4 }
+const worseGrade = (a: Grade | undefined, b: Grade): Grade =>
+  a === undefined || GRADE_ORDER[b] > GRADE_ORDER[a] ? b : a
 
 const boundsWhenEstimated = (r: {
   confidence_grade: string
@@ -61,28 +82,6 @@ const flowRecord = stockBase
     entry: z.enum(['assets', 'liabilities']),
   })
   .refine(boundsWhenEstimated, { message: 'D/E records require estimate_method + bounds' })
-
-const bilateralRecord = z
-  .object({
-    owner_country: z.string().length(3),
-    issuer_country: z.string().length(3),
-    // Phase M: 은행 채널(BIS LBS) 합류 — loans/deposits는 bis_lbs 전용(refine)
-    asset: z.enum(['listed_equity', 'debt_securities', 'loans', 'deposits']),
-    period,
-    measure: z.enum(['stock', 'flow']),
-    value_usd: z.number().finite(),
-    source_id: z.string(),
-    effective_date: isoDate,
-    confidence_grade: grade,
-    estimate_method: z.string().optional(),
-    lower_bound: z.number().optional(),
-    upper_bound: z.number().optional(),
-  })
-  .refine(
-    (r) =>
-      ['loans', 'deposits'].includes(r.asset) ? r.source_id === 'bis_lbs' : true,
-    { message: 'banking-channel assets must come from bis_lbs' },
-  )
 
 let errors = 0
 const fail = (msg: string) => {
@@ -175,9 +174,24 @@ const biShards = loadShards('flows_bilateral')
 let biN = 0
 let korUsaEquityLatest: number | null = null
 const pairTotals = new Map<string, number>()
+const bilateralCoverage = new BilateralCoverageCounter()
+const bilateralLedgerSignatures = new Map<string, number>()
+const stationConcentrationExpected = new Map<
+  string,
+  Map<
+    string,
+    {
+      gross_usd: number
+      grade: Grade
+      position_bases: Set<
+        'asset_liability' | 'lbs_position_side' | 'directional_principle'
+      >
+    }
+  >
+>()
 for (const s of biShards)
   for (const r of s.records) {
-    const p = bilateralRecord.safeParse(r)
+    const p = bilateralRecordSchema.safeParse(r)
     if (!p.success) {
       if (errors < 15) fail(`flows_bilateral/${s.period}: ${p.error.issues[0].message}`)
       errors++
@@ -185,7 +199,36 @@ for (const s of biShards)
     }
     bump(p.data.confidence_grade)
     biN++
+    bilateralCoverage.observe(p.data)
+    const ledgerSignature = JSON.stringify(p.data)
+    bilateralLedgerSignatures.set(
+      ledgerSignature,
+      (bilateralLedgerSignatures.get(ledgerSignature) ?? 0) + 1,
+    )
     if (p.data.measure === 'stock') {
+      let countryExpected = stationConcentrationExpected.get(
+        p.data.owner_country,
+      )
+      if (!countryExpected)
+        stationConcentrationExpected.set(
+          p.data.owner_country,
+          (countryExpected = new Map()),
+        )
+      for (const scope of ['all', p.data.asset]) {
+        const key = `${p.data.period}|${scope}`
+        const current = countryExpected.get(key)
+        if (current) {
+          current.gross_usd += Math.abs(p.data.value_usd)
+          current.grade = worseGrade(current.grade, p.data.confidence_grade)
+          current.position_bases.add(p.data.position_basis)
+        } else {
+          countryExpected.set(key, {
+            gross_usd: Math.abs(p.data.value_usd),
+            grade: p.data.confidence_grade,
+            position_bases: new Set([p.data.position_basis]),
+          })
+        }
+      }
       const k = `${p.data.owner_country}→${p.data.issuer_country}`
       if (s.period === index.periods.flows_bilateral.at(-1))
         pairTotals.set(k, (pairTotals.get(k) ?? 0) + p.data.value_usd)
@@ -193,6 +236,18 @@ for (const s of biShards)
     }
   }
 ok(`flows_bilateral: ${biShards.length} shards, ${biN} records`)
+const bilateralSummary = bilateralCoverage.summary()
+if (bilateralSummary.dip_records < 1_000 || bilateralSummary.dip_reporters < 50)
+  fail(
+    `IMF DIP coverage too small: ${bilateralSummary.dip_records} records / ${bilateralSummary.dip_reporters} reporters`,
+  )
+else
+  ok(
+    `IMF DIP direct outward coverage: ${bilateralSummary.dip_records} records / ${bilateralSummary.dip_reporters} reporters`,
+  )
+if (bilateralSummary.pip_q2_stock_records < 1_000)
+  fail(`IMF PIP semiannual Q2 coverage too small: ${bilateralSummary.pip_q2_stock_records} stock records`)
+else ok(`IMF PIP semiannual Q2 coverage: ${bilateralSummary.pip_q2_stock_records} stock records`)
 if (korUsaEquityLatest !== null) {
   if (korUsaEquityLatest < 5e10 || korUsaEquityLatest > 2e12)
     fail(`KOR→USA equity ${(korUsaEquityLatest / 1e9).toFixed(0)}B outside plausible 50B–2T`)
@@ -200,6 +255,43 @@ if (korUsaEquityLatest !== null) {
 }
 const topPairs = [...pairTotals.entries()].sort((a, b) => b[1] - a[1]).slice(0, 5)
 console.log('  top pairs (latest):', topPairs.map(([k, v]) => `${k} $${(v / 1e12).toFixed(2)}T`).join(' · '))
+
+// ---- generated station counterparty coverage -------------------------------
+const stationDir = join(OUT_DIR, 'station')
+let stationAllocationN = 0
+if (!existsSync(stationDir)) fail('station/ missing — run pnpm data:station')
+else {
+  for (const fileName of readdirSync(stationDir).filter(
+    (name) => name.endsWith('.json') && name !== 'index.json',
+  )) {
+    const iso3 = fileName.slice(0, -5)
+    const parsed = stationConcentrationFileSchema.safeParse(
+      JSON.parse(readFileSync(join(stationDir, fileName), 'utf8')),
+    )
+    if (!parsed.success) {
+      fail(`station/${fileName}: ${parsed.error.issues[0].message}`)
+      continue
+    }
+    const expected = new Map<string, ExpectedCounterpartyScope>()
+    for (const [key, row] of stationConcentrationExpected.get(iso3) ?? [])
+      expected.set(key, {
+        gross_usd: row.gross_usd,
+        grade: row.grade,
+        position_bases: [...row.position_bases].sort(),
+      })
+    const issues = validateStationConcentration(parsed.data, expected)
+    for (const issue of issues.slice(0, 10)) fail(`station/${fileName}: ${issue}`)
+    if (issues.length > 10)
+      fail(`station/${fileName}: ${issues.length - 10} additional concentration errors`)
+    stationAllocationN += parsed.data.concentration.counterparty.length
+  }
+  if (stationAllocationN < 1_000)
+    fail(`station allocation coverage too small: ${stationAllocationN} rows`)
+  else
+    ok(
+      `station allocation coverage: ${stationAllocationN} rows exact-period/basis/range checked`,
+    )
+}
 
 // ---- exposure (v3 — 직접 통화·부문 + 명시적 파생) ----------------------------
 let currencyN = 0
@@ -317,15 +409,9 @@ const auditIipObservation = z.object({
   quarter: period,
   value: z.number().finite(),
 })
-const auditPipObservation = z.object({
-  owner: z.string().length(3),
-  issuer: z.string().length(3),
-  indicator: z.enum(['P_F51_P_USD', 'P_F3_P_USD']),
-  year: z.number().int().min(2013),
-  value: z.number().finite(),
-})
+const auditPipObservation = pipNormalizedObservationSchema
 const closureAuditSchema = z.object({
-  schema_version: z.literal(1),
+  schema_version: z.literal(2),
   source_ids: z.tuple([z.literal('imf_iip'), z.literal('imf_pip')]),
   iip: z.array(auditIipObservation).min(1),
   pip: z.array(auditPipObservation).min(1),
@@ -363,7 +449,7 @@ if (rawClosureIip) {
   const relevant = rawClosureIip.filter(
     (row) =>
       (row.indicator === 'P_F5_MV' || row.indicator === 'P_F3_MV') &&
-      row.quarter.endsWith('-Q4') &&
+      (row.quarter.endsWith('-Q2') || row.quarter.endsWith('-Q4')) &&
       row.quarter >= '2013-Q4',
   )
   if (canonicalRows(relevant) !== canonicalRows(closureIip))
@@ -373,7 +459,7 @@ const rawClosurePip = readRawJson<Array<z.infer<typeof auditPipObservation>>>(
   'imf/pip_normalized.json',
 )
 if (rawClosurePip) {
-  const relevant = rawClosurePip.filter((row) => row.year >= 2013)
+  const relevant = rawClosurePip.filter((row) => row.period >= '2013-Q4')
   if (canonicalRows(relevant) !== canonicalRows(closurePip))
     fail(`${CLOSURE_AUDIT_REL_PATH}: PIP mirror differs from normalized raw input`)
 }
@@ -479,10 +565,9 @@ if (!existsSync(closureIndexPath)) {
       // of both the closure builder and the pruned public bilateral view.
       const pipIndicator =
         asset === 'listed_equity' ? 'P_F51_P_USD' : 'P_F3_P_USD'
-      const closureYear = Number(closurePeriod.slice(0, 4))
       const direct = (closurePip ?? []).filter(
         (row) =>
-          row.year === closureYear &&
+          row.period === closurePeriod &&
           row.indicator === pipIndicator &&
           row.owner !== row.issuer &&
           sourceMargins.rows[row.owner] !== undefined &&
@@ -668,6 +753,65 @@ if (!existsSync(factsGz) || !existsSync(factsSummaryPath)) {
   const gzBytes = statSync(factsGz).size
   if (gzBytes !== fs.gzip_bytes) fail('facts.ndjson.gz size ≠ summary.gzip_bytes')
   if (gzBytes > 100 * 1024 * 1024) fail('facts.ndjson.gz exceeds Vercel 100MB file limit')
+  const remainingBilateral = new Map(bilateralLedgerSignatures)
+  let ledgerRecords = 0
+  let bilateralLedgerRecords = 0
+  const factLines = createInterface({
+    input: createReadStream(factsGz).pipe(createGunzip()),
+    crlfDelay: Infinity,
+  })
+  for await (const line of factLines) {
+    if (!line) continue
+    ledgerRecords++
+    let raw: unknown
+    try {
+      raw = JSON.parse(line)
+    } catch (error) {
+      fail(`facts line ${ledgerRecords}: invalid JSON: ${String(error)}`)
+      continue
+    }
+    if (
+      typeof raw !== 'object' ||
+      raw === null ||
+      !('table' in raw) ||
+      raw.table !== 'flows_bilateral'
+    )
+      continue
+    bilateralLedgerRecords++
+    const parsed = bilateralRecordSchema.safeParse(raw)
+    if (!parsed.success) {
+      if (errors < 20)
+        fail(
+          `facts flows_bilateral line ${ledgerRecords}: ${parsed.error.issues[0].message}`,
+        )
+      continue
+    }
+    const signature = JSON.stringify(parsed.data)
+    const remaining = remainingBilateral.get(signature) ?? 0
+    if (remaining <= 0) {
+      if (errors < 20)
+        fail(
+          `facts flows_bilateral line ${ledgerRecords}: no exact shard match for source/basis/lineage`,
+        )
+    } else if (remaining === 1) remainingBilateral.delete(signature)
+    else remainingBilateral.set(signature, remaining - 1)
+  }
+  if (ledgerRecords !== fs.records)
+    fail(`facts ledger lines ${ledgerRecords} ≠ summary records ${fs.records}`)
+  if (bilateralLedgerRecords !== biN)
+    fail(
+      `facts bilateral lines ${bilateralLedgerRecords} ≠ shard records ${biN}`,
+    )
+  const missingBilateral = [...remainingBilateral.values()].reduce(
+    (sum, count) => sum + count,
+    0,
+  )
+  if (missingBilateral > 0)
+    fail(`facts bilateral ledger is missing ${missingBilateral} exact shard rows`)
+  else
+    ok(
+      `facts bilateral lineage: ${bilateralLedgerRecords} exact shard matches with source-compatible position basis`,
+    )
   const expectedTotal = Object.values(expected).reduce((sum, value) => sum + value, 0)
   if (fs.records !== expectedTotal)
     fail(`facts total ${fs.records} ≠ ${expectedTotal}`)

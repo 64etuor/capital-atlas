@@ -130,6 +130,7 @@ describe('mergeBankCorridors — 멱등 병합', () => {
     source_id: 'imf_pip',
     effective_date: '2024-12-31',
     confidence_grade: 'A',
+    position_basis: 'asset_liability',
   }
   const oldBis: BilateralRecord = {
     ...pip,
@@ -137,6 +138,7 @@ describe('mergeBankCorridors — 멱등 병합', () => {
     value_usd: 5e8,
     source_id: 'bis_lbs',
     confidence_grade: 'B',
+    position_basis: 'lbs_position_side',
   }
   const newBis: BilateralRecord = { ...oldBis, value_usd: 6e8 }
 

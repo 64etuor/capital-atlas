@@ -25,6 +25,7 @@ import type {
   StockRecord,
 } from '../types/data'
 import type { DossierPayload } from '../types/dossier'
+import { bilateralPositionSubtitle } from '../features/synoptic/corridorDossier'
 
 const GRADES: readonly ConfidenceGrade[] = ['A', 'B', 'C', 'D', 'E']
 
@@ -486,7 +487,10 @@ export function ObservationReport() {
                       onClick={() =>
                         openDossier({
                           title: `${r.owner_country} → ${r.issuer_country} · ${ASSET_LABELS[r.asset]}`,
-                          subtitle: `${r.source_id === 'bis_lbs' ? 'LBS banking' : 'CPIS'} bilateral position · ${r.period}`,
+                          subtitle: bilateralPositionSubtitle(
+                            r.source_id,
+                            r.period,
+                          ),
                           value_usd: r.value_usd,
                           grade: r.confidence_grade,
                           method: r.estimate_method,
@@ -501,6 +505,7 @@ export function ObservationReport() {
                                 ? t('report.directionIn')
                                 : t('report.directionOut'),
                             ],
+                            ['Position basis', r.position_basis],
                             ...money.fxRows(r.value_usd, r.period),
                           ],
                         })

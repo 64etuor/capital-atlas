@@ -5,6 +5,7 @@
 import { buildCountries, run as runCountries } from './fetch/countries.ts'
 import { run as runWorldBank } from './fetch/worldbank.ts'
 import { runIip, runBop, runPip } from './fetch/imf.ts'
+import { runDip } from './fetch/imf-dip.ts'
 import { runIipcc, runPipExposure } from './fetch/imf-exposure.ts'
 import { COINGECKO_GLOBAL_URL, run as runCrypto } from './fetch/crypto.ts'
 import { runFx } from './fetch/fx.ts'
@@ -26,6 +27,7 @@ const wb = await runWorldBank(new Set(iso3s))
 const iip = await runIip(iso3s)
 const bop = await runBop(iso3s)
 const pip = await runPip(iso3s)
+const dip = await runDip(iso3s)
 await Promise.all([runIipcc(iso3s), runPipExposure(iso3s)])
 
 // Finish every required network read before touching public/data. A later
@@ -38,7 +40,7 @@ runCountries(countries)
 // Explicitly optional, and only attempted after every required feed is valid.
 const cryptoOk = await runCrypto()
 
-assemble({ countries, wb, iip, bop, pip })
+assemble({ countries, wb, iip, bop, pip, dip })
 buildExposure()
 buildPositionClosure()
 

@@ -10,6 +10,7 @@
 import { existsSync, readFileSync } from 'node:fs'
 import { join } from 'node:path'
 import { OUT_DIR, writeJson } from '../fetch/lib.ts'
+import type { BilateralPositionBasis } from '../../src/types/data.ts'
 import {
   corridorConcentration,
   type CorridorConcentration,
@@ -54,6 +55,7 @@ export interface BilateralRecord extends Lineage {
   period: string
   measure: 'stock' | 'flow'
   value_usd: number
+  position_basis: BilateralPositionBasis
 }
 
 export interface SynopticCell {
@@ -83,6 +85,7 @@ export interface Corridor {
   method?: string
   lower?: number
   upper?: number
+  position_basis: BilateralPositionBasis
 }
 
 export interface Anomaly {
@@ -171,6 +174,7 @@ const toCorridor = (r: BilateralRecord): Corridor => ({
   grade: r.confidence_grade,
   source_id: r.source_id,
   effective_date: r.effective_date,
+  position_basis: r.position_basis,
   ...(r.estimate_method !== undefined && { method: r.estimate_method }),
   ...(r.lower_bound !== undefined && { lower: r.lower_bound }),
   ...(r.upper_bound !== undefined && { upper: r.upper_bound }),

@@ -36,6 +36,7 @@ const rec = (
   source_id: 'imf_pip',
   effective_date: '2024-12-31',
   confidence_grade: grade,
+  position_basis: 'asset_liability',
 })
 
 describe('hhiOf — 알려진 분포', () => {
@@ -51,14 +52,38 @@ describe('hhiOf — 알려진 분포', () => {
 })
 
 describe('counterpartyConcentration — 상대국 집중도', () => {
+  const ownerSeries: StationSeries = {
+    listed_equity: [
+      {
+        period: '2024-Q4',
+        stock: 160,
+        grade: 'A',
+        flow_in: 0,
+        flow_out: 0,
+        valuation: 0,
+        source_id: 'imf_iip',
+      },
+    ],
+    debt_securities: [
+      {
+        period: '2024-Q4',
+        stock: 40,
+        grade: 'A',
+        flow_in: 0,
+        flow_out: 0,
+        valuation: 0,
+        source_id: 'imf_iip',
+      },
+    ],
+  }
   const bilat = [
     rec('KOR', 'USA', 'listed_equity', 60),
     rec('KOR', 'USA', 'debt_securities', 20, 'B'), // 같은 상대국, 다른 자산 → 합산
     rec('KOR', 'JPN', 'listed_equity', 20),
-    rec('KOR', 'DEU', 'listed_equity', 5, 'A', 'flow'), // 파생 flow는 제외
+    rec('KOR', 'DEU', 'listed_equity', 5, 'A', 'flow'), // 파생 포지션 변화는 제외
     rec('USA', 'KOR', 'listed_equity', 999), // 타 owner 제외 (holders 방향 아님)
   ]
-  const entries = counterpartyConcentration(bilat, 'KOR')
+  const entries = counterpartyConcentration(bilat, 'KOR', ownerSeries)
 
   it('all 스코프: 상대국 단위로 합산 후 HHI/top5', () => {
     const all = entries.find((e) => e.period === '2024-Q4' && e.scope === 'all')
@@ -81,8 +106,134 @@ describe('counterpartyConcentration — 상대국 집중도', () => {
     expect(debt!.hhi).toBeCloseTo(1, 12)
   })
 
+  it('동일 분기 owner stock을 분모로 양자 배분 커버리지를 운반한다', () => {
+    const all = entries.find((e) => e.scope === 'all')
+    const equity = entries.find((e) => e.scope === 'listed_equity')
+    const debt = entries.find((e) => e.scope === 'debt_securities')
+
+    expect(all?.allocation_coverage).toEqual({
+      status: 'available',
+      allocated_usd: 100,
+      owner_stock_usd: 200,
+      share: 0.5,
+      confidence_grade: 'B',
+      denominator_source_ids: ['imf_iip'],
+    })
+    expect(equity?.allocation_coverage).toEqual({
+      status: 'available',
+      allocated_usd: 80,
+      owner_stock_usd: 160,
+      share: 0.5,
+      confidence_grade: 'A',
+      denominator_source_ids: ['imf_iip'],
+    })
+    expect(debt?.allocation_coverage).toEqual({
+      status: 'available',
+      allocated_usd: 20,
+      owner_stock_usd: 40,
+      share: 0.5,
+      confidence_grade: 'B',
+      denominator_source_ids: ['imf_iip'],
+    })
+  })
+
+  it('양자 분자와 owner 분모 중 나쁜 등급을 배분비 등급으로 보존한다', () => {
+    const estimatedDenominator: StationSeries = {
+      listed_equity: [
+        {
+          period: '2024-Q4',
+          stock: 200,
+          grade: 'D',
+          stock_lower: 150,
+          stock_upper: 250,
+          flow_in: 0,
+          flow_out: 0,
+          valuation: 0,
+          source_id: 'model_regional_median',
+        },
+      ],
+    }
+    const [all] = counterpartyConcentration(
+      [rec('KOR', 'USA', 'listed_equity', 100)],
+      'KOR',
+      estimatedDenominator,
+    ).filter((entry) => entry.scope === 'all')
+
+    expect(all.allocation_coverage).toMatchObject({
+      status: 'available',
+      confidence_grade: 'D',
+      denominator_source_ids: ['model_regional_median'],
+      lower_bound: 0.4,
+      upper_bound: 2 / 3,
+      range_label: 'owner-stock denominator sensitivity',
+    })
+  })
+
+  it('all 분모는 같은 기간의 음수 owner 포지션도 부호 그대로 합산한다', () => {
+    const signedDenominator: StationSeries = {
+      listed_equity: [
+        {
+          period: '2024-Q4',
+          stock: 200,
+          grade: 'A',
+          flow_in: 0,
+          flow_out: 0,
+          valuation: 0,
+          source_id: 'imf_iip',
+        },
+      ],
+      reserves_gold: [
+        {
+          period: '2024-Q4',
+          stock: -10,
+          grade: 'A',
+          flow_in: 0,
+          flow_out: 0,
+          valuation: 0,
+          source_id: 'imf_iip',
+        },
+      ],
+    }
+    const entries = counterpartyConcentration(
+      [rec('KOR', 'USA', 'listed_equity', 100)],
+      'KOR',
+      signedDenominator,
+    )
+
+    expect(
+      entries.find((entry) => entry.scope === 'all')?.allocation_coverage,
+    ).toMatchObject({ owner_stock_usd: 190, share: 100 / 190 })
+    expect(
+      entries.find((entry) => entry.scope === 'listed_equity')
+        ?.allocation_coverage,
+    ).toMatchObject({ owner_stock_usd: 200, share: 0.5 })
+  })
+
+  it('집중도 레코드가 구성 포지션 기준을 숨기지 않는다', () => {
+    const all = entries.find((entry) => entry.scope === 'all')
+    expect(all?.position_bases).toEqual(['asset_liability'])
+  })
+
+  it('동일 분기 owner 분모가 없으면 숫자를 만들지 않고 사유를 발행한다', () => {
+    const [all] = counterpartyConcentration(bilat, 'KOR', {}).filter(
+      (entry) => entry.scope === 'all',
+    )
+    expect(all.allocation_coverage).toEqual({
+      status: 'unavailable',
+      reason: 'same-period owner stock denominator is missing or non-positive',
+    })
+  })
+
   it('산식 문구에 업스트림 프루닝($100M) 한계를 명시한다', () => {
-    for (const e of entries) expect(e.method).toMatch(/\$100M/)
+    for (const e of entries) {
+      expect(e.method).toMatch(/\$100M/)
+      expect(e.method).toMatch(
+        /allocation coverage = published bilateral gross ÷ same-period stocks_owner/,
+      )
+      expect(e.method).toMatch(/not source completeness/)
+      expect(e.method).toMatch(/IMF DIP direct-investment directional positions/)
+      expect(e.method).toMatch(/mixed official position bases/)
+    }
   })
 })
 

@@ -197,8 +197,10 @@ describe('parseSdmxSeries — StructureSpecificData robustness', () => {
 })
 
 describe('toQuarter — period canonicalization', () => {
-  it('canonicalizes quarterly, annual and monthly periods', () => {
+  it('canonicalizes quarterly, semiannual, annual and monthly periods', () => {
     expect(toQuarter('2024-Q3')).toBe('2024-Q3')
+    expect(toQuarter('2025-S1')).toBe('2025-Q2')
+    expect(toQuarter('2025-S2')).toBe('2025-Q4')
     expect(toQuarter('2024')).toBe('2024-Q4') // annual lands on year-end
     expect(toQuarter('2024-01')).toBe('2024-Q1')
     expect(toQuarter('2024-06')).toBe('2024-Q2')
@@ -207,6 +209,7 @@ describe('toQuarter — period canonicalization', () => {
   it('rejects garbage instead of guessing', () => {
     expect(toQuarter('Q3-2024')).toBeNull()
     expect(toQuarter('2024-13')).toBe(null) // month 13 → Q5 must not exist
+    expect(toQuarter('2025-S3')).toBeNull()
     expect(toQuarter('')).toBeNull()
   })
 })
