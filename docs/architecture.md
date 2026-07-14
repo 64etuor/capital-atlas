@@ -56,7 +56,7 @@ data:fetch → data:bis → data:exposure → data:closure → data:synoptic →
 | lineage 필수 | 모든 수치 레코드에 source_id·effective_date·grade, C–E는 계약별 산식+범위 |
 | 등급 = 픽셀 | UI 안개 렌더링(§6), VIS=OBS에서 추정 소멸 |
 | 수집 분류 | sources.json collection_mode — live 데이터의 통계 위장 금지(테스트) |
-| 폐합 | flowmatrix 마진=BOP 관측(±1e-6), RAS 잔차≤1e-9, 미러 gap 기록(원 관측 조정 금지) |
+| 폐합 | flowmatrix 마진=BOP 관측(±1e-6), RAS 잔차≤1e-9 + 발행 tail 메타, 미러 gap 기록(원 관측 조정 금지) |
 | 이중 시간 | effective_date(기준일) vs retrieved_at/빈티지(인지 시점), REVISIONS 행 |
 | 게이트 | vitest(계약·결정론·hex-0·i18n 패리티) + data:check + CI |
 
