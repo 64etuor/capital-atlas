@@ -1,0 +1,31 @@
+public/data/meta/pipeline_report.json
+  s_6cfe0f5f25d4e5::t_49387f6a82869a 1
+docs/DATA_CONTRACT.md
+  s_6cfe0f5f25d4e5::t_457855af53f006 251,335,397-398
+README.md
+  s_6cfe0f5f25d4e5::t_457855af53f006 101,106-107,109,147-149,191-192,236-237,316-317,319-320
+scripts/build/snapshot-honesty.test.ts
+  s_6cfe0f5f25d4e5::t_171c7a4ec2e895 35-38,41-43
+  s_6cfe0f5f25d4e5::t_40e75a101caa16 1-34,39-40,44-45
+scripts/build/assemble.ts
+  s_6cfe0f5f25d4e5::t_d8d1aa3a29ca6f 72-73,429,489
+docs/DATA_PIPELINE.md
+  s_6cfe0f5f25d4e5::t_b3a964ac5d2697 63,71-72
+  s_6cfe0f5f25d4e5::t_457855af53f006 116-117
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.13",
+  "base_commit_sha": "80d0b2d08f474812f2c7de1b521585d5028bde71",
+  "prompts": {},
+  "sessions": {
+    "s_6cfe0f5f25d4e5": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "019f5c0a-f294-78b2-af01-6c5483dbfcbe",
+        "model": "gpt-5.6-sol"
+      },
+      "human_author": "64etuor <130260521+64etuor@users.noreply.github.com>"
+    }
+  }
+}
