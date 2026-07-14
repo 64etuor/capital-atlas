@@ -28,19 +28,23 @@ bilateral에 BIS를 재병합하고, 그 다음 exposure/RAS와 모든 집계·�
 네트워크 검증이 끝나기 전에는 public 산출을 쓰지 않는다. CoinGecko 글로벌 통제값만
 명시적 optional이며 정적 스냅샷으로 폴백한다.
 
-## 소스별 상태 (2026-07-14 실측)
+## 소스별 상태
+
+행·보고국 수는 API 개정 때마다 바뀐다. 공개 수치군의 현재 건수는
+`meta/facts_summary.json`, 기간은 `index.json`, BIS 프루닝·실패 내역은
+`meta/pipeline_report.json`이 정본이며 이 표에 스냅샷 숫자를 복제하지 않는다.
 
 | source_id | 데이터 | 상태 | 등급 |
 |---|---|---|---|
-| `imf_iip` | 대외 자산·부채 잔액, 국가×분기 (2010~) | ✅ 127개국, 75,993 normalized obs | A |
-| `imf_iipcc` | 대외채권·채무 통화구성 | ✅ 20개 보고국, 53,072 obs | A |
-| `imf_bop` | 금융계정 실거래 흐름, 국가×분기 | ✅ 150개국, 83,381 obs | A |
-| `imf_pip` | 양자 포트폴리오 자산 (CPIS/PIP), 연간 2013~ | ✅ 81개 보고국, 273,743 obs | A |
-| `imf_pip` sector | 보고 부문별 포트폴리오 자산 | ✅ 81개 보고국, 14,790 obs | A |
-| `imf_pip` SCC | 상대국 정보로 유도한 포트폴리오 부채 | ✅ 197개국, 261,987 normalized obs | C |
-| `wb_wdi` | 상장주식 시총(발행국 총액)·GDP, 연간 | ✅ 1,150 / 3,071 obs | B |
+| `imf_iip` | 대외 자산·부채 잔액, 국가×분기 (2010~) | ✅ 런타임 발견 | A |
+| `imf_iipcc` | 대외채권·채무 통화구성 | ✅ 런타임 발견 | A |
+| `imf_bop` | 금융계정 실거래 흐름, 국가×분기 | ✅ 런타임 발견 | A |
+| `imf_pip` | 양자 포트폴리오 자산 (CPIS/PIP), 연간 2013~ | ✅ 런타임 발견 | A |
+| `imf_pip` sector | 보고 부문별 포트폴리오 자산 | ✅ 런타임 발견 | A |
+| `imf_pip` SCC | 상대국 정보로 유도한 포트폴리오 부채 | ✅ 런타임 발견 | C |
+| `wb_wdi` | 상장주식 시총(발행국 총액)·GDP, 연간 | ✅ 런타임 발견 | B |
 | `coingecko_global` | 암호자산 글로벌 통제값 + 분리된 일중 오버레이 | ✅ 글로벌만(국가배분 없음) | B |
-| `bis_lbs` | 국경 간 은행 loans&deposits 양자 회랑, 분기 (Phase M) | ✅ 39개 보고국, 150,815 회랑 | B |
+| `bis_lbs` | 국경 간 은행 loans&deposits 양자 회랑, 분기 (Phase M) | ✅ 런타임 발견 | B |
 | BIS DSS | 채무증권 발행잔액 | ❌ 미착수 (후속) | — |
 
 **IMF API 주의**: 구 `dataservices.imf.org`는 DNS까지 폐기됨. 신 API는
@@ -66,8 +70,8 @@ SDMX 2.1 REST, `format=csv`(SDMX-CSV) 지원 — IMF와 달리 CSV가 나와 파
   G=loans and deposits, TO1=전통화, 5J=전체 모행 소재국, N=cross-border).
 - 값은 `OBS_VALUE × 10^UNIT_MULT`(=6, 백만 USD). 검증: KR→US claims 2024-Q4
   = $47.670B, KR liabilities to US = $14.191B (샤드 병합값과 정확 일치).
-- 보고국은 런타임 발견(1분기 전체 와일드카드) — 39개국 채택, **BM/GG/IM/JE/KY
-  5곳은 국가 마스터 밖(역외센터)이라 정직 드랍** + `pipeline_report.bis_lbs`에 기록.
+- 보고국은 1분기 전체 와일드카드로 런타임 발견한다. 국가 마스터 밖 역외센터는
+  정직하게 드랍하고 실제 채택·드랍 코드를 `pipeline_report.bis_lbs`에 기록한다.
 - 상품 G는 loans+deposits 합산 — 포지션 방향으로 분류(claims=loans/
   liabilities=deposits), grade B + estimate_method로 공개. 수집: `pnpm data:bis`
   (멱등 병합, 전체 재수집 불요).
@@ -118,13 +122,14 @@ SDMX 2.1 REST, `format=csv`(SDMX-CSV) 지원 — IMF와 달리 CSV가 나와 파
   고정환율 수치는 별도 `exposure/*.json`에서만 coverage-gated 파생값으로 제공한다.
 - IIP `P_F5`에 펀드지분 포함 → `funds` asset은 미분리.
 - PIP 파생 flow는 가격효과 미조정(D등급으로 정직 표기).
-- 총 산출 약 226MB(station 사전집계 포함) — git에는 무겁지만 정적 서빙엔 문제없음.
-  브라우저 서빙 JSON은 최대 약 2.6MB(`meta/fx_rates.json`)로 5MB 조항을 준수하고,
-  다운로드용 `facts.ndjson.gz`는 6.3MB다. 전부 lazy-load 전제. station 용량이 부담되면 후속에서 은행
+- 산출 규모는 station 사전집계 때문에 크지만 정적 서빙 파일은 5MB 계약 게이트를
+  통과해야 한다. 다운로드용 `facts.ndjson.gz`의 현재 크기는
+  `meta/facts_summary.json`의 `gzip_bytes`가 정본이다. 전부 lazy-load 전제.
+  station 용량이 부담되면 후속에서 은행
   파트너 시계열 상한(top-N) 검토.
 - BIS 양자합 ↔ IIP 국가 총계는 보고국 커버리지 차이로 불일치 — 조정하지 않고
   `pipeline_report.bis_lbs`에 기록(§12 폐합 정신, §5 중복 가드).
-- 2026-Q1이 최신 분기(IIP 기준). WB 시총은 2024년까지.
+- 최신 분기와 소스별 실제 기간은 `index.json` 및 레코드 `effective_date`가 정본이다.
 
 ## exposure + position closure (v3)
 
@@ -142,11 +147,11 @@ SDMX 2.1 REST, `format=csv`(SDMX-CSV) 지원 — IMF와 달리 CSV가 나와 파
   공개 closure를 원 입력 행에서 독립 재계산할 수 있다.
   `direct_seed_share`는 IIP 행·열 마진 도메인 안에 실제로 들어온 seed만 센다.
   원 샤드를 수정하지 않고 모든 셀을 E등급으로 발행한다. 최대 100회, 잔차 1e-9,
-  Fréchet 범위를 만족하지 않으면 부분 결과 없이 실패한다. 현행 2013-Q4~2024-Q4
-  12개 분기다. 전체 행렬 폐합 후 자산별 상위 1,000셀, 총 24,000셀을 발행하고
-  생략 셀 수·합계는 각 샤드에 보존한다.
-- `data:check`: exposure 122개국/65분기, 통화 53,072건, 부문 14,790건,
-  재구성 2,318건, FXD 458건, RAS 24,000셀을 계약·등급·범위·폐합까지 전수 확인한다.
+  Fréchet 범위를 만족하지 않으면 부분 결과 없이 실패한다. 가용 기간은
+  `position_closure/index.json`이 정본이다. 전체 행렬 폐합 후 기간·자산별 상위
+  1,000셀을 발행하고 생략 셀 수·합계는 각 샤드에 보존한다.
+- `data:check`: exposure index↔국가 shard↔facts summary의 변동 가능한 건수를 서로
+  폐합하고, 통화·부문·재구성·FXD와 모든 발행 RAS 셀을 계약·등급·범위까지 전수 확인한다.
 
 ## flowmatrix (Phase O — §8 재배분 행렬)
 
@@ -156,5 +161,5 @@ SDMX 2.1 REST, `format=csv`(SDMX-CSV) 지원 — IMF와 달리 CSV가 나와 파
   1e-9. 미수렴이면 빌드 자체가 실패한다(부분 산출 금지).
 - 셀 드랍 없음 — 초소액 마진(달러 단위 국가)에서도 폐합이 정확해야 sanity의
   전수 마진 검증이 성립한다(개발 중 $1 컷이 폐합을 깨는 것을 적발해 제거).
-- 65분기 · 8,819 국가-행렬 · 총 ~7MB. 체인: `data:station` 다음
-  `data:flowmatrix`(크론 포함 — 체인 누락=스테일 산출물).
+- 발행 기간·국가-행렬 수는 `data:flowmatrix`와 sanity가 매 갱신 때 출력·검증한다.
+  체인: `data:station` 다음 `data:flowmatrix`(크론 포함 — 체인 누락=스테일 산출물).

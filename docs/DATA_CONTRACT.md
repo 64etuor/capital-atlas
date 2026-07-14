@@ -205,7 +205,7 @@ live 데이터는 `meta/` 통제값·오버레이 전용.
 
 `scripts/build/synoptic.ts`가 커밋된 샤드에서 **네트워크 없이** 생성
 (`pnpm data:synoptic`, 데이터 재수집 후 반드시 재실행). 대시보드는 이 파일
-하나만 lazy-load 한다 — 클라이언트의 65분기 샤드 순회 금지. TS 미러:
+하나만 lazy-load 한다 — 클라이언트의 전체 기간 샤드 순회 금지. TS 미러:
 `src/types/data.ts`의 `SynopticFile`.
 
 - `per_quarter[period][asset]`: 글로벌 stock/flow(양측)/valuation 합계 —
@@ -360,15 +360,17 @@ stock 계열만 추적(흐름·파생 지표는 revision_key 없음 = 행 생략
   GRADE E" 라벨 + E-안개, 셀 도시에에 산식·Fréchet 범위·반복·잔차·관측
   마진 전부 노출(source: `model_flow_reallocation` + `imf_bop`).
   **VIS=OBS에서 구역 통째 소멸**(전부 모델 — §6의 가장 순수한 적용).
-- 결정론(N1): 타임스탬프 없음, 재실행 바이트 동일(테스트 강제). 65분기 ·
-  파일당 ~110KB(5MB 조항 준수). 갱신 체인: `data:station` 다음.
+- 결정론(N1): 타임스탬프 없음, 재실행 바이트 동일(테스트 강제). 기간·파일 크기는
+  index/shard와 sanity 출력이 정본이며 파일당 5MB 조항을 준수한다. 갱신 체인:
+  `data:station` 다음.
 
 ### facts.ndjson.gz — 정본 수치 원장 (v3, 초안 §11.2 축소 + §16-6)
 
 `scripts/build/facts.ts`가 stocks(3 basis)·flows_country·flows_bilateral과 v3
 currency/sector/reconstructed/FXD/RAS 레코드를 라인당 JSON 1개(NDJSON)로
-평탄화해 gzip 발행한다(505,316건, 6,321,710 bytes). `position_closure` 24,000건은
-발행된 상위 셀이며 생략 tail 메타데이터는 원 `position_closure` 샤드가 정본이다.
+평탄화해 gzip 발행한다. 스냅샷마다 달라지는 정확한 레코드 수·테이블/등급 분포·압축
+바이트는 `meta/facts_summary.json`이 정본이다. `position_closure`는 발행된 상위
+셀이며 정확한 수와 생략 tail 메타데이터는 원 `position_closure` 샤드가 정본이다.
 TS 미러: `FactLine`(scripts/build/facts.ts). 규칙:
 
 - **관측과 파생을 구분 보존**: A/B 직접 관측과 C–E 파생/모델 레코드를 한 원장에서

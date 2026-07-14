@@ -66,10 +66,10 @@ data:fetch → data:bis → data:exposure → data:closure → data:synoptic →
 
 | 초안 권장 | 여기서는 | 사유 |
 |---|---|---|
-| ClickHouse/PostgreSQL/Redis/FastAPI | 없음 — 정적 파일 + 클라이언트 lazy-load | 분기 수치 505,316건 규모에 서버는 과설계. 클라이언트 LRU 샤드 캐시로 충분 |
+| ClickHouse/PostgreSQL/Redis/FastAPI | 없음 — 정적 파일 + 클라이언트 lazy-load | 현행 facts gzip은 100MB 재검토 기준보다 충분히 작아 서버는 과설계. 클라이언트 LRU 샤드 캐시로 충분 |
 | Dagster/Airflow | GitHub Actions 크론 + 명시적 체인 | 단일 파이프라인·일 1회 — 오케스트레이터 도입 비용이 이득을 초과 |
 | dbt | tsx 스크립트 + zod 게이트 + vitest | 같은 역할(변환+테스트)을 단일 언어로 |
-| Parquet/컬럼 저장 | NDJSON.gz 수치 원장 | 의존성 0·범용 소비(jq/pandas/duckdb 모두 읽음), 6.3MB로 충분히 작음 |
+| Parquet/컬럼 저장 | NDJSON.gz 수치 원장 | 의존성 0·범용 소비(jq/pandas/duckdb 모두 읽음), 현재 크기는 `meta/facts_summary.json`으로 추적 |
 | S3 원본 보존 | data-raw/ 로컬 캐시(24h) | 원본 재현은 소스 API가 담당, 빈티지 다이제스트가 개정 관측을 담당 |
 
 다음 조건 중 하나가 생기면 DuckDB 아티팩트/서버 계층을 재검토한다:
