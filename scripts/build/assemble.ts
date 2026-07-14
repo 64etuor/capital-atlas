@@ -23,6 +23,7 @@ import { derivePipPositionChanges } from './bilateral.ts'
 import type { BilateralPositionBasis } from '../../src/types/data.ts'
 import type { DipObs } from '../fetch/imf-dip.ts'
 import { dipToBilateral } from './bilateral.ts'
+import { sortRecordsDeterministically } from './deterministic-order.ts'
 
 type Grade = 'A' | 'B' | 'C' | 'D' | 'E'
 
@@ -448,7 +449,9 @@ export function assemble({ countries, wb, iip, bop, pip, dip }: AssembleInputs):
 
   const flowPeriods = [...flowShards.keys()].sort(compareQuarters)
   for (const [period, records] of flowShards)
-    totalBytes += writeJson(`flows_country/${period}.json`, { records })
+    totalBytes += writeJson(`flows_country/${period}.json`, {
+      records: sortRecordsDeterministically(records),
+    })
 
   const bilateralPeriods = [...bilateralShards.keys()].sort(compareQuarters)
   for (const [period, records] of bilateralShards)
