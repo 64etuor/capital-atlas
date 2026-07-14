@@ -86,8 +86,8 @@ export const fxdResultSchema = z.discriminatedUnion('status', [
 
 export const positionClosureCellSchema = z
   .object({
-    owner_country: iso3,
-    issuer_country: iso3,
+    owner_country: z.union([iso3, z.literal('discrepancy_owner')]),
+    issuer_country: z.union([iso3, z.literal('discrepancy_issuer')]),
     asset: z.enum(['listed_equity', 'debt_securities']),
     period,
     value_usd: z.number().finite().nonnegative(),

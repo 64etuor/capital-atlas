@@ -340,6 +340,9 @@ export interface PositionClosureAsset {
   residual: number
   converged: true
   direct_seed_share: number
+  total_cells: number
+  omitted_cells: number
+  omitted_value_usd: number
 }
 
 export interface PositionClosureFile {

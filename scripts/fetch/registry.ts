@@ -160,6 +160,16 @@ export const SOURCE_REGISTRY: readonly SourceDef[] = [
     expected_release_lag: 'derived at assembly time',
   },
   {
+    source_id: 'model_position_closure',
+    name: 'Top-down/bottom-up position closure — bounded RAS/IPF',
+    publisher: 'capital-atlas pipeline',
+    url: 'docs/DATA_CONTRACT.md',
+    license_note: 'internal model allocation — grade E with Frechet bounds',
+    collection_mode: 'derived_model',
+    update_frequency: 'annual',
+    expected_release_lag: 'derived at assembly time',
+  },
+  {
     source_id: 'coingecko_global',
     name: 'CoinGecko global crypto market cap',
     publisher: 'CoinGecko',

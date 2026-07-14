@@ -162,6 +162,21 @@ const toPartner = (r: BilateralRecord, country: string): StationPartner => ({
   ...(r.upper_bound !== undefined && { upper: r.upper_bound }),
 })
 
+const toReconstructedPartner = (
+  r: BilateralRecord,
+  country: string,
+  upper: number,
+): StationPartner => ({
+  country,
+  value: r.value_usd,
+  grade: 'C',
+  source_id: r.source_id,
+  effective_date: r.effective_date,
+  method: 'counterparty_assets_transposed_to_reconstructed_liability',
+  lower: 0,
+  upper,
+})
+
 const capSort = (rows: StationPartner[]): StationPartner[] =>
   rows
     .sort((a, b) => Math.abs(b.value) - Math.abs(a.value))
@@ -203,6 +218,12 @@ export function stationPartners(
   bilat: readonly BilateralRecord[],
   iso3: string,
 ): Record<string, { all: PartnerSides; assets: Record<string, PartnerSides> }> {
+  const reconstructedTotals = new Map<string, number>()
+  for (const r of bilat) {
+    if (r.measure !== 'stock' || r.source_id !== 'imf_pip') continue
+    const key = `${r.issuer_country}|${r.period}|${r.asset}`
+    reconstructedTotals.set(key, (reconstructedTotals.get(key) ?? 0) + r.value_usd)
+  }
   const byPeriod = new Map<
     string,
     Map<string, { holdings: StationPartner[]; holders: StationPartner[] }>
@@ -216,7 +237,10 @@ export function stationPartners(
     let sides = assets.get(r.asset)
     if (!sides) assets.set(r.asset, (sides = { holdings: [], holders: [] }))
     if (mine) sides.holdings.push(toPartner(r, r.issuer_country))
-    else sides.holders.push(toPartner(r, r.owner_country))
+    else if (r.source_id === 'imf_pip') {
+      const total = reconstructedTotals.get(`${iso3}|${r.period}|${r.asset}`) ?? r.value_usd
+      sides.holders.push(toReconstructedPartner(r, r.owner_country, total))
+    } else sides.holders.push(toPartner(r, r.owner_country))
   }
 
   const out: Record<
