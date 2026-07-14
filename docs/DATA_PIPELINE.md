@@ -136,7 +136,10 @@ SDMX 2.1 REST, `format=csv`(SDMX-CSV) 지원 — IMF와 달리 CSV가 나와 파
   source IDs를 함께 발행한다.
 - `reconstructed_liabilities`: PIP SCC/상대국 자산을 부채 방향으로 전치한 C등급이다.
   상향식 합계와 IIP 하향식 총계 사이의 corridor를 범위로 공개하며, 독립 관측이 아니다.
-- `data:closure`: 직접 PIP 양자자산을 seed, IIP 자산·부채를 마진으로 RAS/IPF를 실행한다.
+- `data:closure`: 공개 bilateral 샤드의 $100M 절단 전 raw normalized PIP 직접 양자자산을
+  seed, IIP 자산·부채를 마진으로 RAS/IPF를 실행한다.
+  같은 입력의 결정론적 gzip 감사 미러를 함께 발행하므로 `data-raw/`가 없는 clean CI도
+  공개 closure를 원 입력 행에서 독립 재계산할 수 있다.
   `direct_seed_share`는 IIP 행·열 마진 도메인 안에 실제로 들어온 seed만 센다.
   원 샤드를 수정하지 않고 모든 셀을 E등급으로 발행한다. 최대 100회, 잔차 1e-9,
   Fréchet 범위를 만족하지 않으면 부분 결과 없이 실패한다. 현행 2013-Q4~2024-Q4

@@ -47,8 +47,7 @@ export function buildCountries(): CountryRow[] {
   return rows
 }
 
-export function run(): CountryRow[] {
-  const rows = buildCountries()
+export function run(rows: CountryRow[] = buildCountries()): CountryRow[] {
   const bytes = writeJson('countries.json', rows)
   writeRawJson('countries_master.json', rows)
   console.log(`[countries] ${rows.length} economies → countries.json (${(bytes / 1024).toFixed(1)}KB)`)

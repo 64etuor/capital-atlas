@@ -3,15 +3,142 @@ import {
   DISCREPANCY_ISSUER,
   DISCREPANCY_OWNER,
   boundPositionValue,
+  buildClosureAuditInputs,
+  encodeClosureAuditInputs,
   frechetPositionBounds,
   hasBottomUpSeed,
+  rawPipSeedForClosure,
   rasClose,
 } from './position-closure.ts'
+import { gunzipSync } from 'node:zlib'
 
 const near = (a: number, b: number, tolerance = 1e-9) =>
   Math.abs(a - b) <= tolerance * Math.max(1, Math.abs(a), Math.abs(b))
 
 describe('rasClose — top-down/bottom-up position closure', () => {
+  it('publishes a deterministic audit mirror of the normalized official inputs', () => {
+    const audit = buildClosureAuditInputs(
+      [
+        {
+          iso3: 'USA',
+          entry: 'L_P',
+          indicator: 'P_F5_MV',
+          quarter: '2024-Q4',
+          value: 80,
+        },
+        {
+          iso3: 'KOR',
+          entry: 'A_P',
+          indicator: 'P_F5_MV',
+          quarter: '2024-Q4',
+          value: 100,
+        },
+        {
+          iso3: 'KOR',
+          entry: 'A_P',
+          indicator: 'D',
+          quarter: '2024-Q4',
+          value: 999,
+        },
+      ],
+      [
+        {
+          owner: 'KOR',
+          issuer: 'USA',
+          indicator: 'P_F51_P_USD',
+          year: 2024,
+          value: 50_000_000,
+        },
+      ],
+    )
+
+    expect(audit).toEqual({
+      schema_version: 1,
+      source_ids: ['imf_iip', 'imf_pip'],
+      iip: [
+        {
+          iso3: 'KOR',
+          entry: 'A_P',
+          indicator: 'P_F5_MV',
+          quarter: '2024-Q4',
+          value: 100,
+        },
+        {
+          iso3: 'USA',
+          entry: 'L_P',
+          indicator: 'P_F5_MV',
+          quarter: '2024-Q4',
+          value: 80,
+        },
+      ],
+      pip: [
+        {
+          owner: 'KOR',
+          issuer: 'USA',
+          indicator: 'P_F51_P_USD',
+          year: 2024,
+          value: 50_000_000,
+        },
+      ],
+    })
+    const first = encodeClosureAuditInputs(audit)
+    const second = encodeClosureAuditInputs(audit)
+    expect(first.equals(second)).toBe(true)
+    expect(JSON.parse(gunzipSync(first).toString())).toEqual(audit)
+  })
+
+  it('builds the seed from unpruned raw normalized PIP observations', () => {
+    const seed = rawPipSeedForClosure(
+      [
+        {
+          owner: 'KOR',
+          issuer: 'USA',
+          indicator: 'P_F51_P_USD',
+          year: 2024,
+          value: 50_000_000,
+        },
+        {
+          owner: 'KOR',
+          issuer: 'JPN',
+          indicator: 'P_F3_P_USD',
+          year: 2024,
+          value: 20_000_000,
+        },
+        {
+          owner: 'KOR',
+          issuer: 'USA',
+          indicator: 'P_F51_P_USD',
+          year: 2023,
+          value: 10_000_000,
+        },
+        {
+          owner: 'KOR',
+          issuer: 'KOR',
+          indicator: 'P_F51_P_USD',
+          year: 2024,
+          value: 30_000_000,
+        },
+        {
+          owner: 'OUT',
+          issuer: 'USA',
+          indicator: 'P_F51_P_USD',
+          year: 2024,
+          value: 40_000_000,
+        },
+      ],
+      '2024-Q4',
+      'listed_equity',
+      { KOR: 100_000_000 },
+      { USA: 100_000_000 },
+    )
+
+    // $50M is intentionally below the public bilateral-shard floor. Keeping it
+    // proves the closure seed comes from raw PIP, not that pruned public view.
+    expect(seed).toEqual([
+      { row: 'KOR', column: 'USA', value: 50_000_000 },
+    ])
+  })
+
   it('clips floating-point residue to the exact published Fréchet corridor', () => {
     expect(boundPositionValue(100.0000001, 0, 100)).toBe(100)
     expect(boundPositionValue(-0.0000001, 0, 100)).toBe(0)

@@ -4,6 +4,7 @@
  */
 import { readFileSync, readdirSync, statSync, existsSync } from 'node:fs'
 import { join } from 'node:path'
+import { gunzipSync } from 'node:zlib'
 import { z } from 'zod'
 import { OUT_DIR, readRawJson } from '../fetch/lib.ts'
 import {
@@ -13,7 +14,10 @@ import {
   reconstructedLiabilitySchema,
   sectorPositionRecordSchema,
 } from '../build/exposure-contract.ts'
-import { rasClose } from '../build/position-closure.ts'
+import {
+  CLOSURE_AUDIT_REL_PATH,
+  rasClose,
+} from '../build/position-closure.ts'
 
 const grade = z.enum(['A', 'B', 'C', 'D', 'E'])
 const period = z.string().regex(/^\d{4}-Q[1-4]$/)
@@ -306,15 +310,73 @@ if (!existsSync(exposureIndexPath)) {
 let positionClosureN = 0
 const closureDir = join(OUT_DIR, 'position_closure')
 const closureIndexPath = join(closureDir, 'index.json')
-const closureIip = readRawJson<
-  Array<{
-    iso3: string
-    entry: 'A_P' | 'L_P'
-    indicator: string
-    quarter: string
-    value: number
-  }>
->('imf/iip_normalized.json')
+const auditIipObservation = z.object({
+  iso3: z.string().length(3),
+  entry: z.enum(['A_P', 'L_P']),
+  indicator: z.enum(['P_F5_MV', 'P_F3_MV']),
+  quarter: period,
+  value: z.number().finite(),
+})
+const auditPipObservation = z.object({
+  owner: z.string().length(3),
+  issuer: z.string().length(3),
+  indicator: z.enum(['P_F51_P_USD', 'P_F3_P_USD']),
+  year: z.number().int().min(2013),
+  value: z.number().finite(),
+})
+const closureAuditSchema = z.object({
+  schema_version: z.literal(1),
+  source_ids: z.tuple([z.literal('imf_iip'), z.literal('imf_pip')]),
+  iip: z.array(auditIipObservation).min(1),
+  pip: z.array(auditPipObservation).min(1),
+})
+const closureAuditPath = join(OUT_DIR, CLOSURE_AUDIT_REL_PATH)
+let closureIip: z.infer<typeof auditIipObservation>[] = []
+let closurePip: z.infer<typeof auditPipObservation>[] = []
+if (!existsSync(closureAuditPath)) {
+  fail(`${CLOSURE_AUDIT_REL_PATH} missing — run pnpm data:closure`)
+} else {
+  try {
+    const parsed = closureAuditSchema.safeParse(
+      JSON.parse(gunzipSync(readFileSync(closureAuditPath)).toString()),
+    )
+    if (!parsed.success) {
+      fail(`${CLOSURE_AUDIT_REL_PATH}: ${parsed.error.issues[0].message}`)
+    } else {
+      closureIip = parsed.data.iip
+      closurePip = parsed.data.pip
+    }
+  } catch (error) {
+    fail(`${CLOSURE_AUDIT_REL_PATH}: unreadable audit input: ${String(error)}`)
+  }
+}
+
+// On refresh machines the ignored raw cache exists: prove the committed audit
+// mirror is exactly the closure-relevant normalized official input. Clean CI
+// can then independently recompute from that deterministic mirror.
+const canonicalRows = (rows: readonly unknown[]) =>
+  JSON.stringify([...rows].sort((a, b) => JSON.stringify(a).localeCompare(JSON.stringify(b))))
+const rawClosureIip = readRawJson<Array<z.infer<typeof auditIipObservation> & { indicator: string }>>(
+  'imf/iip_normalized.json',
+)
+if (rawClosureIip) {
+  const relevant = rawClosureIip.filter(
+    (row) =>
+      (row.indicator === 'P_F5_MV' || row.indicator === 'P_F3_MV') &&
+      row.quarter.endsWith('-Q4') &&
+      row.quarter >= '2013-Q4',
+  )
+  if (canonicalRows(relevant) !== canonicalRows(closureIip))
+    fail(`${CLOSURE_AUDIT_REL_PATH}: IIP mirror differs from normalized raw input`)
+}
+const rawClosurePip = readRawJson<Array<z.infer<typeof auditPipObservation>>>(
+  'imf/pip_normalized.json',
+)
+if (rawClosurePip) {
+  const relevant = rawClosurePip.filter((row) => row.year >= 2013)
+  if (canonicalRows(relevant) !== canonicalRows(closurePip))
+    fail(`${CLOSURE_AUDIT_REL_PATH}: PIP mirror differs from normalized raw input`)
+}
 const closureMargins = new Map<
   string,
   { rows: Record<string, number>; columns: Record<string, number> }
@@ -413,31 +475,28 @@ if (!existsSync(closureIndexPath)) {
         fail(`position_closure/${closurePeriod}.json ${asset}: source IIP margins missing`)
         continue
       }
-      const bilateralPath = join(OUT_DIR, 'flows_bilateral', `${closurePeriod}.json`)
-      const direct = (
-        JSON.parse(readFileSync(bilateralPath, 'utf8')) as {
-          records: Array<{
-            owner_country: string
-            issuer_country: string
-            asset: string
-            measure: string
-            value_usd: number
-            source_id: string
-          }>
-        }
-      ).records.filter(
+      // Rebuild from the raw normalized IMF observation table, independently
+      // of both the closure builder and the pruned public bilateral view.
+      const pipIndicator =
+        asset === 'listed_equity' ? 'P_F51_P_USD' : 'P_F3_P_USD'
+      const closureYear = Number(closurePeriod.slice(0, 4))
+      const direct = (closurePip ?? []).filter(
         (row) =>
-          row.source_id === 'imf_pip' &&
-          row.measure === 'stock' &&
-          row.asset === asset,
+          row.year === closureYear &&
+          row.indicator === pipIndicator &&
+          row.owner !== row.issuer &&
+          sourceMargins.rows[row.owner] !== undefined &&
+          sourceMargins.columns[row.issuer] !== undefined &&
+          Number.isFinite(row.value) &&
+          row.value > 0,
       )
       let recomputed
       try {
         recomputed = rasClose(
           direct.map((row) => ({
-            row: row.owner_country,
-            column: row.issuer_country,
-            value: row.value_usd,
+            row: row.owner,
+            column: row.issuer,
+            value: row.value,
           })),
           sourceMargins.rows,
           sourceMargins.columns,
