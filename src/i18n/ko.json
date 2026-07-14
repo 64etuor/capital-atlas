@@ -11,6 +11,9 @@
     "surfaceAria": "관측 표면",
     "localeAria": "언어"
   },
+  "nowcast": {
+    "aria": "글로벌 암호자산 실시간 시장 오버레이"
+  },
   "dial": {
     "label": "관측소",
     "world": "세계",

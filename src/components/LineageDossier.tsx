@@ -330,9 +330,9 @@ export function LineageDossier() {
                 })}
             </Row>
           )}
-          {firstSource && (
+          {(payload.retrieved_at || firstSource) && (
             <Row label={t('dossier.rows.retrieved')}>
-              {firstSource.retrieved_at.slice(0, 10)}
+              {payload.retrieved_at ?? firstSource?.retrieved_at.slice(0, 10)}
             </Row>
           )}
           {firstSource && (

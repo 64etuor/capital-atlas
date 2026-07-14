@@ -11,6 +11,9 @@
     "surfaceAria": "Observation surface",
     "localeAria": "Language"
   },
+  "nowcast": {
+    "aria": "Global crypto live-market overlay"
+  },
   "dial": {
     "label": "OBSERVATORY",
     "world": "World",

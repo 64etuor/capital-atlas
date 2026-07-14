@@ -169,6 +169,14 @@ export interface FlowIntensityFile {
   series: FlowIntensityPoint[]
 }
 
+export interface GlobalCryptoFile {
+  total_market_cap_usd: number
+  as_of: string
+  source_id: 'coingecko_global'
+  confidence_grade: 'B'
+  note: string
+}
+
 export interface StocksFile {
   basis: Basis
   records: StockRecord[]
