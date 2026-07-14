@@ -1,0 +1,220 @@
+scripts/fetch/registry.ts
+  s_6cfe0f5f25d4e5::t_4cb771967a612e 153-161
+  s_196e5b31affd6e::t_74573486e66a75 152
+scripts/fetch/registry.test.ts
+  s_6cfe0f5f25d4e5::t_4cb771967a612e 72
+scripts/fetch/imf-exposure.ts
+  s_6cfe0f5f25d4e5::t_4cb771967a612e 23,32-33,87-89,210
+scripts/build/exposure.test.ts
+  s_6cfe0f5f25d4e5::t_80bdb5737b7897 1-140
+scripts/fetch/fx.test.ts
+  s_6cfe0f5f25d4e5::t_80bdb5737b7897 32,60-80
+scripts/build/exposure-contract.ts
+  s_6cfe0f5f25d4e5::t_4cb771967a612e 20
+scripts/run.ts
+  s_6cfe0f5f25d4e5::t_4cb771967a612e 15,31
+scripts/fetch/fx.ts
+  s_6cfe0f5f25d4e5::t_4cb771967a612e 56-113,137-138,141,159
+src/types/data.ts
+  s_6cfe0f5f25d4e5::t_4cb771967a612e 210,215-230
+scripts/build/exposure.ts
+  s_6cfe0f5f25d4e5::t_4cb771967a612e 1-217
+src/lib/money.test.ts
+  s_6cfe0f5f25d4e5::t_e418ab4326b57e 21
+package.json
+  s_6cfe0f5f25d4e5::t_a3274195a69370 25-26
+public/data/exposure/ALB.json
+  s_6cfe0f5f25d4e5::t_12c405f689e93a 1
+public/data/exposure/ARG.json
+  s_6cfe0f5f25d4e5::t_f72b42a58b2d89 1
+public/data/exposure/AUS.json
+  s_6cfe0f5f25d4e5::t_7eedf9d6d0c9b5 1
+public/data/exposure/AUT.json
+  s_6cfe0f5f25d4e5::t_d182cc4271206b 1
+public/data/exposure/BEL.json
+  s_6cfe0f5f25d4e5::t_3cfce66891f384 1
+public/data/exposure/BGD.json
+  s_6cfe0f5f25d4e5::t_79f84a04a42866 1
+public/data/exposure/BGR.json
+  s_6cfe0f5f25d4e5::t_4ba5dc61acea33 1
+public/data/exposure/BHR.json
+  s_6cfe0f5f25d4e5::t_d8a16c70347fda 1
+public/data/exposure/BHS.json
+  s_6cfe0f5f25d4e5::t_aadc73ec650e99 1
+public/data/exposure/BLR.json
+  s_6cfe0f5f25d4e5::t_d6d3bf4522b0c5 1
+public/data/exposure/BOL.json
+  s_6cfe0f5f25d4e5::t_0f94365653d20e 1
+public/data/exposure/BRA.json
+  s_6cfe0f5f25d4e5::t_60d5ad17dc966e 1
+public/data/exposure/BRB.json
+  s_6cfe0f5f25d4e5::t_eddab9004fe2c3 1
+public/data/exposure/CAN.json
+  s_6cfe0f5f25d4e5::t_96e71a2f1c3cb8 1
+public/data/exposure/CHE.json
+  s_6cfe0f5f25d4e5::t_d26a0aad471c79 1
+public/data/exposure/CHL.json
+  s_6cfe0f5f25d4e5::t_b1702c7fb2d455 1
+public/data/exposure/CHN.json
+  s_6cfe0f5f25d4e5::t_26e969363ce7ed 1
+public/data/exposure/COL.json
+  s_6cfe0f5f25d4e5::t_7d829499b19048 1
+public/data/exposure/CRI.json
+  s_6cfe0f5f25d4e5::t_6da51750bd76be 1
+public/data/exposure/CYP.json
+  s_6cfe0f5f25d4e5::t_cd42822d22c0e1 1
+public/data/exposure/CZE.json
+  s_6cfe0f5f25d4e5::t_c3f1e25666e45c 1
+public/data/exposure/DEU.json
+  s_6cfe0f5f25d4e5::t_5bb266d1f678c4 1
+public/data/exposure/DNK.json
+  s_6cfe0f5f25d4e5::t_890f7c08cd36fe 1
+public/data/exposure/EGY.json
+  s_6cfe0f5f25d4e5::t_8e2044264a1e8e 1
+public/data/exposure/ESP.json
+  s_6cfe0f5f25d4e5::t_238c22ae3a1f91 1
+public/data/exposure/EST.json
+  s_6cfe0f5f25d4e5::t_00c120a67b7434 1
+public/data/exposure/FIN.json
+  s_6cfe0f5f25d4e5::t_bf2f90056f2429 1
+public/data/exposure/FRA.json
+  s_6cfe0f5f25d4e5::t_b03bf85465060d 1
+public/data/exposure/GBR.json
+  s_6cfe0f5f25d4e5::t_1afb9370ba5051 1
+public/data/exposure/GRC.json
+  s_6cfe0f5f25d4e5::t_2908c10720fc02 1
+public/data/exposure/HKG.json
+  s_6cfe0f5f25d4e5::t_8d624563f55b25 1
+public/data/exposure/HND.json
+  s_6cfe0f5f25d4e5::t_b21874ef26fb14 1
+public/data/exposure/HRV.json
+  s_6cfe0f5f25d4e5::t_4f1445afe6745b 1
+public/data/exposure/HUN.json
+  s_6cfe0f5f25d4e5::t_0d5405eb7cedfc 1
+public/data/exposure/IDN.json
+  s_6cfe0f5f25d4e5::t_f28e2fd4da1f31 1
+public/data/exposure/IND.json
+  s_6cfe0f5f25d4e5::t_388dd37d7f0b96 1
+public/data/exposure/IRL.json
+  s_6cfe0f5f25d4e5::t_6bac745f0be837 1
+public/data/exposure/ISL.json
+  s_6cfe0f5f25d4e5::t_dabbbaecb6a865 1
+public/data/exposure/ISR.json
+  s_6cfe0f5f25d4e5::t_24ad0e49c98eae 1
+public/data/exposure/ITA.json
+  s_6cfe0f5f25d4e5::t_a9adee623d3c1f 1
+public/data/exposure/JPN.json
+  s_6cfe0f5f25d4e5::t_e63c3a4085300a 1
+public/data/exposure/KAZ.json
+  s_6cfe0f5f25d4e5::t_bc7d257057940d 1
+public/data/exposure/KOR.json
+  s_6cfe0f5f25d4e5::t_ee2c9d4a435b42 1
+public/data/exposure/KWT.json
+  s_6cfe0f5f25d4e5::t_e51bd2084f8a33 1
+public/data/exposure/LBN.json
+  s_6cfe0f5f25d4e5::t_2ddc27c8160f28 1
+public/data/exposure/LBR.json
+  s_6cfe0f5f25d4e5::t_bbd41ba1ccc30e 1
+public/data/exposure/LTU.json
+  s_6cfe0f5f25d4e5::t_77f9427c692d6e 1
+public/data/exposure/LUX.json
+  s_6cfe0f5f25d4e5::t_5f7d42a78889ad 1
+public/data/exposure/LVA.json
+  s_6cfe0f5f25d4e5::t_715a9928234a04 1
+public/data/exposure/MAC.json
+  s_6cfe0f5f25d4e5::t_6c4562d6b15e15 1
+public/data/exposure/MEX.json
+  s_6cfe0f5f25d4e5::t_11a13c8a1513f5 1
+public/data/exposure/MKD.json
+  s_6cfe0f5f25d4e5::t_2ab20a99c779c0 1
+public/data/exposure/MLT.json
+  s_6cfe0f5f25d4e5::t_d0e81ed77375de 1
+public/data/exposure/MNG.json
+  s_6cfe0f5f25d4e5::t_ef581a74b4c62f 1
+public/data/exposure/MUS.json
+  s_6cfe0f5f25d4e5::t_30d933e9d338ff 1
+public/data/exposure/MYS.json
+  s_6cfe0f5f25d4e5::t_7e772cd401ecd1 1
+public/data/exposure/NAM.json
+  s_6cfe0f5f25d4e5::t_260a5a8bd34e09 1
+public/data/exposure/NLD.json
+  s_6cfe0f5f25d4e5::t_ed4447f25e0979 1
+public/data/exposure/NOR.json
+  s_6cfe0f5f25d4e5::t_d13a767b51ca05 1
+public/data/exposure/NZL.json
+  s_6cfe0f5f25d4e5::t_7a37d6e4208fcb 1
+public/data/exposure/PAK.json
+  s_6cfe0f5f25d4e5::t_a11eb005483e7f 1
+public/data/exposure/PAN.json
+  s_6cfe0f5f25d4e5::t_8a6f51df36fdf1 1
+public/data/exposure/PER.json
+  s_6cfe0f5f25d4e5::t_75b4547a7a8864 1
+public/data/exposure/PHL.json
+  s_6cfe0f5f25d4e5::t_ab5f0042e7876f 1
+public/data/exposure/PLW.json
+  s_6cfe0f5f25d4e5::t_84ea720f2f8e54 1
+public/data/exposure/POL.json
+  s_6cfe0f5f25d4e5::t_7919876e6bcdef 1
+public/data/exposure/PRT.json
+  s_6cfe0f5f25d4e5::t_871a0fc7d40e5f 1
+public/data/exposure/ROU.json
+  s_6cfe0f5f25d4e5::t_8a7d8075df2fdc 1
+public/data/exposure/RUS.json
+  s_6cfe0f5f25d4e5::t_8318debc74e0e9 1
+public/data/exposure/SAU.json
+  s_6cfe0f5f25d4e5::t_da038cdf09739c 1
+public/data/exposure/SGP.json
+  s_6cfe0f5f25d4e5::t_3dab08c1b658ab 1
+public/data/exposure/SLV.json
+  s_6cfe0f5f25d4e5::t_39ad6988ae2461 1
+public/data/exposure/SVK.json
+  s_6cfe0f5f25d4e5::t_3d2b233958f3c5 1
+public/data/exposure/SVN.json
+  s_6cfe0f5f25d4e5::t_a855ebe2603097 1
+public/data/exposure/SWE.json
+  s_6cfe0f5f25d4e5::t_639a0dd9b65a31 1
+public/data/exposure/THA.json
+  s_6cfe0f5f25d4e5::t_96127fe127df16 1
+public/data/exposure/TUR.json
+  s_6cfe0f5f25d4e5::t_4748fdfd4afdbb 1
+public/data/exposure/UKR.json
+  s_6cfe0f5f25d4e5::t_716af0556582b8 1
+public/data/exposure/URY.json
+  s_6cfe0f5f25d4e5::t_5c86b9232df37f 1
+public/data/exposure/USA.json
+  s_6cfe0f5f25d4e5::t_e2bcae094d7c3f 1
+public/data/exposure/VEN.json
+  s_6cfe0f5f25d4e5::t_368d7d40e238f9 1
+public/data/exposure/ZAF.json
+  s_6cfe0f5f25d4e5::t_8161523d040e85 1
+public/data/exposure/index.json
+  s_6cfe0f5f25d4e5::t_03ef2491e3675c 1
+public/data/meta/fx_rates.json
+  s_6cfe0f5f25d4e5::t_e00bb4eb49f623 1
+public/data/meta/sources.json
+  s_6cfe0f5f25d4e5::t_0a67f71180d546 1
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.13",
+  "base_commit_sha": "607c242da8878617a1188928d71c977f6fd32837",
+  "prompts": {},
+  "sessions": {
+    "s_196e5b31affd6e": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "019f5e0c-9a1f-75b0-a3ab-1c02dee66eb0",
+        "model": "gpt-5.6-sol"
+      },
+      "human_author": "64etuor <130260521+64etuor@users.noreply.github.com>"
+    },
+    "s_6cfe0f5f25d4e5": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "019f5c0a-f294-78b2-af01-6c5483dbfcbe",
+        "model": "gpt-5.6-sol"
+      },
+      "human_author": "64etuor <130260521+64etuor@users.noreply.github.com>"
+    }
+  }
+}
