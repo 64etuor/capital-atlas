@@ -48,15 +48,26 @@ export function assertMinimumRows(
 
 const sleep = (ms: number) => new Promise((r) => setTimeout(r, ms))
 
+export interface FetchOptions {
+  accept?: string
+  timeoutMs?: number
+  /** Endpoint-specific transient statuses. Generic 4xx remains fail-fast. */
+  retryStatuses?: readonly number[]
+}
+
+export interface CachedFetchOptions extends FetchOptions {
+  maxAgeHours?: number
+}
+
 /**
  * Bounded-retry fetch: 3 attempts, backoff 3s/5s (+0–500ms jitter).
  * Returns null on terminal failure (recorded in `failures`).
  */
 export async function fetchBounded(
   url: string,
-  opts: { accept?: string; timeoutMs?: number } = {},
+  opts: FetchOptions = {},
 ): Promise<string | null> {
-  const { accept, timeoutMs = 90_000 } = opts
+  const { accept, retryStatuses = [], timeoutMs = 90_000 } = opts
   let lastError = ''
   let attemptsMade = 0
   for (let attempt = 1; attempt <= 3; attempt++) {
@@ -68,8 +79,15 @@ export async function fetchBounded(
       })
       if (res.ok) return await res.text()
       lastError = `HTTP ${res.status}`
-      // 4xx (except 429) will not improve on retry — fail fast.
-      if (res.status >= 400 && res.status < 500 && res.status !== 429) break
+      // Generic 4xx is a caller bug and fails fast. A caller may opt a known
+      // flaky endpoint into bounded retry for a specific observed status.
+      if (
+        res.status >= 400 &&
+        res.status < 500 &&
+        res.status !== 429 &&
+        !retryStatuses.includes(res.status)
+      )
+        break
     } catch (err) {
       lastError = err instanceof Error ? err.message : String(err)
     }
@@ -87,7 +105,7 @@ export async function fetchBounded(
 export async function fetchCached(
   cacheKey: string,
   url: string,
-  opts: { accept?: string; maxAgeHours?: number } = {},
+  opts: CachedFetchOptions = {},
 ): Promise<string | null> {
   const path = join(RAW_DIR, cacheKey)
   const maxAge = (opts.maxAgeHours ?? 24) * 3600_000

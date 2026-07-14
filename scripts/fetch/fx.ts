@@ -195,7 +195,12 @@ async function fetchWbFx(): Promise<WbFxObs[]> {
     const url =
       'https://api.worldbank.org/v2/country/all/indicator/PA.NUS.FCRF' +
       `?format=json&date=2010:2026&per_page=20000&page=${page}`
-    const body = await fetchCached(`wb/PA.NUS.FCRF_p${page}.json`, url)
+    // This valid query has returned a transient HTTP 400 in GitHub Actions and
+    // an immediate identical request returned 200. Retry only that status for
+    // this endpoint; every attempt remains under the shared three-call cap.
+    const body = await fetchCached(`wb/PA.NUS.FCRF_p${page}.json`, url, {
+      retryStatuses: [400],
+    })
     if (body === null) return rows
     const parsed = JSON.parse(body) as [{ pages: number }, WbApiRow[] | null]
     for (const r of parsed[1] ?? []) {

@@ -98,6 +98,21 @@ describe('fetchBounded — bounded retry discipline', () => {
     expect(failures[0]?.attempts).toBe(1)
   })
 
+  it('retries an explicitly opted-in transient 4xx but keeps the global fail-fast default', async () => {
+    const fetchMock = vi
+      .fn()
+      .mockResolvedValueOnce(errResponse(400))
+      .mockResolvedValueOnce(okResponse('recovered-world-bank'))
+    vi.stubGlobal('fetch', fetchMock)
+    const p = fetchBounded('https://api.worldbank.org/example', {
+      retryStatuses: [400],
+    })
+    await vi.runAllTimersAsync()
+    await expect(p).resolves.toBe('recovered-world-bank')
+    expect(fetchMock).toHaveBeenCalledTimes(2)
+    expect(failures).toHaveLength(0)
+  })
+
   it('treats 429 as retryable (rate limit, not a client bug)', async () => {
     const fetchMock = vi
       .fn()
