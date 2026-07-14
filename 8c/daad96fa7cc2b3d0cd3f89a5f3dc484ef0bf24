@@ -1,0 +1,24 @@
+scripts/build/deterministic-order.ts
+  s_6cfe0f5f25d4e5::t_4985cf15527b86 20-21,27-43
+  s_6cfe0f5f25d4e5::t_9414b6abc1abc8 1-19,22-26
+scripts/build/deterministic-order.test.ts
+  s_6cfe0f5f25d4e5::t_f00fd4491b2848 1-33
+scripts/build/assemble.ts
+  s_6cfe0f5f25d4e5::t_4985cf15527b86 26,452-454
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.13",
+  "base_commit_sha": "8cdaad96fa7cc2b3d0cd3f89a5f3dc484ef0bf24",
+  "prompts": {},
+  "sessions": {
+    "s_6cfe0f5f25d4e5": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "019f5c0a-f294-78b2-af01-6c5483dbfcbe",
+        "model": "gpt-5.6-sol"
+      },
+      "human_author": "64etuor <130260521+64etuor@users.noreply.github.com>"
+    }
+  }
+}
