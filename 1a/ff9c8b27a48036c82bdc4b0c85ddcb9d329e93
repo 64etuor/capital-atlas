@@ -1,0 +1,26 @@
+docs/DATA_CONTRACT.md
+  s_6cfe0f5f25d4e5::t_1380cee4a2ab16 256-280
+scripts/build/exposure-contract.test.ts
+  s_6cfe0f5f25d4e5::t_122d067c14c417 94-96
+  s_6cfe0f5f25d4e5::t_873b2d4dde2df0 1-93,97-103
+src/types/data.ts
+  s_6cfe0f5f25d4e5::t_122d067c14c417 212-334
+scripts/build/exposure-contract.ts
+  s_6cfe0f5f25d4e5::t_122d067c14c417 1-106
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.13",
+  "base_commit_sha": "1aff9c8b27a48036c82bdc4b0c85ddcb9d329e93",
+  "prompts": {},
+  "sessions": {
+    "s_6cfe0f5f25d4e5": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "019f5c0a-f294-78b2-af01-6c5483dbfcbe",
+        "model": "gpt-5.6-sol"
+      },
+      "human_author": "64etuor <130260521+64etuor@users.noreply.github.com>"
+    }
+  }
+}
