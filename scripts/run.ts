@@ -2,7 +2,7 @@
  * Pipeline orchestrator: fetch (cached, bounded-retry) → assemble → report.
  * Usage: pnpm data:fetch   (tsx scripts/run.ts)
  */
-import { run as runCountries } from './fetch/countries.ts'
+import { buildCountries, run as runCountries } from './fetch/countries.ts'
 import { run as runWorldBank } from './fetch/worldbank.ts'
 import { runIip, runBop, runPip } from './fetch/imf.ts'
 import { runIipcc, runPipExposure } from './fetch/imf-exposure.ts'
@@ -17,7 +17,9 @@ import { buildPositionClosure } from './build/position-closure.ts'
 import { failures } from './fetch/lib.ts'
 
 const t0 = Date.now()
-const countries = runCountries()
+// Pure local metadata load: publication is deferred until every required
+// network stage has passed its failure and minimum-row guards.
+const countries = buildCountries()
 const iso3s = countries.map((c) => c.iso3)
 
 const wb = await runWorldBank(new Set(iso3s))
@@ -31,6 +33,7 @@ await Promise.all([runIipcc(iso3s), runPipExposure(iso3s)])
 const iso3ByIso2 = new Map(countries.map((c) => [c.iso2, c.iso3]))
 const bis = await runBis(iso3ByIso2)
 await runFx(iso3s) // Phase L: CURR=LCU 다이얼 근거 (required; terminal failure aborts)
+runCountries(countries)
 
 // Explicitly optional, and only attempted after every required feed is valid.
 const cryptoOk = await runCrypto()

@@ -1,12 +1,9 @@
 /** Bounded RAS/IPF view. Direct PIP observations remain untouched in their source shards. */
-import { readFileSync, rmSync } from 'node:fs'
-import { join } from 'node:path'
-import type {
-  BilateralRecord,
-  PositionClosureCell,
-  PositionClosureFile,
-} from '../../src/types/data.ts'
-import type { ImfStockObs } from '../fetch/imf.ts'
+import { mkdirSync, readFileSync, rmSync, writeFileSync } from 'node:fs'
+import { dirname, join } from 'node:path'
+import { gzipSync } from 'node:zlib'
+import type { PositionClosureCell, PositionClosureFile } from '../../src/types/data.ts'
+import type { ImfStockObs, PipObs } from '../fetch/imf.ts'
 import { OUT_DIR, quarterEndDate, readRawJson, writeJson } from '../fetch/lib.ts'
 
 export const DISCREPANCY_OWNER = 'discrepancy_owner'
@@ -14,6 +11,7 @@ export const DISCREPANCY_ISSUER = 'discrepancy_issuer'
 const MAX_ITERATIONS = 100
 const TOLERANCE = 1e-9
 const PUBLISHED_CELL_LIMIT = 1_000
+export const CLOSURE_AUDIT_REL_PATH = 'meta/position_closure_inputs.json.gz'
 
 export interface PositionSeed {
   row: string
@@ -39,8 +37,76 @@ export interface RasResult {
   directSeedShare: number
 }
 
+export interface ClosureAuditInputs {
+  schema_version: 1
+  source_ids: ['imf_iip', 'imf_pip']
+  iip: ImfStockObs[]
+  pip: PipObs[]
+}
+
+const canonicalSort = <T>(rows: readonly T[]): T[] =>
+  [...rows].sort((a, b) => JSON.stringify(a).localeCompare(JSON.stringify(b)))
+
+export function buildClosureAuditInputs(
+  iip: readonly ImfStockObs[],
+  pip: readonly PipObs[],
+): ClosureAuditInputs {
+  return {
+    schema_version: 1,
+    source_ids: ['imf_iip', 'imf_pip'],
+    iip: canonicalSort(
+      iip.filter(
+        (row) =>
+          (row.indicator === 'P_F5_MV' || row.indicator === 'P_F3_MV') &&
+          row.quarter.endsWith('-Q4') &&
+          row.quarter >= '2013-Q4',
+      ),
+    ),
+    pip: canonicalSort(pip.filter((row) => row.year >= 2013)),
+  }
+}
+
+export function encodeClosureAuditInputs(inputs: ClosureAuditInputs): Buffer {
+  const gzip = gzipSync(Buffer.from(JSON.stringify(inputs)), { level: 9 })
+  gzip.writeUInt32LE(0, 4)
+  return gzip
+}
+
 export const hasBottomUpSeed = (seed: readonly PositionSeed[]): boolean =>
   seed.some((cell) => Number.isFinite(cell.value) && cell.value > 0)
+
+const PIP_INDICATOR_BY_ASSET = {
+  listed_equity: 'P_F51_P_USD',
+  debt_securities: 'P_F3_P_USD',
+} as const
+
+/**
+ * Build the RAS seed from the unpruned normalized IMF PIP observations.
+ * Public bilateral shards deliberately omit the sub-$100M tail and therefore
+ * are a presentation view, not an admissible model input.
+ */
+export function rawPipSeedForClosure(
+  observations: readonly PipObs[],
+  period: string,
+  asset: keyof typeof PIP_INDICATOR_BY_ASSET,
+  rowMargins: Readonly<Record<string, number>>,
+  columnMargins: Readonly<Record<string, number>>,
+): PositionSeed[] {
+  const year = Number(period.slice(0, 4))
+  const indicator = PIP_INDICATOR_BY_ASSET[asset]
+  return observations
+    .filter(
+      (row) =>
+        row.year === year &&
+        row.indicator === indicator &&
+        row.owner !== row.issuer &&
+        rowMargins[row.owner] !== undefined &&
+        columnMargins[row.issuer] !== undefined &&
+        Number.isFinite(row.value) &&
+        row.value > 0,
+    )
+    .map((row) => ({ row: row.owner, column: row.issuer, value: row.value }))
+}
 
 export const frechetPositionBounds = (row: number, column: number, total: number) => ({
   lower: Math.max(0, row + column - total),
@@ -167,14 +233,14 @@ const MARGIN_ASSET = {
   P_F3_MV: 'debt_securities',
 } as const
 
-function readBilateral(period: string): BilateralRecord[] {
-  const path = join(OUT_DIR, 'flows_bilateral', `${period}.json`)
-  return (JSON.parse(readFileSync(path, 'utf8')) as { records: BilateralRecord[] }).records
-}
-
 export function buildPositionClosure(): { periods: number; cells: number } {
   const iip = readRawJson<ImfStockObs[]>('imf/iip_normalized.json')
   if (!iip) throw new Error('[position-closure] normalized IIP missing — run pnpm data:fetch')
+  const pip = readRawJson<PipObs[]>('imf/pip_normalized.json')
+  if (!pip) throw new Error('[position-closure] normalized PIP missing — run pnpm data:fetch')
+  const auditPath = join(OUT_DIR, CLOSURE_AUDIT_REL_PATH)
+  mkdirSync(dirname(auditPath), { recursive: true })
+  writeFileSync(auditPath, encodeClosureAuditInputs(buildClosureAuditInputs(iip, pip)))
   const byMargin = new Map<string, { rows: Record<string, number>; columns: Record<string, number> }>()
   for (const observation of iip) {
     const asset = MARGIN_ASSET[observation.indicator as keyof typeof MARGIN_ASSET]
@@ -192,20 +258,13 @@ export function buildPositionClosure(): { periods: number; cells: number } {
   for (const [key, margins] of [...byMargin].sort(([a], [b]) => a.localeCompare(b))) {
     const [period, asset] = key.split('|') as [string, 'listed_equity' | 'debt_securities']
     if (!period.endsWith('-Q4') || period < '2013-Q4') continue
-    const direct = readBilateral(period).filter(
-      (row) => row.source_id === 'imf_pip' && row.measure === 'stock' && row.asset === asset,
+    const inDomainDirect = rawPipSeedForClosure(
+      pip,
+      period,
+      asset,
+      margins.rows,
+      margins.columns,
     )
-    const inDomainDirect = direct
-      .filter(
-        (row) =>
-          margins.rows[row.owner_country] !== undefined &&
-          margins.columns[row.issuer_country] !== undefined,
-      )
-      .map((row) => ({
-        row: row.owner_country,
-        column: row.issuer_country,
-        value: row.value_usd,
-      }))
     if (!hasBottomUpSeed(inDomainDirect))
       continue
     const result = rasClose(

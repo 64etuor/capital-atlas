@@ -43,6 +43,7 @@ TS 미러: `src/types/data.ts` — 문서와 타입이 다르면 이 문서가 �
 | `exposure/{ISO3}.json` | 직접 통화·부문 + C/D 파생 FXD·부채 재구성 | 수집 후 |
 | `position_closure/index.json` | RAS 폐합 가용 기간 | 수집 후 |
 | `position_closure/{period}.json` | IIP 마진↔PIP seed 양자 포지션 폐합(E) | 수집 후 |
+| `meta/position_closure_inputs.json.gz` | RAS 독립 재계산용 normalized IIP/PIP 감사 미러 | 수집 후 |
 | `flowmatrix/{period}.json` | BOP 마진 기반 자산 간 모델 배분(E) | 수집 후 |
 | `vintages/{date}.json` | 실질 변경 시 빈티지 다이제스트 | 실질 변경 시 |
 
@@ -298,11 +299,16 @@ v3는 기존 `stocks_*` 관측을 덮어쓰지 않고 `exposure/{ISO3}.json`에 
   폴백이다. 모든 결과는 IIPCC와 실제 사용한 IMF/WB 환율 `source_ids`를 보존한다.
   `unavailable`에 `value_usd`를 넣는 것은 계약 위반이다.
 
-`position_closure/{period}.json`은 PIP 직접 양자자산을 seed, IIP 자산·부채 총계를
+`position_closure/{period}.json`은 공개 샤드의 $100M 절단 전 raw normalized PIP 직접
+양자자산을 seed, IIP 자산·부채 총계를
 마진으로 하는 RAS/IPF 파생 뷰다. 원 관측을 수정하지 않으며 모든 셀은 grade E,
 `biproportional_ras_position_closure`, 직접 seed 커버리지, 반복·잔차, Fréchet 범위를
 가진다. 100회 안에 수렴하지 않거나 마진이 닫히지 않으면 산출물을 발행하지 않는다.
 직접 seed 커버리지는 IIP 행·열 마진 도메인 안의 PIP 셀만 분자에 포함한다.
+`meta/position_closure_inputs.json.gz`는 closure에 사용한 공식 normalized IIP/PIP
+입력만 결정론적으로 정렬·압축한 감사 미러다. 로컬 refresh에서는 gitignored raw
+normalized 입력과 byte-equivalent row set인지 검사하고, raw cache가 없는 clean CI에서는
+이 미러로 RAS를 독립 재계산한다.
 전체 행렬로 폐합한 뒤 정적 샤드에는 자산별 상위 1,000셀만 발행한다. 각 자산 결과의
 `total_cells`·`omitted_cells`·`omitted_value_usd`가 tail을 숨김없이 기록하며, UI는
 국가 셀이 발행 집합에 없을 때 이를 “관측/모델 없음”으로 오인시키지 않는다.
@@ -361,7 +367,7 @@ stock 계열만 추적(흐름·파생 지표는 revision_key 없음 = 행 생략
 
 `scripts/build/facts.ts`가 stocks(3 basis)·flows_country·flows_bilateral과 v3
 currency/sector/reconstructed/FXD/RAS 레코드를 라인당 JSON 1개(NDJSON)로
-평탄화해 gzip 발행한다(505,316건, 6,322,452 bytes). `position_closure` 24,000건은
+평탄화해 gzip 발행한다(505,316건, 6,321,710 bytes). `position_closure` 24,000건은
 발행된 상위 셀이며 생략 tail 메타데이터는 원 `position_closure` 샤드가 정본이다.
 TS 미러: `FactLine`(scripts/build/facts.ts). 규칙:
 

@@ -74,7 +74,7 @@ pnpm data:fetch     # ① 공개 API 수집(24h 캐시) + 조립 → public/data
 pnpm data:fx        # ①-b (선택) 환율만 단독 재수집 — data:fetch에 이미 포함
 pnpm data:bis       # ② BIS 은행 회랑 재병합 (assemble이 bilateral을 재생성하므로 필수)
 pnpm data:exposure  # ③ 통화·부문 직접 관측 + FXD·재구성 부채 발행 (네트워크 없음)
-pnpm data:closure   # ④ IIP 마진↔PIP seed RAS 폐합 발행 (네트워크 없음)
+pnpm data:closure   # ④ IIP 마진↔raw normalized PIP seed RAS 폐합 발행 (네트워크 없음)
 pnpm data:synoptic  # ⑤ SYNOPTIC 사전 집계 재생성 (커밋된 샤드에서, 네트워크 없음)
 pnpm data:station   # ⑥ STATION 국가별 집계 + 집중도(§14) 재생성 (네트워크 없음)
 pnpm data:flowmatrix # ⑦ 자산 간 재배분 행렬(§8, 모델 배분) 재생성 (네트워크 없음)

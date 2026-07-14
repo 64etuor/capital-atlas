@@ -19,7 +19,8 @@ Gold    public/data/              계약(DATA_CONTRACT.md)이 스키마인 정�
         ├─ flows_country/         사실: BOP 실거래 + 파생 평가변동
         ├─ flows_bilateral/       사실: CPIS 증권 + BIS 은행 회랑
         ├─ exposure/              직접 통화·부문 + 등급화한 FXD·재구성 부채
-        ├─ position_closure/      뷰: IIP 마진↔PIP seed RAS 폐합 (grade E)
+        ├─ position_closure/      뷰: IIP 마진↔raw PIP seed RAS 폐합 (grade E)
+        ├─ meta/position_closure_inputs.json.gz  RAS clean-CI 감사 입력 미러
         ├─ facts.ndjson.gz        ★ 관측·파생을 구분 보존한 정본 수치 원장
         ├─ synoptic.json station/ 뷰: 사전 집계 (사실에서 재계산 가능한 2차 산출)
         ├─ flowmatrix/            뷰: §8 모델 배분 (grade E)
