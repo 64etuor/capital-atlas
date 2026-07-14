@@ -1,0 +1,87 @@
+scripts/build/facts.ts
+  s_6cfe0f5f25d4e5::t_b1a8fa485f5ee3 18-19,21,23-26,33-41,50-52,60-62,117-192,231-255
+  s_7afcdb75c5c55c::t_05d2b2501158a2 256
+scripts/build/position-closure.test.ts
+  s_6cfe0f5f25d4e5::t_20ff8654d8acca 5,15-19
+scripts/build/exposure-contract.ts
+  s_6cfe0f5f25d4e5::t_b1a8fa485f5ee3 107-128
+.github/workflows/data-refresh.yml
+  s_6cfe0f5f25d4e5::t_3b7d328e981f5f 34-36
+scripts/check/changed.test.ts
+  s_6cfe0f5f25d4e5::t_3b7d328e981f5f 28-35
+scripts/build/exposure-contract.test.ts
+  s_6cfe0f5f25d4e5::t_3c40a8c317b095 6,104-121
+  s_6cfe0f5f25d4e5::t_08d91108c230e7 122-123
+scripts/build/exposure.test.ts
+  s_6cfe0f5f25d4e5::t_20ff8654d8acca 190-217
+scripts/build/position-closure.ts
+  s_6cfe0f5f25d4e5::t_23cce4589fc104 50-53,140-145
+scripts/build/facts.test.ts
+  s_6cfe0f5f25d4e5::t_3c40a8c317b095 16-20,27-31,105-156
+scripts/check/sanity.ts
+  s_6cfe0f5f25d4e5::t_3b7d328e981f5f 9-15,199-369,438-442,455-457
+scripts/build/exposure.ts
+  s_6cfe0f5f25d4e5::t_23cce4589fc104 191
+public/data/exposure/CRI.json
+  s_6cfe0f5f25d4e5::t_270097430805f1 1
+public/data/exposure/LSO.json
+  s_6cfe0f5f25d4e5::t_d0037b97347eee 1
+public/data/exposure/MDA.json
+  s_6cfe0f5f25d4e5::t_dc4956cf6f34b2 1
+public/data/exposure/STP.json
+  s_6cfe0f5f25d4e5::t_f6f74af3d12ede 1
+public/data/exposure/TLS.json
+  s_6cfe0f5f25d4e5::t_4c338a5230c3d6 1
+public/data/exposure/TON.json
+  s_6cfe0f5f25d4e5::t_305a119c2697a5 1
+public/data/meta/facts_summary.json
+  s_6cfe0f5f25d4e5::t_902b903cc8983f 1
+public/data/position_closure/2013-Q4.json
+  s_6cfe0f5f25d4e5::t_84409f903fda10 1
+public/data/position_closure/2014-Q4.json
+  s_6cfe0f5f25d4e5::t_be74e3455adb01 1
+public/data/position_closure/2015-Q4.json
+  s_6cfe0f5f25d4e5::t_838151d3d0f569 1
+public/data/position_closure/2016-Q4.json
+  s_6cfe0f5f25d4e5::t_d6c210177eeb0f 1
+public/data/position_closure/2017-Q4.json
+  s_6cfe0f5f25d4e5::t_dce2c4c7f8f25e 1
+public/data/position_closure/2018-Q4.json
+  s_6cfe0f5f25d4e5::t_8ccde6351a907b 1
+public/data/position_closure/2019-Q4.json
+  s_6cfe0f5f25d4e5::t_1fa6e6fb340585 1
+public/data/position_closure/2020-Q4.json
+  s_6cfe0f5f25d4e5::t_3b73e5898117ec 1
+public/data/position_closure/2021-Q4.json
+  s_6cfe0f5f25d4e5::t_f2d9bb57d81cc4 1
+public/data/position_closure/2022-Q4.json
+  s_6cfe0f5f25d4e5::t_c3130834ff4192 1
+public/data/position_closure/2023-Q4.json
+  s_6cfe0f5f25d4e5::t_7454e0ce0b10f4 1
+public/data/position_closure/2024-Q4.json
+  s_6cfe0f5f25d4e5::t_ee1f7ca331c97e 1
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.13",
+  "base_commit_sha": "fa1d43c8652e6ef5538bd8aa43a13fffbcd03d47",
+  "prompts": {},
+  "sessions": {
+    "s_6cfe0f5f25d4e5": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "019f5c0a-f294-78b2-af01-6c5483dbfcbe",
+        "model": "gpt-5.6-sol"
+      },
+      "human_author": "64etuor <130260521+64etuor@users.noreply.github.com>"
+    },
+    "s_7afcdb75c5c55c": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "019f5e96-cc10-7b11-8b04-c27a97550e70",
+        "model": "gpt-5.6-terra"
+      },
+      "human_author": "64etuor <130260521+64etuor@users.noreply.github.com>"
+    }
+  }
+}
