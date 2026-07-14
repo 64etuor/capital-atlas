@@ -7,7 +7,7 @@
  * 정직성: 셀 전체 grade E + Fréchet 한계(원리적 범위 — 가정 없음),
  *          마진과 셀 합의 불일치는 정직 실패(부분 결과 금지).
  */
-import { readFileSync } from 'node:fs'
+import { readFileSync, readdirSync } from 'node:fs'
 import { join } from 'node:path'
 import { execFileSync } from 'node:child_process'
 import { describe, expect, it } from 'vitest'
@@ -18,6 +18,7 @@ import {
   netsFromRecords,
 } from './flowmatrix.ts'
 import { OUT_DIR, REPO_ROOT } from '../fetch/lib.ts'
+import { digestFiles } from './digest.ts'
 
 const near = (a: number, b: number, tol = 1e-6) =>
   Math.abs(a - b) <= tol * Math.max(1, Math.abs(a), Math.abs(b))
@@ -159,18 +160,18 @@ describe('생성 산출물 — 결정론·마진 정합 (커밋된 데이터 기
   })
 
   it('빌더 2회 실행이 바이트 동일하다 (N1 결정론 규율)', () => {
-    const md5 = () =>
-      execFileSync(
-        'bash',
-        ['-c', 'find public/data/flowmatrix -type f | sort | xargs md5 -q | md5 -q'],
-        { cwd: REPO_ROOT, encoding: 'utf8' },
-      ).trim()
-    const before = md5()
+    const root = join(OUT_DIR, 'flowmatrix')
+    const digest = () =>
+      digestFiles(
+        root,
+        readdirSync(root).filter((path) => path.endsWith('.json')),
+      )
+    const before = digest()
     execFileSync('pnpm', ['-s', 'data:flowmatrix'], {
       cwd: REPO_ROOT,
       encoding: 'utf8',
       stdio: ['ignore', 'pipe', 'pipe'],
     })
-    expect(md5()).toBe(before)
+    expect(digest()).toBe(before)
   })
 })
