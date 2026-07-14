@@ -1,0 +1,35 @@
+docs/architecture.md
+  s_6cfe0f5f25d4e5::t_aa6631bc1f3b5e 59
+src/features/station/exposure.test.ts
+  s_6cfe0f5f25d4e5::t_d6abb461d589dd 94
+  s_6cfe0f5f25d4e5::t_4e4b7c065e4020 6,130-146
+README.md
+  s_6cfe0f5f25d4e5::t_aa6631bc1f3b5e 303-305
+docs/DATA_CONTRACT.md
+  s_6cfe0f5f25d4e5::t_aa6631bc1f3b5e 299-301,357-358
+src/features/station/exposure.ts
+  s_6cfe0f5f25d4e5::t_d0a8f92025eacd 50-58,63-73,75-76,79-88
+src/features/station/ExposurePanel.tsx
+  s_6cfe0f5f25d4e5::t_fca8ec77f1bf43 288-295,405
+  s_6cfe0f5f25d4e5::t_95ffd3964f8990 194-201,286-287
+  s_6cfe0f5f25d4e5::t_b0c8949d87d403 398
+  s_6cfe0f5f25d4e5::t_d0a8f92025eacd 25-29,175-179,283-285,297-298,408-414,418
+docs/DATA_PIPELINE.md
+  s_6cfe0f5f25d4e5::t_aa6631bc1f3b5e 135-136
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.13",
+  "base_commit_sha": "8632a42f4c0ce119eed21fab2917f61a18f1c021",
+  "prompts": {},
+  "sessions": {
+    "s_6cfe0f5f25d4e5": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "019f5c0a-f294-78b2-af01-6c5483dbfcbe",
+        "model": "gpt-5.6-sol"
+      },
+      "human_author": "64etuor <130260521+64etuor@users.noreply.github.com>"
+    }
+  }
+}
