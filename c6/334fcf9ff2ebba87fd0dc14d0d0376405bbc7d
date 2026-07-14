@@ -1,0 +1,21 @@
+scripts/fetch/fx.ts
+  s_6cfe0f5f25d4e5::t_d8efc83df88843 67-69,89,91,161-169,173-174
+scripts/fetch/fx.test.ts
+  s_6cfe0f5f25d4e5::t_90c5102ac70732 97-112
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.14",
+  "base_commit_sha": "c6334fcf9ff2ebba87fd0dc14d0d0376405bbc7d",
+  "prompts": {},
+  "sessions": {
+    "s_6cfe0f5f25d4e5": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "019f5c0a-f294-78b2-af01-6c5483dbfcbe",
+        "model": "gpt-5.6-sol"
+      },
+      "human_author": "64etuor <130260521+64etuor@users.noreply.github.com>"
+    }
+  }
+}
