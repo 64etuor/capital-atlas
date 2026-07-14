@@ -13,8 +13,8 @@ export function initPeriods(latestQuarter: PeriodKey): void {
 
 /**
  * 데이터 스냅샷 빈티지(YYYY-MM-DD) — 명판의 "현재 추정 기준"은 월클럭이
- * 아니라 이 값이다(감사 F1): v1은 나우캐스팅 없는 정적 스냅샷이므로 오늘
- * 날짜를 표시하면 보유하지 않은 신선도를 주장하게 된다.
+ * 아니라 이 값이다(감사 F1). v3 일중 시장 오버레이도 별도 조회시각을 쓰며,
+ * 공식 통계 명판을 오늘 날짜로 바꾸지 않는다.
  */
 let dataVintage: string | null = null
 

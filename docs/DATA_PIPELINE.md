@@ -1,4 +1,4 @@
-# Data Pipeline (Phase B)
+# Data Pipeline (v3)
 
 공개 통계 API → 정규화 → 계약 데이터셋(`public/data/`) 생성. 서버 없음 — 오프라인
 스크립트가 정적 JSON을 굽는다.
@@ -6,21 +6,36 @@
 ## 실행
 
 ```bash
-pnpm data:fetch   # 수집(24h 캐시) + 조립 → public/data/
-pnpm data:check   # 계약 스키마(zod) + 상식 범위 게이트 (CI-able)
+pnpm data:fetch
+pnpm data:bis
+pnpm data:exposure
+pnpm data:closure
+pnpm data:synoptic
+pnpm data:station
+pnpm data:flowmatrix
+pnpm data:facts
+pnpm data:reconcile
+pnpm data:sources
+pnpm data:check
 ```
+
+화살표 순서 전체가 갱신 계약이다. `data:fetch` 뒤에는 조립 과정에서 다시 만들어진
+bilateral에 BIS를 재병합하고, 그 다음 exposure/RAS와 모든 집계·원장을 재발행한다.
 
 원시 응답은 `data-raw/`(gitignore)에 보존된다. 재실행은 24h 내 캐시를 재사용한다.
 
-## 소스별 상태 (2026-07-12 실측)
+## 소스별 상태 (2026-07-14 실측)
 
 | source_id | 데이터 | 상태 | 등급 |
 |---|---|---|---|
-| `imf_iip` | 대외 자산·부채 잔액, 국가×분기 (2010~) | ✅ 127개국, 75,927 obs | A |
+| `imf_iip` | 대외 자산·부채 잔액, 국가×분기 (2010~) | ✅ 127개국, 75,993 normalized obs | A |
+| `imf_iipcc` | 대외채권·채무 통화구성 | ✅ 20개 보고국, 53,072 obs | A |
 | `imf_bop` | 금융계정 실거래 흐름, 국가×분기 | ✅ 150개국, 83,381 obs | A |
-| `imf_pip` | 양자 포트폴리오 포지션 (CPIS), 연간 2013~ | ✅ 81개 보고국, 273,743 obs | A |
+| `imf_pip` | 양자 포트폴리오 자산 (CPIS/PIP), 연간 2013~ | ✅ 81개 보고국, 273,743 obs | A |
+| `imf_pip` sector | 보고 부문별 포트폴리오 자산 | ✅ 81개 보고국, 14,790 obs | A |
+| `imf_pip` SCC | 상대국 정보로 유도한 포트폴리오 부채 | ✅ 197개국, 261,987 normalized obs | C |
 | `wb_wdi` | 상장주식 시총(발행국 총액)·GDP, 연간 | ✅ 1,150 / 3,071 obs | B |
-| `coingecko_global` | 암호자산 글로벌 통제값 | ✅ (국가배분은 v2) | B |
+| `coingecko_global` | 암호자산 글로벌 통제값 + 분리된 일중 오버레이 | ✅ 글로벌만(국가배분 없음) | B |
 | `bis_lbs` | 국경 간 은행 loans&deposits 양자 회랑, 분기 (Phase M) | ✅ 39개 보고국, 150,815 회랑 | B |
 | BIS DSS | 채무증권 발행잔액 | ❌ 미착수 (후속) | — |
 
@@ -29,8 +44,13 @@ pnpm data:check   # 계약 스키마(zod) + 상식 범위 게이트 (CI-able)
 반환한다(JSON Accept 무시/500). 키 차원과 코드값은 문서보다 실호출 프로브가 정확했다:
 
 - IIP/BOP 키: `COUNTRY.BOP_ACCOUNTING_ENTRY.INDICATOR.UNIT.FREQUENCY` (ISO3, USD, Q)
+- IIPCC 키: `COUNTRY.ACCOUNTING_ENTRY.INDICATOR.SECTOR.CURRENCY.FREQUENCY`.
+  `A_P/L_P` debt와 비중복 통화 버킷 `USD|EUR|JPY|XDC|OTHC|UALLC`만 적재한다.
 - 잔액 엔트리: `A_P`/`L_P`. **흐름 엔트리는 `A_NFA_T`(자산 순취득)/`L_NIL_T`(부채 순발생)** — `A_T`/`L_T` 아님(1차 실행 0건의 원인).
 - PIP 키: `COUNTRY.ACCOUNTING_ENTRY.INDICATOR.SECTOR.COUNTERPART_SECTOR.COUNTERPART_COUNTRY.FREQUENCY` — `{iso3}.A.P_F51_P_USD+P_F3_P_USD.S1.S1..A`
+- PIP 부문은 원 코드를 그대로 보존한다. `S1V` 같은 결합군을 가계·기업으로 나누지
+  않는다. SCC 지표(`*_SCC_USD`)는 IMF가 상대국 정보로 유도한 부채이므로 C등급이며,
+  직접 관측이나 독립 미러로 승격하지 않는다.
 - OBS_VALUE는 절대 USD (KOR D A_P 2024-Q4 ≈ $769.5B로 검증).
 
 **BIS API (Phase M, 2026-07-13 실호출 프로브)**: `stats.bis.org/api/v2/data/dataflow/`
@@ -76,7 +96,8 @@ SDMX 2.1 REST, `format=csv`(SDMX-CSV) 지원 — IMF와 달리 CSV가 나와 파
 1. 직접 관측 (A/B)
 2. 직전 관측 롤포워드, 최대 8분기 (D, ±20%)
 3. 지역(subregion) 중앙값 GDP-비율 모델, 최근 4분기만 (E, ±35%)
-4. GDP 앵커도 없으면 **정직하게 빈 셀** — `meta/pipeline_report.json`에 커버리지 기록
+4. GDP 앵커도 없으면 숫자를 만들지 않고 **명시적 unavailable 상태/사유**를 노출 —
+   `meta/pipeline_report.json`에 커버리지 기록
 
 주거부동산(location)은 지역별 주택자산/GDP 배율 휴리스틱(1.5~3.1×, 기본 1.6×) E등급.
 조야한 v1 모델임을 명시한다 — 등기·센서스 기반은 v2.
@@ -86,18 +107,34 @@ SDMX 2.1 REST, `format=csv`(SDMX-CSV) 지원 — IMF와 달리 CSV가 나와 파
 양자 레코드는 |값| ≥ $100M만 유지 — 레코드 16.4%로 가치 99.82% 보존(실측).
 드롭 수는 조립 로그와 `meta/pipeline_report.json`에 기록된다.
 
-## 알려진 한계 (v1)
+## 알려진 한계 (v3)
 
-- `value_usd_constant_fx` 미산출(환율 시계열 미수집) — 계약상 optional.
+- 핵심 `stocks.value_usd_constant_fx`는 원 관측을 덮어쓰지 않기 위해 미산출 유지.
+  고정환율 수치는 별도 `exposure/*.json`에서만 coverage-gated 파생값으로 제공한다.
 - IIP `P_F5`에 펀드지분 포함 → `funds` asset은 미분리.
 - PIP 파생 flow는 가격효과 미조정(D등급으로 정직 표기).
-- 총 산출 ~183MB(Phase M 은행 회랑 합류 후; station 사전집계 85.9MiB 포함) —
-  git에는 무겁지만 정적 서빙엔 문제없음. 파일당 최대 ~2.2MB(bilateral Q4)로
-  5MB 조항 준수. 전부 lazy-load 전제. station 용량이 부담되면 후속에서 은행
+- 총 산출 약 226MB(station 사전집계 포함) — git에는 무겁지만 정적 서빙엔 문제없음.
+  브라우저 서빙 JSON은 최대 약 2.6MB(`meta/fx_rates.json`)로 5MB 조항을 준수하고,
+  다운로드용 `facts.ndjson.gz`는 6.3MB다. 전부 lazy-load 전제. station 용량이 부담되면 후속에서 은행
   파트너 시계열 상한(top-N) 검토.
 - BIS 양자합 ↔ IIP 국가 총계는 보고국 커버리지 차이로 불일치 — 조정하지 않고
   `pipeline_report.bis_lbs`에 기록(§12 폐합 정신, §5 중복 가드).
 - 2026-Q1이 최신 분기(IIP 기준). WB 시총은 2024년까지.
+
+## exposure + position closure (v3)
+
+- `data:exposure`: IIPCC 통화와 PIP 부문 직접 관측을 그대로 보존한다. FXD는 2020-Q4
+  환율을 기준으로 계산하되 `OTHC+UALLC>5%`, 환율 누락, 통화합↔IIP 총계 gap>0.5%면
+  값을 발행하지 않고 typed reason을 남긴다. 가용 값도 coverage·residual·민감도 범위를
+  반드시 가진다.
+- `reconstructed_liabilities`: PIP SCC/상대국 자산을 부채 방향으로 전치한 C등급이다.
+  상향식 합계와 IIP 하향식 총계 사이의 corridor를 범위로 공개하며, 독립 관측이 아니다.
+- `data:closure`: 직접 PIP 양자자산을 seed, IIP 자산·부채를 마진으로 RAS/IPF를 실행한다.
+  원 샤드를 수정하지 않고 모든 셀을 E등급으로 발행한다. 최대 100회, 잔차 1e-9,
+  Fréchet 범위를 만족하지 않으면 부분 결과 없이 실패한다. 현행 2013-Q4~2024-Q4
+  12개 분기, 24,000셀이다.
+- `data:check`: exposure 122개국/65분기, 통화 53,072건, 부문 14,790건,
+  재구성 2,318건, FXD 388건, RAS 24,000셀을 계약·등급·범위·폐합까지 전수 확인한다.
 
 ## flowmatrix (Phase O — §8 재배분 행렬)
 

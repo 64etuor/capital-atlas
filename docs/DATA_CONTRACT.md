@@ -1,4 +1,4 @@
-# Capital Atlas — Data Contract (v1)
+# Capital Atlas — Data Contract (v3)
 
 Phase B(파이프라인)와 Phase C(시각화)가 병렬로 어긋나지 않기 위한 **정본 계약**.
 TS 미러: `src/types/data.ts` — 문서와 타입이 다르면 이 문서가 이긴다(고치고 커밋).
@@ -30,7 +30,8 @@ TS 미러: `src/types/data.ts` — 문서와 타입이 다르면 이 문서가 �
 | `meta/sources.json` | 소스 레지스트리 | 수집 시 |
 | `meta/flow_intensity.json` | 분기별 글로벌 총 흐름 강도 (바로그래프용) | 분기 |
 | `meta/pipeline_report.json` | 커버리지·등급 분포·수집 실패 기록 | 수집 시 |
-| `meta/global_crypto.json` | 암호자산 글로벌 통제값 (국가 배분은 v2) | 수집 시 |
+| `meta/global_crypto.json` | 암호자산 글로벌 스냅샷 폴백(국가 배분 없음) | 수집 시 |
+| `meta/fx_rates.json` | 분기 환율(LCU 표시·FXD 입력) | 수집 시 |
 | `meta/synoptic.json` | SYNOPTIC 대시보드 사전 집계 (`pnpm data:synoptic`) | 수집 후 |
 | `station/index.json` | STATION 가용 국가 목록 | 수집 후 |
 | `station/{ISO3}.json` | STATION 국가별 사전 집계 (`pnpm data:station`, WLD=세계) | 수집 후 |
@@ -38,6 +39,12 @@ TS 미러: `src/types/data.ts` — 문서와 타입이 다르면 이 문서가 �
 | `meta/facts_summary.json` | 사실 테이블 정합 요약(수·테이블·등급 분포) — sanity 게이트 대상 | 수집 후 |
 | `reconciliation/{period}.json` | §12-3 미러 폐합 쌍 상세 (`pnpm data:reconcile`, Phase P) | 수집 후 |
 | `meta/reconciliation.json` | 미러 폐합 분포 요약(중앙값·사분위·상위 gap) | 수집 후 |
+| `exposure/index.json` | 통화·부문 exposure 가용 국가/기간 + FXD 기준분기 | 수집 후 |
+| `exposure/{ISO3}.json` | 직접 통화·부문 + C/D 파생 FXD·부채 재구성 | 수집 후 |
+| `position_closure/index.json` | RAS 폐합 가용 기간 | 수집 후 |
+| `position_closure/{period}.json` | IIP 마진↔PIP seed 양자 포지션 폐합(E) | 수집 후 |
+| `flowmatrix/{period}.json` | BOP 마진 기반 자산 간 모델 배분(E) | 수집 후 |
+| `vintages/{date}.json` | 실질 변경 시 빈티지 다이제스트 | 실질 변경 시 |
 
 - 인코딩: UTF-8 JSON. 값 단위: **USD (current)**, 절대값(백만 아님 — 스케일 접미사 금지).
 - `period`: `"YYYY-Qn"` (2010-Q1 ~). 연간 원자료(WB 시총, PIP)는 해당 연도 **Q4**에 표기.
@@ -83,17 +90,19 @@ TS 미러: `src/types/data.ts` — 문서와 타입이 다르면 이 문서가 �
 }
 ```
 
-- `estimate_method`/`lower_bound`/`upper_bound`는 **추정치(C~E)에서 필수**.
+- `estimate_method`는 **파생·추정치(C~E)에서 필수**. 범위는 수치군 계약에 따라
+  95% 신뢰구간·민감도 corridor·Fréchet 한계 중 의미를 명시하며, D/E는 항상 유한한
+  `lower_bound`/`upper_bound`를 가진다. v3의 reconstructed/FXD C도 범위를 필수로 한다.
 - A에선 셋 다 생략. **B는 `estimate_method`를 분류·매핑 주석 용도로 가질 수
   있다**(값 자체는 직접 관측인데 분류에 매핑 가정이 개입한 경우 — 예: BIS LBS
-  G 상품의 포지션 방향 분류). `lower/upper_bound`는 여전히 D/E 전용.
+  G 상품의 포지션 방향 분류). 범위를 갖는 C는 해당 수치군의 산식·범위 의미를 함께
+  공개한다.
 
 ### stocks_{basis}.json
 
 ```json
 {
   "basis": "owner",
-  "generated_at": "2026-07-12T09:00:00Z",
   "records": [
     {
       "country": "KOR",
@@ -101,7 +110,6 @@ TS 미러: `src/types/data.ts` — 문서와 타입이 다르면 이 문서가 �
       "period": "2024-Q4",
       "measure": "stock",
       "value_usd": 84200000000,
-      "value_usd_constant_fx": 81000000000,
       "source_id": "imf_iip",
       "effective_date": "2024-12-31",
       "confidence_grade": "A"
@@ -114,7 +122,6 @@ TS 미러: `src/types/data.ts` — 문서와 타입이 다르면 이 문서가 �
 
 ```json
 {
-  "generated_at": "2026-07-12T09:00:00Z",
   "records": [
     {
       "owner_country": "KOR",
@@ -170,16 +177,28 @@ SSOT는 `scripts/fetch/registry.ts`. 발행 파일은 `pnpm data:sources`(retrie
 
 **`collection_mode` — 실시간/비실시간 분류 (테스트로 강제):**
 
-| mode | 의미 | cadence 허용값 | v1 소스 |
+| mode | 의미 | cadence 허용값 | 대표 소스 |
 |---|---|---|---|
 | `live_market` | 실시간·일중 시장 데이터. 발표 지연 없음, 폴링/스트림 대상 | intraday, daily | coingecko_global |
-| `batch_official` | 공식 통계 배치. 분기/연간 + 발표 지연이 본질 — "실시간" 개념 없음 | monthly, quarterly, annual | imf_iip, imf_bop, imf_pip, imf_ifs_fx, bis_lbs, wb_wdi |
+| `batch_official` | 공식 통계 배치. 분기/연간 + 발표 지연이 본질 — "실시간" 개념 없음 | monthly, quarterly, annual | imf_iip, imf_iipcc, imf_bop, imf_pip, imf_ifs_fx, bis_lbs, wb_wdi |
 | `derived_model` | 파이프라인 내부 파생·모델. 수집이 아니라 계산 (grade C–E) | quarterly, annual | model_regional_median, model_gdp_ratio |
 | `static_reference` | 정적 참조 (지오메트리·국가 마스터, vendored 패키지) | static | natural_earth, world_countries |
 
 규칙: **`live_market`·`static_reference` 소스는 stocks/flows 수치 레코드를 뒷받침할 수
 없다** — 시장 데이터가 공식 통계로 위장하지 않는다(`scripts/fetch/registry.test.ts`).
 live 데이터는 `meta/` 통제값·오버레이 전용.
+
+### CoinGecko 일중 오버레이 — 공식 통계 비오염 계약
+
+- 브라우저는 공개 global endpoint 한 곳만 호출하며 결과는 암호자산 글로벌 시총(B)에만
+  사용한다. 국가 배분·공식 지수·`index.generated_at`을 수정하지 않는다.
+- UI는 항상 `LIVE MARKET · NOT OFFICIAL STATISTICS · B`와 실제 조회시각을 같은 픽셀에
+  표시한다. 30분보다 오래된 값 또는 5분보다 미래인 시각은 거부한다.
+- 최초 1회 + 5분 간격 최대 12회로 제한하고 unmount 시 요청을 abort한다. 실패하거나
+  freshness를 통과하지 못하면 `meta/global_crypto.json`으로 폴백하되
+  `SNAPSHOT FALLBACK`을 숨기지 않는다.
+- live 응답은 정적 facts/stocks/flows에 기록하지 않는다. 인증·비밀키·다중 feed가
+  필요해지면 클라이언트 호출을 확장하지 않고 아키텍처를 재검토한다.
 
 ### meta/synoptic.json — SYNOPTIC 대시보드 사전 집계
 
@@ -250,8 +269,8 @@ live 데이터는 `meta/` 통제값·오버레이 전용.
 - 소비 규칙: LCU 표시는 **국가 스코프 전용**(글로벌 집계는 통화 합산 무의미 → USD 고정).
   연간 국가는 같은 해 Q4 환율을 분기에 적용(공개된 근사). 분기 환율 부재 = '—'.
   도시에 원값은 항상 USD, LCU 표시 수치엔 FX RATE 행 병기(`src/lib/money.ts` 계약).
-- `value_usd_constant_fx`(stocks)는 **미산출 유지** — IIP 통화구성 없이 constant-FX는
-  가정 주입(허위 정밀도). v3에서 통화구성 확보 후 재검토.
+- `value_usd_constant_fx`(stocks)는 **미산출 유지** — 핵심 관측 샤드를 파생값으로
+  덮어쓰지 않는다. v3 FXD는 아래 `exposure/`의 별도 coverage-gated 결과다.
 
 ### exposure/ — 통화·부문·파생 부채·FXD (v3)
 
@@ -280,8 +299,9 @@ v3는 기존 `stocks_*` 관측을 덮어쓰지 않고 `exposure/{ISO3}.json`에 
 
 ### 결정론적 샤드 + vintages/ — 이중 시간 (Phase N, 초안 §10)
 
-**결정론 계약**: 개별 샤드(`stocks_*`·`flows_*`·`station/*`)와 파생 파일
-(`meta/synoptic.json`·`meta/flow_intensity.json`·`meta/fx_rates.json`)은
+**결정론 계약**: 개별 샤드(`stocks_*`·`flows_*`·`station/*`·`exposure/*`·
+`position_closure/*`)와 파생 파일(`meta/synoptic.json`·`meta/flow_intensity.json`·
+`meta/fx_rates.json`)은
 **타임스탬프를 갖지 않는다** — 동일 상류 데이터 = 동일 바이트(테스트
 `scripts/build/deterministic.test.ts`가 바이트 수준 강제). 타임스탬프 보유는
 `index.json generated_at`(데이터 빈티지 정본)·`meta/sources.json retrieved_at`
@@ -317,8 +337,9 @@ stock 계열만 추적(흐름·파생 지표는 revision_key 없음 = 행 생략
   부분 결과 커밋 금지). `lower/upper`는 **Fréchet 한계**
   (`max(0, r+c−T) ≤ F ≤ min(r, c)`) — 가정 없는 원리적 범위로 E등급
   "범위 필수" 조항을 충족한다.
-- **부문 축 생략**: 초안 §8의 국가×부문×자산 중 부문은 v1 BOP 집계에
-  분해가 없어 미구현(`basis_note`에 명시).
+- **흐름 부문 축 생략**: 초안 §8의 국가×부문×자산 중 BOP 흐름 부문은 원자료에
+  분해가 없어 미구현(`basis_note`에 명시). v3 PIP 포지션 부문 관측은 별도
+  `exposure/`에 있으며 흐름으로 전용하지 않는다.
 - **UI 계약**: STATION ALL 탭 `REALLOC` 보기. 상시 "MODEL ALLOCATION ·
   GRADE E" 라벨 + E-안개, 셀 도시에에 산식·Fréchet 범위·반복·잔차·관측
   마진 전부 노출(source: `model_flow_reallocation` + `imf_bop`).
@@ -326,14 +347,17 @@ stock 계열만 추적(흐름·파생 지표는 revision_key 없음 = 행 생략
 - 결정론(N1): 타임스탬프 없음, 재실행 바이트 동일(테스트 강제). 65분기 ·
   파일당 ~110KB(5MB 조항 준수). 갱신 체인: `data:station` 다음.
 
-### facts.ndjson.gz — 정본 사실 테이블 (Phase P, 초안 §11.2 축소 + §16-6)
+### facts.ndjson.gz — 정본 수치 원장 (v3, 초안 §11.2 축소 + §16-6)
 
-`scripts/build/facts.ts`가 stocks(3 basis)·flows_country·flows_bilateral 전
-레코드를 라인당 JSON 1개(NDJSON)로 평탄화해 gzip 발행한다(~410k 레코드, ~5MB).
+`scripts/build/facts.ts`가 stocks(3 basis)·flows_country·flows_bilateral과 v3
+currency/sector/reconstructed/FXD/RAS 레코드를 라인당 JSON 1개(NDJSON)로
+평탄화해 gzip 발행한다(505,246건, 6,314,704 bytes).
 TS 미러: `FactLine`(scripts/build/facts.ts). 규칙:
 
-- **파생물 비포함**: synoptic/station/flowmatrix는 이 테이블에서 재계산 가능한
-  2차 산출(§11 Gold 집계층) — 사실이 아니라 뷰다.
+- **관측과 파생을 구분 보존**: A/B 직접 관측과 C–E 파생/모델 레코드를 한 원장에서
+  조회하되 `confidence_grade`·`estimate_method`·bounds를 삭제해서는 안 된다.
+- **UI 집계 비포함**: synoptic/station/flowmatrix는 이 테이블에서 재계산 가능한
+  2차 뷰다. `position_closure`는 각 셀의 산식·범위를 감사하는 수치군이라 포함한다.
 - **결정론**: 타임스탬프 없음, gzip 헤더 MTIME=0 고정 — 같은 상류면 같은 바이트.
 - **정합 게이트**: 레코드 수(테이블별)·등급 분포 = 원 샤드 합. `data:facts`
   self-check + `data:check` + vitest 삼중 강제. 요약은 `meta/facts_summary.json`.
@@ -353,7 +377,8 @@ liabilities(asset=deposits)** 는 같은 방향(owner→issuer) 은행 포지션
 - `meta/reconciliation.json`: 분기별 분포(median/p25/p75 gap_share)·최신 상위
   gap 10쌍·method/caveat. sanity 게이트: 최신 분기 쌍≥100, 중앙 gap∈(0, 90%)
   (관대 임계 — gap은 상대국 부문 커버리지 차이가 섞여 수십%가 정상, 실측 ~36%).
-- **CPIS(imf_pip)는 소유자 단방향 보고라 미러 불가** — 이 한계는 구조적이다.
+- **PIP 직접 관측은 소유자 단방향이라 독립 미러 불가** — v3
+  `reconstructed_liabilities`는 상대국 정보 전치 C등급이며 직접 미러를 대체하지 않는다.
 - 프루닝(|값|≥$100M)으로 한쪽이 임계 미만인 쌍은 비교 불가 → 생략(도시에
   MIRROR 행 문구에 명시).
 - UI: bis_lbs 양자 레코드의 계보 도시에 **MIRROR** 행(`mirror_key` — 자산 탭
@@ -363,13 +388,14 @@ liabilities(asset=deposits)** 는 같은 방향(owner→issuer) 은행 포지션
 
 - `basis`: `owner` | `issuer` | `location`
 - `measure_type`: `stock` | `flow` | `valuation` | `turnover`
-- `asset` (v1): `deposits` | `loans` | `debt_securities` | `listed_equity` |
+- `asset`: `deposits` | `loans` | `debt_securities` | `listed_equity` |
   `unlisted_equity_fdi` | `funds` | `reserves_gold` | `residential_property` |
   `commodities` | `crypto`
 - `confidence_grade`: `A`–`E`
 
-## Phase B 소스 우선순위 (참고)
+## v3 소스 우선순위 (참고)
 
-IMF IIP/BOP(잔액·흐름 골격) → IMF CPIS(양자 포트폴리오) → BIS 채무증권·LBS(채권·은행)
+IMF IIP/BOP(잔액·흐름 골격) → IMF IIPCC(통화구성) → IMF PIP(양자·부문·SCC)
+→ BIS 채무증권·LBS(채권·은행)
 → World Bank/WFE(시가총액 통제값) → 파생·롤포워드(C) → 모델(D/E).
 모든 소스는 `meta/sources.json`에 등록 후 사용.

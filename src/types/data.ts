@@ -17,8 +17,8 @@ export type MeasureType = 'stock' | 'flow' | 'valuation' | 'turnover'
 /**
  * CURR 다이얼 (Phase L): 'usd' | 'lcu'(선택 국가의 현지통화 — 분기 환율 곱).
  * LCU는 국가 스코프에서만 유효; 글로벌 집계는 통화 합산이 무의미해 USD 고정.
- * 고정환율 USD(constant-FX)는 IIP 통화구성 데이터가 없어 가정 없이 계산
- * 불가(허위 정밀도 금지) — 통화구성 확보(v3) 전까지 도입하지 않는다.
+ * 고정환율 USD(FXD)는 이 표시 다이얼과 분리된 exposure 계약에서만 제공한다.
+ * 핵심 stocks 값을 덮어쓰지 않으며 coverage gate와 범위가 없는 FXD는 발행하지 않는다.
  */
 export type CurrencyView = 'usd' | 'lcu'
 
@@ -70,7 +70,7 @@ export interface StockRecord extends Lineage {
   period: PeriodKey
   measure: 'stock'
   value_usd: number // current USD
-  /** 미산출 — IIP 통화구성 확보(v3) 전까지 constant-FX는 계산하지 않는다 */
+  /** Legacy optional: 핵심 관측 샤드는 미산출 유지; FXD는 exposure/*.json 참조. */
   value_usd_constant_fx?: number
 }
 
@@ -573,7 +573,8 @@ export interface VintagesIndexFile {
  * public/data/flowmatrix/{period}.json — Phase O(§8 축소 구현): 자산 간
  * 흐름 재배분의 최대엔트로피(IPF) 모델 배분. 마진(observed)만 관측(A),
  * 셀은 전부 **grade E 모델 배분**이며 lower/upper는 Fréchet 한계(가정 없는
- * 원리적 범위). 부문(가계/기업/정부) 축은 v1 BOP 집계에 없어 생략.
+ * 원리적 범위). BOP 흐름의 부문 축은 원자료에 없어 생략하며, v3 PIP 포지션
+ * 부문 관측은 별도 exposure 계약에 있다.
  * VIS=OBS 모드에서 이 데이터 기반 UI는 통째로 소멸한다(§6).
  */
 export interface FlowMatrixCell {
