@@ -29,7 +29,7 @@
 명판 아래 `GLOBE / SYNOPTIC / STATION` 토글로 **종관도**로 전환한다 — 모든 자산군의 잔액·
 흐름·평가변동·최대 회랑·이상 관측을 한 화면에 놓은 기상청식 대시보드. 자산
 기압계 칼럼(높이=글로벌 잔액, 니들=분기 순흐름), owner→issuer 순환도(cyan 유출→
-amber 유입), 자산별 65분기 지진계 스트립, 이상 관측 특보, 그리고 하단 시정 바가
+amber 유입), 자산별 분기 지진계 스트립, 이상 관측 특보, 그리고 하단 시정 바가
 "이 화면이 몇 %의 관측 위에 서 있는가"를 항상 밝힌다. 카드·KPI 타일은 여기에도
 없다 — 전부 계기와 특보 조판이고, 어떤 숫자든 클릭하면 교정 시트가 열리며,
 바로그래프 스크럽·자산 필터·VIS(관측만) 다이얼이 전 구역에 동시 반영된다.
@@ -113,10 +113,12 @@ pnpm build          # tsc -b && vite build
 
 ### 데이터 다운로드 — 정본 수치 원장 (v3, §16-6)
 
-관측과 명시적으로 등급화한 파생 수치 505,316건을 단일 NDJSON 원장으로 내려받을 수 있다:
+관측과 명시적으로 등급화한 파생 수치를 단일 NDJSON 원장으로 내려받을 수 있다.
+현재 레코드 수와 압축 바이트는 갱신 때 함께 생성되는
+[`meta/facts_summary.json`](https://ca.yanghapark.com/data/meta/facts_summary.json)이 정본이다:
 
 ```
-https://ca.yanghapark.com/data/facts.ndjson.gz   (~6.3MB gzip, 라인당 JSON 1개)
+https://ca.yanghapark.com/data/facts.ndjson.gz   (gzip, 라인당 JSON 1개)
 ```
 
 | 필드 | 의미 |
@@ -154,7 +156,7 @@ $41.4B, 격차 13.1%). gap은 상대국 부문 커버리지 차이와 실제 불
 |---|---|---|---|
 | **IMF IIP** | 대외 자산·부채 잔액, 국가×분기 (2010~) | A | IMF terms — attribution |
 | **IMF BOP** | 금융계정 실거래 흐름 (바로그래프 실루엣) | A | IMF terms — attribution |
-| **IMF IIPCC** | 대외채권·채무 통화구성 (20개 보고국 직접 관측) | A | IMF terms — attribution |
+| **IMF IIPCC** | 대외채권·채무 통화구성 (가용 보고국 직접 관측) | A | IMF terms — attribution |
 | **IMF PIP** (CPIS 후속) | 양자 포트폴리오 자산·보고 부문 (직접 관측) + SCC 파생 부채 | A / C | IMF terms — attribution |
 | **BIS LBS** | 국경 간 은행 loans&deposits 양자 회랑 (분기, Phase M) | B | BIS terms — attribution |
 | **World Bank WDI** | 상장주식 시총(발행국 총액)·GDP | B | CC BY-4.0 |
@@ -163,14 +165,13 @@ $41.4B, 격차 13.1%). gap은 상대국 부문 커버리지 차이와 실제 불
 
 신 IMF API(`api.imf.org/external/sdmx/2.1`, SDMX XML)와 BIS Data Portal API
 (`stats.bis.org/api/v2`, SDMX-CSV)에서 수집. BIS 채무증권(DSS)은 후속.
-최신 관측 분기 **2026-Q1**(IIP), WB 시총은 2024년까지. 명판의 "추정 기준"
-날짜는 데이터 스냅샷 빈티지(`index.generated_at`)다.
+최신 관측 분기와 소스별 기간은 `index.json`과 각 레코드 `effective_date`가 정본이다.
+명판의 "추정 기준" 날짜는 데이터 스냅샷 빈티지(`index.generated_at`)다.
 
-현재 스냅샷 규모: 198개국 마스터, 그중 127개국 대외잔액 관측, PIP 보고국 81개,
-BIS 은행 보고국 39개(회랑 15만 건 — 마스터 밖 역외센터 BM/GG/IM/JE/KY는 정직
-드랍, `pipeline_report.bis_lbs` 기록). 분기 65개(2010-Q1~2026-Q1) 샤딩, 총 산출
-약 226 MB. 브라우저 서빙 JSON 샤드는 최대 약 2.6 MB(`meta/fx_rates.json`),
-다운로드용 gzip 원장은 6.3 MB이며 전부 lazy-load한다. 은행 회랑 갱신:
+스냅샷마다 바뀌는 국가·기간·수치·바이트 수는 `index.json`,
+`meta/facts_summary.json`, `meta/pipeline_report.json`이 정본이다. README에 현재값을
+복제하지 않는다. 브라우저 샤드는 5MB 계약 게이트를 통과한 것만 발행하고 전부
+lazy-load한다. 은행 회랑 갱신:
 `pnpm data:bis`(멱등).
 
 ## 신뢰등급 A–E와 안개 렌더링
@@ -288,12 +289,13 @@ STATION ALL 탭의 `REALLOC` 보기는 관측된 BOP 순흐름(A등급)을 마�
 - **계보 도시에 = 열린 시점의 스냅샷.** 도시에는 클릭 당시의 basis/period/VIS 상태를
   고정 캡처한다. 이후 계기를 바꿔도 열린 도시에는 갱신되지 않는다(닫고 다시 연다).
 - **통화(CURR) 다이얼 = USD | LCU (Phase L).** LCU는 선택 국가의 현지통화로 분기
-  기말 환율(IMF ER, A등급 174개국 · WB 연간 Q4 폴백 B등급 18개국)을 곱한 정확 산술.
+  기말 환율(IMF ER A등급 · WB 연간 Q4 폴백 B등급)을 곱한 정확 산술. 현재 국가별
+  커버리지와 source는 `meta/fx_rates.json`이 정본이다.
   국가 스코프(STATION 국가 선택·GLOBE 리포트)에서만 활성 — 글로벌 집계는 통화 합산이
   무의미해 다이얼이 회색+사유("MIXED CURRENCIES — USD ONLY")가 된다. LCU 표시 수치의
   도시에엔 FX RATE·LCU/USD VALUE 행이 병기된다. v3 **고정환율 USD(FXD)**는
-  `exposure/`에 별도 발행한다(기준 2020-Q4). IIPCC 직접 통화구성은 20개 보고국에만
-  있으므로 `OTHC+UALLC>5%`, 환율 누락, 통화합↔총계 gap>0.5%면 숫자 대신 정확한
+  `exposure/`에 별도 발행한다(기준 2020-Q4). IIPCC 직접 통화구성의 보고 범위가
+  제한적이므로 `OTHC+UALLC>5%`, 환율 누락, 통화합↔총계 gap>0.5%면 숫자 대신 정확한
   unavailable 사유를 보인다. `XDC`는 국가 ISO 통화의 currency-level IMF 환율
   중앙값(WB 폴백)을 쓰며 실제 환율 source까지 dossier에 남긴다. 핵심 `stocks`의
   `value_usd_constant_fx`는 관측 원장을
