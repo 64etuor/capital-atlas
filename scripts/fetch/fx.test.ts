@@ -94,6 +94,22 @@ describe('assembleFx — 소스 우선순위·정직 공백', () => {
     const out = assembleFx([{ iso3: 'ZZZ', quarter: '2024-Q4', rate: 5 }], [], ['KOR'])
     expect(out.countries.ZZZ).toBeUndefined()
   })
+
+  it('publishes byte-stable country and period order regardless of fetch completion order', () => {
+    const forward = assembleFx(imf, wb, ['KOR', 'AFG'])
+    const reversed = assembleFx(
+      [...imf].reverse(),
+      [...wb].reverse(),
+      ['KOR', 'AFG'],
+    )
+
+    expect(JSON.stringify(forward)).toBe(JSON.stringify(reversed))
+    expect(Object.keys(forward.countries)).toEqual(['AFG', 'KOR'])
+    expect(Object.keys(forward.countries.AFG.rates)).toEqual([
+      '2023-Q4',
+      '2024-Q4',
+    ])
+  })
 })
 
 describe('generated meta/fx_rates.json — 실생성물 검증', () => {
