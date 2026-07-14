@@ -64,6 +64,9 @@ const median = (values: number[]): number => {
     : sorted[mid]
 }
 
+const compareCodeUnits = (left: string, right: string) =>
+  left < right ? -1 : left > right ? 1 : 0
+
 /** Currency-level rates for FXD. Prefer grade A, then median identical ISO-currency reports. */
 export function currencyRates(
   countries: FxRatesFile['countries'],
@@ -83,9 +86,9 @@ export function currencyRates(
   }
 
   const out: FxRatesFile['currencies'] = {}
-  for (const [currency, byPeriod] of [...grouped].sort(([a], [b]) => a.localeCompare(b))) {
+  for (const [currency, byPeriod] of [...grouped].sort(([a], [b]) => compareCodeUnits(a, b))) {
     const rates: FxRatesFile['currencies'][string]['rates'] = {}
-    for (const [period, entries] of [...byPeriod].sort(([a], [b]) => a.localeCompare(b))) {
+    for (const [period, entries] of [...byPeriod].sort(([a], [b]) => compareCodeUnits(a, b))) {
       const aGrade = entries.filter((entry) => entry.grade === 'A')
       const selected = aGrade.length > 0 ? aGrade : entries
       rates[period as keyof typeof rates] = {
@@ -155,11 +158,20 @@ export function assembleFx(
     }
   }
 
+  const orderedCountries: FxRatesFile['countries'] = {}
+  for (const iso3 of Object.keys(countries).sort(compareCodeUnits)) {
+    const country = countries[iso3]
+    const rates: typeof country.rates = {}
+    for (const period of Object.keys(country.rates).sort(compareCodeUnits))
+      rates[period as keyof typeof rates] = country.rates[period as keyof typeof country.rates]
+    orderedCountries[iso3] = { ...country, rates }
+  }
+
   // 결정론(Phase N): 수집 시각은 sources.json retrieved_at이 정본 — 여기엔 금지
   return {
     base: 'USD',
-    countries,
-    currencies: currencyRates(countries),
+    countries: orderedCountries,
+    currencies: currencyRates(orderedCountries),
   }
 }
 
