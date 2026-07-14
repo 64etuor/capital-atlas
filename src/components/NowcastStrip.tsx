@@ -23,7 +23,6 @@ export function NowcastStrip() {
 
   useEffect(() => {
     let alive = true
-    let timer: ReturnType<typeof setTimeout> | undefined
     let scheduledRefreshes = 0
     const controller = new AbortController()
     const fallbackPromise = getGlobalCrypto()
@@ -43,16 +42,22 @@ export function NowcastStrip() {
         const fallback = await fallbackPromise
         if (alive && fallback !== null) setReading(fallback)
       }
-      if (!alive || scheduledRefreshes >= MAX_SCHEDULED_REFRESHES) return
-      scheduledRefreshes++
-      timer = setTimeout(() => void poll(), LIVE_REFRESH_INTERVAL_MS)
     }
     void poll()
+    const timer = setInterval(() => {
+      if (!alive || scheduledRefreshes >= MAX_SCHEDULED_REFRESHES) {
+        clearInterval(timer)
+        return
+      }
+      scheduledRefreshes += 1
+      void poll()
+      if (scheduledRefreshes >= MAX_SCHEDULED_REFRESHES) clearInterval(timer)
+    }, LIVE_REFRESH_INTERVAL_MS)
 
     return () => {
       alive = false
       controller.abort()
-      if (timer !== undefined) clearTimeout(timer)
+      clearInterval(timer)
     }
   }, [])
 

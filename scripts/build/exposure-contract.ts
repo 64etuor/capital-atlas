@@ -51,8 +51,9 @@ const fxdAvailable = z
     entry: z.enum(['assets', 'liabilities']),
     value_usd: z.number().finite(),
     coverage_share: coverage,
-    residual_share: coverage,
+    residual_share: z.number().finite().min(0).max(0.05),
     source_id: z.literal('model_constant_fx'),
+    source_ids: z.array(z.string().min(1)).min(2),
     effective_date: isoDate,
     confidence_grade: z.enum(['C', 'D']),
     estimate_method: z.string().min(1),
@@ -62,6 +63,12 @@ const fxdAvailable = z
   .refine(
     (row) => row.lower_bound <= row.value_usd && row.value_usd <= row.upper_bound,
     { message: 'FXD value must lie inside its finite range' },
+  )
+  .refine(
+    (row) =>
+      row.source_ids.includes('imf_iipcc') &&
+      row.source_ids.some((source) => source === 'imf_ifs_fx' || source === 'wb_wdi'),
+    { message: 'FXD must name IIPCC and the actual FX source' },
   )
 
 const fxdUnavailable = z
@@ -107,6 +114,7 @@ export const reconstructedLiabilitySchema = z
     asset: z.enum(['listed_equity', 'debt_securities']),
     value_usd: z.number().finite().nonnegative(),
     source_id: z.literal('imf_pip'),
+    source_ids: z.tuple([z.literal('imf_pip'), z.literal('imf_iip')]),
     effective_date: isoDate,
     confidence_grade: z.literal('C'),
     estimate_method: z.literal(

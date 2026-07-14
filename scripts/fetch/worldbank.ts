@@ -7,7 +7,13 @@
  * matching against the country master; the WLD aggregate is kept separately
  * as a top-down control total for sanity checks.
  */
-import { fetchCached, writeRawJson } from './lib.ts'
+import {
+  assertMinimumRows,
+  assertNoNewFailures,
+  failures,
+  fetchCached,
+  writeRawJson,
+} from './lib.ts'
 
 export interface WbObs {
   iso3: string
@@ -49,13 +55,17 @@ export interface WbData {
 }
 
 export async function run(validIso3: Set<string>): Promise<WbData> {
+  const failureStart = failures.length
   const mkt = await fetchIndicator('CM.MKT.LCAP.CD')
   const gdp = await fetchIndicator('NY.GDP.MKTP.CD')
+  assertNoNewFailures('World Bank WDI', failureStart)
   const data: WbData = {
     marketCap: (mkt?.rows ?? []).filter((r) => validIso3.has(r.iso3)),
     marketCapWorld: mkt?.world ?? [],
     gdp: (gdp?.rows ?? []).filter((r) => validIso3.has(r.iso3)),
   }
+  assertMinimumRows('World Bank market cap', data.marketCap.length, 100)
+  assertMinimumRows('World Bank GDP', data.gdp.length, 500)
   writeRawJson('wb/normalized.json', data)
   console.log(
     `[worldbank] marketCap ${data.marketCap.length} obs / gdp ${data.gdp.length} obs` +

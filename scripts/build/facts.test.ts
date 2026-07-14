@@ -126,6 +126,7 @@ describe('fact line shapes — §11.2 축소 스키마', () => {
     const reconstructed: ReconstructedLiability = {
       country: 'KOR', period: '2024-Q4', asset: 'debt_securities', value_usd: 70,
       source_id: 'imf_pip', effective_date: '2024-12-31', confidence_grade: 'C',
+      source_ids: ['imf_pip', 'imf_iip'],
       estimate_method: 'counterparty_assets_transposed_to_reconstructed_liability',
       lower_bound: 70, upper_bound: 100, coverage_share: 0.7,
     }
@@ -133,6 +134,7 @@ describe('fact line shapes — §11.2 축소 스키마', () => {
       status: 'available', period: '2024-Q4', base_period: '2020-Q4', entry: 'assets',
       value_usd: 115, coverage_share: 1, residual_share: 0,
       source_id: 'model_constant_fx', effective_date: '2024-12-31',
+      source_ids: ['imf_iipcc', 'imf_ifs_fx'],
       confidence_grade: 'C', estimate_method: 'currency_bucket_constant_fx_exact_components',
       lower_bound: 115, upper_bound: 115,
     }
@@ -153,6 +155,14 @@ describe('fact line shapes — §11.2 축소 스키마', () => {
       expect(line.upper_bound).toBeTypeOf('number')
       expect(line.coverage_share).toBeTypeOf('number')
     }
+    expect(reconstructedLiabilityFact(reconstructed).source_ids).toEqual([
+      'imf_pip',
+      'imf_iip',
+    ])
+    expect(fxdFact('KOR', fxd).source_ids).toEqual([
+      'imf_iipcc',
+      'imf_ifs_fx',
+    ])
   })
 })
 

@@ -5,7 +5,7 @@
 import { readFileSync, readdirSync, statSync, existsSync } from 'node:fs'
 import { join } from 'node:path'
 import { z } from 'zod'
-import { OUT_DIR } from '../fetch/lib.ts'
+import { OUT_DIR, readRawJson } from '../fetch/lib.ts'
 import {
   currencyExposureRecordSchema,
   fxdResultSchema,
@@ -13,6 +13,7 @@ import {
   reconstructedLiabilitySchema,
   sectorPositionRecordSchema,
 } from '../build/exposure-contract.ts'
+import { rasClose } from '../build/position-closure.ts'
 
 const grade = z.enum(['A', 'B', 'C', 'D', 'E'])
 const period = z.string().regex(/^\d{4}-Q[1-4]$/)
@@ -201,6 +202,8 @@ let currencyN = 0
 let sectorN = 0
 let reconstructedN = 0
 let fxdN = 0
+const currencyCountriesSeen = new Set<string>()
+const sectorCountriesSeen = new Set<string>()
 const exposureDir = join(OUT_DIR, 'exposure')
 const exposureIndexPath = join(exposureDir, 'index.json')
 if (!existsSync(exposureIndexPath)) {
@@ -245,14 +248,20 @@ if (!existsSync(exposureIndexPath)) {
       fail(`exposure/${country}.json currency: ${currencyRows.error.issues[0].message}`)
     } else {
       currencyN += currencyRows.data.length
-      for (const row of currencyRows.data) bump(row.confidence_grade)
+      for (const row of currencyRows.data) {
+        currencyCountriesSeen.add(row.country)
+        bump(row.confidence_grade)
+      }
     }
     const sectorRows = z.array(sectorPositionRecordSchema).safeParse(body.sectors)
     if (!sectorRows.success) {
       fail(`exposure/${country}.json sectors: ${sectorRows.error.issues[0].message}`)
     } else {
       sectorN += sectorRows.data.length
-      for (const row of sectorRows.data) bump(row.confidence_grade)
+      for (const row of sectorRows.data) {
+        sectorCountriesSeen.add(row.country)
+        bump(row.confidence_grade)
+      }
     }
     const reconstructedRows = z
       .array(reconstructedLiabilitySchema)
@@ -276,9 +285,17 @@ if (!existsSync(exposureIndexPath)) {
       }
     }
   }
-  if (currencyN === 0) fail('currency exposure contains no direct observations')
-  if (sectorN === 0) fail('sector positions contain no direct observations')
-  if (reconstructedN === 0) fail('reconstructed liabilities contain no derived observations')
+  if (currencyN < 50_000 || currencyCountriesSeen.size < 18)
+    fail(
+      `currency exposure coverage regressed: ${currencyN} rows / ${currencyCountriesSeen.size} countries`,
+    )
+  if (sectorN < 14_000 || sectorCountriesSeen.size < 75)
+    fail(
+      `sector exposure coverage regressed: ${sectorN} rows / ${sectorCountriesSeen.size} countries`,
+    )
+  if (reconstructedN < 2_000)
+    fail(`reconstructed liability coverage regressed: ${reconstructedN} rows`)
+  if (fxdN < 300) fail(`available FXD coverage regressed: ${fxdN} rows`)
   ok(
     `exposure: ${exposureCountries.success ? exposureCountries.data.length : 0} countries · ` +
       `${currencyN} currency A · ${sectorN} sector A · ${reconstructedN} reconstructed C · ${fxdN} FXD C/D`,
@@ -289,6 +306,33 @@ if (!existsSync(exposureIndexPath)) {
 let positionClosureN = 0
 const closureDir = join(OUT_DIR, 'position_closure')
 const closureIndexPath = join(closureDir, 'index.json')
+const closureIip = readRawJson<
+  Array<{
+    iso3: string
+    entry: 'A_P' | 'L_P'
+    indicator: string
+    quarter: string
+    value: number
+  }>
+>('imf/iip_normalized.json')
+const closureMargins = new Map<
+  string,
+  { rows: Record<string, number>; columns: Record<string, number> }
+>()
+for (const observation of closureIip ?? []) {
+  const asset =
+    observation.indicator === 'P_F5_MV'
+      ? 'listed_equity'
+      : observation.indicator === 'P_F3_MV'
+        ? 'debt_securities'
+        : null
+  if (!asset) continue
+  const key = `${observation.quarter}|${asset}`
+  const source = closureMargins.get(key) ?? { rows: {}, columns: {} }
+  const side = observation.entry === 'A_P' ? source.rows : source.columns
+  side[observation.iso3] = observation.value
+  closureMargins.set(key, source)
+}
 if (!existsSync(closureIndexPath)) {
   fail('position_closure/index.json missing — run pnpm data:closure')
 } else {
@@ -324,6 +368,8 @@ if (!existsSync(closureIndexPath)) {
         residual?: unknown
         converged?: unknown
         direct_seed_share?: unknown
+        row_margins?: unknown
+        column_margins?: unknown
         total_cells?: unknown
         omitted_cells?: unknown
         omitted_value_usd?: unknown
@@ -355,6 +401,117 @@ if (!existsSync(closureIndexPath)) {
         fail(`position_closure/${closurePeriod}.json ${asset}: cell counts do not close`)
       if (!Number.isFinite(result.omitted_value_usd) || Number(result.omitted_value_usd) < 0)
         fail(`position_closure/${closurePeriod}.json ${asset}: invalid omitted value`)
+      const margins = z.record(z.string(), z.number().finite().positive())
+      const rowMargins = margins.safeParse(result.row_margins)
+      const columnMargins = margins.safeParse(result.column_margins)
+      if (!rowMargins.success || !columnMargins.success) {
+        fail(`position_closure/${closurePeriod}.json ${asset}: invalid margins`)
+        continue
+      }
+      const sourceMargins = closureMargins.get(`${closurePeriod}|${asset}`)
+      if (!sourceMargins) {
+        fail(`position_closure/${closurePeriod}.json ${asset}: source IIP margins missing`)
+        continue
+      }
+      const bilateralPath = join(OUT_DIR, 'flows_bilateral', `${closurePeriod}.json`)
+      const direct = (
+        JSON.parse(readFileSync(bilateralPath, 'utf8')) as {
+          records: Array<{
+            owner_country: string
+            issuer_country: string
+            asset: string
+            measure: string
+            value_usd: number
+            source_id: string
+          }>
+        }
+      ).records.filter(
+        (row) =>
+          row.source_id === 'imf_pip' &&
+          row.measure === 'stock' &&
+          row.asset === asset,
+      )
+      let recomputed
+      try {
+        recomputed = rasClose(
+          direct.map((row) => ({
+            row: row.owner_country,
+            column: row.issuer_country,
+            value: row.value_usd,
+          })),
+          sourceMargins.rows,
+          sourceMargins.columns,
+        )
+      } catch (error) {
+        fail(
+          `position_closure/${closurePeriod}.json ${asset}: recompute failed: ${String(error)}`,
+        )
+        continue
+      }
+      for (const [label, actual, expected] of [
+        ['row', rowMargins.data, recomputed.rowMargins],
+        ['column', columnMargins.data, recomputed.columnMargins],
+      ] as const) {
+        const keys = new Set([...Object.keys(actual), ...Object.keys(expected)])
+        if (
+          [...keys].some(
+            (key) =>
+              actual[key] === undefined ||
+              expected[key] === undefined ||
+              Math.abs(actual[key] - expected[key]) >
+                1e-12 * Math.max(1, expected[key]),
+          )
+        )
+          fail(`position_closure/${closurePeriod}.json ${asset}: ${label} margins drift`)
+      }
+      if (
+        Math.abs(recomputed.directSeedShare - Number(result.direct_seed_share)) > 1e-12
+      )
+        fail(`position_closure/${closurePeriod}.json ${asset}: seed coverage mismatch`)
+      if (recomputed.iterations !== Number(result.iterations))
+        fail(`position_closure/${closurePeriod}.json ${asset}: iteration count mismatch`)
+      if (
+        Math.abs(recomputed.residual - Number(result.residual)) >
+        1e-12 * Math.max(1, recomputed.residual)
+      )
+        fail(`position_closure/${closurePeriod}.json ${asset}: residual mismatch`)
+      if (recomputed.residual > 1e-9)
+        fail(`position_closure/${closurePeriod}.json ${asset}: recomputed residual exceeds 1e-9`)
+      const allExpectedCells = [...recomputed.cells]
+        .sort((a, b) => b.value - a.value)
+      if (Number(result.total_cells) !== allExpectedCells.length)
+        fail(`position_closure/${closurePeriod}.json ${asset}: total cell count mismatch`)
+      const expectedOmitted = allExpectedCells
+        .slice(cells.data.length)
+        .reduce((sum, cell) => sum + cell.value, 0)
+      if (
+        Math.abs(expectedOmitted - Number(result.omitted_value_usd)) >
+        1e-9 * Math.max(1, expectedOmitted)
+      )
+        fail(`position_closure/${closurePeriod}.json ${asset}: omitted value mismatch`)
+      if (
+        cells.data.some(
+          (cell) =>
+            Math.abs(cell.coverage_share - recomputed.directSeedShare) > 1e-12,
+        )
+      )
+        fail(`position_closure/${closurePeriod}.json ${asset}: cell coverage mismatch`)
+      const expectedCells = allExpectedCells.slice(0, cells.data.length)
+      for (let i = 0; i < cells.data.length; i++) {
+        const actual = cells.data[i]
+        const expected = expectedCells[i]
+        if (
+          !expected ||
+          actual.owner_country !== expected.row ||
+          actual.issuer_country !== expected.column ||
+          Math.abs(actual.value_usd - expected.value) > 1e-6 * Math.max(1, expected.value) ||
+          actual.lower_bound !== expected.lower ||
+          actual.upper_bound !== expected.upper
+        ) {
+          fail(`position_closure/${closurePeriod}.json ${asset}: published cell ${i} drift`)
+          break
+        }
+      }
       positionClosureN += cells.data.length
       for (const row of cells.data) bump(row.confidence_grade)
     }

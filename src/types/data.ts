@@ -281,6 +281,8 @@ export interface FxdAvailable extends Lineage {
   coverage_share: number
   residual_share: number
   source_id: 'model_constant_fx'
+  /** Actual upstream observations used; never assume IMF when WB supplied XDC. */
+  source_ids: string[]
   confidence_grade: 'C' | 'D'
   estimate_method: string
   lower_bound: number
@@ -305,6 +307,8 @@ export interface ReconstructedLiability extends Lineage {
   asset: 'listed_equity' | 'debt_securities'
   value_usd: number
   confidence_grade: 'C'
+  /** PIP bottom-up observation + IIP top-down margin. */
+  source_ids: ['imf_pip', 'imf_iip']
   estimate_method: 'counterparty_assets_transposed_to_reconstructed_liability'
   lower_bound: number
   upper_bound: number
@@ -457,10 +461,13 @@ export interface StationPartner {
   value: number
   grade: ConfidenceGrade
   source_id: string
+  source_ids?: string[]
   effective_date: string
   method?: string
   lower?: number
   upper?: number
+  range_label?: string
+  coverage_share?: number
 }
 
 export interface StationPartnerSides {

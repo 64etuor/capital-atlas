@@ -8,6 +8,7 @@ import type {
   SectorPositionRecord,
 } from '../../src/types/data.ts'
 import {
+  assertMinimumRows,
   chunk,
   fetchCached,
   parseSdmxSeries,
@@ -78,6 +79,19 @@ const PIP_SCC_ASSETS = {
 
 const rowKey = (row: CurrencyExposureRecord) =>
   [row.country, row.period, row.entry, row.sector, row.currency].join('|')
+
+/** Required official slices are atomic: never overwrite normalized data with a partial fetch. */
+export function requireCompleteResponses(
+  label: string,
+  responses: readonly (string | null)[],
+): string[] {
+  const failed = responses.filter((response) => response === null).length
+  if (failed > 0)
+    throw new Error(
+      `[imf-exposure] ${label}: ${failed} of ${responses.length} required requests failed; refusing partial overwrite`,
+    )
+  return responses as string[]
+}
 
 /** Annual and quarterly observations can share Q4; the higher-frequency fact wins. */
 export function parseIipcc(xml: string): CurrencyExposureRecord[] {
@@ -218,7 +232,8 @@ export async function runIipcc(iso3s: string[]): Promise<CurrencyExposureRecord[
       `${BASE}/IMF.STA,IIPCC/${key}?startPeriod=2010`,
     )
   })
-  const rows = parseIipcc(bodies.filter((body): body is string => body !== null).join('\n'))
+  const rows = parseIipcc(requireCompleteResponses('IIPCC', bodies).join('\n'))
+  assertMinimumRows('IMF IIPCC', rows.length, 1_000)
   writeRawJson('imf/iipcc_normalized.json', rows)
   console.log(`[imf:iipcc] ${rows.length} direct currency facts`)
   return rows
@@ -240,12 +255,16 @@ export async function runPipExposure(
         `${BASE}/IMF.STA,PIP/${derivedKey}?startPeriod=2013`,
       ),
     ])
-    return parsePipExposure([direct, derived].filter(Boolean).join('\n'))
+    return parsePipExposure(
+      requireCompleteResponses(`PIP exposure ${iso3}`, [direct, derived]).join('\n'),
+    )
   })
   const result = {
     sectors: parsed.flatMap((row) => row.sectors),
     reconstructed: parsed.flatMap((row) => row.reconstructed),
   }
+  assertMinimumRows('IMF PIP sectors', result.sectors.length, 500)
+  assertMinimumRows('IMF PIP SCC', result.reconstructed.length, 1_000)
   writeRawJson('imf/pip_sector_normalized.json', result.sectors)
   writeRawJson('imf/pip_scc_normalized.json', result.reconstructed)
   console.log(

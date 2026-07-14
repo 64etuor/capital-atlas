@@ -7,6 +7,7 @@ import { existsSync, readFileSync, statSync } from 'node:fs'
 import { join } from 'node:path'
 import { describe, expect, it } from 'vitest'
 import { OUT_DIR } from '../fetch/lib.ts'
+import type { ReconstructedLiability } from '../../src/types/data.ts'
 import type { BilateralRecord, FlowRecord, StockRecord } from './synoptic.ts'
 import {
   PARTNER_LIMIT,
@@ -147,7 +148,23 @@ describe('stationPartners — CPIS 양방향 상대국', () => {
     rows.push(bilat({ owner_country: 'JPN', issuer_country: 'KOR', value_usd: 1e9 }))
     // derived flow records must NOT enter the partner matrix (positions only)
     rows.push(bilat({ measure: 'flow', issuer_country: 'DEU', value_usd: 9e12, confidence_grade: 'D' }))
-    const partners = stationPartners(rows, 'KOR')
+    const reconstructed: ReconstructedLiability[] = [
+      {
+        country: 'KOR',
+        period: '2024-Q4',
+        asset: 'listed_equity',
+        value_usd: 4e9,
+        source_id: 'imf_pip',
+        source_ids: ['imf_pip', 'imf_iip'],
+        effective_date: '2024-12-31',
+        confidence_grade: 'C',
+        estimate_method: 'counterparty_assets_transposed_to_reconstructed_liability',
+        lower_bound: 4e9,
+        upper_bound: 5e9,
+        coverage_share: 0.8,
+      },
+    ]
+    const partners = stationPartners(rows, 'KOR', reconstructed)
     const entry = partners['2024-Q4']
     expect(entry).toBeDefined()
     const eq = entry.assets.listed_equity
@@ -156,9 +173,12 @@ describe('stationPartners — CPIS 양방향 상대국', () => {
     expect(eq?.holders.map((p) => p.country)).toEqual(['USA', 'JPN'])
     expect(eq?.holders[0]).toMatchObject({
       grade: 'C',
-      method: 'counterparty_assets_transposed_to_reconstructed_liability',
-      lower: 0,
-      upper: 4e9,
+      method: 'counterparty_assets_transposed_with_proportional_top_down_corridor',
+      lower: 3e9,
+      upper: 3.75e9,
+      coverage_share: 0.8,
+      source_ids: ['imf_pip', 'imf_iip'],
+      range_label: 'proportional bottom-up ↔ top-down corridor',
     })
     expect(eq?.holdings[0].grade).toBe('A')
     expect(eq?.holdings.some((p) => p.country === 'DEU')).toBe(false)
@@ -168,14 +188,37 @@ describe('stationPartners — CPIS 양방향 상대국', () => {
     const partners = stationPartners(
       [
         bilat({ value_usd: 5e9 }),
-        bilat({ asset: 'debt_securities', value_usd: 2e9, confidence_grade: 'C', estimate_method: 'mirror' }),
+        bilat({
+          asset: 'debt_securities',
+          value_usd: 2e9,
+          confidence_grade: 'C',
+          estimate_method: 'mirror',
+          lower_bound: 1e9,
+          upper_bound: 3e9,
+        }),
         bilat({ issuer_country: 'GBR', value_usd: 1e9 }),
       ],
       'KOR',
     )
     const all = partners['2024-Q4'].all
-    expect(all.holdings[0]).toMatchObject({ country: 'USA', value: 7e9, grade: 'C' })
+    expect(all.holdings[0]).toMatchObject({
+      country: 'USA',
+      value: 7e9,
+      grade: 'C',
+      lower: 6e9,
+      upper: 8e9,
+      method: 'sum_of_partner_positions_across_assets',
+      range_label: 'sum of component corridors; observed components are exact',
+    })
     expect(all.holdings[1]).toMatchObject({ country: 'GBR', value: 1e9, grade: 'A' })
+  })
+
+  it('omits a reconstructed holder value when no IIP top-down margin can bound it', () => {
+    const partners = stationPartners(
+      [bilat({ owner_country: 'USA', issuer_country: 'KOR', value_usd: 3e9 })],
+      'KOR',
+    )
+    expect(partners['2024-Q4'].assets.listed_equity?.holders).toEqual([])
   })
 })
 

@@ -114,6 +114,82 @@ describe('computeFxd — coverage-gated constant-FX', () => {
     })
   })
 
+  it('records the actual WB fallback lineage when domestic-currency FXD uses WB rates', () => {
+    const wbFx: FxRatesFile = {
+      ...fx,
+      countries: {
+        KOR: {
+          currency: 'KRW',
+          quarterly: false,
+          rates: {
+            '2020-Q4': {
+              rate: 1100,
+              grade: 'B',
+              source_id: 'wb_wdi',
+              effective_date: '2020-12-31',
+              method: 'wb_pa_nus_fcrf_annual_rate_q4',
+            },
+            '2024-Q4': {
+              rate: 1400,
+              grade: 'B',
+              source_id: 'wb_wdi',
+              effective_date: '2024-12-31',
+              method: 'wb_pa_nus_fcrf_annual_rate_q4',
+            },
+          },
+        },
+      },
+    }
+    const [result] = computeFxd(
+      [fact('TOTAL', 100), fact('USD', 40), fact('XDC', 60)],
+      wbFx,
+      '2020-Q4',
+    )
+    expect(result).toMatchObject({
+      status: 'available',
+      source_ids: ['imf_iipcc', 'imf_ifs_fx', 'wb_wdi'],
+    })
+  })
+
+  it('maps XDC to the shared ISO currency rate before using a country fallback', () => {
+    const euroFx: FxRatesFile = {
+      ...fx,
+      countries: {
+        DEU: {
+          currency: 'EUR',
+          quarterly: false,
+          rates: {
+            '2020-Q4': {
+              rate: 0.9,
+              grade: 'B',
+              source_id: 'wb_wdi',
+              effective_date: '2020-12-31',
+            },
+            '2024-Q4': {
+              rate: 0.95,
+              grade: 'B',
+              source_id: 'wb_wdi',
+              effective_date: '2024-12-31',
+            },
+          },
+        },
+      },
+    }
+    const [result] = computeFxd(
+      [fact('TOTAL', 100), fact('USD', 40), fact('XDC', 60)].map((row) => ({
+        ...row,
+        country: 'DEU',
+      })),
+      euroFx,
+      '2020-Q4',
+    )
+    expect(result).toMatchObject({
+      status: 'available',
+      value_usd: 115,
+      source_ids: ['imf_iipcc', 'imf_ifs_fx'],
+    })
+  })
+
   it('emits an explicit unavailable reason instead of a number above the residual gate', () => {
     const [result] = computeFxd(
       [fact('TOTAL', 100), fact('USD', 90), fact('OTHC', 10)],
@@ -184,6 +260,7 @@ describe('reconstructLiabilities — counterpart-derived range', () => {
         upper_bound: 100,
         coverage_share: 0.7,
         confidence_grade: 'C',
+        source_ids: ['imf_pip', 'imf_iip'],
       }),
     ])
   })

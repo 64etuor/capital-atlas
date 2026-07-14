@@ -9,16 +9,19 @@ import type {
   SectorPositionRecord,
 } from '../../types/data'
 
-const latestRows = <T extends { period: PeriodKey }>(
+const latestRowsBy = <T extends { period: PeriodKey }>(
   rows: readonly T[],
   target: PeriodKey,
+  group: (row: T) => string,
 ): T[] => {
-  let latest: PeriodKey | null = null
+  const latest = new Map<string, PeriodKey>()
   for (const row of rows) {
     if (row.period > target) continue
-    if (latest === null || row.period > latest) latest = row.period
+    const key = group(row)
+    const current = latest.get(key)
+    if (current === undefined || row.period > current) latest.set(key, row.period)
   }
-  return latest === null ? [] : rows.filter((row) => row.period === latest)
+  return rows.filter((row) => row.period === latest.get(group(row)))
 }
 
 export interface ExposureSelection {
@@ -33,17 +36,28 @@ export function exposureAt(
   file: CountryExposureFile,
   target: PeriodKey,
   observedOnly: boolean,
+  asset?: 'listed_equity' | 'debt_securities',
 ): ExposureSelection {
+  const sectors = asset
+    ? file.sectors.filter((row) => row.asset === asset)
+    : file.sectors
+  const reconstructed = asset
+    ? file.reconstructed_liabilities.filter((row) => row.asset === asset)
+    : file.reconstructed_liabilities
   const direct = {
-    currency: latestRows(file.currency, target),
-    sectors: latestRows(file.sectors, target),
+    currency: latestRowsBy(
+      file.currency,
+      target,
+      (row) => `${row.entry}|${row.sector}`,
+    ),
+    sectors: latestRowsBy(sectors, target, (row) => row.asset),
   }
   return observedOnly
     ? { ...direct, fxd: [], reconstructed: [] }
     : {
         ...direct,
-        fxd: latestRows(file.fxd, target),
-        reconstructed: latestRows(file.reconstructed_liabilities, target),
+        fxd: latestRowsBy(file.fxd, target, (row) => row.entry),
+        reconstructed: latestRowsBy(reconstructed, target, (row) => row.asset),
       }
 }
 

@@ -17,7 +17,14 @@
  * 분류만 매핑이므로 grade B + estimate_method로 공개한다(bounds 아님).
  */
 import type { BilateralRecord } from '../../src/types/data.ts'
-import { fetchCached, pooled, quarterEndDate } from './lib.ts'
+import {
+  assertMinimumRows,
+  assertNoNewFailures,
+  failures,
+  fetchCached,
+  pooled,
+  quarterEndDate,
+} from './lib.ts'
 
 const FLOW = 'BIS/WS_LBS_D_PUB/1.0'
 const BASE = `https://stats.bis.org/api/v2/data/dataflow/${FLOW}`
@@ -128,6 +135,17 @@ export function toBankRecords(
 const keyUrl = (rep: string, pos: 'C' | 'L') =>
   `${BASE}/Q.S.${pos}.G.TO1.A.5J.A.${rep}.A..N?format=csv&startPeriod=2010-01-01`
 
+/** HTTP 200 with an empty/drifted payload must not erase committed BIS corridors. */
+export function requireUsableLbsCoverage(
+  reporters: readonly string[],
+  records: readonly BilateralRecord[],
+): void {
+  if (reporters.length === 0)
+    throw new Error('[bis] no reporting economies discovered; refusing public overwrite')
+  if (records.length === 0)
+    throw new Error('[bis] no usable corridors parsed; refusing public overwrite')
+}
+
 /**
  * 보고국 발견 → 보고국×포지션별 전기간 수집(캐시·bounded retry) → 회랑 레코드.
  * 반환과 함께 커버리지 요약을 콘솔에 남긴다(폐합 §12 정신 — 조정하지 않고 기록).
@@ -135,14 +153,15 @@ const keyUrl = (rep: string, pos: 'C' | 'L') =>
 export async function runBis(
   iso3ByIso2: ReadonlyMap<string, string>,
 ): Promise<{ records: BilateralRecord[]; reporters: string[]; droppedReporters: string[] }> {
+  const failureStart = failures.length
   const year = new Date().getFullYear() - 1
   const disc = await fetchCached(
     'bis/discover_reporters.csv',
     `${BASE}/Q.S.C.G.TO1.A.5J.A..A..N?format=csv&startPeriod=${year}-01-01`,
   )
   if (disc === null) {
-    console.error('[bis] reporter discovery failed — skipping BIS (recorded)')
-    return { records: [], reporters: [], droppedReporters: [] }
+    assertNoNewFailures('BIS LBS reporter discovery', failureStart)
+    throw new Error('[bis] reporter discovery failed without a recorded fetch failure')
   }
   const all = new Set(parseLbsCsv(disc).map((r) => r.rep2))
   const reporters: string[] = []
@@ -160,7 +179,11 @@ export async function runBis(
     )
     for (const body of bodies) if (body !== null) rows.push(...parseLbsCsv(body))
   }
+  assertNoNewFailures('BIS LBS', failureStart)
   const records = toBankRecords(rows, iso3ByIso2)
+  requireUsableLbsCoverage(reporters, records)
+  assertMinimumRows('BIS LBS reporters', reporters.length, 10)
+  assertMinimumRows('BIS LBS corridors', records.length, 100)
   console.log(
     `[bis] reporters ${reporters.length} (dropped: ${droppedReporters.join(',') || 'none'}) · ` +
       `rows ${rows.length} → corridors ${records.length}`,

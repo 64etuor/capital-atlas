@@ -229,8 +229,11 @@ live 데이터는 `meta/` 통제값·오버레이 전용.
   신뢰구간 밴드 + method**, source_id, stock_issuer 병렬(의미는 issuer 표),
   flow_in/flow_out(BPM6 부호 보존), flow_grade, valuation}. §1.5 — 점 단위 계보.
 - `partners[period]`: CPIS **포지션(stock)만** — 파생 flow(D)는 매트릭스 비대상.
-  `all`(자산 합산, 등급=구성 worst, 합산 행은 산식/범위 미주장) + 자산별,
-  holdings(보유)/holders(피보유) 각 상위 15.
+  `all`(자산 합산, 등급=구성 worst, 구성 corridor 합·source IDs·합산 산식 동반) +
+  자산별, holdings(보유)/holders(피보유) 각 상위 15. holdings는 보고자 PIP 직접
+  관측(A), holders는 PIP 상대국 비중으로 reconstructed aggregate를 배분한 C등급이다.
+  holders는 IIP 하향식 총계가 있어 유한 proportional corridor를 만들 수 있을 때만
+  발행하며, 양쪽 숫자는 각각 독립 dossier를 연다.
 - `summary`: 최신 분기 총잔액·양측 흐름·구성·가치가중 관측 비중.
 - `WLD.json` = 세계 집계. 점 등급은 가치가중 관측 비중의 매핑(≥.95 A / ≥.8 B /
   ≥.5 C / ≥.25 D / 그 외 E), `obs_share` 동반 — 개별 레코드 주장 아님.
@@ -286,16 +289,20 @@ v3는 기존 `stocks_*` 관측을 덮어쓰지 않고 `exposure/{ISO3}.json`에 
 - `reconstructed_liabilities[]`: 상대국 자산 보고를 전치한 파생 부채(C). 직접 부채
   관측이나 독립 미러로 부르지 않는다. 산식
   `counterparty_assets_transposed_to_reconstructed_liability`와 상향식 합계↔IIP
-  하향식 총계 사이의 수치 범위·커버리지를 필수로 가진다.
+  하향식 총계 사이의 수치 범위·커버리지를 필수로 가지며 source lineage는
+  `imf_pip`와 `imf_iip`를 모두 포함한다.
 - `fxd[]`: `status=available|unavailable` 판별합. 가용 값은 기준분기·산식·등급·
   커버리지·잔여비중·유한 lower/upper를 모두 갖는다. `OTHC+UALLC>5%`, 환율 누락,
   또는 통화합↔총계 gap>0.5%면 숫자를 만들지 않고 비어 있지 않은 `reason`을 발행한다.
+  `XDC`는 해당 국가 ISO 통화의 currency-level 환율을 먼저 사용하고 국가별 환율은
+  폴백이다. 모든 결과는 IIPCC와 실제 사용한 IMF/WB 환율 `source_ids`를 보존한다.
   `unavailable`에 `value_usd`를 넣는 것은 계약 위반이다.
 
 `position_closure/{period}.json`은 PIP 직접 양자자산을 seed, IIP 자산·부채 총계를
 마진으로 하는 RAS/IPF 파생 뷰다. 원 관측을 수정하지 않으며 모든 셀은 grade E,
 `biproportional_ras_position_closure`, 직접 seed 커버리지, 반복·잔차, Fréchet 범위를
 가진다. 100회 안에 수렴하지 않거나 마진이 닫히지 않으면 산출물을 발행하지 않는다.
+직접 seed 커버리지는 IIP 행·열 마진 도메인 안의 PIP 셀만 분자에 포함한다.
 전체 행렬로 폐합한 뒤 정적 샤드에는 자산별 상위 1,000셀만 발행한다. 각 자산 결과의
 `total_cells`·`omitted_cells`·`omitted_value_usd`가 tail을 숨김없이 기록하며, UI는
 국가 셀이 발행 집합에 없을 때 이를 “관측/모델 없음”으로 오인시키지 않는다.
@@ -354,7 +361,7 @@ stock 계열만 추적(흐름·파생 지표는 revision_key 없음 = 행 생략
 
 `scripts/build/facts.ts`가 stocks(3 basis)·flows_country·flows_bilateral과 v3
 currency/sector/reconstructed/FXD/RAS 레코드를 라인당 JSON 1개(NDJSON)로
-평탄화해 gzip 발행한다(505,246건, 6,314,704 bytes). `position_closure` 24,000건은
+평탄화해 gzip 발행한다(505,316건, 6,322,452 bytes). `position_closure` 24,000건은
 발행된 상위 셀이며 생략 tail 메타데이터는 원 `position_closure` 샤드가 정본이다.
 TS 미러: `FactLine`(scripts/build/facts.ts). 규칙:
 
