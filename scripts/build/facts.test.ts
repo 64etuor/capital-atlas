@@ -11,6 +11,7 @@ import { OUT_DIR } from '../fetch/lib.ts'
 import {
   bilateralFact,
   buildFactsNdjson,
+  debtMarketFact,
   flowFact,
   gzipDeterministic,
   currencyExposureFact,
@@ -25,6 +26,7 @@ import type {
   FlowRecord,
   StockRecord,
   CurrencyExposureRecord,
+  DebtMarketRecord,
   FxdAvailable,
   PositionClosureCell,
   ReconstructedLiability,
@@ -121,6 +123,31 @@ describe('fact line shapes — §11.2 축소 스키마', () => {
     })
     expect(sectorPositionFact(sector)).toMatchObject({
       table: 'sector_positions', sector: 'S14', confidence_grade: 'A',
+    })
+  })
+
+  it('keeps DSS accounting side, counterparty scope, and valuation in the ledger', () => {
+    const debt: DebtMarketRecord = {
+      country: 'KOR', period: '2025-Q4', accounting_entry: 'liabilities',
+      counterparty_scope: 'nonresident', sector: 'S13', measure: 'stock',
+      value_usd: 205, valuation: 'market', unit_basis: 'current_usd',
+      source_id: 'bis_dss', effective_date: '2025-12-31', confidence_grade: 'A',
+    }
+    expect(debtMarketFact(debt)).toEqual({
+      table: 'debt_market',
+      country: 'KOR',
+      asset: 'debt_securities',
+      period: '2025-Q4',
+      measure: 'stock',
+      entry: 'liabilities',
+      sector: 'S13',
+      counterparty_scope: 'nonresident',
+      valuation: 'market',
+      unit_basis: 'current_usd',
+      value_usd: 205,
+      source_id: 'bis_dss',
+      effective_date: '2025-12-31',
+      confidence_grade: 'A',
     })
   })
 

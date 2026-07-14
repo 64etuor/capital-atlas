@@ -19,6 +19,7 @@ Gold    public/data/              계약(DATA_CONTRACT.md)이 스키마인 정�
         ├─ flows_country/         사실: BOP 실거래 + 파생 평가변동
         ├─ flows_bilateral/       사실: PIP 증권 + DIP 직접투자 + BIS 은행 포지션
         ├─ exposure/              직접 통화·부문 + 등급화한 FXD·재구성 부채
+        ├─ debt_market/           BIS DSS 국가 발행·보유 stock/transaction (직접 A)
         ├─ position_closure/      뷰: IIP 마진↔raw PIP seed RAS 폐합 (grade E)
         ├─ meta/position_closure_inputs.json.gz  RAS clean-CI 감사 입력 미러
         ├─ facts.ndjson.gz        ★ 관측·파생을 구분 보존한 정본 수치 원장
@@ -39,10 +40,15 @@ position side, DIP는 directional principle이다. 따라서 STATION의 all-scop
 집계는 `BILATERAL-COVERED ASSETS`로만 부르고, exact-period `CP ALLOC`을 별도 진단으로
 노출한다. 이 값은 국가 총자산 커버리지나 소스 완전성 주장이 아니다.
 
+BIS DSS 국가 부채시장은 또 하나의 독립 장부다. 시장가·현재 USD·전통화·전만기
+조합의 발행/보유 잔액과 공식 순거래만 직접 A등급으로 발행한다. 보고국만 존재하고
+미보고국은 unavailable이며, 중첩 부문 계층을 합산하지 않는다. 국내/해외 시장
+통계이므로 대외자산 `stocks_*`나 양자 회랑에 병합하지 않는다.
+
 ## 재생성 체인 (순서가 계약이다)
 
 ```
-data:fetch → data:bis → data:exposure → data:closure → data:synoptic → data:station → data:flowmatrix
+data:fetch → data:bis → data:dss → data:exposure → data:closure → data:synoptic → data:station → data:flowmatrix
           → data:facts → data:reconcile → data:sources → data:check
           → data:changed → (실질 변경 시) data:vintage + commit
 ```

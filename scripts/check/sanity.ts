@@ -22,6 +22,10 @@ import {
   sectorPositionRecordSchema,
 } from '../build/exposure-contract.ts'
 import {
+  countryDebtMarketFileSchema,
+  debtMarketIndexSchema,
+} from '../build/debt-market-contract.ts'
+import {
   CLOSURE_AUDIT_REL_PATH,
   rasClose,
 } from '../build/position-closure.ts'
@@ -398,6 +402,76 @@ if (!existsSync(exposureIndexPath)) {
   )
 }
 
+// ---- BIS DSS debt market (direct national issuance/holdings) ---------------
+let debtMarketN = 0
+const debtMarketDir = join(OUT_DIR, 'debt_market')
+const debtMarketIndexPath = join(debtMarketDir, 'index.json')
+if (!existsSync(debtMarketIndexPath)) {
+  fail('debt_market/index.json missing — run pnpm data:dss')
+} else {
+  const parsedIndex = debtMarketIndexSchema.safeParse(
+    JSON.parse(readFileSync(debtMarketIndexPath, 'utf8')),
+  )
+  if (!parsedIndex.success) {
+    fail(`debt_market/index.json: ${parsedIndex.error.issues[0].message}`)
+  } else {
+    if (parsedIndex.data.countries.length < 25)
+      fail(`debt-market coverage ${parsedIndex.data.countries.length} < 25 countries`)
+    if (parsedIndex.data.periods.length < 40)
+      fail(`debt-market history ${parsedIndex.data.periods.length} < 40 quarters`)
+    let headlineCountries = 0
+    for (const country of parsedIndex.data.countries) {
+      const path = join(debtMarketDir, `${country}.json`)
+      if (!existsSync(path)) {
+        fail(`debt_market/${country}.json missing`)
+        continue
+      }
+      const size = statSync(path).size
+      if (size > 5 * 1024 * 1024)
+        fail(`debt_market/${country}.json exceeds 5MB (${(size / 1e6).toFixed(1)}MB)`)
+      const parsed = countryDebtMarketFileSchema.safeParse(
+        JSON.parse(readFileSync(path, 'utf8')),
+      )
+      if (!parsed.success) {
+        fail(`debt_market/${country}.json: ${parsed.error.issues[0].message}`)
+        continue
+      }
+      const signatures = new Set<string>()
+      let hasHeadline = false
+      for (const row of parsed.data.records) {
+        debtMarketN++
+        bump(row.confidence_grade)
+        const signature = [
+          row.period,
+          row.accounting_entry,
+          row.counterparty_scope,
+          row.sector,
+          row.measure,
+        ].join('|')
+        if (signatures.has(signature))
+          fail(`debt_market/${country}.json duplicate ${signature}`)
+        signatures.add(signature)
+        if (
+          row.accounting_entry === 'liabilities' &&
+          row.counterparty_scope === 'world' &&
+          row.sector === 'S1' &&
+          row.measure === 'stock'
+        )
+          hasHeadline = true
+      }
+      if (hasHeadline) headlineCountries++
+    }
+    if (debtMarketN < 5_000)
+      fail(`debt-market direct observations ${debtMarketN} < 5,000`)
+    if (headlineCountries < 25)
+      fail(`debt-market total-issued headline coverage ${headlineCountries} < 25 countries`)
+    ok(
+      `debt market: ${debtMarketN} direct A observations · ` +
+        `${parsedIndex.data.countries.length} countries · ${parsedIndex.data.periods.length} quarters`,
+    )
+  }
+}
+
 // ---- position closure (v3 — bounded RAS, grade E only) ---------------------
 let positionClosureN = 0
 const closureDir = join(OUT_DIR, 'position_closure')
@@ -736,6 +810,7 @@ if (!existsSync(factsGz) || !existsSync(factsSummaryPath)) {
     stocks: stockTotal,
     flows_country: flowN,
     flows_bilateral: biN,
+    debt_market: debtMarketN,
     currency_exposure: currencyN,
     sector_positions: sectorN,
     reconstructed_liabilities: reconstructedN,

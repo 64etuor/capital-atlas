@@ -120,6 +120,18 @@ export const SOURCE_REGISTRY: readonly SourceDef[] = [
     expected_release_lag: '~1–2 quarters after period end',
   },
   {
+    source_id: 'bis_dss',
+    name: 'Debt Securities Statistics (DSS) — national issuance and holdings',
+    publisher: 'BIS',
+    url: 'https://stats.bis.org/api/v2/data/dataflow/BIS/WS_NA_SEC_DSS/1.0',
+    license_note:
+      'BIS terms — reproduction permitted with attribution (bis.org/terms_conditions.htm)',
+    collection_mode: 'batch_official',
+    update_frequency: 'quarterly',
+    expected_release_lag:
+      '~1–2 quarters after period end; reporting coverage and valuation basis vary by economy',
+  },
+  {
     source_id: 'wb_wdi',
     name: 'World Development Indicators (market cap, GDP)',
     publisher: 'World Bank',

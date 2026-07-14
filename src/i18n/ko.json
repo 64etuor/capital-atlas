@@ -152,10 +152,15 @@
       "currency": "통화 · 직접 A",
       "sector": "부문 · 직접 A",
       "derived": "FXD / 부채 · 파생",
+      "debtMarket": "부채시장 · 직접 A",
       "noCurrency": "직접 IIP 통화구성 없음",
       "noSector": "직접 PIP 부문 관측 없음",
       "derivedHidden": "파생치 숨김 — 관측만 모드",
       "noDerived": "커버리지 게이트를 통과한 파생치 없음",
+      "debtLoading": "BIS DSS 관측 준비 중",
+      "noDebtCountry": "이 경제의 BIS DSS 보고 없음",
+      "noDebtPeriod": "목표 시점 이전 BIS DSS 관측 없음",
+      "noDebtHeadline": "BIS DSS 보고에 비교 가능한 헤드라인 계열 없음",
       "unavailable": "산출 불가"
     },
     "realloc": {

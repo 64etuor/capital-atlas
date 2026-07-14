@@ -152,10 +152,15 @@
       "currency": "CURRENCY · DIRECT A",
       "sector": "SECTOR · DIRECT A",
       "derived": "FXD / LIABILITY · DERIVED",
+      "debtMarket": "DEBT MARKET · DIRECT A",
       "noCurrency": "NO DIRECT IIP CURRENCY COMPOSITION",
       "noSector": "NO DIRECT PIP SECTOR OBSERVATION",
       "derivedHidden": "DERIVATIONS HIDDEN — OBSERVED ONLY",
       "noDerived": "NO COVERAGE-GATED DERIVATION",
+      "debtLoading": "PREPARING BIS DSS OBSERVATIONS",
+      "noDebtCountry": "NO BIS DSS REPORT FOR THIS ECONOMY",
+      "noDebtPeriod": "NO BIS DSS OBSERVATION ON OR BEFORE TARGET",
+      "noDebtHeadline": "BIS DSS REPORT HAS NO COMPARABLE HEADLINE SERIES",
       "unavailable": "UNAVAILABLE"
     },
     "realloc": {

@@ -15,7 +15,10 @@ import type {
   Basis,
   BilateralRecord,
   CountryExposureFile,
+  CountryDebtMarketFile,
   CurrencyExposureRecord,
+  DebtMarketIndexFile,
+  DebtMarketRecord,
   FlowRecord,
   FxdAvailable,
   PeriodIndexFile,
@@ -33,6 +36,7 @@ export interface FactLine {
     | 'stocks'
     | 'flows_country'
     | 'flows_bilateral'
+    | 'debt_market'
     | 'currency_exposure'
     | 'sector_positions'
     | 'reconstructed_liabilities'
@@ -60,6 +64,9 @@ export interface FactLine {
   residual_share?: number
   source_ids?: string[]
   position_basis?: string
+  counterparty_scope?: string
+  valuation?: string
+  unit_basis?: string
 }
 
 const lineage = (r: {
@@ -113,6 +120,23 @@ export const bilateralFact = (r: BilateralRecord): FactLine => ({
   confidence_grade: r.confidence_grade,
   position_basis: r.position_basis,
   ...lineage(r),
+})
+
+export const debtMarketFact = (r: DebtMarketRecord): FactLine => ({
+  table: 'debt_market',
+  country: r.country,
+  asset: 'debt_securities',
+  period: r.period,
+  measure: r.measure,
+  entry: r.accounting_entry,
+  sector: r.sector,
+  counterparty_scope: r.counterparty_scope,
+  valuation: r.valuation,
+  unit_basis: r.unit_basis,
+  value_usd: r.value_usd,
+  source_id: r.source_id,
+  effective_date: r.effective_date,
+  confidence_grade: r.confidence_grade,
 })
 
 export const currencyExposureFact = (r: CurrencyExposureRecord): FactLine => ({
@@ -230,6 +254,16 @@ if (process.argv[1]?.endsWith('facts.ts')) {
   for (const p of index.periods.flows_bilateral)
     for (const r of readShard<BilateralRecord>('flows_bilateral', p))
       lines.push(bilateralFact(r))
+
+  const debtMarketIndex = JSON.parse(
+    readFileSync(join(OUT_DIR, 'debt_market', 'index.json'), 'utf8'),
+  ) as DebtMarketIndexFile
+  for (const country of debtMarketIndex.countries) {
+    const file = JSON.parse(
+      readFileSync(join(OUT_DIR, 'debt_market', `${country}.json`), 'utf8'),
+    ) as CountryDebtMarketFile
+    for (const row of file.records) lines.push(debtMarketFact(row))
+  }
 
   const exposureIndex = JSON.parse(
     readFileSync(join(OUT_DIR, 'exposure', 'index.json'), 'utf8'),

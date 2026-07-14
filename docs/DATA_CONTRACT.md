@@ -41,6 +41,8 @@ TS 미러: `src/types/data.ts` — 문서와 타입이 다르면 이 문서가 �
 | `meta/reconciliation.json` | 미러 폐합 분포 요약(중앙값·사분위·상위 gap) | 수집 후 |
 | `exposure/index.json` | 통화·부문 exposure 가용 국가/기간 + FXD 기준분기 | 수집 후 |
 | `exposure/{ISO3}.json` | 직접 통화·부문 + C/D 파생 FXD·부채 재구성 | 수집 후 |
+| `debt_market/index.json` | BIS DSS 직접 관측 가용 국가/기간 | 분기 |
+| `debt_market/{ISO3}.json` | 국가 채무증권 발행·보유 잔액/순거래(시장가·현재 USD) | 분기 |
 | `position_closure/index.json` | RAS 폐합 가용 기간 | 수집 후 |
 | `position_closure/{period}.json` | IIP 마진↔PIP seed 양자 포지션 폐합(E) | 수집 후 |
 | `meta/position_closure_inputs.json.gz` | RAS 독립 재계산용 normalized IIP/PIP 감사 미러 | 수집 후 |
@@ -168,6 +170,48 @@ DIP에서 flow를 만들지 않는다. DIP 방향원칙 포지션은 IIP의 자�
   레코드와 `corridor_concentration.source_ids/position_bases`가 정본이다. 재생성: `pnpm data:bis`
   (전체 재수집 불요, 멱등) 또는 `data:fetch` 체인.
 
+### debt_market/ — BIS DSS 국가 부채시장 직접 관측
+
+`debt_market/{ISO3}.json`은 BIS `WS_NA_SEC_DSS`의 국가 채무증권 통계를 별도
+제품으로 발행한다. 이것은 국내·해외 발행/보유 통계이며 `stocks_owner`,
+`stocks_issuer`, `flows_bilateral`의 국경간 장부와 합치거나 덮어쓰지 않는다.
+
+```json
+{
+  "country": "KOR",
+  "records": [
+    {
+      "country": "KOR",
+      "period": "2025-Q4",
+      "accounting_entry": "liabilities",
+      "counterparty_scope": "nonresident",
+      "sector": "S13",
+      "measure": "stock",
+      "value_usd": 205204795633,
+      "valuation": "market",
+      "unit_basis": "current_usd",
+      "source_id": "bis_dss",
+      "effective_date": "2025-12-31",
+      "confidence_grade": "A"
+    }
+  ]
+}
+```
+
+- 비교 가능한 계약 조합만 발행한다: 분기(Q), 비조정(N), 비연결(N), 채무증권(F3),
+  전만기(T), 전통화(`_T`), 시장가(M), 현재가(V), 현재 USD, 비변환(N), 총 custom
+  breakdown(`_T`). 명목가·자국통화·만기별/custom 시장 행은 섞지 않는다.
+- `accounting_entry=liabilities`는 거주 부문의 발행, `assets`는 거주 부문의 보유다.
+  `counterparty_scope=world|resident|nonresident`는 BIS의 `XW|1E|5Z`를 그대로
+  명명한다. `measure=stock`은 기말잔액(LE), `flow`는 공식 순거래(F)다. 잔액 차분을
+  거래로 만들지 않는다.
+- 부문 코드는 직접 보고 계층을 그대로 보존한다. `S12`와 그 하위 `S121/S122/S125A`
+  등을 합산하지 않는다. UI의 top-sector 비교는 서로 배타적인 최상위
+  `S11|S12|S13|S1M` 안에서만 수행한다.
+- A등급은 위 고정 조합의 공식 직접 관측에만 적용한다. 미보고 국가·부문·기간은
+  추정으로 채우지 않고 typed unavailable로 표시한다. 실제 커버리지는
+  `debt_market/index.json`과 `pipeline_report.bis_dss`가 정본이다.
+
 ### meta/sources.json — 수집 분류 포함
 
 SSOT는 `scripts/fetch/registry.ts`. 발행 파일은 `pnpm data:sources`(retrieved_at 보존)
@@ -194,7 +238,7 @@ SSOT는 `scripts/fetch/registry.ts`. 발행 파일은 `pnpm data:sources`(retrie
 | mode | 의미 | cadence 허용값 | 대표 소스 |
 |---|---|---|---|
 | `live_market` | 실시간·일중 시장 데이터. 발표 지연 없음, 폴링/스트림 대상 | intraday, daily | coingecko_global |
-| `batch_official` | 공식 통계 배치. 분기/반기/연간 + 발표 지연이 본질 — "실시간" 개념 없음 | monthly, quarterly, semiannual, annual | imf_iip, imf_iipcc, imf_bop, imf_pip, imf_dip, imf_ifs_fx, bis_lbs, wb_wdi |
+| `batch_official` | 공식 통계 배치. 분기/반기/연간 + 발표 지연이 본질 — "실시간" 개념 없음 | monthly, quarterly, semiannual, annual | imf_iip, imf_iipcc, imf_bop, imf_pip, imf_dip, imf_ifs_fx, bis_lbs, bis_dss, wb_wdi |
 | `derived_model` | 파이프라인 내부 파생·모델. 수집이 아니라 계산 (grade C–E) | quarterly, annual | model_regional_median, model_gdp_ratio |
 | `static_reference` | 정적 참조 (지오메트리·국가 마스터, vendored 패키지) | static | natural_earth, world_countries |
 
@@ -341,7 +385,7 @@ normalized 입력과 byte-equivalent row set인지 검사하고, raw cache가 �
 
 ### 결정론적 샤드 + vintages/ — 이중 시간 (Phase N, 초안 §10)
 
-**결정론 계약**: 개별 샤드(`stocks_*`·`flows_*`·`station/*`·`exposure/*`·
+**결정론 계약**: 개별 샤드(`stocks_*`·`flows_*`·`station/*`·`exposure/*`·`debt_market/*`·
 `position_closure/*`)와 파생 파일(`meta/synoptic.json`·`meta/flow_intensity.json`·
 `meta/fx_rates.json`)은
 **타임스탬프를 갖지 않는다** — 동일 상류 데이터 = 동일 바이트(테스트
@@ -392,7 +436,7 @@ stock 계열만 추적(흐름·파생 지표는 revision_key 없음 = 행 생략
 
 ### facts.ndjson.gz — 정본 수치 원장 (v3, 초안 §11.2 축소 + §16-6)
 
-`scripts/build/facts.ts`가 stocks(3 basis)·flows_country·flows_bilateral과 v3
+`scripts/build/facts.ts`가 stocks(3 basis)·flows_country·flows_bilateral·BIS DSS와 v3
 currency/sector/reconstructed/FXD/RAS 레코드를 라인당 JSON 1개(NDJSON)로
 평탄화해 gzip 발행한다. 스냅샷마다 달라지는 정확한 레코드 수·테이블/등급 분포·압축
 바이트는 `meta/facts_summary.json`이 정본이다. `position_closure`는 발행된 상위

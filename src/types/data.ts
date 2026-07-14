@@ -336,6 +336,59 @@ export interface ExposureIndexFile {
   base_period: PeriodKey
 }
 
+// ---------------------------------------------------------- debt market ----
+
+/**
+ * BIS national debt-securities sector taxonomy. Hierarchical codes are kept
+ * verbatim and must never be summed together as if they were disjoint.
+ */
+export type DebtMarketSector =
+  | 'S1'
+  | 'S11'
+  | 'S12'
+  | 'S121'
+  | 'S122'
+  | 'S123'
+  | 'S125A'
+  | 'S12P'
+  | 'S12Q'
+  | 'S12T'
+  | 'S13'
+  | 'S1311'
+  | 'S1M'
+  | 'S1ZS'
+
+export type DebtMarketCounterpartyScope = 'world' | 'resident' | 'nonresident'
+
+/**
+ * public/data/debt_market/{ISO3}.json — direct BIS DSS observations.
+ * These are national debt-market issuance/holdings statistics, not the
+ * cross-border owner/issuer stocks in stocks_* or flows_bilateral.
+ */
+export interface DebtMarketRecord extends Lineage {
+  country: string
+  period: PeriodKey
+  accounting_entry: 'assets' | 'liabilities'
+  counterparty_scope: DebtMarketCounterpartyScope
+  sector: DebtMarketSector
+  measure: 'stock' | 'flow'
+  value_usd: number
+  valuation: 'market'
+  unit_basis: 'current_usd'
+  source_id: 'bis_dss'
+  confidence_grade: 'A'
+}
+
+export interface CountryDebtMarketFile {
+  country: string
+  records: DebtMarketRecord[]
+}
+
+export interface DebtMarketIndexFile {
+  countries: string[]
+  periods: PeriodKey[]
+}
+
 export interface PositionClosureCell {
   owner_country: string
   issuer_country: string
