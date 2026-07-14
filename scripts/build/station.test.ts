@@ -154,6 +154,13 @@ describe('stationPartners — CPIS 양방향 상대국', () => {
     expect(eq?.holdings.length).toBe(PARTNER_LIMIT)
     expect(eq?.holdings[0].value).toBe((PARTNER_LIMIT + 4) * 1e8)
     expect(eq?.holders.map((p) => p.country)).toEqual(['USA', 'JPN'])
+    expect(eq?.holders[0]).toMatchObject({
+      grade: 'C',
+      method: 'counterparty_assets_transposed_to_reconstructed_liability',
+      lower: 0,
+      upper: 4e9,
+    })
+    expect(eq?.holdings[0].grade).toBe('A')
     expect(eq?.holdings.some((p) => p.country === 'DEU')).toBe(false)
   })
 

@@ -13,6 +13,7 @@ import { assemble } from './build/assemble.ts'
 import { applyBankMerge } from './build/bank_merge.ts'
 import { writeSourcesJson } from './build/sources.ts'
 import { buildExposure } from './build/exposure.ts'
+import { buildPositionClosure } from './build/position-closure.ts'
 import { failures } from './fetch/lib.ts'
 
 const t0 = Date.now()
@@ -29,6 +30,7 @@ await runFx(iso3s) // Phase L: CURR=LCU 다이얼 근거 (실패는 failures에 
 
 assemble({ countries, wb, iip, bop, pip })
 buildExposure()
+buildPositionClosure()
 
 // Phase M: BIS 은행 회랑 — assemble이 쓴 bilateral 샤드에 병합(멱등)
 {

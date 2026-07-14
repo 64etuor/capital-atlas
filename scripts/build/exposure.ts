@@ -9,8 +9,11 @@ import type {
   FxRatesFile,
   FxdResult,
   PeriodKey,
+  ReconstructedLiability,
   SectorPositionRecord,
 } from '../../src/types/data.ts'
+import type { ImfStockObs } from '../fetch/imf.ts'
+import type { PipReconstructedObservation } from '../fetch/imf-exposure.ts'
 import { OUT_DIR, readRawJson, writeJson } from '../fetch/lib.ts'
 
 export const FXD_BASE_PERIOD = '2020-Q4' as PeriodKey
@@ -160,23 +163,88 @@ export function computeFxd(
   )
 }
 
+const RECON_ASSET = {
+  P_F5_MV: 'listed_equity',
+  P_F3_MV: 'debt_securities',
+} as const
+
+export function reconstructLiabilities(
+  observations: readonly PipReconstructedObservation[],
+  iip: readonly ImfStockObs[],
+): ReconstructedLiability[] {
+  const topDown = new Map<string, number>()
+  for (const row of iip) {
+    const asset = RECON_ASSET[row.indicator as keyof typeof RECON_ASSET]
+    if (!asset || row.entry !== 'L_P') continue
+    topDown.set(`${row.iso3}|${row.quarter}|${asset}`, row.value)
+  }
+  const bottomUp = new Map<string, { value: number; effective_date: string }>()
+  for (const row of observations) {
+    const key = `${row.country}|${row.period}|${row.asset}`
+    const current = bottomUp.get(key) ?? { value: 0, effective_date: row.effective_date }
+    current.value += row.value_usd
+    bottomUp.set(key, current)
+  }
+  const out: ReconstructedLiability[] = []
+  for (const [key, row] of bottomUp) {
+    const margin = topDown.get(key)
+    if (margin === undefined || margin <= 0) continue
+    const [country, period, asset] = key.split('|') as [
+      string,
+      PeriodKey,
+      'listed_equity' | 'debt_securities',
+    ]
+    out.push({
+      country,
+      period,
+      asset,
+      value_usd: row.value,
+      source_id: 'imf_pip',
+      effective_date: row.effective_date,
+      confidence_grade: 'C',
+      estimate_method: 'counterparty_assets_transposed_to_reconstructed_liability',
+      lower_bound: Math.min(row.value, margin),
+      upper_bound: Math.max(row.value, margin),
+      coverage_share: Math.min(row.value / margin, 1),
+    })
+  }
+  return out.sort((a, b) =>
+    `${a.country}|${a.period}|${a.asset}`.localeCompare(`${b.country}|${b.period}|${b.asset}`),
+  )
+}
+
 export function buildExposure(): { countries: number; periods: number; fxdAvailable: number } {
   const currency = readRawJson<CurrencyExposureRecord[]>('imf/iipcc_normalized.json')
   const sectors = readRawJson<SectorPositionRecord[]>('imf/pip_sector_normalized.json')
-  if (!currency || !sectors)
+  const scc = readRawJson<PipReconstructedObservation[]>('imf/pip_scc_normalized.json')
+  const iip = readRawJson<ImfStockObs[]>('imf/iip_normalized.json')
+  if (!currency || !sectors || !scc || !iip)
     throw new Error('[exposure] normalized IIPCC/PIP inputs missing — run pnpm data:fetch')
   const fx = JSON.parse(
     readFileSync(join(OUT_DIR, 'meta', 'fx_rates.json'), 'utf8'),
   ) as FxRatesFile
-  const byCountry = new Map<string, { currency: CurrencyExposureRecord[]; sectors: SectorPositionRecord[] }>()
+  const reconstructed = reconstructLiabilities(scc, iip)
+  const byCountry = new Map<
+    string,
+    {
+      currency: CurrencyExposureRecord[]
+      sectors: SectorPositionRecord[]
+      reconstructed: ReconstructedLiability[]
+    }
+  >()
   for (const row of currency) {
-    const value = byCountry.get(row.country) ?? { currency: [], sectors: [] }
+    const value = byCountry.get(row.country) ?? { currency: [], sectors: [], reconstructed: [] }
     value.currency.push(row)
     byCountry.set(row.country, value)
   }
   for (const row of sectors) {
-    const value = byCountry.get(row.country) ?? { currency: [], sectors: [] }
+    const value = byCountry.get(row.country) ?? { currency: [], sectors: [], reconstructed: [] }
     value.sectors.push(row)
+    byCountry.set(row.country, value)
+  }
+  for (const row of reconstructed) {
+    const value = byCountry.get(row.country) ?? { currency: [], sectors: [], reconstructed: [] }
+    value.reconstructed.push(row)
     byCountry.set(row.country, value)
   }
 
@@ -188,7 +256,8 @@ export function buildExposure(): { countries: number; periods: number; fxdAvaila
     rows.sectors.sort((a, b) =>
       `${a.period}|${a.asset}|${a.sector}`.localeCompare(`${b.period}|${b.asset}|${b.sector}`),
     )
-    for (const row of [...rows.currency, ...rows.sectors]) periods.add(row.period)
+    for (const row of [...rows.currency, ...rows.sectors, ...rows.reconstructed])
+      periods.add(row.period)
     const fxd = computeFxd(rows.currency, fx)
     fxdAvailable += fxd.filter((row) => row.status === 'available').length
     const file: CountryExposureFile = {
@@ -196,7 +265,7 @@ export function buildExposure(): { countries: number; periods: number; fxdAvaila
       currency: rows.currency,
       sectors: rows.sectors,
       fxd,
-      reconstructed_liabilities: [],
+      reconstructed_liabilities: rows.reconstructed,
     }
     writeJson(`exposure/${country}.json`, file)
   }

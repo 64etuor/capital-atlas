@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest'
 import type { CurrencyExposureRecord, FxRatesFile } from '../../src/types/data.ts'
-import { computeFxd } from './exposure.ts'
+import { computeFxd, reconstructLiabilities } from './exposure.ts'
 
 const fact = (
   currency: CurrencyExposureRecord['currency'],
@@ -136,5 +136,55 @@ describe('computeFxd — coverage-gated constant-FX', () => {
     )
     expect(result).toMatchObject({ status: 'unavailable' })
     expect(result).not.toHaveProperty('value_usd')
+  })
+})
+
+describe('reconstructLiabilities — counterpart-derived range', () => {
+  it('uses the bottom-up SCC sum and top-down IIP margin as an explicit interval', () => {
+    const rows = reconstructLiabilities(
+      [
+        {
+          country: 'KOR',
+          owner_country: 'USA',
+          period: '2024-Q4',
+          asset: 'debt_securities',
+          value_usd: 50,
+          source_id: 'imf_pip',
+          effective_date: '2024-12-31',
+          confidence_grade: 'C',
+          estimate_method: 'imf_staff_counterparty_derived_liability',
+        },
+        {
+          country: 'KOR',
+          owner_country: 'JPN',
+          period: '2024-Q4',
+          asset: 'debt_securities',
+          value_usd: 20,
+          source_id: 'imf_pip',
+          effective_date: '2024-12-31',
+          confidence_grade: 'C',
+          estimate_method: 'imf_staff_counterparty_derived_liability',
+        },
+      ],
+      [
+        {
+          iso3: 'KOR',
+          entry: 'L_P',
+          indicator: 'P_F3_MV',
+          quarter: '2024-Q4',
+          value: 100,
+        },
+      ],
+    )
+    expect(rows).toEqual([
+      expect.objectContaining({
+        country: 'KOR',
+        value_usd: 70,
+        lower_bound: 70,
+        upper_bound: 100,
+        coverage_share: 0.7,
+        confidence_grade: 'C',
+      }),
+    ])
   })
 })
