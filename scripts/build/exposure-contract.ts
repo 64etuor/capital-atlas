@@ -104,3 +104,25 @@ export const positionClosureCellSchema = z
     (row) => row.lower_bound <= row.value_usd && row.value_usd <= row.upper_bound,
     { message: 'closure value must lie inside its Fréchet range' },
   )
+
+export const reconstructedLiabilitySchema = z
+  .object({
+    country: iso3,
+    period,
+    asset: z.enum(['listed_equity', 'debt_securities']),
+    value_usd: z.number().finite().nonnegative(),
+    source_id: z.literal('imf_pip'),
+    effective_date: isoDate,
+    confidence_grade: z.literal('C'),
+    estimate_method: z.literal(
+      'counterparty_assets_transposed_to_reconstructed_liability',
+    ),
+    lower_bound: z.number().finite().nonnegative(),
+    upper_bound: z.number().finite().nonnegative(),
+    coverage_share: coverage,
+  })
+  .strict()
+  .refine(
+    (row) => row.lower_bound <= row.value_usd && row.value_usd <= row.upper_bound,
+    { message: 'reconstructed liability must lie inside its reconciliation range' },
+  )

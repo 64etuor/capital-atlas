@@ -187,4 +187,32 @@ describe('reconstructLiabilities — counterpart-derived range', () => {
       }),
     ])
   })
+
+  it('does not publish a nonpositive aggregate as a liability observation', () => {
+    const rows = reconstructLiabilities(
+      [
+        {
+          country: 'CRI',
+          owner_country: 'USA',
+          period: '2024-Q4',
+          asset: 'listed_equity',
+          value_usd: -1,
+          source_id: 'imf_pip',
+          effective_date: '2024-12-31',
+          confidence_grade: 'C',
+          estimate_method: 'imf_staff_counterparty_derived_liability',
+        },
+      ],
+      [
+        {
+          iso3: 'CRI',
+          entry: 'L_P',
+          indicator: 'P_F5_MV',
+          quarter: '2024-Q4',
+          value: 100,
+        },
+      ],
+    )
+    expect(rows).toEqual([])
+  })
 })

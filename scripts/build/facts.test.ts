@@ -13,12 +13,22 @@ import {
   buildFactsNdjson,
   flowFact,
   gzipDeterministic,
+  currencyExposureFact,
+  fxdFact,
+  positionClosureFact,
+  reconstructedLiabilityFact,
+  sectorPositionFact,
   stockFact,
 } from './facts.ts'
 import type {
   BilateralRecord,
   FlowRecord,
   StockRecord,
+  CurrencyExposureRecord,
+  FxdAvailable,
+  PositionClosureCell,
+  ReconstructedLiability,
+  SectorPositionRecord,
 } from '../../src/types/data.ts'
 
 const stock: StockRecord = {
@@ -91,6 +101,58 @@ describe('fact line shapes — §11.2 축소 스키마', () => {
     const line = stockFact('owner', stock)
     expect('estimate_method' in line).toBe(false)
     expect('lower_bound' in line).toBe(false)
+  })
+
+  it('flattens v3 direct facts without promoting them to models', () => {
+    const currency: CurrencyExposureRecord = {
+      country: 'KOR', period: '2024-Q4', entry: 'assets', sector: 'S1',
+      currency: 'USD', value_usd: 10, source_id: 'imf_iipcc',
+      effective_date: '2024-12-31', confidence_grade: 'A',
+    }
+    const sector: SectorPositionRecord = {
+      country: 'KOR', period: '2024-Q4', sector: 'S14', asset: 'listed_equity',
+      value_usd: 20, source_id: 'imf_pip', effective_date: '2024-12-31',
+      confidence_grade: 'A',
+    }
+    expect(currencyExposureFact(currency)).toMatchObject({
+      table: 'currency_exposure', currency: 'USD', sector: 'S1', confidence_grade: 'A',
+    })
+    expect(sectorPositionFact(sector)).toMatchObject({
+      table: 'sector_positions', sector: 'S14', confidence_grade: 'A',
+    })
+  })
+
+  it('flattens every v3 derived value with method, range, grade, and coverage', () => {
+    const reconstructed: ReconstructedLiability = {
+      country: 'KOR', period: '2024-Q4', asset: 'debt_securities', value_usd: 70,
+      source_id: 'imf_pip', effective_date: '2024-12-31', confidence_grade: 'C',
+      estimate_method: 'counterparty_assets_transposed_to_reconstructed_liability',
+      lower_bound: 70, upper_bound: 100, coverage_share: 0.7,
+    }
+    const fxd: FxdAvailable = {
+      status: 'available', period: '2024-Q4', base_period: '2020-Q4', entry: 'assets',
+      value_usd: 115, coverage_share: 1, residual_share: 0,
+      source_id: 'model_constant_fx', effective_date: '2024-12-31',
+      confidence_grade: 'C', estimate_method: 'currency_bucket_constant_fx_exact_components',
+      lower_bound: 115, upper_bound: 115,
+    }
+    const closure: PositionClosureCell = {
+      owner_country: 'KOR', issuer_country: 'USA', asset: 'debt_securities',
+      period: '2024-Q4', value_usd: 80, lower_bound: 20, upper_bound: 100,
+      confidence_grade: 'E', estimate_method: 'biproportional_ras_position_closure',
+      coverage_share: 0.8, effective_date: '2024-12-31',
+      source_ids: ['imf_pip', 'imf_iip'],
+    }
+    for (const line of [
+      reconstructedLiabilityFact(reconstructed),
+      fxdFact('KOR', fxd),
+      positionClosureFact(closure),
+    ]) {
+      expect(line.estimate_method).toBeTruthy()
+      expect(line.lower_bound).toBeTypeOf('number')
+      expect(line.upper_bound).toBeTypeOf('number')
+      expect(line.coverage_share).toBeTypeOf('number')
+    }
   })
 })
 

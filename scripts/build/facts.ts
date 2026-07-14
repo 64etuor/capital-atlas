@@ -15,15 +15,30 @@ import { gzipSync, gunzipSync } from 'node:zlib'
 import type {
   Basis,
   BilateralRecord,
+  CountryExposureFile,
+  CurrencyExposureRecord,
   FlowRecord,
+  FxdAvailable,
   PeriodIndexFile,
+  PositionClosureCell,
+  PositionClosureFile,
+  ReconstructedLiability,
+  SectorPositionRecord,
   StockRecord,
 } from '../../src/types/data.ts'
 import { OUT_DIR, writeJson } from '../fetch/lib.ts'
 
 /** 사실 라인 — 필드 순서가 곧 직렬화 순서(결정론) */
 export interface FactLine {
-  table: 'stocks' | 'flows_country' | 'flows_bilateral'
+  table:
+    | 'stocks'
+    | 'flows_country'
+    | 'flows_bilateral'
+    | 'currency_exposure'
+    | 'sector_positions'
+    | 'reconstructed_liabilities'
+    | 'constant_fx'
+    | 'position_closure'
   basis?: Basis
   country?: string
   owner_country?: string
@@ -32,6 +47,9 @@ export interface FactLine {
   period: string
   measure: string
   entry?: 'assets' | 'liabilities'
+  sector?: string
+  currency?: string
+  base_period?: string
   value_usd: number
   source_id: string
   effective_date: string
@@ -39,6 +57,9 @@ export interface FactLine {
   estimate_method?: string
   lower_bound?: number
   upper_bound?: number
+  coverage_share?: number
+  residual_share?: number
+  source_ids?: string[]
 }
 
 const lineage = (r: {
@@ -93,6 +114,82 @@ export const bilateralFact = (r: BilateralRecord): FactLine => ({
   ...lineage(r),
 })
 
+export const currencyExposureFact = (r: CurrencyExposureRecord): FactLine => ({
+  table: 'currency_exposure',
+  country: r.country,
+  asset: 'external_debt',
+  period: r.period,
+  measure: 'stock',
+  entry: r.entry,
+  sector: r.sector,
+  currency: r.currency,
+  value_usd: r.value_usd,
+  source_id: r.source_id,
+  effective_date: r.effective_date,
+  confidence_grade: r.confidence_grade,
+})
+
+export const sectorPositionFact = (r: SectorPositionRecord): FactLine => ({
+  table: 'sector_positions',
+  country: r.country,
+  asset: r.asset,
+  period: r.period,
+  measure: 'stock',
+  sector: r.sector,
+  value_usd: r.value_usd,
+  source_id: r.source_id,
+  effective_date: r.effective_date,
+  confidence_grade: r.confidence_grade,
+})
+
+export const reconstructedLiabilityFact = (r: ReconstructedLiability): FactLine => ({
+  table: 'reconstructed_liabilities',
+  country: r.country,
+  asset: r.asset,
+  period: r.period,
+  measure: 'stock',
+  entry: 'liabilities',
+  value_usd: r.value_usd,
+  source_id: r.source_id,
+  effective_date: r.effective_date,
+  confidence_grade: r.confidence_grade,
+  coverage_share: r.coverage_share,
+  ...lineage(r),
+})
+
+export const fxdFact = (country: string, r: FxdAvailable): FactLine => ({
+  table: 'constant_fx',
+  country,
+  asset: 'external_debt',
+  period: r.period,
+  base_period: r.base_period,
+  measure: 'stock',
+  entry: r.entry,
+  value_usd: r.value_usd,
+  source_id: r.source_id,
+  effective_date: r.effective_date,
+  confidence_grade: r.confidence_grade,
+  coverage_share: r.coverage_share,
+  residual_share: r.residual_share,
+  ...lineage(r),
+})
+
+export const positionClosureFact = (r: PositionClosureCell): FactLine => ({
+  table: 'position_closure',
+  owner_country: r.owner_country,
+  issuer_country: r.issuer_country,
+  asset: r.asset,
+  period: r.period,
+  measure: 'stock',
+  value_usd: r.value_usd,
+  source_id: 'model_position_closure',
+  source_ids: r.source_ids,
+  effective_date: r.effective_date,
+  confidence_grade: r.confidence_grade,
+  coverage_share: r.coverage_share,
+  ...lineage(r),
+})
+
 export const buildFactsNdjson = (lines: readonly FactLine[]): string =>
   lines.map((l) => JSON.stringify(l)).join('\n') + '\n'
 
@@ -130,6 +227,32 @@ if (process.argv[1]?.endsWith('facts.ts')) {
   for (const p of index.periods.flows_bilateral)
     for (const r of readShard<BilateralRecord>('flows_bilateral', p))
       lines.push(bilateralFact(r))
+
+  const exposureIndex = JSON.parse(
+    readFileSync(join(OUT_DIR, 'exposure', 'index.json'), 'utf8'),
+  ) as { countries: string[] }
+  for (const country of exposureIndex.countries) {
+    const file = JSON.parse(
+      readFileSync(join(OUT_DIR, 'exposure', `${country}.json`), 'utf8'),
+    ) as CountryExposureFile
+    for (const row of file.currency) lines.push(currencyExposureFact(row))
+    for (const row of file.sectors) lines.push(sectorPositionFact(row))
+    for (const row of file.reconstructed_liabilities)
+      lines.push(reconstructedLiabilityFact(row))
+    for (const row of file.fxd)
+      if (row.status === 'available') lines.push(fxdFact(country, row))
+  }
+
+  const closureIndex = JSON.parse(
+    readFileSync(join(OUT_DIR, 'position_closure', 'index.json'), 'utf8'),
+  ) as { periods: string[] }
+  for (const period of closureIndex.periods) {
+    const file = JSON.parse(
+      readFileSync(join(OUT_DIR, 'position_closure', `${period}.json`), 'utf8'),
+    ) as PositionClosureFile
+    for (const asset of ['debt_securities', 'listed_equity'] as const)
+      for (const row of file.assets[asset]?.cells ?? []) lines.push(positionClosureFact(row))
+  }
 
   const ndjson = buildFactsNdjson(lines)
   const gz = gzipDeterministic(Buffer.from(ndjson))

@@ -3,6 +3,7 @@ import {
   currencyExposureRecordSchema,
   fxdResultSchema,
   positionClosureCellSchema,
+  reconstructedLiabilitySchema,
   sectorPositionRecordSchema,
 } from './exposure-contract.ts'
 
@@ -98,6 +99,26 @@ describe('v3 exposure contract', () => {
     expect(positionClosureCellSchema.safeParse(cell).success).toBe(true)
     expect(
       positionClosureCellSchema.safeParse({ ...cell, confidence_grade: 'A' }).success,
+    ).toBe(false)
+  })
+
+  it('requires reconstructed liabilities to expose the top-down/bottom-up interval', () => {
+    const row = {
+      country: 'KOR',
+      period: '2024-Q4',
+      asset: 'debt_securities',
+      value_usd: 70,
+      source_id: 'imf_pip',
+      effective_date: '2024-12-31',
+      confidence_grade: 'C',
+      estimate_method: 'counterparty_assets_transposed_to_reconstructed_liability',
+      lower_bound: 70,
+      upper_bound: 100,
+      coverage_share: 0.7,
+    }
+    expect(reconstructedLiabilitySchema.safeParse(row).success).toBe(true)
+    expect(
+      reconstructedLiabilitySchema.safeParse({ ...row, upper_bound: undefined }).success,
     ).toBe(false)
   })
 })
