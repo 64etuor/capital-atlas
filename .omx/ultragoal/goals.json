@@ -1,0 +1,23 @@
+{
+  "version": 1,
+  "createdAt": "2026-07-14T02:50:34.393Z",
+  "updatedAt": "2026-07-14T02:50:57.451Z",
+  "briefPath": ".omx/ultragoal/brief.md",
+  "goalsPath": ".omx/ultragoal/goals.json",
+  "ledgerPath": ".omx/ultragoal/ledger.jsonl",
+  "codexGoalMode": "aggregate",
+  "goals": [
+    {
+      "id": "G001-implement-docs-plans-2026-07-14-v3-h",
+      "title": "Implement docs/plans/2026-07-14-v3-honesty-contract.md completely in...",
+      "objective": "Implement docs/plans/2026-07-14-v3-honesty-contract.md completely in capital-atlas. Preserve the honesty contract: every derived number has source, method, grade, range and coverage; never present SCC/reconstructed/RAS/nowcast values as direct observations; never overwrite official facts; use TDD and deterministic bounded gates. Complete CI portability, IIPCC FXD, PIP sector and reconstructed liabilities, RAS closure, isolated live crypto overlay, docs, full local/CI/data-refresh verification, independent review, merge and scheduled-refresh evidence.",
+      "status": "in_progress",
+      "attempt": 1,
+      "createdAt": "2026-07-14T02:50:34.393Z",
+      "updatedAt": "2026-07-14T02:50:57.451Z",
+      "startedAt": "2026-07-14T02:50:57.451Z"
+    }
+  ],
+  "codexObjective": "Complete the durable ultragoal plan in .omx/ultragoal/goals.json, including later accepted/appended stories, under the original brief constraints; use .omx/ultragoal/ledger.jsonl as the audit trail.",
+  "activeGoalId": "G001-implement-docs-plans-2026-07-14-v3-h"
+}
