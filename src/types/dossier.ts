@@ -17,6 +17,8 @@ export interface DossierPayload {
   /** Meaning of the interval; omit only when the source contract defines a 95% range. */
   range_label?: string
   effective_date?: string
+  /** Session fetch timestamp for live observations; overrides registry snapshot date. */
+  retrieved_at?: string
   source_ids: string[]
   /** extra context rows rendered as-is: [label, value] */
   context: Array<[string, string]>

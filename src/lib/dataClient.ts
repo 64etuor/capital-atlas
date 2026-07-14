@@ -9,6 +9,7 @@ import type {
   CountryExposureFile,
   ExposureIndexFile,
   FlowIntensityFile,
+  GlobalCryptoFile,
   FlowMatrixFile,
   FlowMatrixIndexFile,
   FlowsCountryFile,
@@ -99,6 +100,9 @@ export const getGeometry = () =>
 
 export const getFlowIntensity = () =>
   fetchJson<FlowIntensityFile>('/data/meta/flow_intensity.json')
+
+export const getGlobalCrypto = () =>
+  fetchJson<GlobalCryptoFile>('/data/meta/global_crypto.json')
 
 /** SYNOPTIC 사전 집계 — meta 경로라 핀 고정(LRU 비대상), 단일 lazy-load */
 export const getSynoptic = () =>

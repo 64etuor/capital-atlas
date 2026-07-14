@@ -176,7 +176,7 @@ export const SOURCE_REGISTRY: readonly SourceDef[] = [
     url: 'https://api.coingecko.com/api/v3/global',
     license_note: 'free API — attribution required for public display',
     collection_mode: 'live_market',
-    update_frequency: 'daily',
+    update_frequency: 'intraday',
     expected_release_lag: 'near-real-time (minutes)',
   },
   {
