@@ -22,8 +22,8 @@ export const CP_METHOD =
   '(CPIS securities + BIS LBS banking channel); ' +
   'top-5 = combined share of the five largest counterparties. ' +
   'Limitation: computed from published shards pruned upstream at |value| ≥ $100M ' +
-  'so the long tail is truncated and HHI is slightly overstated; value retention ' +
-  'is not computed.'
+  'so the long tail is truncated and HHI is overstated by an unquantified amount; ' +
+  'value retention is not computed.'
 
 export const QUARTERLY_METHOD =
   'share_of_world = country total ÷ world total (stocks_owner shards, ' +
