@@ -60,7 +60,7 @@ bilateral에 BIS를 재병합하고, 그 다음 exposure/RAS와 모든 집계·�
 - PIP 부문은 원 코드를 그대로 보존한다. `S1V` 같은 결합군을 가계·기업으로 나누지
   않는다. SCC 지표(`*_SCC_USD`)는 IMF가 상대국 정보로 유도한 부채이므로 C등급이며,
   직접 관측이나 독립 미러로 승격하지 않는다.
-- OBS_VALUE는 절대 USD (KOR D A_P 2024-Q4 ≈ $769.5B로 검증).
+- OBS_VALUE는 절대 USD다. 파서 회귀 테스트와 생성 샤드 sanity가 단위를 검증한다.
 
 **BIS API (Phase M, 2026-07-13 실호출 프로브)**: `stats.bis.org/api/v2/data/dataflow/`
 SDMX 2.1 REST, `format=csv`(SDMX-CSV) 지원 — IMF와 달리 CSV가 나와 파싱이 쉽다.
@@ -68,8 +68,8 @@ SDMX 2.1 REST, `format=csv`(SDMX-CSV) 지원 — IMF와 달리 CSV가 나와 파
 - LBS dataflow: `BIS/WS_LBS_D_PUB/1.0`, key **12차원**
   `Q.S.{C|L}.G.TO1.A.5J.A.{REP}.A.{CP}.N` (S=잔액, C/L=claims/liabilities,
   G=loans and deposits, TO1=전통화, 5J=전체 모행 소재국, N=cross-border).
-- 값은 `OBS_VALUE × 10^UNIT_MULT`(=6, 백만 USD). 검증: KR→US claims 2024-Q4
-  = $47.670B, KR liabilities to US = $14.191B (샤드 병합값과 정확 일치).
+- 값은 `OBS_VALUE × 10^UNIT_MULT`(=6, 백만 USD). 파서 회귀 테스트와 생성 샤드
+  sanity가 단위 및 병합 결과를 검증한다.
 - 보고국은 1분기 전체 와일드카드로 런타임 발견한다. 국가 마스터 밖 역외센터는
   정직하게 드랍하고 실제 채택·드랍 코드를 `pipeline_report.bis_lbs`에 기록한다.
 - 상품 G는 loans+deposits 합산 — 포지션 방향으로 분류(claims=loans/
@@ -113,8 +113,8 @@ SDMX 2.1 REST, `format=csv`(SDMX-CSV) 지원 — IMF와 달리 CSV가 나와 파
 
 ## 프루닝 (침묵 금지)
 
-양자 레코드는 |값| ≥ $100M만 유지 — 레코드 16.4%로 가치 99.82% 보존(실측).
-드롭 수는 조립 로그와 `meta/pipeline_report.json`에 기록된다.
+양자 레코드는 |값| ≥ $100M만 유지한다. 드롭 수는 조립 로그와
+`meta/pipeline_report.json`에 기록하며, 계산하지 않는 가치 보존율은 주장하지 않는다.
 
 ## 알려진 한계 (v3)
 
