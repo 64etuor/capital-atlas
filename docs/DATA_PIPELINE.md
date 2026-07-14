@@ -8,6 +8,7 @@
 ```bash
 pnpm data:fetch
 pnpm data:bis
+pnpm data:dss
 pnpm data:exposure
 pnpm data:closure
 pnpm data:synoptic
@@ -20,7 +21,8 @@ pnpm data:check
 ```
 
 화살표 순서 전체가 갱신 계약이다. `data:fetch` 뒤에는 조립 과정에서 다시 만들어진
-bilateral에 BIS를 재병합하고, 그 다음 exposure/RAS와 모든 집계·원장을 재발행한다.
+bilateral에 BIS를 재병합하고, 국가 부채시장 DSS를 별도 재발행한 다음 exposure/RAS와
+모든 집계·원장을 재발행한다.
 
 원시 응답은 `data-raw/`(gitignore)에 보존된다. 재실행은 24h 내 캐시를 재사용한다.
 필수 공식 소스는 stage 단위로 원자적이다. bounded retry 뒤 요청 하나라도 실패하면
@@ -46,7 +48,7 @@ bilateral에 BIS를 재병합하고, 그 다음 exposure/RAS와 모든 집계·�
 | `wb_wdi` | 상장주식 시총(발행국 총액)·GDP, 연간 | ✅ 런타임 발견 | B |
 | `coingecko_global` | 암호자산 글로벌 통제값 + 분리된 일중 오버레이 | ✅ 글로벌만(국가배분 없음) | B |
 | `bis_lbs` | 국경 간 은행 loans&deposits 양자 회랑, 분기 (Phase M) | ✅ 런타임 발견 | B |
-| BIS DSS | 채무증권 발행잔액 | ❌ 미착수 (후속) | — |
+| `bis_dss` | 국가 채무증권 발행·보유 잔액/순거래, 분기 | ✅ 런타임 발견·별도 제품 | A |
 
 **IMF API 주의**: 구 `dataservices.imf.org`는 DNS까지 폐기됨. 신 API는
 `api.imf.org/external/sdmx/2.1` — **데이터는 SDMX StructureSpecificData XML만**
@@ -81,6 +83,15 @@ SDMX 2.1 REST, `format=csv`(SDMX-CSV) 지원 — IMF와 달리 CSV가 나와 파
 - 상품 G는 loans+deposits 합산 — 포지션 방향으로 분류(claims=loans/
   liabilities=deposits), grade B + estimate_method로 공개. 수집: `pnpm data:bis`
   (멱등 병합, 전체 재수집 불요).
+- DSS dataflow: `BIS/WS_NA_SEC_DSS/1.0`, key **18차원**. 자산(A)·부채(L) 두
+  aggregate query에서 보고국·상대범위·부문·stock/transaction만 wildcard로 두고,
+  `Q.N....S1.N.{A|L}..F3.T._Z.USD._T.M.V.N._T`의 비교 가능 조합을 고정한다.
+  `XW|1E|5Z`만 `world|resident|nonresident`로 보존하고 `OBS_VALUE × 10^UNIT_MULT`를
+  달러 단위로 정규화한다. 명목가·자국통화·세부만기·custom breakdown은 혼합 금지.
+- DSS는 국가 부채시장 장부다. `stocks_*`나 양자 회랑에 병합하지 않고
+  `debt_market/`과 facts의 `debt_market` 테이블에만 들어간다. 자산/부채 양쪽이
+  성공하고 25개국·5천 관측 회귀 게이트를 통과해야 기존 공개 파일을 교체한다.
+  수집: `pnpm data:dss`.
 
 ## 자산 매핑 (BPM6 → 계약 asset)
 
@@ -142,6 +153,9 @@ SDMX 2.1 REST, `format=csv`(SDMX-CSV) 지원 — IMF와 달리 CSV가 나와 파
   파트너 시계열 상한(top-N) 검토.
 - BIS 양자합 ↔ IIP 국가 총계는 보고국 커버리지 차이로 불일치 — 조정하지 않고
   `pipeline_report.bis_lbs`에 기록(§12 폐합 정신, §5 중복 가드).
+- BIS DSS는 보고 경제만 존재하며 미보고국을 모델로 메우지 않는다. 부문 계층은
+  중첩되므로 상하위 코드를 합산하지 않으며, DSS 발행/보유액을 대외자산 총계로
+  전용하지 않는다. 커버리지는 `debt_market/index.json`이 정본이다.
 - 최신 분기와 소스별 실제 기간은 `index.json` 및 레코드 `effective_date`가 정본이다.
 
 ## exposure + position closure (v3)

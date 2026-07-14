@@ -73,17 +73,18 @@ pnpm dev            # Vite dev 서버 → http://localhost:5173
 pnpm data:fetch     # ① 공개 API 수집(24h 캐시) + 조립 → public/data/ 샤드 (환율 포함)
 pnpm data:fx        # ①-b (선택) 환율만 단독 재수집 — data:fetch에 이미 포함
 pnpm data:bis       # ② BIS 은행 회랑 재병합 (assemble이 bilateral을 재생성하므로 필수)
-pnpm data:exposure  # ③ 통화·부문 직접 관측 + FXD·재구성 부채 발행 (네트워크 없음)
-pnpm data:closure   # ④ IIP 마진↔raw normalized PIP seed RAS 폐합 발행 (네트워크 없음)
-pnpm data:synoptic  # ⑤ SYNOPTIC 사전 집계 재생성 (커밋된 샤드에서, 네트워크 없음)
-pnpm data:station   # ⑥ STATION 국가별 집계 + 집중도(§14) 재생성 (네트워크 없음)
-pnpm data:flowmatrix # ⑦ 자산 간 재배분 행렬(§8, 모델 배분) 재생성 (네트워크 없음)
-pnpm data:facts     # ⑧ 정본 수치 원장 facts.ndjson.gz 재발행 (네트워크 없음)
-pnpm data:reconcile # ⑨ BIS 미러 폐합(§12-3) 재계산 (네트워크 없음)
-pnpm data:sources   # ⑩ meta/sources.json 재발행 (retrieved_at 보존)
-pnpm data:check     # ⑪ 계약·상식·사실원장·미러·RAS 정합 게이트
-pnpm data:changed   # ⑫ 실질 변경 vs 타임스탬프-전용 분류 (커밋 게이트)
-pnpm data:vintage   # ⑬ 실질 변경 시 빈티지 다이제스트 보존 (개정 이력의 원천)
+pnpm data:dss       # ③ BIS 국가 부채시장 발행·보유 직접 관측 별도 발행
+pnpm data:exposure  # ④ 통화·부문 직접 관측 + FXD·재구성 부채 발행 (네트워크 없음)
+pnpm data:closure   # ⑤ IIP 마진↔raw normalized PIP seed RAS 폐합 발행 (네트워크 없음)
+pnpm data:synoptic  # ⑥ SYNOPTIC 사전 집계 재생성 (커밋된 샤드에서, 네트워크 없음)
+pnpm data:station   # ⑦ STATION 국가별 집계 + 집중도(§14) 재생성 (네트워크 없음)
+pnpm data:flowmatrix # ⑧ 자산 간 재배분 행렬(§8, 모델 배분) 재생성 (네트워크 없음)
+pnpm data:facts     # ⑨ 정본 수치 원장 facts.ndjson.gz 재발행 (네트워크 없음)
+pnpm data:reconcile # ⑩ BIS 미러 폐합(§12-3) 재계산 (네트워크 없음)
+pnpm data:sources   # ⑪ meta/sources.json 재발행 (retrieved_at 보존)
+pnpm data:check     # ⑫ 계약·상식·사실원장·미러·RAS 정합 게이트
+pnpm data:changed   # ⑬ 실질 변경 vs 타임스탬프-전용 분류 (커밋 게이트)
+pnpm data:vintage   # ⑭ 실질 변경 시 빈티지 다이제스트 보존 (개정 이력의 원천)
 
 # 검증
 pnpm typecheck      # tsc -b
@@ -123,7 +124,7 @@ https://ca.yanghapark.com/data/facts.ndjson.gz   (gzip, 라인당 JSON 1개)
 
 | 필드 | 의미 |
 |---|---|
-| `table` | `stocks` \| `flows_country` \| `flows_bilateral` \| `currency_exposure` \| `sector_positions` \| `reconstructed_liabilities` \| `constant_fx` \| `position_closure` |
+| `table` | `stocks` \| `flows_country` \| `flows_bilateral` \| `debt_market` \| `currency_exposure` \| `sector_positions` \| `reconstructed_liabilities` \| `constant_fx` \| `position_closure` |
 | `basis` | stocks 전용 — `owner` \| `issuer` \| `location` |
 | `country` / `owner_country`·`issuer_country` | ISO3 (테이블별) |
 | `asset` · `period` · `measure` · `entry` | 자산군 · `YYYY-Qn` · stock/flow/valuation · BPM6 측 |
@@ -160,12 +161,14 @@ liabilities). `meta/reconciliation.json`(분포 요약)과 `reconciliation/{분�
 | **IMF PIP** (CPIS 후속) | 양자 포트폴리오 자산·보고 부문 (직접 관측) + SCC 파생 부채 | A / C | IMF terms — attribution |
 | **IMF DIP** (CDIS 후속) | 양자 outward 직접투자 포지션 (직접보고·방향원칙) | A | IMF terms — attribution |
 | **BIS LBS** | 국경 간 은행 loans&deposits 양자 회랑 (분기, Phase M) | B | BIS terms — attribution |
+| **BIS DSS** | 국가 채무증권 발행·보유 잔액과 공식 순거래 (분기, 별도 장부) | A | BIS terms — attribution |
 | **World Bank WDI** | 상장주식 시총(발행국 총액)·GDP | B | CC BY-4.0 |
 | **CoinGecko** | 암호자산 글로벌 통제값 + 분리된 일중 오버레이 | B | free API — attribution |
 | 내부 폴백 모델 | 롤포워드 / 지역-중앙값 GDP비율 / 주택자산 | D–E | internal estimate, ±20~35% |
 
 신 IMF API(`api.imf.org/external/sdmx/2.1`, SDMX XML)와 BIS Data Portal API
-(`stats.bis.org/api/v2`, SDMX-CSV)에서 수집. BIS 채무증권(DSS)은 후속.
+(`stats.bis.org/api/v2`, SDMX-CSV)에서 수집. BIS 채무증권(DSS)은 국경간 장부와
+분리된 `debt_market/` 직접 관측 제품으로 발행한다.
 최신 관측 분기와 소스별 기간은 `index.json`과 각 레코드 `effective_date`가 정본이다.
 명판의 "추정 기준" 날짜는 데이터 스냅샷 빈티지(`index.generated_at`)다.
 
@@ -312,6 +315,9 @@ STATION ALL 탭의 `REALLOC` 보기는 관측된 BOP 순흐름(A등급)을 마�
 - **부문은 보고된 코드만 노출한다.** PIP 직접 포지션의 S11(비금융기업), S13(정부),
   S14(가계) 등은 A등급이지만 S1V(비금융기업·가계·NPISH 결합군)는 그대로 둔다.
   결합군을 가계/기업으로 임의 배분하지 않으며, BOP 흐름에는 아직 부문 축이 없다.
+- **부채시장은 국경간 장부와 분리한다.** BIS DSS의 시장가·현재 USD·전통화·전만기
+  발행/보유 잔액과 공식 순거래를 `debt_market/`에 직접 A등급으로 발행한다.
+  보고국만 노출하고 미보고국은 unavailable이며, 중첩 부문 코드는 합산하지 않는다.
 - **RAS 정적 샤드는 leading cells만 발행한다.** 전체 행렬로 마진을 닫은 뒤 자산별
   상위 1,000셀만 저장하며, 생략 셀 수·합계를 샤드와 도시에에 명시한다. 선택 국가가
   tail에만 있을 때 “모델 없음”으로 속이지 않고 발행 tail 생략 사유를 표시한다.
@@ -341,11 +347,14 @@ STATION ALL 탭의 `REALLOC` 보기는 관측된 BOP 순흐름(A등급)을 마�
   IMF DIP outward 포지션을 추가하되 PIP·DIP·BIS를 단일 완전 장부로 부르지 않는다.
   STATION은 `OBS STOCK`과 exact-period `CP ALLOC`을 분리하고, 수치·도시에·원장에
   source family와 position basis를 보존한다.
+- **2026-07-14 · BIS DSS는 독립 국가 부채시장 제품.** 발행·보유, stock·공식
+  transaction, 상대범위, 직접 부문, 시장가 기준을 보존하고 cross-border 장부와
+  병합하지 않는다. 미보고국/부문은 추정하지 않는다.
 
 ## 재검토 후보 (v3 이후 — 자세히는 `docs/architecture.md`)
 
-- **BIS·부동산·암호자산 심화**: 채무증권 발행잔액(BIS DSS), 등기/센서스 기반 주택자산,
-  국가별 암호자산 배분.
+- **부동산·암호자산 심화**: 등기/센서스 기반 주택자산과 국가별 암호자산 배분.
+  BIS DSS 국가 채무증권 발행·보유 잔액/순거래는 구현 완료했다.
 - **자산 간 흐름 행렬**: 소유자↔발행자↔소재지 3장부를 잇는 룩스루(펀드·ETF·SPV·토큰).
 - **직접 통화·부채 커버리지 확대**: IIPCC 비보고국의 구성을 추정으로 메우지 않는다.
   PIP SCC 재구성(C)은 독립 CPIS 부채 미러가 아니므로 직접 양방향 보고가 생길 때 재검토한다.

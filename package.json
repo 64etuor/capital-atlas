@@ -15,6 +15,7 @@
     "data:fx": "tsx scripts/fetch/fx.ts",
     "data:sources": "tsx scripts/build/sources.ts",
     "data:bis": "tsx scripts/build/bank_merge.ts",
+    "data:dss": "tsx scripts/build/debt-market.ts",
     "data:synoptic": "tsx scripts/build/synoptic.ts",
     "data:vintage": "tsx scripts/build/vintage.ts",
     "data:changed": "tsx scripts/check/changed.ts",

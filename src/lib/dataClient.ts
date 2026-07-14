@@ -6,8 +6,10 @@ import type {
   Basis,
   BilateralFile,
   CountryMaster,
+  CountryDebtMarketFile,
   CountryExposureFile,
   ExposureIndexFile,
+  DebtMarketIndexFile,
   FlowIntensityFile,
   GlobalCryptoFile,
   FlowMatrixFile,
@@ -54,7 +56,7 @@ export const MAX_SHARD_CACHE = 16
 
 const isShardPath = (path: string) =>
   /^\/data\/(stocks_|flows_)/.test(path) ||
-  (/^\/data\/(station|flowmatrix|reconciliation|exposure|position_closure)\//.test(path) &&
+  (/^\/data\/(station|flowmatrix|reconciliation|exposure|position_closure|debt_market)\//.test(path) &&
     !path.endsWith('/index.json'))
 
 const inflight = new Map<string, Promise<unknown>>()
@@ -135,6 +137,13 @@ export const getExposureIndex = () =>
 
 export const getExposure = (iso3: string) =>
   fetchJson<CountryExposureFile>(`/data/exposure/${iso3}.json`)
+
+/** BIS DSS national debt-market observations; separate from cross-border stocks. */
+export const getDebtMarketIndex = () =>
+  fetchJson<DebtMarketIndexFile>('/data/debt_market/index.json')
+
+export const getDebtMarket = (iso3: string) =>
+  fetchJson<CountryDebtMarketFile>(`/data/debt_market/${iso3}.json`)
 
 export const getPositionClosureIndex = () =>
   fetchJson<PositionClosureIndexFile>('/data/position_closure/index.json')

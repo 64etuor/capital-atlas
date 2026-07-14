@@ -31,6 +31,8 @@ jobs:
       # BIS 은행 회랑 재병합 — assemble이 bilateral을 PIP-only로 재생성하므로
       # 이 단계가 빠지면 은행 데이터 15만 건이 조용히 소실된다 (Phase N fix)
       - run: pnpm data:bis
+      # BIS 국가채권통계 — 국내 발행·보유를 국경간 stocks와 분리한 직접 관측 제품.
+      - run: pnpm data:dss
       # v3 노출·폐합 산출물 — BIS 재병합 뒤 다시 생성해 스테일 파생물을 차단한다.
       - run: pnpm data:exposure
       - run: pnpm data:closure

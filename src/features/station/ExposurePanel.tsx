@@ -7,6 +7,7 @@ import { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import {
   getExposure,
+  getDebtMarket,
   getPositionClosure,
   getPositionClosureIndex,
   nearestAvailable,
@@ -14,6 +15,7 @@ import {
 import { formatUsd } from '../../lib/format'
 import type {
   CurrencyExposureRecord,
+  DebtMarketRecord,
   FxdAvailable,
   PeriodKey,
   PositionClosureCell,
@@ -27,6 +29,7 @@ import {
   exposureAt,
   type ClosurePublication,
 } from './exposure'
+import { selectDebtMarket } from './debtMarket'
 import type { AssetTab } from './AssetRail'
 
 interface Props {
@@ -63,6 +66,23 @@ const SECTOR_LABELS: Record<SectorPositionRecord['sector'], string> = {
   S1V: 'NFC + HH + NPISH',
 }
 
+const DEBT_SECTOR_LABELS: Record<DebtMarketRecord['sector'], string> = {
+  S1: 'TOTAL ECONOMY',
+  S11: 'NON-FIN CORP',
+  S12: 'FINANCIAL CORP',
+  S121: 'CENTRAL BANK',
+  S122: 'DEPOSIT TAKERS',
+  S123: 'MONEY FUNDS',
+  S125A: 'SECURITISATION SPV',
+  S12P: 'OTHER FINANCE',
+  S12Q: 'INSURANCE + PENSION',
+  S12T: 'MFIs EX CENTRAL BANK',
+  S13: 'GOVERNMENT',
+  S1311: 'CENTRAL GOVERNMENT',
+  S1M: 'HOUSEHOLDS + NPISH',
+  S1ZS: 'DOMESTIC SECTORS',
+}
+
 const selectedPositionAsset = (asset: AssetTab) =>
   asset === 'listed_equity' || asset === 'debt_securities' ? asset : undefined
 
@@ -71,12 +91,14 @@ function FactButton({
   value,
   grade,
   derived = false,
+  compact = false,
   onClick,
 }: {
   label: string
   value: number
   grade: 'A' | 'C' | 'D' | 'E'
   derived?: boolean
+  compact?: boolean
   onClick: () => void
 }) {
   return (
@@ -84,7 +106,8 @@ function FactButton({
       type="button"
       onClick={onClick}
       className={
-        'readout grid w-full grid-cols-[minmax(0,1fr)_auto] items-baseline gap-2 border-t px-1 py-1 text-left text-[9px] transition-[color,opacity,transform] duration-140 hover:text-paper active:translate-y-px ' +
+        'readout grid w-full grid-cols-[minmax(0,1fr)_auto] items-baseline gap-2 border-t px-1 text-left transition-[color,opacity,transform] duration-140 hover:text-paper active:translate-y-px ' +
+        (compact ? 'py-0.5 text-[8px] ' : 'py-1 text-[9px] ') +
         (derived
           ? 'border-dashed border-paper/12 text-paper/70'
           : 'border-paper/8 text-paper')
@@ -130,6 +153,27 @@ const directSectorDossier = (
     ['Sector code', `${row.sector} (exact IMF category)`],
     ['Asset', row.asset],
     ['Aggregation', 'none — hierarchical rows are not summed'],
+  ],
+})
+
+const debtMarketDossier = (
+  row: DebtMarketRecord,
+  name: string,
+): DossierPayload => ({
+  title: `${name} · ${DEBT_SECTOR_LABELS[row.sector]} debt ${row.measure}`,
+  subtitle: `DIRECT BIS DEBT SECURITIES STATISTICS · ${row.period}`,
+  value_usd: row.value_usd,
+  grade: 'A',
+  effective_date: row.effective_date,
+  source_ids: [row.source_id],
+  context: [
+    ['Accounting entry', row.accounting_entry],
+    ['Counterparty scope', row.counterparty_scope],
+    ['Sector code', `${row.sector} (reported hierarchy; not inferred or summed)`],
+    ['Measure', row.measure === 'stock' ? 'closing stock' : 'net transactions'],
+    ['Valuation', 'market value'],
+    ['Unit', 'current USD (BIS-published conversion)'],
+    ['Boundary', 'national debt market; not merged into cross-border asset stocks'],
   ],
 })
 
@@ -228,6 +272,10 @@ export function ExposurePanel({
     key: string
     file: PositionClosureFile | null
   } | null>(null)
+  const [debtLoaded, setDebtLoaded] = useState<{
+    key: string
+    file: Awaited<ReturnType<typeof getDebtMarket>> | null
+  } | null>(null)
 
   useEffect(() => {
     if (iso === 'WLD') return
@@ -238,6 +286,21 @@ export function ExposurePanel({
       })
       .catch(() => {
         if (alive) setLoaded({ key: iso, file: null })
+      })
+    return () => {
+      alive = false
+    }
+  }, [iso])
+
+  useEffect(() => {
+    if (iso === 'WLD') return
+    let alive = true
+    getDebtMarket(iso)
+      .then((file) => {
+        if (alive) setDebtLoaded({ key: iso, file })
+      })
+      .catch(() => {
+        if (alive) setDebtLoaded({ key: iso, file: null })
       })
     return () => {
       alive = false
@@ -296,6 +359,43 @@ export function ExposurePanel({
     : []
   const hasOmittedClosureTail =
     closureRows.length === 0 && (closurePublication?.omitted_cells ?? 0) > 0
+  const debtCurrent = debtLoaded?.key === iso ? debtLoaded.file : undefined
+  const debtSelection = debtCurrent ? selectDebtMarket(debtCurrent, period) : null
+  const debtRows =
+    debtSelection?.status === 'available'
+      ? [
+          ['ISSUED · TOTAL', debtSelection.issued],
+          ['NET ISSUE', debtSelection.net_issuance],
+          [
+            debtSelection.top_issuer_sector
+              ? `ISSUER · ${debtSelection.top_issuer_sector.sector}`
+              : 'ISSUER · TOP',
+            debtSelection.top_issuer_sector,
+          ],
+          ['FOREIGN HELD', debtSelection.nonresident_held],
+          ['ABROAD · TOTAL', debtSelection.foreign_assets],
+          [
+            debtSelection.top_foreign_holder_sector
+              ? `HOLDER · ${debtSelection.top_foreign_holder_sector.sector}`
+              : 'HOLDER · TOP',
+            debtSelection.top_foreign_holder_sector,
+          ],
+        ].filter((row): row is [string, DebtMarketRecord] => row[1] !== undefined)
+      : []
+  const debtState =
+    iso === 'WLD'
+      ? t('station.exposure.world')
+      : debtCurrent === undefined
+      ? t('station.exposure.debtLoading')
+      : debtCurrent === null
+        ? t('station.exposure.noDebtCountry')
+        : debtSelection?.status === 'unavailable'
+          ? t(
+              debtSelection.reason === 'no_comparable_headline_on_or_before_target'
+                ? 'station.exposure.noDebtHeadline'
+                : 'station.exposure.noDebtPeriod',
+            )
+          : null
 
   const directState =
     iso === 'WLD'
@@ -324,7 +424,7 @@ export function ExposurePanel({
           {directState}
         </p>
       ) : (
-        <div className="mt-1 grid min-h-0 flex-1 grid-cols-[1fr_1fr_1.15fr] divide-x divide-paper/8 overflow-hidden">
+        <div className="mt-1 grid min-h-0 flex-1 grid-cols-[1fr_1fr_1.08fr_1.18fr] divide-x divide-paper/8 overflow-hidden">
           <Column title={t('station.exposure.currency')}>
             {currencyRows.length === 0 ? (
               <p className="readout text-[8px] leading-snug text-paper-dim/60">
@@ -417,6 +517,24 @@ export function ExposurePanel({
                   </p>
                   )}
               </>
+            )}
+          </Column>
+          <Column title={t('station.exposure.debtMarket')}>
+            {debtState ? (
+              <p className="readout text-[8px] leading-snug text-paper-dim/60">
+                {debtState}
+              </p>
+            ) : (
+              debtRows.map(([label, row]) => (
+                <FactButton
+                  key={`${row.accounting_entry}|${row.counterparty_scope}|${row.sector}|${row.measure}`}
+                  label={`${label} · ${row.period}`}
+                  value={row.value_usd}
+                  grade="A"
+                  compact
+                  onClick={() => openDossier(debtMarketDossier(row, name))}
+                />
+              ))
             )}
           </Column>
         </div>

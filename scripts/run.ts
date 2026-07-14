@@ -10,8 +10,10 @@ import { runIipcc, runPipExposure } from './fetch/imf-exposure.ts'
 import { COINGECKO_GLOBAL_URL, run as runCrypto } from './fetch/crypto.ts'
 import { runFx } from './fetch/fx.ts'
 import { runBis } from './fetch/bis.ts'
+import { runDss } from './fetch/bis-dss.ts'
 import { assemble } from './build/assemble.ts'
 import { applyBankMerge } from './build/bank_merge.ts'
+import { writeDebtMarket } from './build/debt-market.ts'
 import { writeSourcesJson } from './build/sources.ts'
 import { buildExposure } from './build/exposure.ts'
 import { buildPositionClosure } from './build/position-closure.ts'
@@ -34,6 +36,7 @@ await Promise.all([runIipcc(iso3s), runPipExposure(iso3s)])
 // source failure must never leave the committed snapshot partially rebuilt.
 const iso3ByIso2 = new Map(countries.map((c) => [c.iso2, c.iso3]))
 const bis = await runBis(iso3ByIso2)
+const dss = await runDss(iso3ByIso2)
 await runFx(iso3s) // Phase L: CURR=LCU 다이얼 근거 (required; terminal failure aborts)
 runCountries(countries)
 
@@ -41,6 +44,7 @@ runCountries(countries)
 const cryptoOk = await runCrypto()
 
 assemble({ countries, wb, iip, bop, pip, dip })
+writeDebtMarket(dss)
 buildExposure()
 buildPositionClosure()
 
