@@ -2,7 +2,8 @@
  * Phase P-2 — 미러 폐합 엔진(§12-3) 계약 테스트.
  * BIS LBS 양방향: A 보고 claims(A→B, loans) vs B 보고 liabilities(A→B, deposits)
  * 는 같은 경제 실체(A 거주자의 대B 은행 포지션)의 두 관측 — gap을 계산하되
- * 조정하지 않는다(§12 기록 정신). CPIS는 단방향 보고라 미러 불가(문서화).
+ * 조정하지 않는다(§12 기록 정신). PIP 직접 관측은 단방향이라 독립 미러 불가이며,
+ * v3 재구성 부채(C)를 직접 미러로 승격하지 않는다.
  */
 import { existsSync, readFileSync } from 'node:fs'
 import { join } from 'node:path'

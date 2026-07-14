@@ -1,10 +1,9 @@
 /**
- * Phase P-1 — 정본 사실 테이블 아티팩트 (초안 §11.2 축소 + §16-6 데이터 상품화).
+ * v3 — 정본 수치 원장 아티팩트 (초안 §11.2 축소 + §16-6 데이터 상품화).
  *
- * 전 수치 레코드(stocks 3 basis · flows_country · flows_bilateral)를 단일
- * NDJSON 사실 테이블로 평탄화해 `public/data/facts.ndjson.gz`로 발행한다.
- * 파생물(synoptic/station/flowmatrix)은 이 테이블에서 재계산 가능한 2차
- * 산출이므로 포함하지 않는다(§11 Gold 집계층 — 계약 문서 참조).
+ * 관측(stocks 3 basis · flows_country · flows_bilateral · direct exposure)과
+ * 명시적으로 등급화한 FXD/reconstruction/RAS를 단일 NDJSON 원장으로 평탄화한다.
+ * synoptic/station/flowmatrix 같은 UI 집계는 재계산 가능한 2차 뷰라 제외한다.
  *
  * 규율: 결정론(N1 — 타임스탬프 금지, gzip 헤더 mtime=0), 정합 게이트
  * (라인 수·테이블별 수·등급 분포 = 원 샤드 합, self-check + vitest).

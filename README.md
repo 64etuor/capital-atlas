@@ -15,7 +15,8 @@
 |---|---|
 | ![국가 관측 리포트 — 헤드라인 수치 · 자산 트리맵 · 상대국 흐름](docs/screenshots/02-report.png) | ![계보 도시에 — 출처 · 산식 · 등급 · 빈티지](docs/screenshots/03-dossier.png) |
 
-어떤 수치든 클릭하면 **계보 도시에**가 열린다 — 출처·산식·신뢰등급·95% 범위·기준일.
+어떤 수치든 클릭하면 **계보 도시에**가 열린다 — 출처·산식·신뢰등급·범위의 의미
+(95% 신뢰구간·민감도 범위·Fréchet 한계 등)·기준일.
 계보 없는 숫자는 화면에 올리지 않는다.
 
 ![관측만(OBS) 모드 — 추정치가 안개로 사라진다](docs/screenshots/04-observed-only.png)
@@ -72,15 +73,17 @@ pnpm dev            # Vite dev 서버 → http://localhost:5173
 pnpm data:fetch     # ① 공개 API 수집(24h 캐시) + 조립 → public/data/ 샤드 (환율 포함)
 pnpm data:fx        # ①-b (선택) 환율만 단독 재수집 — data:fetch에 이미 포함
 pnpm data:bis       # ② BIS 은행 회랑 재병합 (assemble이 bilateral을 재생성하므로 필수)
-pnpm data:synoptic  # ③ SYNOPTIC 사전 집계 재생성 (커밋된 샤드에서, 네트워크 없음)
-pnpm data:station   # ④ STATION 국가별 집계 + 집중도(§14) 재생성 (네트워크 없음)
-pnpm data:flowmatrix # ⑤ 자산 간 재배분 행렬(§8, 모델 배분) 재생성 (네트워크 없음)
-pnpm data:facts     # ⑥ 정본 사실 테이블 facts.ndjson.gz 재발행 (Phase P, 네트워크 없음)
-pnpm data:reconcile # ⑦ BIS 미러 폐합(§12-3) 재계산 (네트워크 없음)
-pnpm data:sources   # ⑧ meta/sources.json 재발행 (retrieved_at 보존)
-pnpm data:check     # ⑨ 계약 스키마(zod) + 상식 범위 + 사실테이블·미러 정합 게이트
-pnpm data:changed   # ⑩ 실질 변경 vs 타임스탬프-전용 분류 (커밋 게이트)
-pnpm data:vintage   # ⑪ 실질 변경 시 빈티지 다이제스트 보존 (개정 이력의 원천)
+pnpm data:exposure  # ③ 통화·부문 직접 관측 + FXD·재구성 부채 발행 (네트워크 없음)
+pnpm data:closure   # ④ IIP 마진↔PIP seed RAS 폐합 발행 (네트워크 없음)
+pnpm data:synoptic  # ⑤ SYNOPTIC 사전 집계 재생성 (커밋된 샤드에서, 네트워크 없음)
+pnpm data:station   # ⑥ STATION 국가별 집계 + 집중도(§14) 재생성 (네트워크 없음)
+pnpm data:flowmatrix # ⑦ 자산 간 재배분 행렬(§8, 모델 배분) 재생성 (네트워크 없음)
+pnpm data:facts     # ⑧ 정본 수치 원장 facts.ndjson.gz 재발행 (네트워크 없음)
+pnpm data:reconcile # ⑨ BIS 미러 폐합(§12-3) 재계산 (네트워크 없음)
+pnpm data:sources   # ⑩ meta/sources.json 재발행 (retrieved_at 보존)
+pnpm data:check     # ⑪ 계약·상식·사실원장·미러·RAS 정합 게이트
+pnpm data:changed   # ⑫ 실질 변경 vs 타임스탬프-전용 분류 (커밋 게이트)
+pnpm data:vintage   # ⑬ 실질 변경 시 빈티지 다이제스트 보존 (개정 이력의 원천)
 
 # 검증
 pnpm typecheck      # tsc -b
@@ -108,26 +111,28 @@ pnpm build          # tsc -b && vite build
 - **스크린샷 정책**: 문서 스크린샷의 명판 날짜는 촬영 시점의 데이터 빈티지다.
   일일 크론 운영상 날짜-단독 드리프트는 정상이며 재촬영 사유가 아니다.
 
-### 데이터 다운로드 — 정본 사실 테이블 (Phase P, §16-6)
+### 데이터 다운로드 — 정본 수치 원장 (v3, §16-6)
 
-전 수치 레코드(410k+)를 단일 NDJSON 사실 테이블로 내려받을 수 있다:
+관측과 명시적으로 등급화한 파생 수치 505,246건을 단일 NDJSON 원장으로 내려받을 수 있다:
 
 ```
-https://ca.yanghapark.com/data/facts.ndjson.gz   (~5MB gzip, 라인당 JSON 1개)
+https://ca.yanghapark.com/data/facts.ndjson.gz   (~6.3MB gzip, 라인당 JSON 1개)
 ```
 
 | 필드 | 의미 |
 |---|---|
-| `table` | `stocks` \| `flows_country` \| `flows_bilateral` |
+| `table` | `stocks` \| `flows_country` \| `flows_bilateral` \| `currency_exposure` \| `sector_positions` \| `reconstructed_liabilities` \| `constant_fx` \| `position_closure` |
 | `basis` | stocks 전용 — `owner` \| `issuer` \| `location` |
 | `country` / `owner_country`·`issuer_country` | ISO3 (테이블별) |
 | `asset` · `period` · `measure` · `entry` | 자산군 · `YYYY-Qn` · stock/flow/valuation · BPM6 측 |
 | `value_usd` | USD 절대값 (스케일 접미사 없음) |
 | `source_id` · `effective_date` · `confidence_grade` | lineage — `meta/sources.json`으로 해석 |
-| `estimate_method` · `lower_bound` · `upper_bound` | 추정치(C–E)만 |
+| `estimate_method` · `lower_bound` · `upper_bound` | 파생·모델 수치에 적용(범위 의미는 레코드별 산식 참조) |
 
-파생물(synoptic/station/flowmatrix)은 이 테이블에서 재계산 가능한 2차 산출이라
-포함하지 않는다. 정합은 `pnpm data:check`가 강제한다(레코드 수·등급 분포 = 샤드 합).
+관측(A/B)과 파생(C–E)을 같은 원장에서 조회할 수 있지만 `confidence_grade`와
+`estimate_method`를 지우고 소비하면 안 된다. synoptic/station/flowmatrix 같은 UI 집계는
+재계산 가능한 2차 뷰라 포함하지 않는다. 정합은 `pnpm data:check`가 강제한다
+(레코드 수·테이블·등급 분포 = 발행 샤드 합).
 **재배포 주의**: 원 데이터는 IMF terms(attribution)·World Bank CC BY-4.0·BIS
 terms를 따른다 — 이 파일을 재배포할 때 원 출처 표기를 유지하라(`meta/sources.json`
 의 license_note가 소스별 정본).
@@ -139,8 +144,9 @@ liabilities). `meta/reconciliation.json`(분포 요약)과 `reconciliation/{분�
 (쌍 상세)이 그 gap을 **조정 없이 기록**하고, 은행 양자 수치의 계보 도시에에
 **MIRROR** 행으로 노출된다(예: KOR→USA 2024-Q4 — KOR 보고 $47.7B vs USA 보고
 $41.4B, 격차 13.1%). gap은 상대국 부문 커버리지 차이와 실제 불일치가 섞인 값이라
-수십%가 정상이다(최신 분기 중앙값 ~36%). CPIS는 소유자 단방향 보고라 미러가
-불가능하다.
+수십%가 정상이다(최신 분기 중앙값 ~36%). PIP/CPIS에는 독립적인 양방향 직접
+부채 보고가 없어 BIS식 미러는 불가능하다. v3의 `reconstructed_liabilities`는
+상대국 자산을 전치한 C등급 재구성일 뿐, 독립 미러 관측으로 부르지 않는다.
 
 ## 데이터 소스
 
@@ -148,10 +154,11 @@ $41.4B, 격차 13.1%). gap은 상대국 부문 커버리지 차이와 실제 불
 |---|---|---|---|
 | **IMF IIP** | 대외 자산·부채 잔액, 국가×분기 (2010~) | A | IMF terms — attribution |
 | **IMF BOP** | 금융계정 실거래 흐름 (바로그래프 실루엣) | A | IMF terms — attribution |
-| **IMF PIP** (CPIS 후속) | 양자 포트폴리오 포지션 (연간) | A | IMF terms — attribution |
+| **IMF IIPCC** | 대외채권·채무 통화구성 (20개 보고국 직접 관측) | A | IMF terms — attribution |
+| **IMF PIP** (CPIS 후속) | 양자 포트폴리오 자산·보고 부문 (직접 관측) + SCC 파생 부채 | A / C | IMF terms — attribution |
 | **BIS LBS** | 국경 간 은행 loans&deposits 양자 회랑 (분기, Phase M) | B | BIS terms — attribution |
 | **World Bank WDI** | 상장주식 시총(발행국 총액)·GDP | B | CC BY-4.0 |
-| **CoinGecko** | 암호자산 글로벌 통제값 | B | free API — attribution |
+| **CoinGecko** | 암호자산 글로벌 통제값 + 분리된 일중 오버레이 | B | free API — attribution |
 | 내부 폴백 모델 | 롤포워드 / 지역-중앙값 GDP비율 / 주택자산 | D–E | internal estimate, ±20~35% |
 
 신 IMF API(`api.imf.org/external/sdmx/2.1`, SDMX XML)와 BIS Data Portal API
@@ -162,7 +169,9 @@ $41.4B, 격차 13.1%). gap은 상대국 부문 커버리지 차이와 실제 불
 현재 스냅샷 규모: 198개국 마스터, 그중 127개국 대외잔액 관측, PIP 보고국 81개,
 BIS 은행 보고국 39개(회랑 15만 건 — 마스터 밖 역외센터 BM/GG/IM/JE/KY는 정직
 드랍, `pipeline_report.bis_lbs` 기록). 분기 65개(2010-Q1~2026-Q1) 샤딩, 총 산출
-~183 MB(파일당 ≤~2.2 MB, 전부 lazy-load). 은행 회랑 갱신: `pnpm data:bis`(멱등).
+약 226 MB. 브라우저 서빙 JSON 샤드는 최대 약 2.6 MB(`meta/fx_rates.json`),
+다운로드용 gzip 원장은 6.3 MB이며 전부 lazy-load한다. 은행 회랑 갱신:
+`pnpm data:bis`(멱등).
 
 ## 신뢰등급 A–E와 안개 렌더링
 
@@ -242,7 +251,8 @@ STATION ALL 탭의 `REALLOC` 보기는 관측된 BOP 순흐름(A등급)을 마�
   §6 안개 계약의 가장 순수한 적용).
 - 셀 클릭 = 교정 시트: 산식(`max_entropy_flow_allocation_ipf`), **Fréchet 한계**
   (가정 없는 원리적 범위 — `max(0,r+c−T) ≤ F ≤ min(r,c)`), 반복·잔차, 관측 마진.
-- 부문(가계/기업/정부) 축은 v1 BOP 집계에 없어 생략 — 초안 §8의 정직한 축소.
+- **흐름 부문 축**은 BOP 집계에 없어 생략 — v3의 PIP 포지션 부문 관측과는
+  별개의 제약이다. 가계·기업·정부를 추정 분해해 행렬을 채우지 않는다.
 
 ### 내보내기 · 팔레트 · 튜토리얼 (Phase I — UX 백로그 완주, 잔여 0)
 
@@ -269,7 +279,7 @@ STATION ALL 탭의 `REALLOC` 보기는 관측된 BOP 순흐름(A등급)을 마�
 |---|---|
 | ![튜토리얼](docs/screenshots/09-tutorial.png) | ![멀티플즈](docs/screenshots/09-multiples.png) |
 
-## 알려진 한계 (v1 — 의도된 결정)
+## 알려진 한계 (v3 — 의도된 결정)
 
 - **거래량(TRN) = 빈 캔버스.** v1엔 turnover(난류) 관측이 없다. 허위로 채우지 않고
   정직하게 비운다("NO TURNOVER OBSERVATIONS"). 파생 채움은 v2.
@@ -281,10 +291,19 @@ STATION ALL 탭의 `REALLOC` 보기는 관측된 BOP 순흐름(A등급)을 마�
   기말 환율(IMF ER, A등급 174개국 · WB 연간 Q4 폴백 B등급 18개국)을 곱한 정확 산술.
   국가 스코프(STATION 국가 선택·GLOBE 리포트)에서만 활성 — 글로벌 집계는 통화 합산이
   무의미해 다이얼이 회색+사유("MIXED CURRENCIES — USD ONLY")가 된다. LCU 표시 수치의
-  도시에엔 FX RATE·LCU/USD VALUE 행이 병기된다. **고정환율 USD(FXD)는 도입하지 않았다**
-  — IIP 잔액에 통화구성이 없어 가정 없인 계산 불가(허위 정밀도 금지). 통화구성 확보(v3)
-  전까지 `value_usd_constant_fx`는 미산출. CSV/PNG 내보내기는 LCU 모드에서도 **USD
-  원값**을 수출한다(계보 정본 유지 — 환율은 도시에 FX RATE 행으로 추적).
+  도시에엔 FX RATE·LCU/USD VALUE 행이 병기된다. v3 **고정환율 USD(FXD)**는
+  `exposure/`에 별도 발행한다(기준 2020-Q4). IIPCC 직접 통화구성은 20개 보고국에만
+  있으므로 `OTHC+UALLC>5%`, 환율 누락, 통화합↔총계 gap>0.5%면 숫자 대신 정확한
+  unavailable 사유를 보인다. 핵심 `stocks`의 `value_usd_constant_fx`는 관측 원장을
+  덮어쓰지 않기 위해 계속 미산출이다. CSV/PNG 내보내기는 LCU 모드에서도 **USD 원값**을
+  수출한다(계보 정본 유지 — 환율은 도시에 FX RATE 행으로 추적).
+- **부문은 보고된 코드만 노출한다.** PIP 직접 포지션의 S11(비금융기업), S13(정부),
+  S14(가계) 등은 A등급이지만 S1V(비금융기업·가계·NPISH 결합군)는 그대로 둔다.
+  결합군을 가계/기업으로 임의 배분하지 않으며, BOP 흐름에는 아직 부문 축이 없다.
+- **실시간 가격은 공식 빈티지를 바꾸지 않는다.** 화면 상단 CoinGecko 글로벌 암호자산
+  시총만 `LIVE MARKET · NOT OFFICIAL STATISTICS · B`로 분리해 최대 12회, 5분 간격으로
+  갱신한다. 국가 배분·공식 지수에는 사용하지 않고 실패·오래된 응답은 정적 스냅샷으로
+  명시적으로 폴백한다.
 - **극지 통과 입자류.** 대권항로가 극점 부근을 지날 때의 스파이크는 고도를 극지에서
   0으로 테이퍼링해 크게 완화했으나, 북극 상공 흐름 밀집 구간엔 잔여 번들이 남는다.
 - **번들 청크.** deck.gl/echarts를 별도 청크로 분리(앱 청크 ~386 KB)했으나 `deck.js`
@@ -300,14 +319,23 @@ STATION ALL 탭의 `REALLOC` 보기는 관측된 BOP 순흐름(A등급)을 마�
   월클럭(`new Date()`)에서 `index.generated_at`으로 변경(독립 감사 F1). v1은 나우캐스팅
   없는 정적 스냅샷 — 오늘 날짜 표시는 보유하지 않은 신선도 주장이다. 나우캐스팅 도입
   시점에 재검토.
+- **2026-07-14 · 실시간 오버레이는 공식 통계와 분리.** 공개 CORS 시장값 하나만
+  제한적으로 갱신하며, 수집시각·B등급·비공식 라벨·스냅샷 폴백을 한 픽셀에 묶었다.
+  이 값은 `index.generated_at`, 국가별 수치, 공식 통계 계산을 절대 변경하지 않는다.
 
-## 로드맵 (v2 — 자세히는 `BRIEF.md`)
+## 재검토 후보 (v3 이후 — 자세히는 `docs/architecture.md`)
 
 - **BIS·부동산·암호자산 심화**: 채무증권 발행잔액(BIS DSS), 등기/센서스 기반 주택자산,
   국가별 암호자산 배분.
 - **자산 간 흐름 행렬**: 소유자↔발행자↔소재지 3장부를 잇는 룩스루(펀드·ETF·SPV·토큰).
-- **엔진화**: 정적 스냅샷 → 개정 이력 보존 + 추정 엔진(폴백 사다리를 서버 파이프라인으로).
-- 상장주식 비거주자 보유분 별도 축(IIP L_P P_F5), IIP 통화구성 확보 후 constant-FX(v3), 관측/추정 diff 뷰.
+- **직접 통화·부채 커버리지 확대**: IIPCC 비보고국의 구성을 추정으로 메우지 않는다.
+  PIP SCC 재구성(C)은 독립 CPIS 부채 미러가 아니므로 직접 양방향 보고가 생길 때 재검토한다.
+- **부문 심화**: 직접 보고된 가계/기업/정부 포지션은 노출했지만, BOP 흐름 부문과
+  결합군 분해는 원자료가 생길 때만 도입한다.
+- **가격 오버레이 확대**: 현재는 글로벌 암호자산 시총 하나뿐이다. 인증·요율 제한이
+  있는 다자산/국가별 feed는 정적 아키텍처 재검토 조건을 먼저 충족해야 한다.
+- **엔진화**: 사실 원장 gzip 100 MB 또는 단일 서빙 샤드 5 MB 초과, 일중 국가별
+  관측 도입 시 DuckDB/서버 계층을 재검토한다.
 
 ## 문서
 
