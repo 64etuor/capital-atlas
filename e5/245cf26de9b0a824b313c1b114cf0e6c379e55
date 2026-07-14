@@ -1,0 +1,23 @@
+scripts/build/digest.test.ts
+  s_6cfe0f5f25d4e5::t_ff4b5be1fbebf3 1-25
+scripts/build/flowmatrix.test.ts
+  s_6cfe0f5f25d4e5::t_75613c4edb9866 10,21,163-169,175
+scripts/build/digest.ts
+  s_6cfe0f5f25d4e5::t_75613c4edb9866 1-17
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.13",
+  "base_commit_sha": "e5245cf26de9b0a824b313c1b114cf0e6c379e55",
+  "prompts": {},
+  "sessions": {
+    "s_6cfe0f5f25d4e5": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "019f5c0a-f294-78b2-af01-6c5483dbfcbe",
+        "model": "gpt-5.6-sol"
+      },
+      "human_author": "64etuor <130260521+64etuor@users.noreply.github.com>"
+    }
+  }
+}
