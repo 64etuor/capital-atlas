@@ -30,7 +30,7 @@ describe('mutable snapshot claims', () => {
     expect(prose).toContain('meta/pipeline_report.json')
   })
 
-  it('does not claim an uncomputed bilateral value-retention percentage', () => {
+  it('does not claim uncomputed bilateral retention or bias magnitude', () => {
     const source = [
       read('scripts/build/assemble.ts'),
       read('scripts/build/concentration.ts'),
@@ -47,17 +47,25 @@ describe('mutable snapshot claims', () => {
         return station.concentration?.counterparty?.map((row) => row.method) ?? []
       })
 
-    expect(source).not.toMatch(/16\.4%|99\.8|0\.2% of value/)
+    expect(source).not.toMatch(/16\.4%|99\.8|0\.2% of value|slightly overstated/)
     expect(source).toContain('value retention is not computed')
+    expect(source).toContain('overstated by an unquantified amount')
     expect(report.bilateral_pruning.note).toBe(
       'value retention is not computed; use the recorded dropped record counts',
     )
     expect(stationMethods.length).toBeGreaterThan(0)
     expect(
-      stationMethods.find((method) => /99\.8%|99\.82%|0\.2% of value/.test(method)),
+      stationMethods.find((method) =>
+        /99\.8%|99\.82%|0\.2% of value|slightly overstated/.test(method),
+      ),
     ).toBeUndefined()
     expect(
       stationMethods.some((method) => method.includes('value retention is not computed')),
+    ).toBe(true)
+    expect(
+      stationMethods.some((method) =>
+        method.includes('overstated by an unquantified amount'),
+      ),
     ).toBe(true)
   })
 })
