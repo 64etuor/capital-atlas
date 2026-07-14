@@ -209,6 +209,129 @@ export interface FxRatesFile {
   countries: Record<string, FxCountry>
 }
 
+// ------------------------------------------------------------ exposure ----
+
+export type CurrencyBucket = 'USD' | 'EUR' | 'JPY' | 'XDC' | 'OTHC' | 'UALLC'
+
+export type IipccSector = 'S1' | 'S121' | 'S122' | 'S12R' | 'S13' | 'S1Z' | 'S1ZOTH'
+
+export type PipSector =
+  | 'S1'
+  | 'S11'
+  | 'S121'
+  | 'S122'
+  | 'S123'
+  | 'S12P'
+  | 'S12QU'
+  | 'S12R'
+  | 'S13'
+  | 'S14'
+  | 'S15'
+  | 'S1V'
+
+export interface CurrencyExposureRecord extends Lineage {
+  country: string
+  period: PeriodKey
+  entry: 'assets' | 'liabilities'
+  sector: IipccSector
+  currency: CurrencyBucket
+  value_usd: number
+  confidence_grade: 'A'
+}
+
+export interface SectorPositionRecord extends Lineage {
+  country: string
+  period: PeriodKey
+  sector: PipSector
+  asset: 'listed_equity' | 'debt_securities'
+  value_usd: number
+  confidence_grade: 'A'
+}
+
+export interface FxdAvailable extends Lineage {
+  status: 'available'
+  period: PeriodKey
+  base_period: PeriodKey
+  entry: 'assets' | 'liabilities'
+  value_usd: number
+  coverage_share: number
+  residual_share: number
+  source_id: 'model_constant_fx'
+  confidence_grade: 'C' | 'D'
+  estimate_method: string
+  lower_bound: number
+  upper_bound: number
+}
+
+export interface FxdUnavailable {
+  status: 'unavailable'
+  period: PeriodKey
+  base_period: PeriodKey
+  entry: 'assets' | 'liabilities'
+  coverage_share: number
+  source_ids: string[]
+  reason: string
+}
+
+export type FxdResult = FxdAvailable | FxdUnavailable
+
+export interface ReconstructedLiability extends Lineage {
+  country: string
+  period: PeriodKey
+  asset: 'listed_equity' | 'debt_securities'
+  value_usd: number
+  confidence_grade: 'C'
+  estimate_method: 'counterparty_assets_transposed_to_reconstructed_liability'
+  lower_bound: number
+  upper_bound: number
+  coverage_share: number
+}
+
+export interface CountryExposureFile {
+  country: string
+  currency: CurrencyExposureRecord[]
+  sectors: SectorPositionRecord[]
+  fxd: FxdResult[]
+  reconstructed_liabilities: ReconstructedLiability[]
+}
+
+export interface ExposureIndexFile {
+  countries: string[]
+  periods: PeriodKey[]
+  base_period: PeriodKey
+}
+
+export interface PositionClosureCell {
+  owner_country: string
+  issuer_country: string
+  asset: 'listed_equity' | 'debt_securities'
+  period: PeriodKey
+  value_usd: number
+  lower_bound: number
+  upper_bound: number
+  confidence_grade: 'E'
+  estimate_method: 'biproportional_ras_position_closure'
+  coverage_share: number
+  effective_date: string
+  source_ids: string[]
+}
+
+export interface PositionClosureAsset {
+  cells: PositionClosureCell[]
+  row_margins: Record<string, number>
+  column_margins: Record<string, number>
+  iterations: number
+  residual: number
+  converged: true
+  direct_seed_share: number
+}
+
+export interface PositionClosureFile {
+  period: PeriodKey
+  method: 'biproportional_ras_position_closure'
+  assets: Partial<Record<'listed_equity' | 'debt_securities', PositionClosureAsset>>
+}
+
 // ------------------------------------------------------------- synoptic ----
 
 /**

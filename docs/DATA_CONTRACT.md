@@ -253,6 +253,31 @@ live 데이터는 `meta/` 통제값·오버레이 전용.
 - `value_usd_constant_fx`(stocks)는 **미산출 유지** — IIP 통화구성 없이 constant-FX는
   가정 주입(허위 정밀도). v3에서 통화구성 확보 후 재검토.
 
+### exposure/ — 통화·부문·파생 부채·FXD (v3)
+
+v3는 기존 `stocks_*` 관측을 덮어쓰지 않고 `exposure/{ISO3}.json`에 별도 발행한다.
+`exposure/index.json`은 가용 국가·기간과 명시적 고정환율 기준분기를 가진다.
+
+- `currency[]`: IMF IIPCC의 대외채권·채무 통화구성 직접 관측(A). 비중복 버킷
+  `USD|EUR|JPY|XDC|OTHC|UALLC`만 허용하며, 외화 소계 `FC`는 하위 통화와 겹치므로
+  적재 금지한다. 부문은 IIPCC 정식 코드만 유지하고 결합군을 임의 분해하지 않는다.
+- `sectors[]`: IMF PIP의 포트폴리오 자산 부문별 직접 관측(A). `S11`(비금융기업),
+  `S13`(정부), `S14`(가계)가 실제 보고된 경우에만 독립 축으로 노출한다.
+  `S1V`는 비금융기업·가계·NPISH 결합군 그대로이며 세 부문으로 배분하지 않는다.
+- `reconstructed_liabilities[]`: 상대국 자산 보고를 전치한 파생 부채(C). 직접 부채
+  관측이나 독립 미러로 부르지 않는다. 산식
+  `counterparty_assets_transposed_to_reconstructed_liability`와 상향식 합계↔IIP
+  하향식 총계 사이의 수치 범위·커버리지를 필수로 가진다.
+- `fxd[]`: `status=available|unavailable` 판별합. 가용 값은 기준분기·산식·등급·
+  커버리지·잔여비중·유한 lower/upper를 모두 갖는다. `OTHC+UALLC>5%`, 환율 누락,
+  또는 통화합↔총계 gap>0.5%면 숫자를 만들지 않고 비어 있지 않은 `reason`을 발행한다.
+  `unavailable`에 `value_usd`를 넣는 것은 계약 위반이다.
+
+`position_closure/{period}.json`은 PIP 직접 양자자산을 seed, IIP 자산·부채 총계를
+마진으로 하는 RAS/IPF 파생 뷰다. 원 관측을 수정하지 않으며 모든 셀은 grade E,
+`biproportional_ras_position_closure`, 직접 seed 커버리지, 반복·잔차, Fréchet 범위를
+가진다. 100회 안에 수렴하지 않거나 마진이 닫히지 않으면 산출물을 발행하지 않는다.
+
 ### 결정론적 샤드 + vintages/ — 이중 시간 (Phase N, 초안 §10)
 
 **결정론 계약**: 개별 샤드(`stocks_*`·`flows_*`·`station/*`)와 파생 파일
