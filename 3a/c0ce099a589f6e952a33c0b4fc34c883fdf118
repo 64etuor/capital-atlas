@@ -1,0 +1,41 @@
+docs/architecture.md
+  s_6cfe0f5f25d4e5::t_091d129e09fe64 69,72
+docs/DATA_CONTRACT.md
+  s_6cfe0f5f25d4e5::t_b4dc028aa177b5 208,363-365,372-373
+  s_6cfe0f5f25d4e5::t_091d129e09fe64 371
+README.md
+  s_6cfe0f5f25d4e5::t_091d129e09fe64 116-118,121,159,297-298
+  s_6cfe0f5f25d4e5::t_b4dc028aa177b5 32
+  s_6cfe0f5f25d4e5::t_d8d75b5b32e3a9 168-169
+  s_6cfe0f5f25d4e5::t_659f1ae47a68be 171-174,292-293
+  s_196e5b31affd6e::t_c2bae1e33502b0 170
+docs/DATA_PIPELINE.md
+  s_6cfe0f5f25d4e5::t_091d129e09fe64 153
+  s_6cfe0f5f25d4e5::t_d8d75b5b32e3a9 132
+  s_6cfe0f5f25d4e5::t_659f1ae47a68be 31-35,39-45,47,125-128,164-165
+  s_6cfe0f5f25d4e5::t_b4dc028aa177b5 73-74,150-152,154
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.13",
+  "base_commit_sha": "3ac0ce099a589f6e952a33c0b4fc34c883fdf118",
+  "prompts": {},
+  "sessions": {
+    "s_196e5b31affd6e": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "019f5e0c-9a1f-75b0-a3ab-1c02dee66eb0",
+        "model": "gpt-5.6-sol"
+      },
+      "human_author": "64etuor <130260521+64etuor@users.noreply.github.com>"
+    },
+    "s_6cfe0f5f25d4e5": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "019f5c0a-f294-78b2-af01-6c5483dbfcbe",
+        "model": "gpt-5.6-sol"
+      },
+      "human_author": "64etuor <130260521+64etuor@users.noreply.github.com>"
+    }
+  }
+}
