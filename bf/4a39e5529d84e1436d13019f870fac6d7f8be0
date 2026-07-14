@@ -1,0 +1,1171 @@
+src/components/ObservationReport.tsx
+  s_6cfe0f5f25d4e5::t_633045c2bc8739 28,490-493,508
+src/features/station/PartnerMatrix.test.ts
+  s_6cfe0f5f25d4e5::t_c49f9f6aff5038 66-86
+  s_6cfe0f5f25d4e5::t_919a1aab75bb9a 12,38-45
+  s_6cfe0f5f25d4e5::t_5d319948fcde36 26
+scripts/fetch/imf-exposure.ts
+  s_6cfe0f5f25d4e5::t_717368660c51eb 153-160,163-165,184,193-196,211,221-229,235-240,243,270-271,274,278
+src/features/map/arcs.ts
+  s_6cfe0f5f25d4e5::t_89bc5a5356479a 102,138
+src/features/synoptic/corridorDossier.ts
+  s_6cfe0f5f25d4e5::t_633045c2bc8739 36-41,51
+  s_6cfe0f5f25d4e5::t_50b024b7a3db50 1-10,42-50,52-63
+  s_6cfe0f5f25d4e5::t_d164757c9c45ec 11-35
+scripts/build/dip.test.ts
+  s_6cfe0f5f25d4e5::t_c436444a7bdae0 1-53
+scripts/check/sanity.ts
+  s_6cfe0f5f25d4e5::t_5acb751d26010c 194
+  s_6cfe0f5f25d4e5::t_9b80f17e25f2e9 414,452,462,570
+  s_6cfe0f5f25d4e5::t_d164757c9c45ec 31,412
+  s_6cfe0f5f25d4e5::t_f61824cf013378 28-30,32,177,202,239-250
+  s_6cfe0f5f25d4e5::t_11e85b72e29807 33-37,42-45,179-191,209-231,259-294
+  s_6cfe0f5f25d4e5::t_00218298117f31 5-11,13-14,178,203-207,756-814
+  s_7afcdb75c5c55c::t_5e7da539b62489 295
+docs/plans/2026-07-14-counterparty-coverage.md
+  s_6cfe0f5f25d4e5::t_70a10b8e866374 1-153
+scripts/fetch/bis.test.ts
+  s_6cfe0f5f25d4e5::t_eb279497b7e866 133,141
+scripts/check/station-concentration-contract.test.ts
+  s_6cfe0f5f25d4e5::t_b3d7c54b4a1849 45
+  s_6cfe0f5f25d4e5::t_f8e2755e9d33d0 27
+  s_6cfe0f5f25d4e5::t_488123394f5f85 21-26,28,46-48
+  s_6cfe0f5f25d4e5::t_427c4ab053b170 1-4,6-20,29-44,49-86
+  s_6cfe0f5f25d4e5::t_aa3f109ddf65b3 5
+scripts/fetch/lib.test.ts
+  s_6cfe0f5f25d4e5::t_2551457ab23969 200,202-203,212
+src/lib/rangeMeaning.ts
+  s_6cfe0f5f25d4e5::t_6f0678edb39175 7-8,17-22
+  s_6cfe0f5f25d4e5::t_fe39970e35e347 23
+scripts/build/concentration.test.ts
+  s_6cfe0f5f25d4e5::t_e2fff8fb64e037 127,137-146,149-164
+  s_6cfe0f5f25d4e5::t_919a1aab75bb9a 39,170-171,212-214
+  s_6cfe0f5f25d4e5::t_9490015a392089 228-233,236
+  s_6cfe0f5f25d4e5::t_e7e57eabb604f7 120,128,136,147-148,165-168
+  s_6cfe0f5f25d4e5::t_796fd69a32cb46 119
+  s_6cfe0f5f25d4e5::t_101b5870653b81 55-78,86,109-118,121-126,129-134,169,215-225
+  s_6cfe0f5f25d4e5::t_ccebe365cd0b5f 135
+  s_6cfe0f5f25d4e5::t_7bfa047b1cfe87 172-211
+  s_6cfe0f5f25d4e5::t_14633dd766c0fc 83
+  s_6cfe0f5f25d4e5::t_75b00fe4f7cab4 234-235
+  s_6cfe0f5f25d4e5::t_1ac800fdebedb3 226
+scripts/fetch/imf.ts
+  s_6cfe0f5f25d4e5::t_717368660c51eb 73-74,78-126,209,214-215,217-218,221
+scripts/build/concentration.ts
+  s_6cfe0f5f25d4e5::t_5d319948fcde36 13,67,155-166,178,184,202,206,253
+  s_6cfe0f5f25d4e5::t_90bb9f9f8e5ee4 26-27
+  s_6cfe0f5f25d4e5::t_ad10753c52c679 40-42,334-337,346-348,354-356,378-381
+  s_6cfe0f5f25d4e5::t_5f89503368ba1b 23-24,28-30
+  s_6cfe0f5f25d4e5::t_89bc5a5356479a 144
+  s_6cfe0f5f25d4e5::t_a72ef418723e1a 68-76,82-91,100-101,107-108,110,140,150,211,213,215-218,254
+  s_6cfe0f5f25d4e5::t_70b010f21dd672 77,105,111,131
+  s_6cfe0f5f25d4e5::t_dc3191e74c8283 78-81,92-99,102-104,106,109,112-130,132-139,212,214,219-241
+scripts/fetch/imf-exposure.test.ts
+  s_6cfe0f5f25d4e5::t_2551457ab23969 72-97
+src/features/station/PartnerMatrix.tsx
+  s_6cfe0f5f25d4e5::t_ecc23fde8319b8 2
+README.md
+  s_6cfe0f5f25d4e5::t_89bc5a5356479a 240-241,327
+  s_6cfe0f5f25d4e5::t_fb2722968baacc 44,161,232-233,236-239,328,340-343
+scripts/build/bilateral.test.ts
+  s_6cfe0f5f25d4e5::t_46caff1c5d7ca3 1-44
+scripts/fetch/imf-dip.ts
+  s_6cfe0f5f25d4e5::t_4ae992b19a4c2f 1-74
+src/features/synoptic/SynopticView.tsx
+  s_6cfe0f5f25d4e5::t_d540704e0cb735 102
+scripts/fetch/bis.ts
+  s_6cfe0f5f25d4e5::t_5d319948fcde36 130
+src/features/synoptic/corridorDossier.test.ts
+  s_6cfe0f5f25d4e5::t_6721f736e12861 3-6,59-73
+  s_6cfe0f5f25d4e5::t_427c4ab053b170 1-2,7-58,74-75
+src/features/station/partnerDossier.ts
+  s_6cfe0f5f25d4e5::t_70232bccd2defe 18-27,30,38
+  s_6cfe0f5f25d4e5::t_5d319948fcde36 54
+src/i18n/en.json
+  s_6cfe0f5f25d4e5::t_6f0678edb39175 103,121-123
+src/types/data.ts
+  s_6cfe0f5f25d4e5::t_89bc5a5356479a 77,88
+  s_6cfe0f5f25d4e5::t_5d319948fcde36 78-82,91,483,537
+  s_6cfe0f5f25d4e5::t_70b010f21dd672 515
+  s_6cfe0f5f25d4e5::t_48b253ea77a220 509-514,520-525,538
+  s_6cfe0f5f25d4e5::t_945fee4bd1347c 516-519
+  s_6cfe0f5f25d4e5::t_ad10753c52c679 411-414
+  s_6cfe0f5f25d4e5::t_eb279497b7e866 120,428
+src/types/dossier.ts
+  s_6cfe0f5f25d4e5::t_67276cb47f531c 51,55-60,63
+  s_6cfe0f5f25d4e5::t_945fee4bd1347c 8,45-50,52-54,61-62,64-66
+scripts/run.ts
+  s_6cfe0f5f25d4e5::t_428850bf1d6fb6 8,30,43
+scripts/fetch/imf-dip.test.ts
+  s_6cfe0f5f25d4e5::t_5700cb5ce5f64e 1-49
+scripts/check/station-concentration-contract.ts
+  s_6cfe0f5f25d4e5::t_1e50e3c8fbdbc5 56
+  s_6cfe0f5f25d4e5::t_393806eb8523fa 1-55,57-186
+scripts/build/station.ts
+  s_6cfe0f5f25d4e5::t_6e8a3fbf716a37 283-285,298-299
+  s_6cfe0f5f25d4e5::t_5d319948fcde36 63,165,191,249-251
+  s_6cfe0f5f25d4e5::t_89bc5a5356479a 258
+  s_6cfe0f5f25d4e5::t_a72ef418723e1a 517-521
+scripts/fetch/imf.test.ts
+  s_6cfe0f5f25d4e5::t_2551457ab23969 1,3-80
+  s_6cfe0f5f25d4e5::t_00516d56c6c3a0 2
+scripts/build/position-closure.ts
+  s_6cfe0f5f25d4e5::t_3a52bc23c4bb85 41,55,61,65,99,259-263
+src/features/station/counterpartyScope.test.ts
+  s_6cfe0f5f25d4e5::t_427c4ab053b170 10,34-43
+  s_6cfe0f5f25d4e5::t_e1ec8feca8d506 11,63-74,76-81
+  s_6cfe0f5f25d4e5::t_e7e57eabb604f7 54,75
+  s_6cfe0f5f25d4e5::t_ab9a97798010b1 9,82-87
+  s_6cfe0f5f25d4e5::t_7abcd7771f5cb0 1-3,6-8,12-22,44-52,55-62,88-89
+  s_6cfe0f5f25d4e5::t_e2fff8fb64e037 53
+  s_6cfe0f5f25d4e5::t_2ea83023d23106 4-5,23-33
+src/lib/rangeMeaning.test.ts
+  s_6cfe0f5f25d4e5::t_64980a120ec863 2,22-27
+  s_6cfe0f5f25d4e5::t_6f0678edb39175 10-13
+  s_6cfe0f5f25d4e5::t_e9c2151c479b42 28
+src/features/station/StationView.tsx
+  s_6cfe0f5f25d4e5::t_5701e3f9df59be 30-31,278-280,499-500,503,508,510-512,514-519,521-545,547-560,586-588,613-615
+  s_6cfe0f5f25d4e5::t_48b253ea77a220 22-23,26-28,32,241,422,497-498,501-502,504-506,509,513,520,546,568,598,788
+  s_6cfe0f5f25d4e5::t_aa3f109ddf65b3 34,298
+  s_6cfe0f5f25d4e5::t_17dfb0692fb89a 426,428-452,460-462,464,468,476,482,484-494,564,592-594
+  s_6cfe0f5f25d4e5::t_67276cb47f531c 507
+  s_6cfe0f5f25d4e5::t_7458c38ea91598 24-25
+  s_6cfe0f5f25d4e5::t_8eed574cc6ecc4 29,583,610
+  s_7afcdb75c5c55c::t_30081e94cb2c5e 561
+scripts/fetch/registry.test.ts
+  s_6cfe0f5f25d4e5::t_919a1aab75bb9a 62-64
+scripts/build/facts.test.ts
+  s_6cfe0f5f25d4e5::t_919a1aab75bb9a 65,99
+scripts/build/facts.ts
+  s_6cfe0f5f25d4e5::t_5d319948fcde36 62
+  s_6cfe0f5f25d4e5::t_b55b8683f4d122 114
+scripts/build/station.test.ts
+  s_6cfe0f5f25d4e5::t_ecc23fde8319b8 3,140
+  s_6cfe0f5f25d4e5::t_427c4ab053b170 224-228,237-250,256
+  s_6cfe0f5f25d4e5::t_14633dd766c0fc 150
+  s_6cfe0f5f25d4e5::t_dd55f8acba9bbc 56
+  s_6cfe0f5f25d4e5::t_e1ec8feca8d506 229-236,251-255
+src/features/synoptic/CirculationChart.tsx
+  s_6cfe0f5f25d4e5::t_d164757c9c45ec 18-21,26,59-64,80-81,90,107
+  s_6cfe0f5f25d4e5::t_50b024b7a3db50 152-154
+  s_6cfe0f5f25d4e5::t_d540704e0cb735 11-16,33,42,54-58,74-79,82-89,91-106,108-109
+scripts/build/synoptic.ts
+  s_6cfe0f5f25d4e5::t_5d319948fcde36 13,58,88,177
+scripts/build/reconcile.test.ts
+  s_6cfe0f5f25d4e5::t_eb279497b7e866 31,60
+docs/DATA_CONTRACT.md
+  s_6cfe0f5f25d4e5::t_89bc5a5356479a 29,165,167-168,227-229,270-273,407-410
+  s_6cfe0f5f25d4e5::t_49c2230028997e 166
+  s_6cfe0f5f25d4e5::t_7124be73b55a78 51-53,136,138-139,145-153,161,185-186
+  s_6cfe0f5f25d4e5::t_309df95c37eec6 197,248-250,262-264,268,274-277
+  s_6cfe0f5f25d4e5::t_14633dd766c0fc 246
+  s_6cfe0f5f25d4e5::t_70b010f21dd672 269
+  s_6cfe0f5f25d4e5::t_c5d3c62b1aff3d 446
+scripts/build/assemble.ts
+  s_6cfe0f5f25d4e5::t_428850bf1d6fb6 24-25,123,126,401-405,434-435,491,495
+  s_6cfe0f5f25d4e5::t_bc1e0b5c500fdf 22,392,396,406-412,414-428,430
+  s_6cfe0f5f25d4e5::t_bb83b6566fac4b 398
+  s_6cfe0f5f25d4e5::t_5d319948fcde36 23,71,429
+  s_6cfe0f5f25d4e5::t_89bc5a5356479a 369
+src/components/LineageDossier.tsx
+  s_6cfe0f5f25d4e5::t_67276cb47f531c 193,237-239,241,306
+  s_6cfe0f5f25d4e5::t_945fee4bd1347c 192,194,243-262
+  s_6cfe0f5f25d4e5::t_aa3f109ddf65b3 240
+  s_6cfe0f5f25d4e5::t_6f0678edb39175 11,307-311
+scripts/build/bilateral.ts
+  s_6cfe0f5f25d4e5::t_e3105caa8293f8 1,49-116
+  s_6cfe0f5f25d4e5::t_15bb8eeb73ffdc 2-48
+docs/DATA_PIPELINE.md
+  s_6cfe0f5f25d4e5::t_89bc5a5356479a 134
+  s_6cfe0f5f25d4e5::t_1291d0d24b104a 42-43,60-65,97,106-110,135-137
+scripts/build/synoptic.test.ts
+  s_6cfe0f5f25d4e5::t_eb279497b7e866 100,116
+src/features/station/counterpartyScope.ts
+  s_6cfe0f5f25d4e5::t_8eed574cc6ecc4 2-5,56-59
+  s_6cfe0f5f25d4e5::t_2bda9f855a9f70 46-48
+  s_6cfe0f5f25d4e5::t_30522a2f31d628 7,18-43
+  s_6cfe0f5f25d4e5::t_48b253ea77a220 1,6,8-10,44-45,49-55
+  s_6cfe0f5f25d4e5::t_7458c38ea91598 11-17
+scripts/fetch/lib.ts
+  s_6cfe0f5f25d4e5::t_717368660c51eb 184-186
+scripts/fetch/registry.ts
+  s_6cfe0f5f25d4e5::t_5d319948fcde36 25,32,78-87,89
+docs/architecture.md
+  s_6cfe0f5f25d4e5::t_c5d3c62b1aff3d 20,37-40
+scripts/check/bilateral-contract.test.ts
+  s_6cfe0f5f25d4e5::t_17a7ae98214ced 2-3,5-6,102-135
+  s_6cfe0f5f25d4e5::t_6721f736e12861 4,67-101
+  s_6cfe0f5f25d4e5::t_3ebbe153ad9ff3 1,7-66,136-137
+scripts/build/position-closure.test.ts
+  s_6cfe0f5f25d4e5::t_00516d56c6c3a0 49-50,57,80-81,99-100,107-108,115-116,123-124,131-132
+scripts/check/bilateral-contract.ts
+  s_6cfe0f5f25d4e5::t_f61824cf013378 81-82,110-150
+  s_6cfe0f5f25d4e5::t_d164757c9c45ec 41-42,83-109
+  s_6cfe0f5f25d4e5::t_5acb751d26010c 1-40,43-80
+src/i18n/ko.json
+  s_6cfe0f5f25d4e5::t_6f0678edb39175 103,121-123
+src/features/station/derive.ts
+  s_6cfe0f5f25d4e5::t_89bc5a5356479a 158
+public/data/exposure/AFG.json
+  s_6cfe0f5f25d4e5::t_69d0eeb2b333f8 1
+public/data/exposure/AGO.json
+  s_6cfe0f5f25d4e5::t_4851205578e917 1
+public/data/exposure/ALB.json
+  s_6cfe0f5f25d4e5::t_380fa4c3c6fecd 1
+public/data/exposure/AND.json
+  s_6cfe0f5f25d4e5::t_dbb0b745c6868b 1
+public/data/exposure/ARG.json
+  s_6cfe0f5f25d4e5::t_50782933368f07 1
+public/data/exposure/ARM.json
+  s_6cfe0f5f25d4e5::t_3b1f7d06dab4b4 1
+public/data/exposure/AUS.json
+  s_6cfe0f5f25d4e5::t_68677665e3ba43 1
+public/data/exposure/AUT.json
+  s_6cfe0f5f25d4e5::t_24f4049d3eb295 1
+public/data/exposure/BEL.json
+  s_6cfe0f5f25d4e5::t_c1f795eebafac0 1
+public/data/exposure/BGD.json
+  s_6cfe0f5f25d4e5::t_8926ac1d7b29f6 1
+public/data/exposure/BGR.json
+  s_6cfe0f5f25d4e5::t_943297ca88a7ab 1
+public/data/exposure/BHR.json
+  s_6cfe0f5f25d4e5::t_faeea56e3c7084 1
+public/data/exposure/BHS.json
+  s_6cfe0f5f25d4e5::t_92e65a0999c432 1
+public/data/exposure/BIH.json
+  s_6cfe0f5f25d4e5::t_76cb6040839f64 1
+public/data/exposure/BLR.json
+  s_6cfe0f5f25d4e5::t_124eb44c104835 1
+public/data/exposure/BOL.json
+  s_6cfe0f5f25d4e5::t_75a346d54eb3b1 1
+public/data/exposure/BRA.json
+  s_6cfe0f5f25d4e5::t_4483993a41699e 1
+public/data/exposure/CAN.json
+  s_6cfe0f5f25d4e5::t_b0b974e174ec98 1
+public/data/exposure/CHE.json
+  s_6cfe0f5f25d4e5::t_b0c0f022a16914 1
+public/data/exposure/CHL.json
+  s_6cfe0f5f25d4e5::t_dcfbbc007ec115 1
+public/data/exposure/CHN.json
+  s_6cfe0f5f25d4e5::t_a216f850d6cc46 1
+public/data/exposure/CMR.json
+  s_6cfe0f5f25d4e5::t_1b0fc78ca815fc 1
+public/data/exposure/COD.json
+  s_6cfe0f5f25d4e5::t_99dac04d3212d8 1
+public/data/exposure/COL.json
+  s_6cfe0f5f25d4e5::t_75f0e0cc00f280 1
+public/data/exposure/CPV.json
+  s_6cfe0f5f25d4e5::t_d9e69996378a5a 1
+public/data/exposure/CRI.json
+  s_6cfe0f5f25d4e5::t_9a1b16772946ac 1
+public/data/exposure/CYP.json
+  s_6cfe0f5f25d4e5::t_c70fb61acc310b 1
+public/data/exposure/CZE.json
+  s_6cfe0f5f25d4e5::t_6be800ad1331e9 1
+public/data/exposure/DEU.json
+  s_6cfe0f5f25d4e5::t_59429efb6c71d0 1
+public/data/exposure/DJI.json
+  s_6cfe0f5f25d4e5::t_928810372da940 1
+public/data/exposure/DNK.json
+  s_6cfe0f5f25d4e5::t_b68cd18588131b 1
+public/data/exposure/DOM.json
+  s_6cfe0f5f25d4e5::t_089dfd425664bc 1
+public/data/exposure/ECU.json
+  s_6cfe0f5f25d4e5::t_cf12149423a3ea 1
+public/data/exposure/EGY.json
+  s_6cfe0f5f25d4e5::t_f63fdfa8cfe87c 1
+public/data/exposure/ESP.json
+  s_6cfe0f5f25d4e5::t_ce6432f72180d9 1
+public/data/exposure/EST.json
+  s_6cfe0f5f25d4e5::t_7e617b23e28379 1
+public/data/exposure/FIN.json
+  s_6cfe0f5f25d4e5::t_9b91c9c013187a 1
+public/data/exposure/FJI.json
+  s_6cfe0f5f25d4e5::t_5ac544f8a33ad2 1
+public/data/exposure/FRA.json
+  s_6cfe0f5f25d4e5::t_59136dd7a8b3bc 1
+public/data/exposure/GBR.json
+  s_6cfe0f5f25d4e5::t_3acbe0542507d0 1
+public/data/exposure/GEO.json
+  s_6cfe0f5f25d4e5::t_32eb5531eb0100 1
+public/data/exposure/GRC.json
+  s_6cfe0f5f25d4e5::t_7bebc57642eb03 1
+public/data/exposure/GTM.json
+  s_6cfe0f5f25d4e5::t_298ff06d5a6c1c 1
+public/data/exposure/HKG.json
+  s_6cfe0f5f25d4e5::t_c57f674ffaf81a 1
+public/data/exposure/HND.json
+  s_6cfe0f5f25d4e5::t_c9059591b20db8 1
+public/data/exposure/HRV.json
+  s_6cfe0f5f25d4e5::t_30321a33586911 1
+public/data/exposure/HUN.json
+  s_6cfe0f5f25d4e5::t_d5cd322024752a 1
+public/data/exposure/IDN.json
+  s_6cfe0f5f25d4e5::t_29bdf2d79c39c1 1
+public/data/exposure/IND.json
+  s_6cfe0f5f25d4e5::t_32d1deac1e2aee 1
+public/data/exposure/IRL.json
+  s_6cfe0f5f25d4e5::t_6db341e4e5e747 1
+public/data/exposure/ISL.json
+  s_6cfe0f5f25d4e5::t_68d00531ad87fd 1
+public/data/exposure/ISR.json
+  s_6cfe0f5f25d4e5::t_b567d4a2546917 1
+public/data/exposure/ITA.json
+  s_6cfe0f5f25d4e5::t_cf590b46bb33a2 1
+public/data/exposure/JAM.json
+  s_6cfe0f5f25d4e5::t_cb4fe47297a9cb 1
+public/data/exposure/JOR.json
+  s_6cfe0f5f25d4e5::t_b00269ad5c3e62 1
+public/data/exposure/JPN.json
+  s_6cfe0f5f25d4e5::t_a7d9a23b605661 1
+public/data/exposure/KAZ.json
+  s_6cfe0f5f25d4e5::t_0a9af419b2629c 1
+public/data/exposure/KGZ.json
+  s_6cfe0f5f25d4e5::t_e76b67dc1f0fb0 1
+public/data/exposure/KOR.json
+  s_6cfe0f5f25d4e5::t_0e6d096e62bbc4 1
+public/data/exposure/KWT.json
+  s_6cfe0f5f25d4e5::t_5bedbd0bc69b73 1
+public/data/exposure/LBN.json
+  s_6cfe0f5f25d4e5::t_c61975f5b286c5 1
+public/data/exposure/LBR.json
+  s_6cfe0f5f25d4e5::t_f994c3117afbd8 1
+public/data/exposure/LKA.json
+  s_6cfe0f5f25d4e5::t_03e02d1b84f298 1
+public/data/exposure/LSO.json
+  s_6cfe0f5f25d4e5::t_715c892a8660db 1
+public/data/exposure/LTU.json
+  s_6cfe0f5f25d4e5::t_c2cd6bbf1a7aba 1
+public/data/exposure/LUX.json
+  s_6cfe0f5f25d4e5::t_7734e8c43fff4a 1
+public/data/exposure/LVA.json
+  s_6cfe0f5f25d4e5::t_2534953b7c9e9f 1
+public/data/exposure/MAC.json
+  s_6cfe0f5f25d4e5::t_f23fc67950a788 1
+public/data/exposure/MAR.json
+  s_6cfe0f5f25d4e5::t_cd26b901994cdd 1
+public/data/exposure/MDA.json
+  s_6cfe0f5f25d4e5::t_df04897e356c08 1
+public/data/exposure/MDG.json
+  s_6cfe0f5f25d4e5::t_bdfd567a4ed262 1
+public/data/exposure/MEX.json
+  s_6cfe0f5f25d4e5::t_0c78755d73be5a 1
+public/data/exposure/MKD.json
+  s_6cfe0f5f25d4e5::t_dd83abbc0eef31 1
+public/data/exposure/MLT.json
+  s_6cfe0f5f25d4e5::t_d37fc9c00b6ca0 1
+public/data/exposure/MNE.json
+  s_6cfe0f5f25d4e5::t_76b0e3d56ffc79 1
+public/data/exposure/MNG.json
+  s_6cfe0f5f25d4e5::t_b77fb38a51a009 1
+public/data/exposure/MOZ.json
+  s_6cfe0f5f25d4e5::t_06a9807b4ff004 1
+public/data/exposure/MUS.json
+  s_6cfe0f5f25d4e5::t_620bd85ab0b3dc 1
+public/data/exposure/MYS.json
+  s_6cfe0f5f25d4e5::t_c4b01c5477f966 1
+public/data/exposure/NAM.json
+  s_6cfe0f5f25d4e5::t_3ea5d41832a4ca 1
+public/data/exposure/NGA.json
+  s_6cfe0f5f25d4e5::t_ecacdf2b638439 1
+public/data/exposure/NIC.json
+  s_6cfe0f5f25d4e5::t_cf82e106c05d6e 1
+public/data/exposure/NLD.json
+  s_6cfe0f5f25d4e5::t_039b636eaa6c29 1
+public/data/exposure/NOR.json
+  s_6cfe0f5f25d4e5::t_28e2f19f48eac6 1
+public/data/exposure/NPL.json
+  s_6cfe0f5f25d4e5::t_870f8910e14bb6 1
+public/data/exposure/NZL.json
+  s_6cfe0f5f25d4e5::t_b4588b5834e34b 1
+public/data/exposure/PAK.json
+  s_6cfe0f5f25d4e5::t_8ed34c359d47be 1
+public/data/exposure/PAN.json
+  s_6cfe0f5f25d4e5::t_a7b82d75b76bf3 1
+public/data/exposure/PER.json
+  s_6cfe0f5f25d4e5::t_687362576eec72 1
+public/data/exposure/PHL.json
+  s_6cfe0f5f25d4e5::t_62fee5ad9c7aec 1
+public/data/exposure/PLW.json
+  s_6cfe0f5f25d4e5::t_5a0d02e146fa5d 1
+public/data/exposure/POL.json
+  s_6cfe0f5f25d4e5::t_a7b064918269c0 1
+public/data/exposure/PRT.json
+  s_6cfe0f5f25d4e5::t_f0fb2258221324 1
+public/data/exposure/PRY.json
+  s_6cfe0f5f25d4e5::t_b09d148a2f5f1d 1
+public/data/exposure/ROU.json
+  s_6cfe0f5f25d4e5::t_860a3eed2180fa 1
+public/data/exposure/RUS.json
+  s_6cfe0f5f25d4e5::t_30d1e65ec4ced8 1
+public/data/exposure/RWA.json
+  s_6cfe0f5f25d4e5::t_883384f8888a91 1
+public/data/exposure/SAU.json
+  s_6cfe0f5f25d4e5::t_f4648fb9a75550 1
+public/data/exposure/SGP.json
+  s_6cfe0f5f25d4e5::t_4f05d832f519f3 1
+public/data/exposure/SLV.json
+  s_6cfe0f5f25d4e5::t_cd35b9b8066081 1
+public/data/exposure/SRB.json
+  s_6cfe0f5f25d4e5::t_9ebc130bc2b1ae 1
+public/data/exposure/STP.json
+  s_6cfe0f5f25d4e5::t_eb1ab741d8a6b3 1
+public/data/exposure/SUR.json
+  s_6cfe0f5f25d4e5::t_22595c550db1a2 1
+public/data/exposure/SVK.json
+  s_6cfe0f5f25d4e5::t_e28d9461c927b8 1
+public/data/exposure/SVN.json
+  s_6cfe0f5f25d4e5::t_c6e5c13963948c 1
+public/data/exposure/SWE.json
+  s_6cfe0f5f25d4e5::t_b130bafc0d1b4f 1
+public/data/exposure/SWZ.json
+  s_6cfe0f5f25d4e5::t_b9ecabdce93331 1
+public/data/exposure/SYC.json
+  s_6cfe0f5f25d4e5::t_2b6ec23309eafb 1
+public/data/exposure/THA.json
+  s_6cfe0f5f25d4e5::t_7733525f103894 1
+public/data/exposure/TJK.json
+  s_6cfe0f5f25d4e5::t_090006f4327dee 1
+public/data/exposure/TLS.json
+  s_6cfe0f5f25d4e5::t_e389310d80dd1b 1
+public/data/exposure/TON.json
+  s_6cfe0f5f25d4e5::t_daaaeb4056dc25 1
+public/data/exposure/TTO.json
+  s_6cfe0f5f25d4e5::t_eb4edfeb62a0bd 1
+public/data/exposure/TUR.json
+  s_6cfe0f5f25d4e5::t_83b669c21ea0e2 1
+public/data/exposure/UGA.json
+  s_6cfe0f5f25d4e5::t_10a48b79b4df62 1
+public/data/exposure/UKR.json
+  s_6cfe0f5f25d4e5::t_7fd596c04f8149 1
+public/data/exposure/URY.json
+  s_6cfe0f5f25d4e5::t_eb792b14ca7a36 1
+public/data/exposure/USA.json
+  s_6cfe0f5f25d4e5::t_c4776b01fef556 1
+public/data/exposure/UZB.json
+  s_6cfe0f5f25d4e5::t_a31835f183ee2f 1
+public/data/exposure/VEN.json
+  s_6cfe0f5f25d4e5::t_19ae2e24bd235b 1
+public/data/exposure/ZAF.json
+  s_6cfe0f5f25d4e5::t_23c2a0115e4d5c 1
+public/data/exposure/ZMB.json
+  s_6cfe0f5f25d4e5::t_4afe755691fba6 1
+public/data/exposure/index.json
+  s_6cfe0f5f25d4e5::t_f2a8d358565d12 1
+public/data/flows_bilateral/2010-Q1.json
+  s_6cfe0f5f25d4e5::t_b1a7a701ccc665 1
+public/data/flows_bilateral/2010-Q2.json
+  s_6cfe0f5f25d4e5::t_97d682ed4d2d2a 1
+public/data/flows_bilateral/2010-Q3.json
+  s_6cfe0f5f25d4e5::t_989f61b88a26d1 1
+public/data/flows_bilateral/2010-Q4.json
+  s_6cfe0f5f25d4e5::t_e2eebe591ca229 1
+public/data/flows_bilateral/2011-Q1.json
+  s_6cfe0f5f25d4e5::t_e16e41d9f0f7f1 1
+public/data/flows_bilateral/2011-Q2.json
+  s_6cfe0f5f25d4e5::t_dcc549d3e58639 1
+public/data/flows_bilateral/2011-Q3.json
+  s_6cfe0f5f25d4e5::t_55a9e0811a68a1 1
+public/data/flows_bilateral/2011-Q4.json
+  s_6cfe0f5f25d4e5::t_676bf30854e512 1
+public/data/flows_bilateral/2012-Q1.json
+  s_6cfe0f5f25d4e5::t_de5700a12c28bc 1
+public/data/flows_bilateral/2012-Q2.json
+  s_6cfe0f5f25d4e5::t_c08d7beb10e509 1
+public/data/flows_bilateral/2012-Q3.json
+  s_6cfe0f5f25d4e5::t_9d97cdd2a5176f 1
+public/data/flows_bilateral/2012-Q4.json
+  s_6cfe0f5f25d4e5::t_ee8478790d0902 1
+public/data/flows_bilateral/2013-Q1.json
+  s_6cfe0f5f25d4e5::t_902536813b6e16 1
+public/data/flows_bilateral/2013-Q2.json
+  s_6cfe0f5f25d4e5::t_bc32522b4b7001 1
+public/data/flows_bilateral/2013-Q3.json
+  s_6cfe0f5f25d4e5::t_c34036ae4a272b 1
+public/data/flows_bilateral/2013-Q4.json
+  s_6cfe0f5f25d4e5::t_76d8d8d242bfbe 1
+public/data/flows_bilateral/2014-Q1.json
+  s_6cfe0f5f25d4e5::t_967894a5c6ae29 1
+public/data/flows_bilateral/2014-Q2.json
+  s_6cfe0f5f25d4e5::t_4c55fdf6926824 1
+public/data/flows_bilateral/2014-Q3.json
+  s_6cfe0f5f25d4e5::t_33cb412fe9d551 1
+public/data/flows_bilateral/2014-Q4.json
+  s_6cfe0f5f25d4e5::t_f5c67ee7a937eb 1
+public/data/flows_bilateral/2015-Q1.json
+  s_6cfe0f5f25d4e5::t_adb04681ea9d98 1
+public/data/flows_bilateral/2015-Q2.json
+  s_6cfe0f5f25d4e5::t_d65991df817672 1
+public/data/flows_bilateral/2015-Q3.json
+  s_6cfe0f5f25d4e5::t_aef7fa467b3bd5 1
+public/data/flows_bilateral/2015-Q4.json
+  s_6cfe0f5f25d4e5::t_020cf05e17dda1 1
+public/data/flows_bilateral/2016-Q1.json
+  s_6cfe0f5f25d4e5::t_e4ee71b4519cb6 1
+public/data/flows_bilateral/2016-Q2.json
+  s_6cfe0f5f25d4e5::t_3545540ba4ee8b 1
+public/data/flows_bilateral/2016-Q3.json
+  s_6cfe0f5f25d4e5::t_174b0014ce7c90 1
+public/data/flows_bilateral/2016-Q4.json
+  s_6cfe0f5f25d4e5::t_9dbc2ca95e6616 1
+public/data/flows_bilateral/2017-Q1.json
+  s_6cfe0f5f25d4e5::t_26eab903e1b620 1
+public/data/flows_bilateral/2017-Q2.json
+  s_6cfe0f5f25d4e5::t_abcfce57a31131 1
+public/data/flows_bilateral/2017-Q3.json
+  s_6cfe0f5f25d4e5::t_d4848197b2c201 1
+public/data/flows_bilateral/2017-Q4.json
+  s_6cfe0f5f25d4e5::t_fb7240e9da75cb 1
+public/data/flows_bilateral/2018-Q1.json
+  s_6cfe0f5f25d4e5::t_46711937f5da93 1
+public/data/flows_bilateral/2018-Q2.json
+  s_6cfe0f5f25d4e5::t_fb472804d79fff 1
+public/data/flows_bilateral/2018-Q3.json
+  s_6cfe0f5f25d4e5::t_eff6d6f66eb48d 1
+public/data/flows_bilateral/2018-Q4.json
+  s_6cfe0f5f25d4e5::t_9b423683711d33 1
+public/data/flows_bilateral/2019-Q1.json
+  s_6cfe0f5f25d4e5::t_aa5cf1b6248e9e 1
+public/data/flows_bilateral/2019-Q2.json
+  s_6cfe0f5f25d4e5::t_ec2032b62cfceb 1
+public/data/flows_bilateral/2019-Q3.json
+  s_6cfe0f5f25d4e5::t_f72a7f6f18ad4e 1
+public/data/flows_bilateral/2019-Q4.json
+  s_6cfe0f5f25d4e5::t_b6b52ca17a1cf3 1
+public/data/flows_bilateral/2020-Q1.json
+  s_6cfe0f5f25d4e5::t_6c729bd7e2481c 1
+public/data/flows_bilateral/2020-Q2.json
+  s_6cfe0f5f25d4e5::t_bfc46e2c41dfcc 1
+public/data/flows_bilateral/2020-Q3.json
+  s_6cfe0f5f25d4e5::t_7e7386fbc7a5df 1
+public/data/flows_bilateral/2020-Q4.json
+  s_6cfe0f5f25d4e5::t_752aad8ed0f467 1
+public/data/flows_bilateral/2021-Q1.json
+  s_6cfe0f5f25d4e5::t_422a15bf7deef7 1
+public/data/flows_bilateral/2021-Q2.json
+  s_6cfe0f5f25d4e5::t_a666e8e5157c9a 1
+public/data/flows_bilateral/2021-Q3.json
+  s_6cfe0f5f25d4e5::t_d5db2b6676eda3 1
+public/data/flows_bilateral/2021-Q4.json
+  s_6cfe0f5f25d4e5::t_b36b9a3a0252b7 1
+public/data/flows_bilateral/2022-Q1.json
+  s_6cfe0f5f25d4e5::t_072bddd2c871c1 1
+public/data/flows_bilateral/2022-Q2.json
+  s_6cfe0f5f25d4e5::t_bb826becda7c07 1
+public/data/flows_bilateral/2022-Q3.json
+  s_6cfe0f5f25d4e5::t_c9a494069c0cf7 1
+public/data/flows_bilateral/2022-Q4.json
+  s_6cfe0f5f25d4e5::t_9aeb3c2ba572dc 1
+public/data/flows_bilateral/2023-Q1.json
+  s_6cfe0f5f25d4e5::t_866fbf3a544a4d 1
+public/data/flows_bilateral/2023-Q2.json
+  s_6cfe0f5f25d4e5::t_5f8b5d2de2ec3d 1
+public/data/flows_bilateral/2023-Q3.json
+  s_6cfe0f5f25d4e5::t_799827ae16a7bc 1
+public/data/flows_bilateral/2023-Q4.json
+  s_6cfe0f5f25d4e5::t_6b8adbb9515672 1
+public/data/flows_bilateral/2024-Q1.json
+  s_6cfe0f5f25d4e5::t_ab600737b696a7 1
+public/data/flows_bilateral/2024-Q2.json
+  s_6cfe0f5f25d4e5::t_d1151d340821c4 1
+public/data/flows_bilateral/2024-Q3.json
+  s_6cfe0f5f25d4e5::t_d4961a0098713f 1
+public/data/flows_bilateral/2024-Q4.json
+  s_6cfe0f5f25d4e5::t_4dc49f63257a76 1
+public/data/flows_bilateral/2025-Q1.json
+  s_6cfe0f5f25d4e5::t_428743dc72e4b3 1
+public/data/flows_bilateral/2025-Q2.json
+  s_6cfe0f5f25d4e5::t_c3aa06b893f64d 1
+public/data/flows_bilateral/2025-Q3.json
+  s_6cfe0f5f25d4e5::t_ee63cf40cd4b67 1
+public/data/flows_bilateral/2025-Q4.json
+  s_6cfe0f5f25d4e5::t_d73e7ad9df11df 1
+public/data/flows_country/2010-Q1.json
+  s_6cfe0f5f25d4e5::t_ce6c0b737a9bec 1
+public/data/flows_country/2010-Q2.json
+  s_6cfe0f5f25d4e5::t_d4d097f8263364 1
+public/data/flows_country/2010-Q3.json
+  s_6cfe0f5f25d4e5::t_a986152267873c 1
+public/data/flows_country/2010-Q4.json
+  s_6cfe0f5f25d4e5::t_33e30f427e4bde 1
+public/data/flows_country/2011-Q1.json
+  s_6cfe0f5f25d4e5::t_d29339f65f6407 1
+public/data/flows_country/2011-Q2.json
+  s_6cfe0f5f25d4e5::t_6a7e7aaae4e9df 1
+public/data/flows_country/2011-Q3.json
+  s_6cfe0f5f25d4e5::t_bf63f665970687 1
+public/data/flows_country/2011-Q4.json
+  s_6cfe0f5f25d4e5::t_ba053d5a16e22a 1
+public/data/flows_country/2012-Q1.json
+  s_6cfe0f5f25d4e5::t_0292494583ffc8 1
+public/data/flows_country/2012-Q2.json
+  s_6cfe0f5f25d4e5::t_73efa029ec58a7 1
+public/data/flows_country/2012-Q3.json
+  s_6cfe0f5f25d4e5::t_f20ca99875ae55 1
+public/data/flows_country/2012-Q4.json
+  s_6cfe0f5f25d4e5::t_9bd77f26d31e68 1
+public/data/flows_country/2013-Q1.json
+  s_6cfe0f5f25d4e5::t_a5f3f8087af652 1
+public/data/flows_country/2013-Q2.json
+  s_6cfe0f5f25d4e5::t_564df4ebd71f36 1
+public/data/flows_country/2013-Q3.json
+  s_6cfe0f5f25d4e5::t_f7407685757882 1
+public/data/flows_country/2013-Q4.json
+  s_6cfe0f5f25d4e5::t_decdab194ee4ec 1
+public/data/flows_country/2014-Q1.json
+  s_6cfe0f5f25d4e5::t_253890b088272a 1
+public/data/flows_country/2014-Q2.json
+  s_6cfe0f5f25d4e5::t_95306dde3228c5 1
+public/data/flows_country/2014-Q3.json
+  s_6cfe0f5f25d4e5::t_2bbe4a4a5b90d5 1
+public/data/flows_country/2014-Q4.json
+  s_6cfe0f5f25d4e5::t_93293f37797617 1
+public/data/flows_country/2015-Q1.json
+  s_6cfe0f5f25d4e5::t_354390b746dbd6 1
+public/data/flows_country/2015-Q2.json
+  s_6cfe0f5f25d4e5::t_b6a14ac9a64a66 1
+public/data/flows_country/2015-Q3.json
+  s_6cfe0f5f25d4e5::t_4dddba587672d9 1
+public/data/flows_country/2015-Q4.json
+  s_6cfe0f5f25d4e5::t_d82f56632a5264 1
+public/data/flows_country/2016-Q1.json
+  s_6cfe0f5f25d4e5::t_6f92cceeb30558 1
+public/data/flows_country/2016-Q2.json
+  s_6cfe0f5f25d4e5::t_f6d6e98fa4b720 1
+public/data/flows_country/2016-Q3.json
+  s_6cfe0f5f25d4e5::t_c41478ff332eac 1
+public/data/flows_country/2016-Q4.json
+  s_6cfe0f5f25d4e5::t_e475f290ae8693 1
+public/data/flows_country/2017-Q1.json
+  s_6cfe0f5f25d4e5::t_2698466f75ff0d 1
+public/data/flows_country/2017-Q2.json
+  s_6cfe0f5f25d4e5::t_5ffd84007d4374 1
+public/data/flows_country/2017-Q3.json
+  s_6cfe0f5f25d4e5::t_4ade0e6429f685 1
+public/data/flows_country/2017-Q4.json
+  s_6cfe0f5f25d4e5::t_5716afeed3296a 1
+public/data/flows_country/2018-Q1.json
+  s_6cfe0f5f25d4e5::t_78bd599d3a537c 1
+public/data/flows_country/2018-Q2.json
+  s_6cfe0f5f25d4e5::t_8a71a67494fda4 1
+public/data/flows_country/2018-Q3.json
+  s_6cfe0f5f25d4e5::t_921ea6eee77568 1
+public/data/flows_country/2018-Q4.json
+  s_6cfe0f5f25d4e5::t_7c5871f15b1ba7 1
+public/data/flows_country/2019-Q1.json
+  s_6cfe0f5f25d4e5::t_b8a5957d6bbd02 1
+public/data/flows_country/2019-Q2.json
+  s_6cfe0f5f25d4e5::t_774463703b75d4 1
+public/data/flows_country/2019-Q3.json
+  s_6cfe0f5f25d4e5::t_5cbc714e45c8fb 1
+public/data/flows_country/2019-Q4.json
+  s_6cfe0f5f25d4e5::t_ac2e5c4d8bd366 1
+public/data/flows_country/2020-Q1.json
+  s_6cfe0f5f25d4e5::t_559f1376a65ea3 1
+public/data/flows_country/2020-Q2.json
+  s_6cfe0f5f25d4e5::t_02da94dde94d2c 1
+public/data/flows_country/2020-Q3.json
+  s_6cfe0f5f25d4e5::t_3e31634de28ce8 1
+public/data/flows_country/2020-Q4.json
+  s_6cfe0f5f25d4e5::t_a1bed4069b57e8 1
+public/data/flows_country/2021-Q1.json
+  s_6cfe0f5f25d4e5::t_d3111e4731ffc5 1
+public/data/flows_country/2021-Q2.json
+  s_6cfe0f5f25d4e5::t_d14e88171da12e 1
+public/data/flows_country/2021-Q3.json
+  s_6cfe0f5f25d4e5::t_ea0f33e8f86253 1
+public/data/flows_country/2021-Q4.json
+  s_6cfe0f5f25d4e5::t_ba7c8b7b02e5a8 1
+public/data/flows_country/2022-Q1.json
+  s_6cfe0f5f25d4e5::t_9cae66e70198cd 1
+public/data/flows_country/2022-Q2.json
+  s_6cfe0f5f25d4e5::t_c9e4347ed8a870 1
+public/data/flows_country/2022-Q3.json
+  s_6cfe0f5f25d4e5::t_eee938c86ab8d3 1
+public/data/flows_country/2022-Q4.json
+  s_6cfe0f5f25d4e5::t_fc9785e182f018 1
+public/data/flows_country/2023-Q1.json
+  s_6cfe0f5f25d4e5::t_d3b779a4e2a1f9 1
+public/data/flows_country/2023-Q2.json
+  s_6cfe0f5f25d4e5::t_8206eea365ceea 1
+public/data/flows_country/2023-Q3.json
+  s_6cfe0f5f25d4e5::t_9c161f614b06b0 1
+public/data/flows_country/2023-Q4.json
+  s_6cfe0f5f25d4e5::t_0921e27de2d218 1
+public/data/flows_country/2024-Q1.json
+  s_6cfe0f5f25d4e5::t_73ff22f237b959 1
+public/data/flows_country/2024-Q2.json
+  s_6cfe0f5f25d4e5::t_8c4b2f5632c259 1
+public/data/flows_country/2024-Q3.json
+  s_6cfe0f5f25d4e5::t_92155818c290be 1
+public/data/flows_country/2024-Q4.json
+  s_6cfe0f5f25d4e5::t_1f0e69a122f38a 1
+public/data/flows_country/2025-Q1.json
+  s_6cfe0f5f25d4e5::t_19260ecd286e30 1
+public/data/flows_country/2025-Q2.json
+  s_6cfe0f5f25d4e5::t_c84fb98c86aa26 1
+public/data/flows_country/2025-Q3.json
+  s_6cfe0f5f25d4e5::t_47b640b1732a13 1
+public/data/flows_country/2025-Q4.json
+  s_6cfe0f5f25d4e5::t_d7063dcd35028c 1
+public/data/flows_country/2026-Q1.json
+  s_6cfe0f5f25d4e5::t_96b4c85a4d2ef3 1
+public/data/index.json
+  s_6cfe0f5f25d4e5::t_47afa7a914cca0 1
+public/data/meta/facts_summary.json
+  s_6cfe0f5f25d4e5::t_e24d0360403b6b 1
+public/data/meta/fx_rates.json
+  s_6cfe0f5f25d4e5::t_6f8b975200641b 1
+public/data/meta/global_crypto.json
+  s_6cfe0f5f25d4e5::t_e046c63e3e1ebf 1
+public/data/meta/pipeline_report.json
+  s_6cfe0f5f25d4e5::t_fe57dccb55f2ce 1
+public/data/meta/sources.json
+  s_6cfe0f5f25d4e5::t_3f72eec192e5d3 1
+public/data/meta/synoptic.json
+  s_6cfe0f5f25d4e5::t_e60cb661393e32 1
+public/data/position_closure/2014-Q2.json
+  s_6cfe0f5f25d4e5::t_ddf49cb3d2ed2e 1
+public/data/position_closure/2014-Q4.json
+  s_6cfe0f5f25d4e5::t_011c4ad1a15f00 1
+public/data/position_closure/2015-Q2.json
+  s_6cfe0f5f25d4e5::t_745a4b24bbf0ee 1
+public/data/position_closure/2016-Q2.json
+  s_6cfe0f5f25d4e5::t_db15a976dededb 1
+public/data/position_closure/2017-Q2.json
+  s_6cfe0f5f25d4e5::t_5769e702f29730 1
+public/data/position_closure/2017-Q4.json
+  s_6cfe0f5f25d4e5::t_42e1dfcfe6d96a 1
+public/data/position_closure/2018-Q2.json
+  s_6cfe0f5f25d4e5::t_a5a8368adeaf98 1
+public/data/position_closure/2018-Q4.json
+  s_6cfe0f5f25d4e5::t_9e4a823b1f39d3 1
+public/data/position_closure/2019-Q2.json
+  s_6cfe0f5f25d4e5::t_bb91c5ef771c10 1
+public/data/position_closure/2019-Q4.json
+  s_6cfe0f5f25d4e5::t_cf2323e85a856a 1
+public/data/position_closure/2020-Q2.json
+  s_6cfe0f5f25d4e5::t_d364a94c0a944f 1
+public/data/position_closure/2021-Q2.json
+  s_6cfe0f5f25d4e5::t_841383cd3cce35 1
+public/data/position_closure/2022-Q2.json
+  s_6cfe0f5f25d4e5::t_1d95cc6d86b566 1
+public/data/position_closure/2022-Q4.json
+  s_6cfe0f5f25d4e5::t_0ed33c14bcb79f 1
+public/data/position_closure/2023-Q2.json
+  s_6cfe0f5f25d4e5::t_fb7427d1523e09 1
+public/data/position_closure/2023-Q4.json
+  s_6cfe0f5f25d4e5::t_5d716fcecae51a 1
+public/data/position_closure/2024-Q2.json
+  s_6cfe0f5f25d4e5::t_c0f46867653993 1
+public/data/position_closure/2024-Q4.json
+  s_6cfe0f5f25d4e5::t_353aa671b8f4dc 1
+public/data/position_closure/2025-Q2.json
+  s_6cfe0f5f25d4e5::t_764be7e56e11b9 1
+public/data/position_closure/index.json
+  s_6cfe0f5f25d4e5::t_33bc7b583153af 1
+public/data/station/AFG.json
+  s_6cfe0f5f25d4e5::t_266628f5448db9 1
+public/data/station/AGO.json
+  s_6cfe0f5f25d4e5::t_dc3cfe37dc65ac 1
+public/data/station/ALB.json
+  s_6cfe0f5f25d4e5::t_741fb9e1ed4d9a 1
+public/data/station/AND.json
+  s_6cfe0f5f25d4e5::t_71291912e592a4 1
+public/data/station/ARE.json
+  s_6cfe0f5f25d4e5::t_e8e9eb4800064d 1
+public/data/station/ARG.json
+  s_6cfe0f5f25d4e5::t_848da34bb892d7 1
+public/data/station/ARM.json
+  s_6cfe0f5f25d4e5::t_8705c15a83613c 1
+public/data/station/ATG.json
+  s_6cfe0f5f25d4e5::t_bc53ae3eaa06f2 1
+public/data/station/AUS.json
+  s_6cfe0f5f25d4e5::t_fe8445506edce5 1
+public/data/station/AUT.json
+  s_6cfe0f5f25d4e5::t_78d2241c2c2951 1
+public/data/station/AZE.json
+  s_6cfe0f5f25d4e5::t_f689af1e9dc7f0 1
+public/data/station/BDI.json
+  s_6cfe0f5f25d4e5::t_0d2ea853299f93 1
+public/data/station/BEL.json
+  s_6cfe0f5f25d4e5::t_e4775445a5ad6b 1
+public/data/station/BEN.json
+  s_6cfe0f5f25d4e5::t_187ea99afee14d 1
+public/data/station/BFA.json
+  s_6cfe0f5f25d4e5::t_ce960f16f658d5 1
+public/data/station/BGD.json
+  s_6cfe0f5f25d4e5::t_66e0b3e2b271c6 1
+public/data/station/BGR.json
+  s_6cfe0f5f25d4e5::t_7a80dd10efd8d8 1
+public/data/station/BHR.json
+  s_6cfe0f5f25d4e5::t_32e4528be2c707 1
+public/data/station/BHS.json
+  s_6cfe0f5f25d4e5::t_dfc959abf30ee5 1
+public/data/station/BIH.json
+  s_6cfe0f5f25d4e5::t_28bb8759e7f27b 1
+public/data/station/BLR.json
+  s_6cfe0f5f25d4e5::t_6c6ff7b9ac3600 1
+public/data/station/BLZ.json
+  s_6cfe0f5f25d4e5::t_f3c2dbbdbddc54 1
+public/data/station/BOL.json
+  s_6cfe0f5f25d4e5::t_9573831fb29674 1
+public/data/station/BRA.json
+  s_6cfe0f5f25d4e5::t_e050ef023d6c72 1
+public/data/station/BRB.json
+  s_6cfe0f5f25d4e5::t_f56a6a73f006fa 1
+public/data/station/BRN.json
+  s_6cfe0f5f25d4e5::t_64e6bbbb10aa2a 1
+public/data/station/BTN.json
+  s_6cfe0f5f25d4e5::t_7604d139d8feee 1
+public/data/station/BWA.json
+  s_6cfe0f5f25d4e5::t_e53ed37b144ae9 1
+public/data/station/CAN.json
+  s_6cfe0f5f25d4e5::t_5c69deb484f2eb 1
+public/data/station/CHE.json
+  s_6cfe0f5f25d4e5::t_f667507ec188d2 1
+public/data/station/CHL.json
+  s_6cfe0f5f25d4e5::t_08f2a4f4c0a19f 1
+public/data/station/CHN.json
+  s_6cfe0f5f25d4e5::t_3d8a9e1fe024dd 1
+public/data/station/CIV.json
+  s_6cfe0f5f25d4e5::t_3ff6d6599dc00a 1
+public/data/station/CMR.json
+  s_6cfe0f5f25d4e5::t_35d417fa0c6d52 1
+public/data/station/COD.json
+  s_6cfe0f5f25d4e5::t_2c6f27ce2395a6 1
+public/data/station/COG.json
+  s_6cfe0f5f25d4e5::t_c093db12a7b73e 1
+public/data/station/COL.json
+  s_6cfe0f5f25d4e5::t_7f32e8503e4d7e 1
+public/data/station/CPV.json
+  s_6cfe0f5f25d4e5::t_e402d8825dab18 1
+public/data/station/CRI.json
+  s_6cfe0f5f25d4e5::t_5ab70fc835e4e4 1
+public/data/station/CUB.json
+  s_6cfe0f5f25d4e5::t_f6190c6bff2662 1
+public/data/station/CYP.json
+  s_6cfe0f5f25d4e5::t_55cac86a71cdbf 1
+public/data/station/CZE.json
+  s_6cfe0f5f25d4e5::t_45b74c0f941136 1
+public/data/station/DEU.json
+  s_6cfe0f5f25d4e5::t_f5d623a1f56d91 1
+public/data/station/DJI.json
+  s_6cfe0f5f25d4e5::t_8d32f1ee24b514 1
+public/data/station/DMA.json
+  s_6cfe0f5f25d4e5::t_c6c17d034a5f5b 1
+public/data/station/DNK.json
+  s_6cfe0f5f25d4e5::t_5c47860e271c3b 1
+public/data/station/DOM.json
+  s_6cfe0f5f25d4e5::t_ebe970c143da5d 1
+public/data/station/DZA.json
+  s_6cfe0f5f25d4e5::t_a887b8bb3ec2bd 1
+public/data/station/ECU.json
+  s_6cfe0f5f25d4e5::t_b8627a9d989c24 1
+public/data/station/EGY.json
+  s_6cfe0f5f25d4e5::t_c88f1ad0ca5b5d 1
+public/data/station/ERI.json
+  s_6cfe0f5f25d4e5::t_5c63a79aff13e4 1
+public/data/station/ESP.json
+  s_6cfe0f5f25d4e5::t_808b1603ba1955 1
+public/data/station/EST.json
+  s_6cfe0f5f25d4e5::t_be82dbb446441c 1
+public/data/station/ETH.json
+  s_6cfe0f5f25d4e5::t_ab091c78dca402 1
+public/data/station/FIN.json
+  s_6cfe0f5f25d4e5::t_77024e91edda65 1
+public/data/station/FJI.json
+  s_6cfe0f5f25d4e5::t_63e033e894b13f 1
+public/data/station/FRA.json
+  s_6cfe0f5f25d4e5::t_f413e44e9c45e1 1
+public/data/station/FSM.json
+  s_6cfe0f5f25d4e5::t_a8df61d1060cde 1
+public/data/station/GAB.json
+  s_6cfe0f5f25d4e5::t_02f78808c7b270 1
+public/data/station/GBR.json
+  s_6cfe0f5f25d4e5::t_031902b2084ea1 1
+public/data/station/GEO.json
+  s_6cfe0f5f25d4e5::t_682d3f3f84ef8e 1
+public/data/station/GHA.json
+  s_6cfe0f5f25d4e5::t_a629efdef0c12f 1
+public/data/station/GIN.json
+  s_6cfe0f5f25d4e5::t_61d021947d00ac 1
+public/data/station/GMB.json
+  s_6cfe0f5f25d4e5::t_47aff712ec1fcb 1
+public/data/station/GNQ.json
+  s_6cfe0f5f25d4e5::t_280badd571c8b7 1
+public/data/station/GRC.json
+  s_6cfe0f5f25d4e5::t_5f78af8cabd573 1
+public/data/station/GRD.json
+  s_6cfe0f5f25d4e5::t_e39702bb1ddad5 1
+public/data/station/GTM.json
+  s_6cfe0f5f25d4e5::t_5bc362b41124fa 1
+public/data/station/GUY.json
+  s_6cfe0f5f25d4e5::t_fd703dbc06771d 1
+public/data/station/HKG.json
+  s_6cfe0f5f25d4e5::t_09ec8cc37a764b 1
+public/data/station/HND.json
+  s_6cfe0f5f25d4e5::t_129cebbfcbb8a3 1
+public/data/station/HRV.json
+  s_6cfe0f5f25d4e5::t_def526175de65c 1
+public/data/station/HTI.json
+  s_6cfe0f5f25d4e5::t_95eddc87d68b4b 1
+public/data/station/HUN.json
+  s_6cfe0f5f25d4e5::t_fb5d3d1064ee1e 1
+public/data/station/IDN.json
+  s_6cfe0f5f25d4e5::t_0e9014e4208298 1
+public/data/station/IND.json
+  s_6cfe0f5f25d4e5::t_b53ae973d5a2e2 1
+public/data/station/IRL.json
+  s_6cfe0f5f25d4e5::t_3f4084caba033e 1
+public/data/station/IRN.json
+  s_6cfe0f5f25d4e5::t_5f57cf801f4c1b 1
+public/data/station/IRQ.json
+  s_6cfe0f5f25d4e5::t_e71a27abfe62e0 1
+public/data/station/ISL.json
+  s_6cfe0f5f25d4e5::t_694674bd5910ae 1
+public/data/station/ISR.json
+  s_6cfe0f5f25d4e5::t_a5b4ec411396f3 1
+public/data/station/ITA.json
+  s_6cfe0f5f25d4e5::t_5881158cedcbbe 1
+public/data/station/JAM.json
+  s_6cfe0f5f25d4e5::t_43e94616d9414f 1
+public/data/station/JOR.json
+  s_6cfe0f5f25d4e5::t_c77e18303b5664 1
+public/data/station/JPN.json
+  s_6cfe0f5f25d4e5::t_fdd285e493811c 1
+public/data/station/KAZ.json
+  s_6cfe0f5f25d4e5::t_af0cdf64707ade 1
+public/data/station/KEN.json
+  s_6cfe0f5f25d4e5::t_c6363373c23a2a 1
+public/data/station/KGZ.json
+  s_6cfe0f5f25d4e5::t_f23bf99e4d7191 1
+public/data/station/KHM.json
+  s_6cfe0f5f25d4e5::t_c485022ffd8f1c 1
+public/data/station/KIR.json
+  s_6cfe0f5f25d4e5::t_19d50c9b60abe1 1
+public/data/station/KNA.json
+  s_6cfe0f5f25d4e5::t_55f6679b9c9a68 1
+public/data/station/KOR.json
+  s_6cfe0f5f25d4e5::t_d4bae54c234871 1
+public/data/station/KWT.json
+  s_6cfe0f5f25d4e5::t_83c6a8224ca3e1 1
+public/data/station/LAO.json
+  s_6cfe0f5f25d4e5::t_b86866bee51b28 1
+public/data/station/LBN.json
+  s_6cfe0f5f25d4e5::t_1cbbcb36d6686d 1
+public/data/station/LBR.json
+  s_6cfe0f5f25d4e5::t_92bfdfa8b799f2 1
+public/data/station/LBY.json
+  s_6cfe0f5f25d4e5::t_1319f3ec1f4773 1
+public/data/station/LCA.json
+  s_6cfe0f5f25d4e5::t_205aeffa43eda7 1
+public/data/station/LIE.json
+  s_6cfe0f5f25d4e5::t_0d9a95c4c2e7df 1
+public/data/station/LKA.json
+  s_6cfe0f5f25d4e5::t_27ab0e947ba69e 1
+public/data/station/LSO.json
+  s_6cfe0f5f25d4e5::t_c7937a5ed06376 1
+public/data/station/LTU.json
+  s_6cfe0f5f25d4e5::t_8358e70e1afe71 1
+public/data/station/LUX.json
+  s_6cfe0f5f25d4e5::t_61ea6665a88675 1
+public/data/station/LVA.json
+  s_6cfe0f5f25d4e5::t_8a294c21b87abb 1
+public/data/station/MAC.json
+  s_6cfe0f5f25d4e5::t_6eaaad768be2de 1
+public/data/station/MAR.json
+  s_6cfe0f5f25d4e5::t_51a8633ddfef17 1
+public/data/station/MCO.json
+  s_6cfe0f5f25d4e5::t_cf514580c8c17f 1
+public/data/station/MDA.json
+  s_6cfe0f5f25d4e5::t_d1b9bc194c8f71 1
+public/data/station/MDG.json
+  s_6cfe0f5f25d4e5::t_8969cf2b5cd9bc 1
+public/data/station/MDV.json
+  s_6cfe0f5f25d4e5::t_c3ce87547b5e0f 1
+public/data/station/MEX.json
+  s_6cfe0f5f25d4e5::t_9b6cccf0a54e80 1
+public/data/station/MHL.json
+  s_6cfe0f5f25d4e5::t_f7210631e7702e 1
+public/data/station/MKD.json
+  s_6cfe0f5f25d4e5::t_df079a510fe10c 1
+public/data/station/MLI.json
+  s_6cfe0f5f25d4e5::t_81f7e8126bc6e4 1
+public/data/station/MLT.json
+  s_6cfe0f5f25d4e5::t_ec31f41aff4aa8 1
+public/data/station/MMR.json
+  s_6cfe0f5f25d4e5::t_7530268b153a45 1
+public/data/station/MNE.json
+  s_6cfe0f5f25d4e5::t_cdd6229061044e 1
+public/data/station/MNG.json
+  s_6cfe0f5f25d4e5::t_fad6cd52dbbf44 1
+public/data/station/MOZ.json
+  s_6cfe0f5f25d4e5::t_0f8e58e7858a41 1
+public/data/station/MRT.json
+  s_6cfe0f5f25d4e5::t_ef2395b51d1473 1
+public/data/station/MUS.json
+  s_6cfe0f5f25d4e5::t_20dc0d5285e7a5 1
+public/data/station/MWI.json
+  s_6cfe0f5f25d4e5::t_55c8ff953c87fe 1
+public/data/station/MYS.json
+  s_6cfe0f5f25d4e5::t_a5f7304e717000 1
+public/data/station/NAM.json
+  s_6cfe0f5f25d4e5::t_06e26975abfabf 1
+public/data/station/NER.json
+  s_6cfe0f5f25d4e5::t_1b8b717c607c0e 1
+public/data/station/NGA.json
+  s_6cfe0f5f25d4e5::t_880b52e6ef2309 1
+public/data/station/NIC.json
+  s_6cfe0f5f25d4e5::t_f7bdca0e47949b 1
+public/data/station/NLD.json
+  s_6cfe0f5f25d4e5::t_4d0f3996002f2b 1
+public/data/station/NOR.json
+  s_6cfe0f5f25d4e5::t_d68eb6b9070cef 1
+public/data/station/NPL.json
+  s_6cfe0f5f25d4e5::t_d03b4158214191 1
+public/data/station/NRU.json
+  s_6cfe0f5f25d4e5::t_b3ba6f47cf7021 1
+public/data/station/NZL.json
+  s_6cfe0f5f25d4e5::t_ab735a4d9fcfb5 1
+public/data/station/OMN.json
+  s_6cfe0f5f25d4e5::t_cd22a1a60aae5e 1
+public/data/station/PAK.json
+  s_6cfe0f5f25d4e5::t_14795cbdafb764 1
+public/data/station/PAN.json
+  s_6cfe0f5f25d4e5::t_35165771d4153b 1
+public/data/station/PER.json
+  s_6cfe0f5f25d4e5::t_9b1934d4224ec4 1
+public/data/station/PHL.json
+  s_6cfe0f5f25d4e5::t_0d9633bf3ba9c0 1
+public/data/station/PLW.json
+  s_6cfe0f5f25d4e5::t_0a51dbc8a48364 1
+public/data/station/PNG.json
+  s_6cfe0f5f25d4e5::t_38baaa33bc9a62 1
+public/data/station/POL.json
+  s_6cfe0f5f25d4e5::t_b45bab2accb61f 1
+public/data/station/PRT.json
+  s_6cfe0f5f25d4e5::t_fb1f52efd9004a 1
+public/data/station/PRY.json
+  s_6cfe0f5f25d4e5::t_cd1044b13ad39a 1
+public/data/station/PSE.json
+  s_6cfe0f5f25d4e5::t_c7fd2b77356196 1
+public/data/station/QAT.json
+  s_6cfe0f5f25d4e5::t_ae2a88c6a4838f 1
+public/data/station/ROU.json
+  s_6cfe0f5f25d4e5::t_ee3bd759fd50b8 1
+public/data/station/RUS.json
+  s_6cfe0f5f25d4e5::t_9058ff1abed86b 1
+public/data/station/RWA.json
+  s_6cfe0f5f25d4e5::t_9aacba8db6afd8 1
+public/data/station/SAU.json
+  s_6cfe0f5f25d4e5::t_504be07f063798 1
+public/data/station/SDN.json
+  s_6cfe0f5f25d4e5::t_867122859c9679 1
+public/data/station/SEN.json
+  s_6cfe0f5f25d4e5::t_98d0a04a689e6a 1
+public/data/station/SGP.json
+  s_6cfe0f5f25d4e5::t_c793d4f6767d98 1
+public/data/station/SLB.json
+  s_6cfe0f5f25d4e5::t_7a05f74780c3a3 1
+public/data/station/SLE.json
+  s_6cfe0f5f25d4e5::t_32d42812115452 1
+public/data/station/SLV.json
+  s_6cfe0f5f25d4e5::t_3fafb5e0ee1b88 1
+public/data/station/SMR.json
+  s_6cfe0f5f25d4e5::t_bdfaf6eb1ce95f 1
+public/data/station/SOM.json
+  s_6cfe0f5f25d4e5::t_06a702f4abe0a8 1
+public/data/station/SRB.json
+  s_6cfe0f5f25d4e5::t_aa4862ab6e14b2 1
+public/data/station/SSD.json
+  s_6cfe0f5f25d4e5::t_d18389f1926f97 1
+public/data/station/SUR.json
+  s_6cfe0f5f25d4e5::t_000c54e2ab8018 1
+public/data/station/SVK.json
+  s_6cfe0f5f25d4e5::t_0d276b4a8240c8 1
+public/data/station/SVN.json
+  s_6cfe0f5f25d4e5::t_bd9690767acf47 1
+public/data/station/SWE.json
+  s_6cfe0f5f25d4e5::t_bef4a70ba7ca11 1
+public/data/station/SWZ.json
+  s_6cfe0f5f25d4e5::t_0ec49f7111407d 1
+public/data/station/SYC.json
+  s_6cfe0f5f25d4e5::t_553fae47e8273c 1
+public/data/station/SYR.json
+  s_6cfe0f5f25d4e5::t_e693a084413208 1
+public/data/station/TCD.json
+  s_6cfe0f5f25d4e5::t_378ff221372a07 1
+public/data/station/TGO.json
+  s_6cfe0f5f25d4e5::t_d89957cd2a1061 1
+public/data/station/THA.json
+  s_6cfe0f5f25d4e5::t_d51b99671b3327 1
+public/data/station/TJK.json
+  s_6cfe0f5f25d4e5::t_9fd8cc08a924e9 1
+public/data/station/TKM.json
+  s_6cfe0f5f25d4e5::t_33ac0054f106f1 1
+public/data/station/TLS.json
+  s_6cfe0f5f25d4e5::t_8b2e3b56b97477 1
+public/data/station/TON.json
+  s_6cfe0f5f25d4e5::t_bc55cc648cc8f1 1
+public/data/station/TTO.json
+  s_6cfe0f5f25d4e5::t_996d3fd81acbb9 1
+public/data/station/TUN.json
+  s_6cfe0f5f25d4e5::t_d2f5fe7e776cd2 1
+public/data/station/TUR.json
+  s_6cfe0f5f25d4e5::t_3325e35b4b469d 1
+public/data/station/TZA.json
+  s_6cfe0f5f25d4e5::t_7b6ed21f997faf 1
+public/data/station/UGA.json
+  s_6cfe0f5f25d4e5::t_2d3278d6f74b4d 1
+public/data/station/UKR.json
+  s_6cfe0f5f25d4e5::t_9466ad11f02837 1
+public/data/station/URY.json
+  s_6cfe0f5f25d4e5::t_07cc2765b00474 1
+public/data/station/USA.json
+  s_6cfe0f5f25d4e5::t_c66c9d30ee0aa3 1
+public/data/station/UZB.json
+  s_6cfe0f5f25d4e5::t_24948cc308c45f 1
+public/data/station/VCT.json
+  s_6cfe0f5f25d4e5::t_c5ae35fe9cf3f7 1
+public/data/station/VEN.json
+  s_6cfe0f5f25d4e5::t_d1ed7f2d1733bf 1
+public/data/station/VNM.json
+  s_6cfe0f5f25d4e5::t_7b25ec1cc91158 1
+public/data/station/VUT.json
+  s_6cfe0f5f25d4e5::t_d93c458170f25d 1
+public/data/station/WSM.json
+  s_6cfe0f5f25d4e5::t_d640ca7e2cc676 1
+public/data/station/YEM.json
+  s_6cfe0f5f25d4e5::t_bb94f70778c491 1
+public/data/station/ZAF.json
+  s_6cfe0f5f25d4e5::t_84a0ff426b830d 1
+public/data/station/ZMB.json
+  s_6cfe0f5f25d4e5::t_3b3904c993f1b1 1
+public/data/station/ZWE.json
+  s_6cfe0f5f25d4e5::t_fa1b0db56c5835 1
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.13",
+  "base_commit_sha": "bf4a39e5529d84e1436d13019f870fac6d7f8be0",
+  "prompts": {},
+  "sessions": {
+    "s_6cfe0f5f25d4e5": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "019f5c0a-f294-78b2-af01-6c5483dbfcbe",
+        "model": "gpt-5.6-sol"
+      },
+      "human_author": "64etuor <130260521+64etuor@users.noreply.github.com>"
+    },
+    "s_7afcdb75c5c55c": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "019f5e96-cc10-7b11-8b04-c27a97550e70",
+        "model": "gpt-5.6-terra"
+      },
+      "human_author": "64etuor <130260521+64etuor@users.noreply.github.com>"
+    }
+  }
+}
