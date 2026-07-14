@@ -1,0 +1,69 @@
+scripts/run.ts
+  s_6cfe0f5f25d4e5::t_8238931b9bbcfd 5,20-22,36
+docs/DATA_PIPELINE.md
+  s_6cfe0f5f25d4e5::t_1ec030182d08e5 141-142
+  s_6cfe0f5f25d4e5::t_027ed799500cbc 139-140
+docs/architecture.md
+  s_6cfe0f5f25d4e5::t_027ed799500cbc 22
+  s_6cfe0f5f25d4e5::t_1ec030182d08e5 23
+scripts/fetch/countries.ts
+  s_6cfe0f5f25d4e5::t_8238931b9bbcfd 50
+scripts/build/position-closure.test.ts
+  s_6cfe0f5f25d4e5::t_93d4e1c9dc1cfd 10,90-141
+  s_6cfe0f5f25d4e5::t_bfe22b4ceea165 6-7,13,19-89
+README.md
+  s_6cfe0f5f25d4e5::t_027ed799500cbc 77
+docs/DATA_CONTRACT.md
+  s_6cfe0f5f25d4e5::t_1ec030182d08e5 46,308-311
+  s_6cfe0f5f25d4e5::t_027ed799500cbc 302-303,370
+scripts/check/sanity.ts
+  s_6cfe0f5f25d4e5::t_8238931b9bbcfd 478-483,485-491,497-499
+  s_6cfe0f5f25d4e5::t_7af9fb9b6d152a 7,17-20,313-379
+scripts/run.test.ts
+  s_6cfe0f5f25d4e5::t_93d4e1c9dc1cfd 1-18
+scripts/build/position-closure.ts
+  s_6cfe0f5f25d4e5::t_8238931b9bbcfd 5-6,78-110,239-240,261-266
+  s_6cfe0f5f25d4e5::t_4c3db91404a64c 2-4,14,40-74,241-243
+public/data/meta/facts_summary.json
+  s_6cfe0f5f25d4e5::t_57823ed2229359 1
+public/data/position_closure/2013-Q4.json
+  s_6cfe0f5f25d4e5::t_a787d8b45a0d3a 1
+public/data/position_closure/2014-Q4.json
+  s_6cfe0f5f25d4e5::t_689eb218bce775 1
+public/data/position_closure/2015-Q4.json
+  s_6cfe0f5f25d4e5::t_251ee9401c90c7 1
+public/data/position_closure/2016-Q4.json
+  s_6cfe0f5f25d4e5::t_19e2b416efe39c 1
+public/data/position_closure/2017-Q4.json
+  s_6cfe0f5f25d4e5::t_8bd29aabbee408 1
+public/data/position_closure/2018-Q4.json
+  s_6cfe0f5f25d4e5::t_b26009706b7f77 1
+public/data/position_closure/2019-Q4.json
+  s_6cfe0f5f25d4e5::t_6b830c8ad90555 1
+public/data/position_closure/2020-Q4.json
+  s_6cfe0f5f25d4e5::t_9f9c80503753f1 1
+public/data/position_closure/2021-Q4.json
+  s_6cfe0f5f25d4e5::t_763949ff8bf298 1
+public/data/position_closure/2022-Q4.json
+  s_6cfe0f5f25d4e5::t_c3742b3232fb7b 1
+public/data/position_closure/2023-Q4.json
+  s_6cfe0f5f25d4e5::t_96df1b73104f09 1
+public/data/position_closure/2024-Q4.json
+  s_6cfe0f5f25d4e5::t_3a96db5ff4354e 1
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.13",
+  "base_commit_sha": "c4361c6996aa3b947bc5fca6eef7335b7bbb1d53",
+  "prompts": {},
+  "sessions": {
+    "s_6cfe0f5f25d4e5": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "019f5c0a-f294-78b2-af01-6c5483dbfcbe",
+        "model": "gpt-5.6-sol"
+      },
+      "human_author": "64etuor <130260521+64etuor@users.noreply.github.com>"
+    }
+  }
+}
