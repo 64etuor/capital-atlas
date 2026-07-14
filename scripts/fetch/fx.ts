@@ -12,8 +12,11 @@
  */
 import { createRequire } from 'node:module'
 import {
+  assertMinimumRows,
+  assertNoNewFailures,
   chunk,
   fetchCached,
+  failures,
   parseSdmxSeries,
   pooled,
   quarterEndDate,
@@ -206,8 +209,11 @@ async function fetchWbFx(): Promise<WbFxObs[]> {
 }
 
 export async function runFx(iso3s: string[]): Promise<FxRatesFile> {
+  const failureStart = failures.length
   const [imf, wb] = [await fetchImfEr(iso3s), await fetchWbFx()]
+  assertNoNewFailures('FX rates', failureStart)
   const file = assembleFx(imf, wb, iso3s)
+  assertMinimumRows('FX country coverage', Object.keys(file.countries).length, 50)
   writeRawJson('fx_normalized.json', { imf: imf.length, wb: wb.length })
   const bytes = writeJson('meta/fx_rates.json', file)
   const list = Object.values(file.countries)

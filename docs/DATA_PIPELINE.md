@@ -23,6 +23,10 @@ pnpm data:check
 bilateral에 BIS를 재병합하고, 그 다음 exposure/RAS와 모든 집계·원장을 재발행한다.
 
 원시 응답은 `data-raw/`(gitignore)에 보존된다. 재실행은 24h 내 캐시를 재사용한다.
+필수 공식 소스는 stage 단위로 원자적이다. bounded retry 뒤 요청 하나라도 실패하면
+그 stage의 normalized 파일을 덮어쓰지 않고, BIS 성공-빈 응답을 포함한 모든 필수
+네트워크 검증이 끝나기 전에는 public 산출을 쓰지 않는다. CoinGecko 글로벌 통제값만
+명시적 optional이며 정적 스냅샷으로 폴백한다.
 
 ## 소스별 상태 (2026-07-14 실측)
 
@@ -44,7 +48,8 @@ bilateral에 BIS를 재병합하고, 그 다음 exposure/RAS와 모든 집계·�
 반환한다(JSON Accept 무시/500). 키 차원과 코드값은 문서보다 실호출 프로브가 정확했다:
 
 - IIP/BOP 키: `COUNTRY.BOP_ACCOUNTING_ENTRY.INDICATOR.UNIT.FREQUENCY` (ISO3, USD, Q)
-- IIPCC 키: `COUNTRY.ACCOUNTING_ENTRY.INDICATOR.SECTOR.CURRENCY.FREQUENCY`.
+- IIPCC 키: `COUNTRY.BOP_ACCOUNTING_ENTRY.INDICATOR.CURRENCY.UNIT.FREQUENCY`.
+  보고 부문은 별도 차원이 아니라 `DCNRES_DIC_S13` 같은 indicator 코드에 포함된다.
   `A_P/L_P` debt와 비중복 통화 버킷 `USD|EUR|JPY|XDC|OTHC|UALLC`만 적재한다.
 - 잔액 엔트리: `A_P`/`L_P`. **흐름 엔트리는 `A_NFA_T`(자산 순취득)/`L_NIL_T`(부채 순발생)** — `A_T`/`L_T` 아님(1차 실행 0건의 원인).
 - PIP 키: `COUNTRY.ACCOUNTING_ENTRY.INDICATOR.SECTOR.COUNTERPART_SECTOR.COUNTERPART_COUNTRY.FREQUENCY` — `{iso3}.A.P_F51_P_USD+P_F3_P_USD.S1.S1..A`
@@ -126,16 +131,19 @@ SDMX 2.1 REST, `format=csv`(SDMX-CSV) 지원 — IMF와 달리 CSV가 나와 파
 - `data:exposure`: IIPCC 통화와 PIP 부문 직접 관측을 그대로 보존한다. FXD는 2020-Q4
   환율을 기준으로 계산하되 `OTHC+UALLC>5%`, 환율 누락, 통화합↔IIP 총계 gap>0.5%면
   값을 발행하지 않고 typed reason을 남긴다. 가용 값도 coverage·residual·민감도 범위를
-  반드시 가진다.
+  반드시 가진다. `XDC`는 국가의 ISO 4217 통화를 찾은 뒤 동일 통화 보고국의
+  IMF A등급 환율 중앙값(없으면 WB B등급 중앙값)을 쓰고, 실제 사용한 IIPCC·IMF/WB
+  source IDs를 함께 발행한다.
 - `reconstructed_liabilities`: PIP SCC/상대국 자산을 부채 방향으로 전치한 C등급이다.
   상향식 합계와 IIP 하향식 총계 사이의 corridor를 범위로 공개하며, 독립 관측이 아니다.
 - `data:closure`: 직접 PIP 양자자산을 seed, IIP 자산·부채를 마진으로 RAS/IPF를 실행한다.
+  `direct_seed_share`는 IIP 행·열 마진 도메인 안에 실제로 들어온 seed만 센다.
   원 샤드를 수정하지 않고 모든 셀을 E등급으로 발행한다. 최대 100회, 잔차 1e-9,
   Fréchet 범위를 만족하지 않으면 부분 결과 없이 실패한다. 현행 2013-Q4~2024-Q4
   12개 분기다. 전체 행렬 폐합 후 자산별 상위 1,000셀, 총 24,000셀을 발행하고
   생략 셀 수·합계는 각 샤드에 보존한다.
 - `data:check`: exposure 122개국/65분기, 통화 53,072건, 부문 14,790건,
-  재구성 2,318건, FXD 388건, RAS 24,000셀을 계약·등급·범위·폐합까지 전수 확인한다.
+  재구성 2,318건, FXD 458건, RAS 24,000셀을 계약·등급·범위·폐합까지 전수 확인한다.
 
 ## flowmatrix (Phase O — §8 재배분 행렬)
 

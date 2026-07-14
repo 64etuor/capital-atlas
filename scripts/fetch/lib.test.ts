@@ -8,6 +8,8 @@ import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import { mkdirSync, readFileSync, rmSync, utimesSync, writeFileSync } from 'node:fs'
 import { dirname, join } from 'node:path'
 import {
+  assertMinimumRows,
+  assertNoNewFailures,
   RAW_DIR,
   failures,
   fetchBounded,
@@ -16,6 +18,15 @@ import {
   pooled,
   toQuarter,
 } from './lib.ts'
+
+describe('assertMinimumRows — successful-empty response guard', () => {
+  it('fails before overwrite when a required slice collapses below its floor', () => {
+    expect(() => assertMinimumRows('IMF IIP', 0, 1_000)).toThrow(
+      /IMF IIP.*0.*minimum 1000.*refusing overwrite/,
+    )
+    expect(() => assertMinimumRows('IMF IIP', 1_000, 1_000)).not.toThrow()
+  })
+})
 
 const okResponse = (body: string) =>
   ({ ok: true, status: 200, text: async () => body }) as Response
@@ -32,6 +43,19 @@ describe('fetchBounded — bounded retry discipline', () => {
     vi.useRealTimers()
     vi.restoreAllMocks()
     vi.unstubAllGlobals()
+  })
+
+  it('fails a required stage when that stage adds a terminal failure', () => {
+    const start = failures.length
+    failures.push({
+      url: 'https://example.test/required',
+      attempts: 3,
+      lastError: 'HTTP 500',
+      at: '2026-07-14T00:00:00Z',
+    })
+    expect(() => assertNoNewFailures('required-stage', start)).toThrow(
+      /required-stage.*1 required request failed/,
+    )
   })
 
   it('recovers through transient 5xx and stops at the first success', async () => {

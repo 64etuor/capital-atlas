@@ -9,6 +9,7 @@
 import { existsSync, readFileSync } from 'node:fs'
 import { join } from 'node:path'
 import { OUT_DIR, writeJson } from '../fetch/lib.ts'
+import type { ReconstructedLiability } from '../../src/types/data.ts'
 import type { BilateralRecord, FlowRecord, StockRecord } from './synoptic.ts'
 import {
   counterpartyConcentration,
@@ -52,10 +53,13 @@ export interface StationPartner {
   value: number
   grade: Grade
   source_id: string
+  source_ids?: string[]
   effective_date: string
   method?: string
   lower?: number
   upper?: number
+  range_label?: string
+  coverage_share?: number
 }
 
 export interface PartnerSides {
@@ -165,17 +169,25 @@ const toPartner = (r: BilateralRecord, country: string): StationPartner => ({
 const toReconstructedPartner = (
   r: BilateralRecord,
   country: string,
-  upper: number,
-): StationPartner => ({
-  country,
-  value: r.value_usd,
-  grade: 'C',
-  source_id: r.source_id,
-  effective_date: r.effective_date,
-  method: 'counterparty_assets_transposed_to_reconstructed_liability',
-  lower: 0,
-  upper,
-})
+  bottomUpTotal: number,
+  aggregate: ReconstructedLiability,
+): StationPartner => {
+  const share = r.value_usd / bottomUpTotal
+  const scaled = [aggregate.lower_bound * share, aggregate.upper_bound * share]
+  return {
+    country,
+    value: aggregate.value_usd * share,
+    grade: 'C',
+    source_id: r.source_id,
+    source_ids: aggregate.source_ids,
+    effective_date: r.effective_date,
+    method: 'counterparty_assets_transposed_with_proportional_top_down_corridor',
+    lower: Math.min(...scaled),
+    upper: Math.max(...scaled),
+    range_label: 'proportional bottom-up ↔ top-down corridor',
+    coverage_share: aggregate.coverage_share,
+  }
+}
 
 const capSort = (rows: StationPartner[]): StationPartner[] =>
   rows
@@ -198,13 +210,39 @@ function aggregateAll(rows: readonly StationPartner[]): StationPartner[] {
   return capSort(
     [...byCountry.values()].map(({ sum, n }) => {
       if (n === 1) return sum
-      // 합산 행: 단일 산식/범위 주장 불가 — 계보는 source/기준일만 운반
+      const components = rows.filter((row) => row.country === sum.country)
+      for (const component of components) {
+        if (
+          !OBSERVED.has(component.grade) &&
+          (component.lower === undefined || component.upper === undefined)
+        )
+          throw new Error(
+            `[station] derived partner ${component.country} lacks a finite range`,
+          )
+      }
       return {
         country: sum.country,
         value: sum.value,
         grade: sum.grade,
         source_id: sum.source_id,
+        source_ids: [
+          ...new Set(
+            components.flatMap((component) =>
+              component.source_ids ?? [component.source_id],
+            ),
+          ),
+        ].sort(),
         effective_date: sum.effective_date,
+        method: 'sum_of_partner_positions_across_assets',
+        lower: components.reduce(
+          (total, component) => total + (component.lower ?? component.value),
+          0,
+        ),
+        upper: components.reduce(
+          (total, component) => total + (component.upper ?? component.value),
+          0,
+        ),
+        range_label: 'sum of component corridors; observed components are exact',
       }
     }),
   )
@@ -217,7 +255,11 @@ function aggregateAll(rows: readonly StationPartner[]): StationPartner[] {
 export function stationPartners(
   bilat: readonly BilateralRecord[],
   iso3: string,
+  reconstructed: readonly ReconstructedLiability[] = [],
 ): Record<string, { all: PartnerSides; assets: Record<string, PartnerSides> }> {
+  const reconstructedByKey = new Map(
+    reconstructed.map((row) => [`${row.period}|${row.asset}`, row]),
+  )
   const reconstructedTotals = new Map<string, number>()
   for (const r of bilat) {
     if (r.measure !== 'stock' || r.source_id !== 'imf_pip') continue
@@ -239,7 +281,11 @@ export function stationPartners(
     if (mine) sides.holdings.push(toPartner(r, r.issuer_country))
     else if (r.source_id === 'imf_pip') {
       const total = reconstructedTotals.get(`${iso3}|${r.period}|${r.asset}`) ?? r.value_usd
-      sides.holders.push(toReconstructedPartner(r, r.owner_country, total))
+      const aggregate = reconstructedByKey.get(`${r.period}|${r.asset}`)
+      if (aggregate && total > 0)
+        sides.holders.push(
+          toReconstructedPartner(r, r.owner_country, total, aggregate),
+        )
     } else sides.holders.push(toPartner(r, r.owner_country))
   }
 
@@ -380,6 +426,16 @@ function readShard<T>(dir: string, period: string): T[] {
   return (JSON.parse(readFileSync(path, 'utf8')) as { records: T[] }).records
 }
 
+function readReconstructed(iso3: string): ReconstructedLiability[] {
+  const path = join(OUT_DIR, 'exposure', `${iso3}.json`)
+  if (!existsSync(path)) return []
+  return (
+    JSON.parse(readFileSync(path, 'utf8')) as {
+      reconstructed_liabilities?: ReconstructedLiability[]
+    }
+  ).reconstructed_liabilities ?? []
+}
+
 function bucket<T>(map: Map<string, T[]>, key: string, row: T): void {
   const arr = map.get(key)
   if (arr) arr.push(row)
@@ -440,7 +496,11 @@ export function buildStation(): void {
       iso3,
       summary: stationSummary(series),
       series,
-      partners: stationPartners(bilatBy.get(iso3) ?? [], iso3),
+      partners: stationPartners(
+        bilatBy.get(iso3) ?? [],
+        iso3,
+        readReconstructed(iso3),
+      ),
       concentration: {
         quarterly: quarterlyConcentration(series, wld),
         // 발행 샤드 전체에서 계산 — top-15 partners 리스트 기반 금지

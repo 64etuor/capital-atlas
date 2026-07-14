@@ -49,6 +49,7 @@ describe('v3 exposure contract', () => {
       coverage_share: 0.98,
       residual_share: 0.02,
       source_id: 'model_constant_fx',
+      source_ids: ['imf_iipcc', 'imf_ifs_fx'],
       effective_date: '2024-12-31',
       confidence_grade: 'D',
       estimate_method: 'currency_bucket_constant_fx_with_bounded_residual',
@@ -61,6 +62,12 @@ describe('v3 exposure contract', () => {
     ).toBe(false)
     expect(
       fxdResultSchema.safeParse({ ...result, lower_bound: 100 }).success,
+    ).toBe(false)
+    expect(
+      fxdResultSchema.safeParse({ ...result, source_ids: ['imf_iipcc'] }).success,
+    ).toBe(false)
+    expect(
+      fxdResultSchema.safeParse({ ...result, residual_share: 0.051 }).success,
     ).toBe(false)
   })
 
@@ -109,6 +116,7 @@ describe('v3 exposure contract', () => {
       asset: 'debt_securities',
       value_usd: 70,
       source_id: 'imf_pip',
+      source_ids: ['imf_pip', 'imf_iip'],
       effective_date: '2024-12-31',
       confidence_grade: 'C',
       estimate_method: 'counterparty_assets_transposed_to_reconstructed_liability',
@@ -119,6 +127,9 @@ describe('v3 exposure contract', () => {
     expect(reconstructedLiabilitySchema.safeParse(row).success).toBe(true)
     expect(
       reconstructedLiabilitySchema.safeParse({ ...row, upper_bound: undefined }).success,
+    ).toBe(false)
+    expect(
+      reconstructedLiabilitySchema.safeParse({ ...row, source_ids: ['imf_pip'] }).success,
     ).toBe(false)
   })
 })

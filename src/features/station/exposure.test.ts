@@ -33,6 +33,16 @@ const exposure: CountryExposureFile = {
     },
     {
       country: 'KOR',
+      period: '2021-Q4',
+      sector: 'S13',
+      asset: 'debt_securities',
+      value_usd: 30,
+      source_id: 'imf_pip',
+      effective_date: '2021-12-31',
+      confidence_grade: 'A',
+    },
+    {
+      country: 'KOR',
       period: '2023-Q4',
       sector: 'S1V',
       asset: 'listed_equity',
@@ -60,12 +70,27 @@ const exposure: CountryExposureFile = {
       asset: 'listed_equity',
       value_usd: 70,
       source_id: 'imf_pip',
+      source_ids: ['imf_pip', 'imf_iip'],
       effective_date: '2023-12-31',
       confidence_grade: 'C',
       estimate_method: 'counterparty_assets_transposed_to_reconstructed_liability',
       lower_bound: 70,
       upper_bound: 100,
       coverage_share: 0.7,
+    },
+    {
+      country: 'KOR',
+      period: '2020-Q4',
+      asset: 'debt_securities',
+      value_usd: 20,
+      source_id: 'imf_pip',
+      source_ids: ['imf_pip', 'imf_iip'],
+      effective_date: '2020-12-31',
+      confidence_grade: 'C',
+      estimate_method: 'counterparty_assets_transposed_to_reconstructed_liability',
+      lower_bound: 20,
+      upper_bound: 50,
+      coverage_share: 0.4,
     },
   ],
 }
@@ -76,16 +101,27 @@ describe('exposureAt — no implied precision across exposure families', () => {
     expect(selected.currency.map((row) => row.period)).toEqual(['2024-Q2'])
     expect(selected.sectors.map((row) => [row.sector, row.value_usd])).toEqual([
       ['S1', 100],
+      ['S13', 30],
       ['S1V', 40],
     ])
     expect(selected.fxd[0]).toMatchObject({ status: 'unavailable' })
-    expect(selected.reconstructed).toHaveLength(1)
+    expect(selected.reconstructed).toHaveLength(2)
+  })
+
+  it('floors each asset independently before applying an asset filter', () => {
+    const selected = exposureAt(exposure, '2024-Q3', false, 'debt_securities')
+    expect(selected.sectors.map((row) => [row.period, row.asset])).toEqual([
+      ['2021-Q4', 'debt_securities'],
+    ])
+    expect(selected.reconstructed.map((row) => [row.period, row.asset])).toEqual([
+      ['2020-Q4', 'debt_securities'],
+    ])
   })
 
   it('removes every derived family in observed-only mode while retaining direct A observations', () => {
     const selected = exposureAt(exposure, '2024-Q3', true)
     expect(selected.currency).toHaveLength(1)
-    expect(selected.sectors).toHaveLength(2)
+    expect(selected.sectors).toHaveLength(3)
     expect(selected.fxd).toEqual([])
     expect(selected.reconstructed).toEqual([])
   })

@@ -143,7 +143,7 @@ const fxdDossier = (row: FxdAvailable, name: string): DossierPayload => ({
   upper_bound: row.upper_bound,
   range_label: 'currency residual sensitivity',
   effective_date: row.effective_date,
-  source_ids: ['model_constant_fx', 'imf_iipcc', 'imf_ifs_fx'],
+  source_ids: [row.source_id, ...row.source_ids],
   context: [
     ['Coverage', `${(row.coverage_share * 100).toFixed(1)}% identified currencies`],
     ['Residual', `${(row.residual_share * 100).toFixed(1)}%`],
@@ -164,7 +164,7 @@ const reconstructedDossier = (
   upper_bound: row.upper_bound,
   range_label: 'bottom-up ↔ top-down corridor',
   effective_date: row.effective_date,
-  source_ids: [row.source_id],
+  source_ids: row.source_ids,
   context: [
     ['Asset', row.asset],
     ['Coverage', `${(row.coverage_share * 100).toFixed(1)}% of top-down margin`],
@@ -265,19 +265,19 @@ export function ExposurePanel({
   }, [iso, period, observedOnly, closureKey])
 
   const current = loaded?.key === iso ? loaded.file : undefined
-  const selection = current ? exposureAt(current, period, observedOnly) : null
   const positionAsset = selectedPositionAsset(asset)
+  const selection = current
+    ? exposureAt(current, period, observedOnly, positionAsset)
+    : null
   const currencyRows = (selection?.currency ?? [])
     .filter((row) => row.sector === 'S1')
     .sort((a, b) => (a.currency === 'TOTAL' ? -1 : b.currency === 'TOTAL' ? 1 : b.value_usd - a.value_usd))
     .slice(0, 3)
   const sectorRows = (selection?.sectors ?? [])
-    .filter((row) => positionAsset === undefined || row.asset === positionAsset)
     .sort((a, b) => b.value_usd - a.value_usd)
     .slice(0, 3)
   const fxdRows = selection?.fxd.slice(0, 2) ?? []
   const reconstructedRows = (selection?.reconstructed ?? [])
-    .filter((row) => positionAsset === undefined || row.asset === positionAsset)
     .slice(0, 1)
   const closureCurrent = closureLoaded?.key === closureKey ? closureLoaded.file : null
   const closurePublication = closureCurrent
@@ -313,7 +313,7 @@ export function ExposurePanel({
     >
       <header className="flex shrink-0 items-baseline justify-between gap-2">
         <p className="dial-label text-paper-dim/80">
-          EXPOSURE · {period} · USD
+          EXPOSURE · TARGET {period} · USD
         </p>
         <p className="readout text-[8px] tracking-[0.08em] text-paper-dim/50">
           {observedOnly ? t('station.exposure.obs') : t('station.exposure.est')}
@@ -334,7 +334,7 @@ export function ExposurePanel({
               currencyRows.map((row) => (
                 <FactButton
                   key={`${row.entry}|${row.currency}`}
-                  label={`${row.entry === 'assets' ? 'A' : 'L'} · ${CURRENCY_LABELS[row.currency]}`}
+                  label={`${row.entry === 'assets' ? 'A' : 'L'} · ${CURRENCY_LABELS[row.currency]} · ${row.period}`}
                   value={row.value_usd}
                   grade="A"
                   onClick={() => openDossier(directCurrencyDossier(row, name))}
@@ -351,7 +351,7 @@ export function ExposurePanel({
               sectorRows.map((row) => (
                 <FactButton
                   key={`${row.asset}|${row.sector}`}
-                  label={`${row.sector} · ${SECTOR_LABELS[row.sector]}`}
+                  label={`${row.sector} · ${SECTOR_LABELS[row.sector]} · ${row.period}`}
                   value={row.value_usd}
                   grade="A"
                   onClick={() => openDossier(directSectorDossier(row, name))}
@@ -370,7 +370,7 @@ export function ExposurePanel({
                   row.status === 'available' ? (
                     <FactButton
                       key={`fxd|${row.entry}`}
-                      label={`FXD ${row.entry.toUpperCase()}`}
+                      label={`FXD ${row.entry.toUpperCase()} · ${row.period}`}
                       value={row.value_usd}
                       grade={row.confidence_grade}
                       derived
@@ -381,14 +381,14 @@ export function ExposurePanel({
                       key={`fxd|${row.entry}`}
                       className="readout border-t border-dashed border-paper/12 py-1 text-[8px] leading-snug text-paper-dim/65"
                     >
-                      FXD {row.entry.toUpperCase()} · {t('station.exposure.unavailable')} — {row.reason}
+                      FXD {row.entry.toUpperCase()} · {row.period} · {t('station.exposure.unavailable')} — {row.reason}
                     </p>
                   ),
                 )}
                 {reconstructedRows.map((row) => (
                   <FactButton
                     key={`recon|${row.asset}`}
-                    label={`RECON · ${row.asset === 'listed_equity' ? 'EQTY' : 'DEBT'}`}
+                    label={`RECON · ${row.asset === 'listed_equity' ? 'EQTY' : 'DEBT'} · ${row.period}`}
                     value={row.value_usd}
                     grade="C"
                     derived
@@ -398,7 +398,7 @@ export function ExposurePanel({
                 {closureRows.map(({ row, publication }) => (
                   <FactButton
                     key={`ras|${row.asset}|${row.owner_country}|${row.issuer_country}`}
-                    label={`RAS · ${row.owner_country}→${row.issuer_country}`}
+                    label={`RAS · ${row.owner_country}→${row.issuer_country} · ${row.period}`}
                     value={row.value_usd}
                     grade="E"
                     derived

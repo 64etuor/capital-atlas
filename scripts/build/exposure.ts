@@ -29,7 +29,14 @@ function rateFor(
   period: PeriodKey,
   fx: FxRatesFile,
 ): FxRateEntry | undefined {
-  if (bucket === 'XDC') return fx.countries[country]?.rates[period]
+  if (bucket === 'XDC') {
+    const countryRates = fx.countries[country]
+    const currency = countryRates?.currency
+    return (
+      (currency ? fx.currencies[currency]?.rates[period] : undefined) ??
+      countryRates?.rates[period]
+    )
+  }
   if (bucket === 'USD' || bucket === 'EUR' || bucket === 'JPY')
     return fx.currencies[bucket]?.rates[period]
   return undefined
@@ -40,15 +47,23 @@ const unavailable = (
   basePeriod: PeriodKey,
   coverageShare: number,
   reason: string,
+  sourceIds: string[] = ['imf_iipcc'],
 ): FxdResult => ({
   status: 'unavailable',
   period: sample.period,
   base_period: basePeriod,
   entry: sample.entry,
   coverage_share: coverageShare,
-  source_ids: ['imf_iipcc', 'imf_ifs_fx'],
+  source_ids: sourceIds,
   reason,
 })
+
+const orderedSourceIds = (sourceIds: ReadonlySet<string>): string[] => [
+  'imf_iipcc',
+  ...[...sourceIds]
+    .filter((sourceId) => sourceId !== 'imf_iipcc')
+    .sort(),
+]
 
 /** Aggregate total-debt FXD; sector-specific facts remain observations only. */
 export function computeFxd(
@@ -109,6 +124,7 @@ export function computeFxd(
 
     let knownFxd = 0
     const factors: number[] = []
+    const upstreamSources = new Set<string>(['imf_iipcc'])
     let missing: CurrencyBucket | null = null
     for (const [currency, value] of components) {
       if (currency === 'OTHC' || currency === 'UALLC' || value === 0) continue
@@ -118,6 +134,8 @@ export function computeFxd(
         missing = currency
         break
       }
+      upstreamSources.add(current.source_id)
+      upstreamSources.add(base.source_id)
       const factor = current.rate / base.rate
       factors.push(factor)
       knownFxd += value * factor
@@ -129,6 +147,7 @@ export function computeFxd(
           basePeriod,
           coverageShare,
           `${missing} exchange rate missing at ${basePeriod} or ${sample.period}`,
+          orderedSourceIds(upstreamSources),
         ),
       )
       continue
@@ -148,6 +167,7 @@ export function computeFxd(
       coverage_share: coverageShare,
       residual_share: residualShare,
       source_id: 'model_constant_fx',
+      source_ids: orderedSourceIds(upstreamSources),
       effective_date: sample.effective_date,
       confidence_grade: residualShare === 0 ? 'C' : 'D',
       estimate_method:
@@ -200,6 +220,7 @@ export function reconstructLiabilities(
       asset,
       value_usd: row.value,
       source_id: 'imf_pip',
+      source_ids: ['imf_pip', 'imf_iip'],
       effective_date: row.effective_date,
       confidence_grade: 'C',
       estimate_method: 'counterparty_assets_transposed_to_reconstructed_liability',

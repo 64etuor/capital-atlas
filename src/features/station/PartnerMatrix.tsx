@@ -12,6 +12,7 @@ import type {
 import { formatUsd } from '../../lib/format'
 import { fogAlpha } from '../../lib/tokens'
 import { OBSERVED_GRADES } from './shared'
+import { partnerDossierPayload } from './partnerDossier'
 
 const ROWS_SHOWN = 12
 
@@ -99,59 +100,19 @@ export function PartnerMatrix({
       ) : (
         <div className="mt-1.5 min-h-0 flex-1 overflow-y-auto [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
           {rows.map((r) => {
+            const holder = r.holder
+            const holding = r.holding
             const grade =
-              r.holding && r.holder
-                ? fogAlpha(r.holding.grade) > fogAlpha(r.holder.grade)
-                  ? r.holding.grade
-                  : r.holder.grade
-                : (r.holding ?? r.holder)?.grade ?? 'E'
-            const main = r.holding ?? r.holder
+              holding && holder
+                ? fogAlpha(holding.grade) > fogAlpha(holder.grade)
+                  ? holding.grade
+                  : holder.grade
+                : (holding ?? holder)?.grade ?? 'E'
             return (
-              <button
+              <div
                 key={r.country}
-                type="button"
                 style={{ opacity: 1 - fogAlpha(grade) * 0.9 }}
                 className="group flex w-full items-center gap-2 border-t border-paper/8 py-[3px] first:border-t-0 hover:bg-ink-2/50"
-                onClick={() => {
-                  if (!main) return
-                  openDossier({
-                    title: `${iso3} ⇄ ${r.country} · ${assetLabel} — bilateral positions`,
-                    subtitle: `CPIS/PIP · ${effPeriod ?? ''}`,
-                    value_usd: main.value,
-                    grade,
-                    method: main.method,
-                    lower_bound: main.lower,
-                    upper_bound: main.upper,
-                    effective_date: main.effective_date,
-                    source_ids: [main.source_id],
-                    // §12-3 미러 폐합 — bis_lbs 레코드만, 방향은 보유/피보유로 결정
-                    ...(main.source_id === 'bis_lbs' &&
-                    effPeriod &&
-                    (asset === 'deposits' || asset === 'loans')
-                      ? {
-                          mirror_key: {
-                            owner: main === r.holding ? iso3 : r.country,
-                            issuer: main === r.holding ? r.country : iso3,
-                            period: effPeriod,
-                            side: (asset === 'loans'
-                              ? 'claims'
-                              : 'liabilities') as 'claims' | 'liabilities',
-                          },
-                        }
-                      : {}),
-                    context: [
-                      [
-                        `${iso3} holds ${r.country}`,
-                        r.holding ? formatUsd(r.holding.value, 1) : 'no observation',
-                      ],
-                      [
-                        `${r.country} holds ${iso3}`,
-                        r.holder ? formatUsd(r.holder.value, 1) : 'no observation',
-                      ],
-                      ...(fxRows?.(main.value) ?? []),
-                    ],
-                  })
-                }}
               >
                 <span className="readout w-8 shrink-0 text-[10px] text-paper">
                   {r.country}
@@ -159,33 +120,72 @@ export function PartnerMatrix({
                 {/* 발산 바 — 중앙축 기준 좌: 피보유(cyan) / 우: 보유(amber) */}
                 <span className="relative h-2 min-w-0 flex-1">
                   <span className="absolute inset-y-0 left-1/2 w-px bg-paper/15" />
-                  {r.holder && (
+                  {holder && (
                     <span
                       className="absolute inset-y-0 right-1/2 bg-flow-out/75 transition-colors group-hover:bg-flow-out"
                       style={{
-                        width: `${(Math.abs(r.holder.value) / scale) * 48}%`,
+                        width: `${(Math.abs(holder.value) / scale) * 48}%`,
                       }}
                     />
                   )}
-                  {r.holding && (
+                  {holding && (
                     <span
                       className="absolute inset-y-0 left-1/2 bg-flow-in/80 transition-colors group-hover:bg-flow-in"
                       style={{
-                        width: `${(Math.abs(r.holding.value) / scale) * 48}%`,
+                        width: `${(Math.abs(holding.value) / scale) * 48}%`,
                       }}
                     />
                   )}
                 </span>
-                <span className="readout w-14 shrink-0 text-right text-[10px] text-flow-out/90">
-                  {r.holder ? fmt(r.holder.value, 1) : '·'}
-                </span>
-                <span className="readout w-14 shrink-0 text-right text-[10px] text-flow-in">
-                  {r.holding ? fmt(r.holding.value, 1) : '·'}
-                </span>
-                <span className="readout w-3 shrink-0 text-right text-[10px] text-paper-dim">
-                  {grade}
-                </span>
-              </button>
+                {holder && effPeriod ? (
+                  <button
+                    type="button"
+                    className="readout w-[72px] shrink-0 text-right text-[10px] text-flow-out/90 hover:text-flow-out"
+                    onClick={() =>
+                      openDossier(
+                        partnerDossierPayload(holder, {
+                          owner: r.country,
+                          issuer: iso3,
+                          assetLabel,
+                          period: effPeriod,
+                          asset,
+                          fxRows,
+                        }),
+                      )
+                    }
+                  >
+                    {fmt(holder.value, 1)} · {holder.grade}
+                  </button>
+                ) : (
+                  <span className="readout w-[72px] shrink-0 text-right text-[9px] text-paper-dim/45">
+                    UNAVAIL
+                  </span>
+                )}
+                {holding && effPeriod ? (
+                  <button
+                    type="button"
+                    className="readout w-[72px] shrink-0 text-right text-[10px] text-flow-in hover:text-flow-in/80"
+                    onClick={() =>
+                      openDossier(
+                        partnerDossierPayload(holding, {
+                          owner: iso3,
+                          issuer: r.country,
+                          assetLabel,
+                          period: effPeriod,
+                          asset,
+                          fxRows,
+                        }),
+                      )
+                    }
+                  >
+                    {fmt(holding.value, 1)} · {holding.grade}
+                  </button>
+                ) : (
+                  <span className="readout w-[72px] shrink-0 text-right text-[9px] text-paper-dim/45">
+                    UNAVAIL
+                  </span>
+                )}
+              </div>
             )
           })}
         </div>

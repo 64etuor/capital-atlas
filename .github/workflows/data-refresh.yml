@@ -1,6 +1,6 @@
-# 일일 데이터 갱신 — 파이프라인 재실행 후 파생 3종 재생성(README 재생성 체인),
-# sanity 게이트 통과분만 커밋. 파이프라인 자체가 bounded retry(3회 캡)라
-# 소스 장애 시 실패 기록 후 진행하며, data:check 실패 시 커밋하지 않는다.
+# 일일 데이터 갱신 — 전체 재생성 체인을 돌리고 sanity 통과분만 커밋한다.
+# 필수 소스는 bounded retry(3회 캡) 뒤에도 실패하면 public 쓰기 전에 중단한다.
+# CoinGecko만 명시적 optional snapshot 폴백이다.
 name: Data refresh
 
 on:

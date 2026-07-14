@@ -5,15 +5,25 @@
  * Dataflows used (probed live 2026-07-12):
  *   IMF.STA:IIP  key COUNTRY.BOP_ACCOUNTING_ENTRY.INDICATOR.UNIT.FREQUENCY
  *                entries A_P (external assets) / L_P (external liabilities)
- *   IMF.STA:BOP  same key shape; entries A_T (net acquisition of financial
- *                assets) / L_T (net incurrence of liabilities) — REAL flows
+ *   IMF.STA:BOP  same key shape; entries A_NFA_T (net acquisition of financial
+ *                assets) / L_NIL_T (net incurrence of liabilities) — REAL flows
  *   IMF.STA:PIP  key COUNTRY.ACCOUNTING_ENTRY.INDICATOR.SECTOR.
  *                COUNTERPART_SECTOR.COUNTERPART_COUNTRY.FREQUENCY
  *                (CPIS bilateral portfolio positions)
  *
  * OBS_VALUE is absolute current USD (verified: KOR D A_P 2024-Q4 ≈ $769.5B).
  */
-import { chunk, fetchCached, parseSdmxSeries, pooled, toQuarter, writeRawJson } from './lib.ts'
+import {
+  assertMinimumRows,
+  assertNoNewFailures,
+  chunk,
+  failures,
+  fetchCached,
+  parseSdmxSeries,
+  pooled,
+  toQuarter,
+  writeRawJson,
+} from './lib.ts'
 
 const BASE = 'https://api.imf.org/external/sdmx/2.1/data'
 
@@ -93,6 +103,7 @@ async function fetchChunkedQuarterly<T>(
 }
 
 export async function runIip(iso3s: string[]): Promise<ImfStockObs[]> {
+  const failureStart = failures.length
   const rows = await fetchChunkedQuarterly<ImfStockObs>(
     'IIP',
     iso3s,
@@ -110,12 +121,15 @@ export async function runIip(iso3s: string[]): Promise<ImfStockObs[]> {
       }
     },
   )
+  assertNoNewFailures('IMF IIP', failureStart)
+  assertMinimumRows('IMF IIP', rows.length, 1_000)
   writeRawJson('imf/iip_normalized.json', rows)
   console.log(`[imf:iip] ${rows.length} obs, ${new Set(rows.map((r) => r.iso3)).size} countries`)
   return rows
 }
 
 export async function runBop(iso3s: string[]): Promise<ImfFlowObs[]> {
+  const failureStart = failures.length
   const rows = await fetchChunkedQuarterly<ImfFlowObs>(
     'BOP',
     iso3s,
@@ -133,6 +147,8 @@ export async function runBop(iso3s: string[]): Promise<ImfFlowObs[]> {
       }
     },
   )
+  assertNoNewFailures('IMF BOP', failureStart)
+  assertMinimumRows('IMF BOP', rows.length, 1_000)
   writeRawJson('imf/bop_normalized.json', rows)
   console.log(`[imf:bop] ${rows.length} obs, ${new Set(rows.map((r) => r.iso3)).size} countries`)
   return rows
@@ -144,6 +160,7 @@ export async function runBop(iso3s: string[]): Promise<ImfFlowObs[]> {
  * an empty dataset (~2.6KB) — cheap to skip over.
  */
 export async function runPip(iso3s: string[]): Promise<PipObs[]> {
+  const failureStart = failures.length
   const out: PipObs[] = []
   await pooled(iso3s, 6, async (iso3) => {
     const key = `${iso3}.A.P_F51_P_USD+P_F3_P_USD.S1.S1..A`
@@ -166,6 +183,8 @@ export async function runPip(iso3s: string[]): Promise<PipObs[]> {
       }
     }
   })
+  assertNoNewFailures('IMF PIP', failureStart)
+  assertMinimumRows('IMF PIP', out.length, 1_000)
   writeRawJson('imf/pip_normalized.json', out)
   const reporters = new Set(out.map((r) => r.owner))
   console.log(`[imf:pip] ${out.length} obs, ${reporters.size} reporting economies`)

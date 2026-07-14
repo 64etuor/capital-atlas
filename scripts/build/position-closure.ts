@@ -1,4 +1,4 @@
-/** Bounded RAS/IPF position closure. Direct PIP seeds are never overwritten. */
+/** Bounded RAS/IPF view. Direct PIP observations remain untouched in their source shards. */
 import { readFileSync, rmSync } from 'node:fs'
 import { join } from 'node:path'
 import type {
@@ -81,9 +81,17 @@ export function rasClose(
   const total = rowTotal
   const rows = Object.keys(rowMargins)
   const columns = Object.keys(columnMargins)
+  const rowDomain = new Set(rows)
+  const columnDomain = new Set(columns)
   const seedMap = new Map<string, number>()
   for (const cell of seed) {
-    if (cell.value <= 0 || !Number.isFinite(cell.value)) continue
+    if (
+      cell.value <= 0 ||
+      !Number.isFinite(cell.value) ||
+      !rowDomain.has(cell.row) ||
+      !columnDomain.has(cell.column)
+    )
+      continue
     const key = `${cell.row}|${cell.column}`
     seedMap.set(key, (seedMap.get(key) ?? 0) + cell.value)
   }
@@ -187,16 +195,21 @@ export function buildPositionClosure(): { periods: number; cells: number } {
     const direct = readBilateral(period).filter(
       (row) => row.source_id === 'imf_pip' && row.measure === 'stock' && row.asset === asset,
     )
-    if (!hasBottomUpSeed(
-      direct.map((row) => ({ row: row.owner_country, column: row.issuer_country, value: row.value_usd })),
-    ))
-      continue
-    const result = rasClose(
-      direct.map((row) => ({
+    const inDomainDirect = direct
+      .filter(
+        (row) =>
+          margins.rows[row.owner_country] !== undefined &&
+          margins.columns[row.issuer_country] !== undefined,
+      )
+      .map((row) => ({
         row: row.owner_country,
         column: row.issuer_country,
         value: row.value_usd,
-      })),
+      }))
+    if (!hasBottomUpSeed(inDomainDirect))
+      continue
+    const result = rasClose(
+      inDomainDirect,
       margins.rows,
       margins.columns,
     )

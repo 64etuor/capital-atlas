@@ -9,7 +9,25 @@ import { join } from 'node:path'
 import { OUT_DIR, writeJson } from '../fetch/lib.ts'
 import { SOURCE_REGISTRY } from '../fetch/registry.ts'
 
-export function writeSourcesJson(opts: { stampAll?: string } = {}): void {
+interface SourceStampOptions {
+  stampAll?: string
+  preserveSourceIds?: readonly string[]
+}
+
+export function resolveRetrievedAt(
+  sourceId: string,
+  previous: ReadonlyMap<string, string>,
+  opts: SourceStampOptions,
+  now: string,
+): string {
+  if (opts.preserveSourceIds?.includes(sourceId))
+    return previous.get(sourceId) ?? now
+  return opts.stampAll ?? previous.get(sourceId) ?? now
+}
+
+export function writeSourcesJson(
+  opts: SourceStampOptions = {},
+): void {
   const path = join(OUT_DIR, 'meta', 'sources.json')
   const prev = new Map<string, string>()
   if (existsSync(path)) {
@@ -26,7 +44,7 @@ export function writeSourcesJson(opts: { stampAll?: string } = {}): void {
     'meta/sources.json',
     SOURCE_REGISTRY.map((def) => ({
       ...def,
-      retrieved_at: opts.stampAll ?? prev.get(def.source_id) ?? now,
+      retrieved_at: resolveRetrievedAt(def.source_id, prev, opts, now),
     })),
   )
 }

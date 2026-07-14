@@ -1,11 +1,23 @@
 import { describe, expect, it } from 'vitest'
-import { parseIipcc, parsePipExposure } from './imf-exposure.ts'
+import {
+  parseIipcc,
+  parsePipExposure,
+  requireCompleteResponses,
+} from './imf-exposure.ts'
 
 const xml = (...series: string[]) =>
   `<StructureSpecificData><DataSet>${series.join('')}</DataSet></StructureSpecificData>`
 
 const series = (attrs: string, period: string, value: number) =>
   `<Series ${attrs}><Obs TIME_PERIOD="${period}" OBS_VALUE="${value}"/></Series>`
+
+describe('requireCompleteResponses — partial overwrite guard', () => {
+  it('fails the refresh when any required official response is missing', () => {
+    expect(() => requireCompleteResponses('IIPCC', ['ok', null, 'ok'])).toThrow(
+      /IIPCC.*1 of 3 required requests failed/,
+    )
+  })
+})
 
 describe('parseIipcc — direct currency-composition facts', () => {
   it('keeps non-overlapping buckets, exact sectors, and quarterly precedence', () => {

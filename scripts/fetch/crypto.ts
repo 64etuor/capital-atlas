@@ -1,13 +1,15 @@
 /**
  * Optional: CoinGecko public global endpoint — one call, no key.
- * Country allocation of crypto holdings is a v2 modelling problem (draft
- * §7.7); v1 only records the global control total for future use.
+ * Country allocation is deliberately out of scope: this publishes only the
+ * global control total and the UI keeps its intraday overlay separate.
  * A failure here is non-fatal by design.
  */
 import { fetchBounded, writeJson } from './lib.ts'
 
+export const COINGECKO_GLOBAL_URL = 'https://api.coingecko.com/api/v3/global'
+
 export async function run(): Promise<boolean> {
-  const body = await fetchBounded('https://api.coingecko.com/api/v3/global', {
+  const body = await fetchBounded(COINGECKO_GLOBAL_URL, {
     accept: 'application/json',
     timeoutMs: 20_000,
   })
@@ -23,7 +25,7 @@ export async function run(): Promise<boolean> {
       as_of: new Date(parsed.data.updated_at * 1000).toISOString(),
       source_id: 'coingecko_global',
       confidence_grade: 'B',
-      note: 'global control total only — country allocation is v2 (draft §7.7)',
+      note: 'global control total only — no country allocation',
     })
     console.log(`[crypto] global market cap $${(usd / 1e12).toFixed(2)}T`)
     return true

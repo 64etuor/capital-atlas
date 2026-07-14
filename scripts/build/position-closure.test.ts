@@ -52,6 +52,19 @@ describe('rasClose — top-down/bottom-up position closure', () => {
     expect(result.cells.every((cell) => cell.value >= 0)).toBe(true)
   })
 
+  it('counts direct-seed coverage only inside the IIP row and column domains', () => {
+    const result = rasClose(
+      [
+        { row: 'KOR', column: 'USA', value: 30 },
+        { row: 'OUT', column: 'USA', value: 70 },
+        { row: 'KOR', column: 'OUT', value: 20 },
+      ],
+      { KOR: 100 },
+      { USA: 100 },
+    )
+    expect(result.directSeedShare).toBe(0.3)
+  })
+
   it('adds an explicit discrepancy margin instead of silently rescaling unequal totals', () => {
     const moreAssets = rasClose([], { KOR: 100 }, { USA: 80 })
     expect(moreAssets.columnMargins[DISCREPANCY_ISSUER]).toBe(20)

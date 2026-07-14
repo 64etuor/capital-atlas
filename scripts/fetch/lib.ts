@@ -25,6 +25,27 @@ export interface FetchFailure {
 
 export const failures: FetchFailure[] = []
 
+/** Required stages are atomic: terminal failures must stop before normalized/public writes. */
+export function assertNoNewFailures(label: string, startIndex: number): void {
+  const added = failures.length - startIndex
+  if (added <= 0) return
+  throw new Error(
+    `[fetch] ${label}: ${added} required request failed; refusing partial overwrite`,
+  )
+}
+
+/** A structurally valid 200/empty response is still a failed required refresh. */
+export function assertMinimumRows(
+  label: string,
+  actual: number,
+  minimum: number,
+): void {
+  if (actual >= minimum) return
+  throw new Error(
+    `[fetch] ${label}: ${actual} rows below minimum ${minimum}; refusing overwrite`,
+  )
+}
+
 const sleep = (ms: number) => new Promise((r) => setTimeout(r, ms))
 
 /**

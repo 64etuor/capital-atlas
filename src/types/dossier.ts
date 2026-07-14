@@ -14,7 +14,7 @@ export interface DossierPayload {
   method?: string
   lower_bound?: number
   upper_bound?: number
-  /** Meaning of the interval; omit only when the source contract defines a 95% range. */
+  /** Meaning of the interval; omitted labels resolve from method, never to an assumed 95%. */
   range_label?: string
   effective_date?: string
   /** Session fetch timestamp for live observations; overrides registry snapshot date. */

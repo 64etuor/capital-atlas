@@ -113,7 +113,7 @@ pnpm build          # tsc -b && vite build
 
 ### 데이터 다운로드 — 정본 수치 원장 (v3, §16-6)
 
-관측과 명시적으로 등급화한 파생 수치 505,246건을 단일 NDJSON 원장으로 내려받을 수 있다:
+관측과 명시적으로 등급화한 파생 수치 505,316건을 단일 NDJSON 원장으로 내려받을 수 있다:
 
 ```
 https://ca.yanghapark.com/data/facts.ndjson.gz   (~6.3MB gzip, 라인당 JSON 1개)
@@ -188,7 +188,7 @@ BIS 은행 보고국 39개(회랑 15만 건 — 마스터 밖 역외센터 BM/GG
 
 안개 알파는 `--fog-A:0 … --fog-E:0.45`. 국가 색은 값-가중 평균 등급만큼 잉크로
 흐려지고, 트리맵·상대국 리스트·계보 도시에도 같은 규칙을 따른다. 현재 스냅샷 등급
-분포: A 193,717 · B 1,150 · C 32,874 · D 26,259 · E 5,863.
+분포: A 261,579 · B 151,965 · C 35,192 · D 26,717 · E 29,863.
 
 ## 계기 사용법
 
@@ -294,7 +294,9 @@ STATION ALL 탭의 `REALLOC` 보기는 관측된 BOP 순흐름(A등급)을 마�
   도시에엔 FX RATE·LCU/USD VALUE 행이 병기된다. v3 **고정환율 USD(FXD)**는
   `exposure/`에 별도 발행한다(기준 2020-Q4). IIPCC 직접 통화구성은 20개 보고국에만
   있으므로 `OTHC+UALLC>5%`, 환율 누락, 통화합↔총계 gap>0.5%면 숫자 대신 정확한
-  unavailable 사유를 보인다. 핵심 `stocks`의 `value_usd_constant_fx`는 관측 원장을
+  unavailable 사유를 보인다. `XDC`는 국가 ISO 통화의 currency-level IMF 환율
+  중앙값(WB 폴백)을 쓰며 실제 환율 source까지 dossier에 남긴다. 핵심 `stocks`의
+  `value_usd_constant_fx`는 관측 원장을
   덮어쓰지 않기 위해 계속 미산출이다. CSV/PNG 내보내기는 LCU 모드에서도 **USD 원값**을
   수출한다(계보 정본 유지 — 환율은 도시에 FX RATE 행으로 추적).
 - **부문은 보고된 코드만 노출한다.** PIP 직접 포지션의 S11(비금융기업), S13(정부),

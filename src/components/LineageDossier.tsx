@@ -8,6 +8,7 @@ import {
 } from '../lib/dataClient'
 import type { PeriodKey } from '../types/data'
 import { formatUsd } from '../lib/format'
+import { rangeMeaning } from '../lib/rangeMeaning'
 import { fogAlpha } from '../lib/tokens'
 import { useTranslation } from 'react-i18next'
 import type { SourceRegistryEntry } from '../types/data'
@@ -290,7 +291,7 @@ export function LineageDossier() {
           <Row label={t('dossier.rows.range')}>
             {payload.lower_bound !== undefined &&
             payload.upper_bound !== undefined
-              ? `${formatUsd(payload.lower_bound)} — ${formatUsd(payload.upper_bound)} (${payload.range_label ?? '95%'})`
+              ? `${formatUsd(payload.lower_bound)} — ${formatUsd(payload.upper_bound)} (${rangeMeaning(payload.method, payload.range_label)})`
               : t('dossier.observedValue')}
           </Row>
           {payload.effective_date && (

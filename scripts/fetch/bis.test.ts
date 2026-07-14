@@ -9,7 +9,12 @@
  */
 import { describe, expect, it } from 'vitest'
 import type { BilateralRecord } from '../../src/types/data.ts'
-import { BIS_MIN_USD, parseLbsCsv, toBankRecords } from './bis.ts'
+import {
+  BIS_MIN_USD,
+  parseLbsCsv,
+  requireUsableLbsCoverage,
+  toBankRecords,
+} from './bis.ts'
 import { mergeBankCorridors } from '../build/bank_merge.ts'
 import { sourceById } from './registry.ts'
 
@@ -56,6 +61,14 @@ describe('parseLbsCsv — SDMX-CSV 파싱', () => {
       row('C', 'KR', 'US', '2025-Q1', '1.5'),
     ].join('\n')
     expect(parseLbsCsv(csv)).toHaveLength(1)
+  })
+})
+
+describe('requireUsableLbsCoverage — successful-empty overwrite guard', () => {
+  it('rejects a 200/empty or unmappable response before public shards are rebuilt', () => {
+    expect(() => requireUsableLbsCoverage([], [])).toThrow(/no reporting economies/)
+    expect(() => requireUsableLbsCoverage(['KR'], [])).toThrow(/no usable corridors/)
+    expect(() => requireUsableLbsCoverage(['KR'], [{} as BilateralRecord])).not.toThrow()
   })
 })
 
