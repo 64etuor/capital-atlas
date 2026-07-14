@@ -17,7 +17,7 @@ export const currencyExposureRecordSchema = directLineage
     period,
     entry: z.enum(['assets', 'liabilities']),
     sector: z.enum(['S1', 'S121', 'S122', 'S12R', 'S13', 'S1Z', 'S1ZOTH']),
-    currency: z.enum(['USD', 'EUR', 'JPY', 'XDC', 'OTHC', 'UALLC']),
+    currency: z.enum(['TOTAL', 'USD', 'EUR', 'JPY', 'XDC', 'OTHC', 'UALLC']),
     value_usd: z.number().finite(),
   })
   .strict()

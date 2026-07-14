@@ -207,11 +207,27 @@ export interface FxCountry {
 export interface FxRatesFile {
   base: 'USD'
   countries: Record<string, FxCountry>
+  currencies: Record<string, FxCurrency>
 }
 
 // ------------------------------------------------------------ exposure ----
 
-export type CurrencyBucket = 'USD' | 'EUR' | 'JPY' | 'XDC' | 'OTHC' | 'UALLC'
+export interface FxCurrencyRateEntry extends FxRateEntry {
+  observations: number
+}
+
+export interface FxCurrency {
+  rates: Partial<Record<PeriodKey, FxCurrencyRateEntry>>
+}
+
+export type CurrencyBucket =
+  | 'TOTAL'
+  | 'USD'
+  | 'EUR'
+  | 'JPY'
+  | 'XDC'
+  | 'OTHC'
+  | 'UALLC'
 
 export type IipccSector = 'S1' | 'S121' | 'S122' | 'S12R' | 'S13' | 'S1Z' | 'S1ZOTH'
 

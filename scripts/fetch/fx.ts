@@ -53,6 +53,64 @@ export interface WbFxObs {
   rate: number
 }
 
+const median = (values: number[]): number => {
+  const sorted = [...values].sort((a, b) => a - b)
+  const mid = Math.floor(sorted.length / 2)
+  return sorted.length % 2 === 0
+    ? (sorted[mid - 1] + sorted[mid]) / 2
+    : sorted[mid]
+}
+
+/** Currency-level rates for FXD. Prefer grade A, then median identical ISO-currency reports. */
+export function currencyRates(
+  countries: FxRatesFile['countries'],
+): FxRatesFile['currencies'] {
+  const grouped = new Map<string, Map<string, Array<{ rate: number; grade: 'A' | 'B'; source_id: string; effective_date: string }>>>()
+  const periods = new Set<string>()
+  for (const country of Object.values(countries)) {
+    let byPeriod = grouped.get(country.currency)
+    if (!byPeriod) grouped.set(country.currency, (byPeriod = new Map()))
+    for (const [period, entry] of Object.entries(country.rates)) {
+      if (!entry) continue
+      periods.add(period)
+      const rows = byPeriod.get(period) ?? []
+      rows.push(entry)
+      byPeriod.set(period, rows)
+    }
+  }
+
+  const out: FxRatesFile['currencies'] = {}
+  for (const [currency, byPeriod] of [...grouped].sort(([a], [b]) => a.localeCompare(b))) {
+    const rates: FxRatesFile['currencies'][string]['rates'] = {}
+    for (const [period, entries] of [...byPeriod].sort(([a], [b]) => a.localeCompare(b))) {
+      const aGrade = entries.filter((entry) => entry.grade === 'A')
+      const selected = aGrade.length > 0 ? aGrade : entries
+      rates[period as keyof typeof rates] = {
+        rate: median(selected.map((entry) => entry.rate)),
+        grade: selected[0].grade,
+        source_id: selected[0].source_id,
+        effective_date: selected[0].effective_date,
+        method: 'median_country_rates_same_iso_currency',
+        observations: selected.length,
+      }
+    }
+    out[currency] = { rates }
+  }
+  const usdRates: FxRatesFile['currencies'][string]['rates'] = {}
+  for (const period of [...periods].sort()) {
+    usdRates[period as keyof typeof usdRates] = {
+      rate: 1,
+      grade: 'A',
+      source_id: 'imf_ifs_fx',
+      effective_date: quarterEndDate(period),
+      method: 'usd_identity',
+      observations: 1,
+    }
+  }
+  out.USD = { rates: usdRates }
+  return out
+}
+
 /** 순수 조립 — 테스트 대상. IMF 보유국은 IMF만, WB는 IMF 무보유국 전용. */
 export function assembleFx(
   imf: ErObs[],
@@ -76,9 +134,11 @@ export function assembleFx(
     }
   }
 
+  const imfCountries = new Set(Object.keys(countries))
+
   for (const o of wb) {
     if (!master.has(o.iso3) || !valid(o.rate)) continue
-    if (countries[o.iso3]) continue // IMF 분기 보유국은 오염 금지
+    if (imfCountries.has(o.iso3)) continue // IMF 분기 보유국은 오염 금지
     const currency = CURRENCY_BY_ISO3.get(o.iso3)
     if (!currency) continue
     const q = `${o.year}-Q4`
@@ -96,6 +156,7 @@ export function assembleFx(
   return {
     base: 'USD',
     countries,
+    currencies: currencyRates(countries),
   }
 }
 

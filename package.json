@@ -22,7 +22,8 @@
     "data:station": "tsx scripts/build/station.ts",
     "data:flowmatrix": "tsx scripts/build/flowmatrix.ts",
     "data:facts": "tsx scripts/build/facts.ts",
-    "data:reconcile": "tsx scripts/build/reconcile.ts"
+    "data:reconcile": "tsx scripts/build/reconcile.ts",
+    "data:exposure": "tsx scripts/build/exposure.ts"
   },
   "dependencies": {
     "@fontsource-variable/archivo": "^5.2.8",

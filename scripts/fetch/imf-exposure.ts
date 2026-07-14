@@ -20,6 +20,7 @@ import {
 const BASE = 'https://api.imf.org/external/sdmx/2.1/data'
 
 const CURRENCIES = new Set<CurrencyBucket>([
+  'TOTAL',
   'USD',
   'EUR',
   'JPY',
@@ -27,6 +28,8 @@ const CURRENCIES = new Set<CurrencyBucket>([
   'OTHC',
   'UALLC',
 ])
+
+const API_CURRENCIES = ['_T', 'USD', 'EUR', 'JPY', 'XDC', 'OTHC', 'UALLC'] as const
 
 const IIPCC_INDICATORS: Record<
   string,
@@ -81,7 +84,9 @@ export function parseIipcc(xml: string): CurrencyExposureRecord[] {
   const rows = new Map<string, { row: CurrencyExposureRecord; priority: number }>()
   for (const series of parseSdmxSeries(xml)) {
     const mapping = IIPCC_INDICATORS[series.attrs.INDICATOR]
-    const currency = series.attrs.CURRENCY as CurrencyBucket
+    const currency = (series.attrs.CURRENCY === '_T'
+      ? 'TOTAL'
+      : series.attrs.CURRENCY) as CurrencyBucket
     const expectedEntry = mapping?.entry === 'assets' ? 'A_P' : 'L_P'
     if (
       !mapping ||
@@ -202,7 +207,7 @@ export function parsePipExposure(xml: string): PipExposureParseResult {
 
 export async function runIipcc(iso3s: string[]): Promise<CurrencyExposureRecord[]> {
   const indicators = Object.keys(IIPCC_INDICATORS).join('+')
-  const currencies = [...CURRENCIES].join('+')
+  const currencies = API_CURRENCIES.join('+')
   const requests = chunk(iso3s, 12).flatMap((countries, index) =>
     (['A', 'Q'] as const).map((frequency) => ({ countries, index, frequency })),
   )
