@@ -5,7 +5,7 @@
  * - 상대국 HHI/top-5는 **발행 bilateral 샤드 전체**에서 계산한다 — station
  *   파일의 top-15 상대국 리스트로 계산하면 꼬리를 잘라 HHI가 과대평가된다.
  * - 단, 샤드 자체가 업스트림에서 |값| ≥ $100M로 프루닝된 산출물이므로 그
- *   한계를 method 문구에 그대로 남긴다(가치 기준 99.8% 보존 — Phase B 보고).
+ *   한계를 method 문구에 그대로 남긴다. 가치 보존율은 계산하지 않는다.
  * - 모든 지표는 파생값: source_id 상속 + 산식 문구 + 구성 레코드 worst 등급.
  */
 import type { BilateralRecord } from './synoptic.ts'
@@ -22,8 +22,8 @@ export const CP_METHOD =
   '(CPIS securities + BIS LBS banking channel); ' +
   'top-5 = combined share of the five largest counterparties. ' +
   'Limitation: computed from published shards pruned upstream at |value| ≥ $100M ' +
-  '(99.8% of gross value retained), so the long tail is truncated and HHI is ' +
-  'slightly overstated.'
+  'so the long tail is truncated and HHI is slightly overstated; value retention ' +
+  'is not computed.'
 
 export const QUARTERLY_METHOD =
   'share_of_world = country total ÷ world total (stocks_owner shards, ' +
