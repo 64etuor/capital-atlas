@@ -150,6 +150,16 @@ export const SOURCE_REGISTRY: readonly SourceDef[] = [
     expected_release_lag: 'derived at assembly time',
   },
   {
+    source_id: 'model_constant_fx',
+    name: 'Currency-bucket constant-FX model',
+    publisher: 'capital-atlas pipeline',
+    url: 'docs/DATA_CONTRACT.md',
+    license_note: 'internal derived view — grade C/D with explicit residual bounds',
+    collection_mode: 'derived_model',
+    update_frequency: 'quarterly',
+    expected_release_lag: 'derived at assembly time',
+  },
+  {
     source_id: 'coingecko_global',
     name: 'CoinGecko global crypto market cap',
     publisher: 'CoinGecko',

@@ -18,6 +18,7 @@ const q = (s: string) => s as PeriodKey
 
 const FX: FxRatesFile = {
   base: 'USD',
+  currencies: {},
   countries: {
     KOR: {
       currency: 'KRW',

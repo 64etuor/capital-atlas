@@ -29,6 +29,7 @@ describe('assembleFx — 소스 우선순위·정직 공백', () => {
   const wb = [
     { iso3: 'KOR', year: 2024, rate: 1364 }, // IMF 보유국 — 무시되어야 함
     { iso3: 'AFG', year: 2024, rate: 70.6 },
+    { iso3: 'AFG', year: 2023, rate: 72.1 },
   ]
 
   it('IMF quarterly entries: grade A · imf_ifs_fx · quarter-end effective date', () => {
@@ -55,6 +56,27 @@ describe('assembleFx — 소스 우선순위·정직 공백', () => {
       grade: 'B',
       source_id: 'wb_wdi',
       method: 'wb_pa_nus_fcrf_annual_rate_q4',
+    })
+    expect(afg.rates['2023-Q4']?.rate).toBe(72.1)
+  })
+
+  it('publishes currency-level median rates and a fixed USD rate', () => {
+    const out = assembleFx(
+      [
+        { iso3: 'DEU', quarter: '2024-Q4', rate: 0.9 },
+        { iso3: 'FRA', quarter: '2024-Q4', rate: 0.92 },
+      ],
+      [],
+      ['DEU', 'FRA'],
+    )
+    expect(out.currencies.EUR.rates['2024-Q4']).toMatchObject({
+      rate: 0.91,
+      grade: 'A',
+      observations: 2,
+    })
+    expect(out.currencies.USD.rates['2024-Q4']).toMatchObject({
+      rate: 1,
+      grade: 'A',
     })
   })
 

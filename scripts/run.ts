@@ -12,6 +12,7 @@ import { runBis } from './fetch/bis.ts'
 import { assemble } from './build/assemble.ts'
 import { applyBankMerge } from './build/bank_merge.ts'
 import { writeSourcesJson } from './build/sources.ts'
+import { buildExposure } from './build/exposure.ts'
 import { failures } from './fetch/lib.ts'
 
 const t0 = Date.now()
@@ -27,6 +28,7 @@ const cryptoOk = await runCrypto()
 await runFx(iso3s) // Phase L: CURR=LCU 다이얼 근거 (실패는 failures에 기록)
 
 assemble({ countries, wb, iip, bop, pip })
+buildExposure()
 
 // Phase M: BIS 은행 회랑 — assemble이 쓴 bilateral 샤드에 병합(멱등)
 {
