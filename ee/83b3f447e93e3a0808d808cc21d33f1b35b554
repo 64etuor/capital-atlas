@@ -1,0 +1,23 @@
+scripts/fetch/lib.ts
+  s_6cfe0f5f25d4e5::t_1ab31903fba71a 51-61,68,70,82-90,108
+scripts/fetch/fx.ts
+  s_6cfe0f5f25d4e5::t_1ab31903fba71a 198-203
+scripts/fetch/lib.test.ts
+  s_6cfe0f5f25d4e5::t_79f7a6f2311520 101-115
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.13",
+  "base_commit_sha": "ee83b3f447e93e3a0808d808cc21d33f1b35b554",
+  "prompts": {},
+  "sessions": {
+    "s_6cfe0f5f25d4e5": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "019f5c0a-f294-78b2-af01-6c5483dbfcbe",
+        "model": "gpt-5.6-sol"
+      },
+      "human_author": "64etuor <130260521+64etuor@users.noreply.github.com>"
+    }
+  }
+}
