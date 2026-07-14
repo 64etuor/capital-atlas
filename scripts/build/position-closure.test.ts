@@ -2,6 +2,7 @@ import { describe, expect, it } from 'vitest'
 import {
   DISCREPANCY_ISSUER,
   DISCREPANCY_OWNER,
+  boundPositionValue,
   frechetPositionBounds,
   hasBottomUpSeed,
   rasClose,
@@ -11,6 +12,11 @@ const near = (a: number, b: number, tolerance = 1e-9) =>
   Math.abs(a - b) <= tolerance * Math.max(1, Math.abs(a), Math.abs(b))
 
 describe('rasClose — top-down/bottom-up position closure', () => {
+  it('clips floating-point residue to the exact published Fréchet corridor', () => {
+    expect(boundPositionValue(100.0000001, 0, 100)).toBe(100)
+    expect(boundPositionValue(-0.0000001, 0, 100)).toBe(0)
+  })
+
   it('refuses to publish a closure when no bottom-up observation exists', () => {
     expect(hasBottomUpSeed([])).toBe(false)
     expect(hasBottomUpSeed([{ row: 'KOR', column: 'USA', value: 0 }])).toBe(false)

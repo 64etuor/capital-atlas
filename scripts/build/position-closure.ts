@@ -47,6 +47,10 @@ export const frechetPositionBounds = (row: number, column: number, total: number
   upper: Math.min(row, column),
 })
 
+/** Keep published values inside exact mathematical bounds after iterative FP arithmetic. */
+export const boundPositionValue = (value: number, lower: number, upper: number) =>
+  Math.min(upper, Math.max(lower, value))
+
 const cleanMargins = (margins: Record<string, number>): Record<string, number> =>
   Object.fromEntries(
     Object.entries(margins)
@@ -133,7 +137,12 @@ export function rasClose(
         columnMargins[columns[j]],
         total,
       )
-      cells.push({ row: rows[i], column: columns[j], value: matrix[i][j], ...bounds })
+      cells.push({
+        row: rows[i],
+        column: columns[j],
+        value: boundPositionValue(matrix[i][j], bounds.lower, bounds.upper),
+        ...bounds,
+      })
     }
   return {
     cells,

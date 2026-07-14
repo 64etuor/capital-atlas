@@ -1,1 +1,1 @@
-{"records":410678,"by_table":{"stocks":78717,"flows_country":116255,"flows_bilateral":215706},"by_grade":{"A":193717,"D":26259,"E":5863,"B":151965,"C":32874},"gzip_bytes":4922368,"schema":"docs/DATA_CONTRACT.md#factsndjsongz"}
+{"records":505246,"by_table":{"stocks":78717,"flows_country":116255,"flows_bilateral":215706,"reconstructed_liabilities":2318,"sector_positions":14790,"currency_exposure":53072,"constant_fx":388,"position_closure":24000},"by_grade":{"A":261579,"D":26647,"E":29863,"B":151965,"C":35192},"gzip_bytes":6314704,"schema":"docs/DATA_CONTRACT.md#factsndjsongz"}

@@ -6,6 +6,13 @@ import { readFileSync, readdirSync, statSync, existsSync } from 'node:fs'
 import { join } from 'node:path'
 import { z } from 'zod'
 import { OUT_DIR } from '../fetch/lib.ts'
+import {
+  currencyExposureRecordSchema,
+  fxdResultSchema,
+  positionClosureCellSchema,
+  reconstructedLiabilitySchema,
+  sectorPositionRecordSchema,
+} from '../build/exposure-contract.ts'
 
 const grade = z.enum(['A', 'B', 'C', 'D', 'E'])
 const period = z.string().regex(/^\d{4}-Q[1-4]$/)
@@ -189,6 +196,177 @@ if (korUsaEquityLatest !== null) {
 const topPairs = [...pairTotals.entries()].sort((a, b) => b[1] - a[1]).slice(0, 5)
 console.log('  top pairs (latest):', topPairs.map(([k, v]) => `${k} $${(v / 1e12).toFixed(2)}T`).join(' · '))
 
+// ---- exposure (v3 — 직접 통화·부문 + 명시적 파생) ----------------------------
+let currencyN = 0
+let sectorN = 0
+let reconstructedN = 0
+let fxdN = 0
+const exposureDir = join(OUT_DIR, 'exposure')
+const exposureIndexPath = join(exposureDir, 'index.json')
+if (!existsSync(exposureIndexPath)) {
+  fail('exposure/index.json missing — run pnpm data:exposure')
+} else {
+  const exposureIndex = JSON.parse(readFileSync(exposureIndexPath, 'utf8')) as {
+    countries?: unknown
+    periods?: unknown
+    base_period?: unknown
+  }
+  const exposureCountries = z.array(z.string().length(3)).safeParse(exposureIndex.countries)
+  const exposurePeriods = z.array(period).safeParse(exposureIndex.periods)
+  if (!exposureCountries.success) fail('exposure/index.json: invalid countries')
+  else if (exposureCountries.data.length < 80)
+    fail(`exposure coverage ${exposureCountries.data.length} < 80 countries`)
+  if (!exposurePeriods.success) fail('exposure/index.json: invalid periods')
+  else if (exposurePeriods.data.length < 12)
+    fail(`exposure history ${exposurePeriods.data.length} < 12 quarters`)
+  if (!period.safeParse(exposureIndex.base_period).success)
+    fail('exposure/index.json: invalid base_period')
+
+  for (const country of exposureCountries.success ? exposureCountries.data : []) {
+    const path = join(exposureDir, `${country}.json`)
+    if (!existsSync(path)) {
+      fail(`exposure/${country}.json missing`)
+      continue
+    }
+    const size = statSync(path).size
+    if (size > 5 * 1024 * 1024)
+      fail(`exposure/${country}.json exceeds 5MB (${(size / 1e6).toFixed(1)}MB)`)
+    const body = JSON.parse(readFileSync(path, 'utf8')) as {
+      country?: unknown
+      currency?: unknown
+      sectors?: unknown
+      fxd?: unknown
+      reconstructed_liabilities?: unknown
+    }
+    if (body.country !== country) fail(`exposure/${country}.json: country mismatch`)
+
+    const currencyRows = z.array(currencyExposureRecordSchema).safeParse(body.currency)
+    if (!currencyRows.success) {
+      fail(`exposure/${country}.json currency: ${currencyRows.error.issues[0].message}`)
+    } else {
+      currencyN += currencyRows.data.length
+      for (const row of currencyRows.data) bump(row.confidence_grade)
+    }
+    const sectorRows = z.array(sectorPositionRecordSchema).safeParse(body.sectors)
+    if (!sectorRows.success) {
+      fail(`exposure/${country}.json sectors: ${sectorRows.error.issues[0].message}`)
+    } else {
+      sectorN += sectorRows.data.length
+      for (const row of sectorRows.data) bump(row.confidence_grade)
+    }
+    const reconstructedRows = z
+      .array(reconstructedLiabilitySchema)
+      .safeParse(body.reconstructed_liabilities)
+    if (!reconstructedRows.success) {
+      fail(
+        `exposure/${country}.json reconstructed: ${reconstructedRows.error.issues[0].message}`,
+      )
+    } else {
+      reconstructedN += reconstructedRows.data.length
+      for (const row of reconstructedRows.data) bump(row.confidence_grade)
+    }
+    const fxdRows = z.array(fxdResultSchema).safeParse(body.fxd)
+    if (!fxdRows.success) {
+      fail(`exposure/${country}.json FXD: ${fxdRows.error.issues[0].message}`)
+    } else {
+      for (const row of fxdRows.data) {
+        if (row.status !== 'available') continue
+        fxdN++
+        bump(row.confidence_grade)
+      }
+    }
+  }
+  if (currencyN === 0) fail('currency exposure contains no direct observations')
+  if (sectorN === 0) fail('sector positions contain no direct observations')
+  if (reconstructedN === 0) fail('reconstructed liabilities contain no derived observations')
+  ok(
+    `exposure: ${exposureCountries.success ? exposureCountries.data.length : 0} countries · ` +
+      `${currencyN} currency A · ${sectorN} sector A · ${reconstructedN} reconstructed C · ${fxdN} FXD C/D`,
+  )
+}
+
+// ---- position closure (v3 — bounded RAS, grade E only) ---------------------
+let positionClosureN = 0
+const closureDir = join(OUT_DIR, 'position_closure')
+const closureIndexPath = join(closureDir, 'index.json')
+if (!existsSync(closureIndexPath)) {
+  fail('position_closure/index.json missing — run pnpm data:closure')
+} else {
+  const closureIndex = JSON.parse(readFileSync(closureIndexPath, 'utf8')) as {
+    periods?: unknown
+  }
+  const closurePeriods = z.array(period).safeParse(closureIndex.periods)
+  if (!closurePeriods.success) fail('position_closure/index.json: invalid periods')
+  else if (closurePeriods.data.length < 10)
+    fail(`position closure history ${closurePeriods.data.length} < 10 periods`)
+  for (const closurePeriod of closurePeriods.success ? closurePeriods.data : []) {
+    const path = join(closureDir, `${closurePeriod}.json`)
+    if (!existsSync(path)) {
+      fail(`position_closure/${closurePeriod}.json missing`)
+      continue
+    }
+    const size = statSync(path).size
+    if (size > 5 * 1024 * 1024)
+      fail(`position_closure/${closurePeriod}.json exceeds 5MB`)
+    const body = JSON.parse(readFileSync(path, 'utf8')) as {
+      period?: unknown
+      method?: unknown
+      assets?: Record<string, unknown>
+    }
+    if (body.period !== closurePeriod)
+      fail(`position_closure/${closurePeriod}.json: period mismatch`)
+    if (body.method !== 'biproportional_ras_position_closure')
+      fail(`position_closure/${closurePeriod}.json: unexpected method ${body.method}`)
+    for (const [asset, raw] of Object.entries(body.assets ?? {})) {
+      const result = raw as {
+        cells?: unknown
+        iterations?: unknown
+        residual?: unknown
+        converged?: unknown
+        direct_seed_share?: unknown
+        total_cells?: unknown
+        omitted_cells?: unknown
+        omitted_value_usd?: unknown
+      }
+      const cells = z.array(positionClosureCellSchema).safeParse(result.cells)
+      if (!cells.success) {
+        fail(
+          `position_closure/${closurePeriod}.json ${asset}: ${cells.error.issues[0].message}`,
+        )
+        continue
+      }
+      if (result.converged !== true)
+        fail(`position_closure/${closurePeriod}.json ${asset}: not converged`)
+      if (!Number.isInteger(result.iterations) || Number(result.iterations) > 100)
+        fail(`position_closure/${closurePeriod}.json ${asset}: invalid iteration count`)
+      if (!Number.isFinite(result.residual) || Number(result.residual) > 1e-9)
+        fail(`position_closure/${closurePeriod}.json ${asset}: residual exceeds 1e-9`)
+      if (
+        !Number.isFinite(result.direct_seed_share) ||
+        Number(result.direct_seed_share) <= 0 ||
+        Number(result.direct_seed_share) > 1
+      )
+        fail(`position_closure/${closurePeriod}.json ${asset}: invalid direct seed coverage`)
+      if (
+        !Number.isInteger(result.total_cells) ||
+        !Number.isInteger(result.omitted_cells) ||
+        Number(result.total_cells) !== cells.data.length + Number(result.omitted_cells)
+      )
+        fail(`position_closure/${closurePeriod}.json ${asset}: cell counts do not close`)
+      if (!Number.isFinite(result.omitted_value_usd) || Number(result.omitted_value_usd) < 0)
+        fail(`position_closure/${closurePeriod}.json ${asset}: invalid omitted value`)
+      positionClosureN += cells.data.length
+      for (const row of cells.data) bump(row.confidence_grade)
+    }
+  }
+  if (positionClosureN === 0) fail('position closure contains no published cells')
+  else
+    ok(
+      `position closure: ${closurePeriods.success ? closurePeriods.data.length : 0} periods · ` +
+        `${positionClosureN} grade-E cells (converged, residual ≤1e-9)`,
+    )
+}
+
 // ---- flowmatrix (Phase O — §8 모델 배분) --------------------------------------
 const fmCell = z.object({
   from: z.string(),
@@ -257,6 +435,11 @@ if (!existsSync(factsGz) || !existsSync(factsSummaryPath)) {
     stocks: stockTotal,
     flows_country: flowN,
     flows_bilateral: biN,
+    currency_exposure: currencyN,
+    sector_positions: sectorN,
+    reconstructed_liabilities: reconstructedN,
+    constant_fx: fxdN,
+    position_closure: positionClosureN,
   }
   for (const [table, n] of Object.entries(expected))
     if (fs.by_table[table] !== n)
@@ -269,8 +452,9 @@ if (!existsSync(factsGz) || !existsSync(factsSummaryPath)) {
   const gzBytes = statSync(factsGz).size
   if (gzBytes !== fs.gzip_bytes) fail('facts.ndjson.gz size ≠ summary.gzip_bytes')
   if (gzBytes > 100 * 1024 * 1024) fail('facts.ndjson.gz exceeds Vercel 100MB file limit')
-  if (fs.records !== stockTotal + flowN + biN)
-    fail(`facts total ${fs.records} ≠ ${stockTotal + flowN + biN}`)
+  const expectedTotal = Object.values(expected).reduce((sum, value) => sum + value, 0)
+  if (fs.records !== expectedTotal)
+    fail(`facts total ${fs.records} ≠ ${expectedTotal}`)
   else ok(`facts table: ${fs.records} records = shard sums, ${(gzBytes / 1e6).toFixed(1)}MB gz`)
 }
 

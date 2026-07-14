@@ -188,7 +188,7 @@ export function reconstructLiabilities(
   const out: ReconstructedLiability[] = []
   for (const [key, row] of bottomUp) {
     const margin = topDown.get(key)
-    if (margin === undefined || margin <= 0) continue
+    if (margin === undefined || margin <= 0 || row.value <= 0) continue
     const [country, period, asset] = key.split('|') as [
       string,
       PeriodKey,

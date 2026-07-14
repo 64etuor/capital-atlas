@@ -25,6 +25,14 @@ describe('classifyChange — 파일 단위 분류', () => {
     expect(
       classifyChange(change('station/KOR.json', { a: 1 }, { a: 2 })),
     ).toBe('substantive')
+    expect(
+      classifyChange(change('exposure/KOR.json', { currency: [] }, { currency: [1] })),
+    ).toBe('substantive')
+    expect(
+      classifyChange(
+        change('position_closure/2024-Q4.json', { assets: {} }, { assets: { debt: {} } }),
+      ),
+    ).toBe('substantive')
   })
 
   it('index.json: generated_at만 다르면 타임스탬프-전용', () => {
