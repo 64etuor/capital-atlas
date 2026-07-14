@@ -5,11 +5,9 @@ import type { ConfidenceGrade } from './data'
  * Every on-screen number opens one of these — §1.5: no number without
  * lineage. Aggregates synthesize a payload from their constituent records.
  */
-export interface DossierPayload {
+interface DossierBase {
   title: string
   subtitle?: string
-  value_usd: number
-  grade: ConfidenceGrade
   /** absent = direct observation */
   method?: string
   lower_bound?: number
@@ -44,3 +42,25 @@ export interface DossierPayload {
     side: 'claims' | 'liabilities'
   }
 }
+
+export type DossierPayload = DossierBase &
+  (
+    | {
+        status?: 'available'
+        value_usd: number
+        value_ratio?: never
+        grade: ConfidenceGrade
+      }
+    | {
+        status?: 'available'
+        value_usd?: never
+        value_ratio: number
+        grade: ConfidenceGrade
+      }
+    | {
+        status: 'unavailable'
+        value_usd?: never
+        value_ratio?: never
+        grade?: never
+      }
+  )

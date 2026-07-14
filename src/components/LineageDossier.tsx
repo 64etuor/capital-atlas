@@ -8,7 +8,7 @@ import {
 } from '../lib/dataClient'
 import type { PeriodKey } from '../types/data'
 import { formatUsd } from '../lib/format'
-import { rangeMeaning } from '../lib/rangeMeaning'
+import { rangeAbsenceKind, rangeMeaning } from '../lib/rangeMeaning'
 import { fogAlpha } from '../lib/tokens'
 import { useTranslation } from 'react-i18next'
 import type { SourceRegistryEntry } from '../types/data'
@@ -189,7 +189,9 @@ export function LineageDossier() {
   }, [open, closeDossier])
 
   if (!payload) return null
-  const fog = fogAlpha(payload.grade)
+  const available = payload.status !== 'unavailable'
+  const ratioValue = available ? payload.value_ratio : undefined
+  const fog = available ? fogAlpha(payload.grade) : 0.45
   const resolved = payload.source_ids.map((id) => sources.get(id) ?? null)
   const firstSource = resolved.find((s) => s !== null) ?? null
 
@@ -232,22 +234,32 @@ export function LineageDossier() {
             className="font-display mt-2 text-[clamp(2rem,4vw,3rem)] leading-none text-paper"
             style={{ opacity: 1 - fog * 0.6 }}
           >
-            {formatUsd(payload.value_usd)}
+            {available
+              ? ratioValue !== undefined
+                ? `${(ratioValue * 100).toFixed(1)}%`
+                : formatUsd(payload.value_usd!)
+              : 'UNAVAILABLE'}
           </p>
-          <div className="mt-2 flex items-center gap-2">
-            <span className="readout text-[11px] text-paper">
-              GRADE {payload.grade}
-            </span>
-            <span className="relative h-1.5 w-20 bg-ink-2">
-              <span
-                className="absolute inset-y-0 left-0 bg-flow-in/70"
-                style={{ width: `${(1 - fog / 0.45) * 100}%` }}
-              />
-            </span>
-            <span className="readout text-[10px] text-paper-dim">
-              FOG {fog.toFixed(2)}
-            </span>
-          </div>
+          {available ? (
+            <div className="mt-2 flex items-center gap-2">
+              <span className="readout text-[11px] text-paper">
+                GRADE {payload.grade}
+              </span>
+              <span className="relative h-1.5 w-20 bg-ink-2">
+                <span
+                  className="absolute inset-y-0 left-0 bg-flow-in/70"
+                  style={{ width: `${(1 - fog / 0.45) * 100}%` }}
+                />
+              </span>
+              <span className="readout text-[10px] text-paper-dim">
+                FOG {fog.toFixed(2)}
+              </span>
+            </div>
+          ) : (
+            <p className="readout mt-2 text-[10px] tracking-[0.1em] text-paper-dim">
+              NO NUMERIC CLAIM · NO GRADE
+            </p>
+          )}
         </div>
 
         <dl className="min-w-0 flex-1">
@@ -291,8 +303,12 @@ export function LineageDossier() {
           <Row label={t('dossier.rows.range')}>
             {payload.lower_bound !== undefined &&
             payload.upper_bound !== undefined
-              ? `${formatUsd(payload.lower_bound)} — ${formatUsd(payload.upper_bound)} (${rangeMeaning(payload.method, payload.range_label)})`
-              : t('dossier.observedValue')}
+              ? `${ratioValue !== undefined ? `${(payload.lower_bound * 100).toFixed(1)}% — ${(payload.upper_bound * 100).toFixed(1)}%` : `${formatUsd(payload.lower_bound)} — ${formatUsd(payload.upper_bound)}`} (${rangeMeaning(payload.method, payload.range_label)})`
+              : t(
+                  rangeAbsenceKind(payload.method) === 'derived_exact'
+                    ? 'dossier.derivedExactPoint'
+                    : 'dossier.observedValue',
+                )}
           </Row>
           {payload.effective_date && (
             <Row label={t('dossier.rows.effective')}>

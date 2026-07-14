@@ -100,6 +100,7 @@
       "mirror": "미러 폐합"
     },
     "observedValue": "— (관측값)",
+    "derivedExactPoint": "— (정확 산술 파생점; 모델 범위 없음)",
     "directObservation": "직접 관측",
     "modes": {
       "live_market": "실시간 시장",
@@ -117,9 +118,9 @@
     }
   },
   "synoptic": {
-    "circulationFlow": "파생 순흐름",
-    "circulationPositions": "CPIS 포지션",
-    "circulationNoObserved": "관측 회랑 없음 — CPIS 파생 흐름은 D등급",
+    "circulationFlow": "파생 포지션 변화",
+    "circulationPositions": "양자 포지션",
+    "circulationNoObserved": "관측 회랑 없음 — PIP 파생 포지션 변화는 D등급",
     "circulationAwaiting": "양자 관측 대기",
     "circulationAria": "상위 자본 회랑",
     "visibilityTitle": "시정 — 관측 등급 구성",

@@ -41,7 +41,7 @@ amber 유입), 자산별 분기 지진계 스트립, 이상 관측 특보, 그�
 상세에 진입한다. 주 차트는 **흐름 분해** — 유입(amber ↑)과 유출(cyan ↓)의 분기
 발산 바 + 순흐름 라인 위에, 평가변동은 **별도 파선 층**으로만 겹친다(시가 변동을
 자금 유입이라 부르지 않는다는 제품 원칙의 차트 형태). 자산 탭에서는 잔액 궤적에
-**D/E 신뢰구간 밴드**가 그려지고(불확실성이 차트 위에 있다), CPIS 양방향 상대국
+**D/E 신뢰구간 밴드**가 그려지고(불확실성이 차트 위에 있다), PIP·DIP·BIS 상대국
 매트릭스(← 피보유 · 보유 →)와 기저 레코드 원장이 따라온다. 계기 스트립의 흐름
 강도(순유입/평균잔액)·YoY·시정 게이지까지 — 모든 숫자는 클릭하면 교정 시트다.
 
@@ -158,6 +158,7 @@ liabilities). `meta/reconciliation.json`(분포 요약)과 `reconciliation/{분�
 | **IMF BOP** | 금융계정 실거래 흐름 (바로그래프 실루엣) | A | IMF terms — attribution |
 | **IMF IIPCC** | 대외채권·채무 통화구성 (가용 보고국 직접 관측) | A | IMF terms — attribution |
 | **IMF PIP** (CPIS 후속) | 양자 포트폴리오 자산·보고 부문 (직접 관측) + SCC 파생 부채 | A / C | IMF terms — attribution |
+| **IMF DIP** (CDIS 후속) | 양자 outward 직접투자 포지션 (직접보고·방향원칙) | A | IMF terms — attribution |
 | **BIS LBS** | 국경 간 은행 loans&deposits 양자 회랑 (분기, Phase M) | B | BIS terms — attribution |
 | **World Bank WDI** | 상장주식 시총(발행국 총액)·GDP | B | CC BY-4.0 |
 | **CoinGecko** | 암호자산 글로벌 통제값 + 분리된 일중 오버레이 | B | free API — attribution |
@@ -228,9 +229,16 @@ lazy-load한다. 은행 회랑 갱신:
 "자본 비중이 어디에 쏠렸나"를 %와 집중도 지표로 읽는다 (설계 §14):
 
 - **STATION 계기 스트립**: `WORLD SHARE`(국가 잔액 ÷ 세계 총액 — 자산 탭이면 그
-  자산의 세계 대비), `TOP-5 CP`(상위 5 상대국 비중), `CP HHI`(허핀달-허시먼 지수
+  자산의 세계 대비), `OBS STOCK`(현재 잔액 중 A/B 관측 비중), `CP ALLOC`(같은 기간의
+  발행 bilateral gross ÷ owner 잔액), `TOP-5 CP`(상위 5 상대국 비중), `CP HHI`(허핀달-허시먼 지수
   + CONCENTRATED/MODERATE/DIVERSE 관용 구간 0.25/0.15). 전부 클릭 = 교정 증명서
   (산식·프루닝 한계·top-5 분해까지 그대로).
+- all-scope 상대국은 `BILATERAL-COVERED ASSETS`로만 부른다. PIP(asset/liability),
+  DIP(directional principle), BIS(position side)의 관측 범위와 basis가 다르므로
+  `CP ALLOC`은 source completeness나 국가 총자산 폐합률이 아니다. exact-period
+  분모가 없으면 보간하지 않고 unavailable 사유를 표시하며 100% 초과도 숨기지 않는다.
+  등급은 양자 분자와 owner-stock 분모 중 낮은 쪽을 따르고, 분모 source와 D/E 범위도
+  도시에 운반한다. OBS 모드에서는 D/E 분모로 계산한 배분비를 수치처럼 보이지 않는다.
 - **HHI는 발행 bilateral 샤드 전체에서 사전 계산** — 화면의 top-15 리스트로
   계산하면 꼬리가 잘려 과대평가된다. 샤드 자체의 |값|≥$100M 프루닝 한계는 산식
   문구에 명시하며 현재 HHI·상위 상대국 비중은 station shard가 정본이다.
@@ -316,7 +324,8 @@ STATION ALL 탭의 `REALLOC` 보기는 관측된 BOP 순흐름(A등급)을 마�
 - **번들 청크.** deck.gl/echarts를 별도 청크로 분리했지만 두 라이브러리 청크는
   500KB 경고 대상이다. 현재 크기는 `pnpm build` 출력이 정본이며 내부 분할은 v2 리스크다.
 - **데이터 정밀도 한계**(파이프라인 상세): IIP `P_F5`에 펀드지분 포함 →`funds` 미분리 ·
-  PIP 파생 flow는 가격효과 미조정(D등급) · 양자 레코드 |값| < $100M 프루닝
+  PIP 파생 포지션 변화는 가격효과 미조정(D등급, 실제 거래 흐름이 아님) · DIP 방향원칙과 IIP 자산/부채 원칙의
+  통계적 basis 차이 · 양자 레코드 |값| < $100M 프루닝
   (드롭 수는 `meta/pipeline_report.json`에 기록; 가치 보존율은 별도 주장하지 않음).
 
 ## 결정 기록
@@ -328,6 +337,10 @@ STATION ALL 탭의 `REALLOC` 보기는 관측된 BOP 순흐름(A등급)을 마�
 - **2026-07-14 · 실시간 오버레이는 공식 통계와 분리.** 공개 CORS 시장값 하나만
   제한적으로 갱신하며, 수집시각·B등급·비공식 라벨·스냅샷 폴백을 한 픽셀에 묶었다.
   이 값은 `index.generated_at`, 국가별 수치, 공식 통계 계산을 절대 변경하지 않는다.
+- **2026-07-14 · 상대국 배분은 범위와 통계 basis를 함께 표시.** PIP 반기 관측과
+  IMF DIP outward 포지션을 추가하되 PIP·DIP·BIS를 단일 완전 장부로 부르지 않는다.
+  STATION은 `OBS STOCK`과 exact-period `CP ALLOC`을 분리하고, 수치·도시에·원장에
+  source family와 position basis를 보존한다.
 
 ## 재검토 후보 (v3 이후 — 자세히는 `docs/architecture.md`)
 
@@ -349,5 +362,3 @@ STATION ALL 탭의 `REALLOC` 보기는 관측된 BOP 순흐름(A등급)을 마�
 - [`DESIGN.md`](./DESIGN.md) — 시각 디자인 정본(BAROMETER) · §1 불변 원칙 5개
 - [`docs/DATA_CONTRACT.md`](./docs/DATA_CONTRACT.md) — 데이터 계약(정본, TS 미러 `src/types/data.ts`)
 - [`docs/DATA_PIPELINE.md`](./docs/DATA_PIPELINE.md) — 수집·조립·폴백 사다리·프루닝
-</content>
-</invoke>

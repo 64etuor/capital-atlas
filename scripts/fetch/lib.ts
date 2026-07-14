@@ -181,6 +181,9 @@ export function parseSdmxSeries(xml: string): SdmxSeries[] {
 export function toQuarter(period: string): string | null {
   const q = /^(\d{4})-Q([1-4])$/.exec(period)
   if (q) return `${q[1]}-Q${q[2]}`
+  const semester = /^(\d{4})-S([12])$/.exec(period)
+  if (semester)
+    return `${semester[1]}-Q${semester[2] === '1' ? '2' : '4'}`
   const y = /^(\d{4})$/.exec(period)
   if (y) return `${y[1]}-Q4` // annual figures land on year-end
   const m = /^(\d{4})-(\d{2})$/.exec(period)

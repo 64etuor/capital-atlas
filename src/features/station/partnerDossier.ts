@@ -15,9 +15,19 @@ export function partnerDossierPayload(
   context: PartnerDossierContext,
 ): DossierPayload {
   const { owner, issuer, assetLabel, period, asset, fxRows } = context
+  const sourceLabels: Record<string, string> = {
+    imf_pip: 'IMF PIP/CPIS',
+    imf_dip: 'IMF DIP',
+    imf_iip: 'IMF IIP',
+    bis_lbs: 'BIS LBS',
+  }
+  const sources = partner.source_ids ?? [partner.source_id]
+  const sourceLabel = sources
+    .map((source) => sourceLabels[source] ?? source)
+    .join(' + ')
   return {
     title: `${owner} → ${issuer} · ${assetLabel} — bilateral position`,
-    subtitle: `CPIS/PIP · ${period}`,
+    subtitle: `${sourceLabel} · ${period}`,
     value_usd: partner.value,
     grade: partner.grade,
     method: partner.method,
@@ -25,7 +35,7 @@ export function partnerDossierPayload(
     upper_bound: partner.upper,
     range_label: partner.range_label,
     effective_date: partner.effective_date,
-    source_ids: partner.source_ids ?? [partner.source_id],
+    source_ids: sources,
     ...(partner.source_id === 'bis_lbs' &&
     (asset === 'deposits' || asset === 'loans')
       ? {
@@ -41,6 +51,7 @@ export function partnerDossierPayload(
       : {}),
     context: [
       ['Direction', `${owner} holds ${issuer}`],
+      ['Position basis', partner.position_bases.join(' + ')],
       ...(partner.coverage_share !== undefined
         ? ([
             [

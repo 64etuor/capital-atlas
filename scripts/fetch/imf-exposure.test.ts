@@ -69,6 +69,32 @@ describe('parseIipcc — direct currency-composition facts', () => {
 })
 
 describe('parsePipExposure — direct sectors vs SCC reconstruction', () => {
+  it('maps semiannual sectors to Q2/Q4 and prefers them over annual Q4', () => {
+    const parsed = parsePipExposure(
+      xml(
+        series(
+          'COUNTRY="KOR" ACCOUNTING_ENTRY="A" INDICATOR="P_F51_P_USD" SECTOR="S14" COUNTERPART_SECTOR="S1" COUNTERPART_COUNTRY="G001" FREQUENCY="A"',
+          '2024',
+          20,
+        ),
+        series(
+          'COUNTRY="KOR" ACCOUNTING_ENTRY="A" INDICATOR="P_F51_P_USD" SECTOR="S14" COUNTERPART_SECTOR="S1" COUNTERPART_COUNTRY="G001" FREQUENCY="S"',
+          '2024-S2',
+          22,
+        ),
+      ),
+    )
+
+    expect(parsed.sectors).toEqual([
+      expect.objectContaining({
+        country: 'KOR',
+        period: '2024-Q4',
+        sector: 'S14',
+        value_usd: 22,
+      }),
+    ])
+  })
+
   it('preserves S1V and separates reported official data from SCC derivation', () => {
     const parsed = parsePipExposure(
       xml(

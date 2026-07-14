@@ -1,6 +1,6 @@
 /**
  * STATION 사전 집계 계약 (TDD RED 선행): 국가별 시계열(잔액·양측 흐름·
- * 평가변동·D/E 신뢰구간 밴드), CPIS 양방향 상대국, 세계 집계(WLD),
+ * 평가변동·D/E 신뢰구간 밴드), PIP/DIP/BIS 상대국, 세계 집계(WLD),
  * 생성 파일의 스키마·산술 정합. STATION 뷰는 국가당 파일 하나만 로드한다.
  */
 import { existsSync, readFileSync, statSync } from 'node:fs'
@@ -53,6 +53,7 @@ const bilat = (over: Partial<BilateralRecord>): BilateralRecord => ({
   source_id: 'imf_pip',
   effective_date: '2024-12-31',
   confidence_grade: 'A',
+  position_basis: 'asset_liability',
   ...over,
 })
 
@@ -136,7 +137,7 @@ describe('stationSeries — 국가 시계열 조립', () => {
   })
 })
 
-describe('stationPartners — CPIS 양방향 상대국', () => {
+describe('stationPartners — PIP/DIP/BIS 상대국', () => {
   it('splits holdings (owner=me) vs holders (issuer=me), sorts by |value|, caps per side', () => {
     const rows: BilateralRecord[] = []
     for (let i = 0; i < PARTNER_LIMIT + 4; i++) {
@@ -146,7 +147,7 @@ describe('stationPartners — CPIS 양방향 상대국', () => {
     }
     rows.push(bilat({ owner_country: 'USA', issuer_country: 'KOR', value_usd: 3e9, confidence_grade: 'A' }))
     rows.push(bilat({ owner_country: 'JPN', issuer_country: 'KOR', value_usd: 1e9 }))
-    // derived flow records must NOT enter the partner matrix (positions only)
+    // Derived position-change records must NOT enter the partner matrix.
     rows.push(bilat({ measure: 'flow', issuer_country: 'DEU', value_usd: 9e12, confidence_grade: 'D' }))
     const reconstructed: ReconstructedLiability[] = [
       {
@@ -219,6 +220,39 @@ describe('stationPartners — CPIS 양방향 상대국', () => {
       'KOR',
     )
     expect(partners['2024-Q4'].assets.listed_equity?.holders).toEqual([])
+  })
+
+  it('does not transpose IMF DIP outward positions into issuer-side holders', () => {
+    const partners = stationPartners(
+      [
+        bilat({
+          owner_country: 'KOR',
+          issuer_country: 'USA',
+          asset: 'unlisted_equity_fdi',
+          source_id: 'imf_dip',
+          position_basis: 'directional_principle',
+          value_usd: 2e9,
+        }),
+        bilat({
+          owner_country: 'USA',
+          issuer_country: 'KOR',
+          asset: 'unlisted_equity_fdi',
+          source_id: 'imf_dip',
+          position_basis: 'directional_principle',
+          value_usd: 3e9,
+        }),
+      ],
+      'KOR',
+    )
+
+    expect(
+      partners['2024-Q4'].assets.unlisted_equity_fdi?.holders,
+    ).toEqual([])
+    expect(
+      partners['2024-Q4'].assets.unlisted_equity_fdi?.holdings.map(
+        (row) => row.country,
+      ),
+    ).toEqual(['USA'])
   })
 })
 

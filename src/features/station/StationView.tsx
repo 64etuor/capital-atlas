@@ -19,7 +19,19 @@ import { dataVintageDate, periodFromIndex } from '../../lib/periods'
 import { formatUsd, formatUsdNet } from '../../lib/format'
 import { useMoney } from '../../lib/money'
 import { ASSET_LABELS } from '../../lib/assetLabels'
+import {
+  COUNTERPARTY_ALLOCATION_LABEL,
+  COUNTERPARTY_NO_DATA_REASON,
+  COUNTERPARTY_SOURCE_IDS,
+  OBSERVATION_COVERAGE_LABEL,
+  counterpartyScopeLabel,
+  formatAllocationCoverage,
+  formatPositionBases,
+  unavailableCounterpartyDossier,
+  visibleAllocationCoverage,
+} from './counterpartyScope'
 import type {
+  ConfidenceGrade,
   CountryMaster,
   PeriodKey,
   StationFile,
@@ -226,6 +238,7 @@ function StationBody({
   )
   const present = assetsPresent(file)
   const assetLabel = tab === 'all' ? 'ALL ASSETS' : ASSET_LABELS[tab]
+  const counterpartyAssetLabel = counterpartyScopeLabel(tab)
   const exportBase = {
     country: iso,
     countryName: name,
@@ -262,6 +275,9 @@ function StationBody({
             : (conc.quarterly?.share_of_world_assets[tab] ?? null),
         )
   const cp = gateObs(conc.cp?.grade, conc.cp)
+  const cpAllocation = cp
+    ? visibleAllocationCoverage(cp.allocation_coverage, observedOnly)
+    : null
 
   const flowInNow = flows.flowIn[periodIndex]
   const flowOutNow = flows.flowOut[periodIndex]
@@ -279,7 +295,7 @@ function StationBody({
       if (p?.flow_grade && (!g || order[p.flow_grade] > order[g as 'A']))
         g = p.flow_grade
     }
-    return (g ?? 'A') as DossierPayload['grade']
+    return (g ?? 'A') as ConfidenceGrade
   })()
 
   const flowDossier = (
@@ -403,21 +419,37 @@ function StationBody({
       },
     },
     {
-      label: 'VISIBILITY',
+      label: OBSERVATION_COVERAGE_LABEL,
       value:
         stock.total > 0
           ? `${((stock.obsTotal / stock.total) * 100).toFixed(0)}%`
-          : '—',
+          : 'UNAVAIL',
       tone: 'dim',
-      dossier: {
-        title: `${name} · ${assetLabel} — visibility`,
-        subtitle: `value-weighted observed (A/B) share · ${period}`,
-        value_usd: stock.obsTotal,
-        grade: 'A',
-        effective_date: quarterEnd(period),
-        source_ids: ['imf_iip'],
-        context: [['Observed', formatUsd(stock.obsTotal, 1)], ['Total', formatUsd(stock.total, 1)]],
-      },
+      dossier:
+        stock.total > 0
+          ? {
+              title: `${name} · ${assetLabel} — owner-stock observation coverage`,
+              subtitle: `value-weighted observed (A/B) share · ${period}`,
+              value_ratio: stock.obsTotal / stock.total,
+              grade: 'A',
+              method: 'published grade share arithmetic',
+              effective_date: quarterEnd(period),
+              source_ids: ['imf_iip'],
+              context: [
+                ['Observed', formatUsd(stock.obsTotal, 1)],
+                ['Total', formatUsd(stock.total, 1)],
+              ],
+            }
+          : {
+              status: 'unavailable',
+              title: `${name} · ${assetLabel} — owner-stock observation coverage`,
+              subtitle: 'no owner-stock denominator for this scope',
+              source_ids: ['imf_iip'],
+              context: [
+                ['Status', 'UNAVAILABLE'],
+                ['Reason', 'owner-stock denominator is missing or non-positive'],
+              ],
+            },
     },
     // §14 집중도 계기 — WLD는 세계 대비/상대국 개념이 정의되지 않아 생략
     ...(iso !== 'WLD'
@@ -425,13 +457,15 @@ function StationBody({
           {
             label: 'WORLD SHARE',
             value:
-              worldShare !== null ? `${(worldShare * 100).toFixed(2)}%` : '—',
+              worldShare !== null
+                ? `${(worldShare * 100).toFixed(2)}%`
+                : 'UNAVAIL',
             tone: 'paper',
-            dossier: conc.quarterly
+            dossier: conc.quarterly && worldShare !== null
               ? {
                   title: `${name} · ${assetLabel} — share of world`,
                   subtitle: `stocks_owner · ${conc.quarterly.period}`,
-                  value_usd: stock.total,
+                  value_ratio: worldShare,
                   grade: conc.quarterly.grade,
                   method: conc.quarterly.method,
                   effective_date: quarterEnd(conc.quarterly.period),
@@ -439,29 +473,99 @@ function StationBody({
                   context: [
                     [
                       'Share of world',
-                      worldShare !== null
-                        ? `${(worldShare * 100).toFixed(2)}%`
-                        : '— (observed-only mode)',
+                      `${(worldShare * 100).toFixed(2)}%`,
                     ],
                     ['Charter §14', 'world share = adjusted balance_c / Σ_c adjusted balance'],
                   ],
                 }
               : {
+                  status: 'unavailable',
                   title: `${name} — share of world`,
-                  subtitle: 'no concentration data for this scope',
-                  value_usd: 0,
-                  grade: 'A',
-                  source_ids: ['imf_iip'],
-                  context: [['Reason', 'no owner-basis stock records']],
+                  subtitle: 'no publishable world-share ratio for this scope',
+                  source_ids: conc.quarterly?.source_ids ?? ['imf_iip'],
+                  context: [
+                    ['Status', 'UNAVAILABLE'],
+                    [
+                      'Reason',
+                      conc.quarterly
+                        ? 'estimated world-share ratio is hidden in OBS mode'
+                        : 'no owner-basis stock records',
+                    ],
+                  ],
                 },
           },
           {
+            label: COUNTERPARTY_ALLOCATION_LABEL,
+            value: cpAllocation
+              ? formatAllocationCoverage(cpAllocation)
+              : 'UNAVAIL',
+            tone: 'dim',
+            dossier: cp && cpAllocation?.status === 'available'
+              ? {
+                  title: `${name} · ${counterpartyAssetLabel} — counterparty allocation coverage`,
+                  subtitle: `Bilateral positions ÷ owner stock · ${cp.period}`,
+                  value_ratio: cpAllocation.share,
+                  grade: cpAllocation.confidence_grade,
+                  method: cp.method,
+                  lower_bound: cpAllocation.lower_bound,
+                  upper_bound: cpAllocation.upper_bound,
+                  range_label: cpAllocation.range_label,
+                  effective_date: quarterEnd(cp.period),
+                  source_ids: [
+                    ...new Set([
+                      ...cp.source_ids,
+                      ...cpAllocation.denominator_source_ids,
+                    ]),
+                  ],
+                  context: [
+                    [
+                      'Allocated bilateral gross',
+                      formatUsd(cpAllocation.allocated_usd, 1),
+                    ],
+                    [
+                      'Owner-stock denominator',
+                      formatUsd(cpAllocation.owner_stock_usd, 1),
+                    ],
+                    [
+                      'Allocation share',
+                      formatAllocationCoverage(cpAllocation),
+                    ],
+                    ['Scope', counterpartyAssetLabel],
+                    [
+                      'Position bases',
+                      formatPositionBases(cp.position_bases),
+                    ],
+                    [
+                      'Denominator sources',
+                      cpAllocation.denominator_source_ids.join(' + '),
+                    ],
+                    [
+                      'Meaning',
+                      'published bilateral gross ÷ same-period stocks_owner; not source completeness',
+                    ],
+                  ],
+                }
+              : unavailableCounterpartyDossier(
+                  `${name} · ${counterpartyAssetLabel} — counterparty allocation coverage`,
+                  cpAllocation?.status === 'unavailable'
+                    ? cpAllocation.reason
+                    : COUNTERPARTY_NO_DATA_REASON,
+                  cp?.source_ids ?? COUNTERPARTY_SOURCE_IDS,
+                  cp
+                    ? [
+                        ['Scope', counterpartyAssetLabel],
+                        ['Position bases', formatPositionBases(cp.position_bases)],
+                      ]
+                    : [],
+                ),
+          },
+          {
             label: 'TOP-5 CP',
-            value: cp ? `${(cp.top5_share * 100).toFixed(0)}%` : '—',
+            value: cp ? `${(cp.top5_share * 100).toFixed(0)}%` : 'UNAVAIL',
             tone: 'paper',
             dossier: cp
               ? {
-                  title: `${name} · ${assetLabel} — top-5 counterparty share`,
+                  title: `${name} · ${counterpartyAssetLabel} — top-5 counterparty share`,
                   subtitle: `Bilateral positions · ${cp.period}`,
                   value_usd: cp.gross_usd,
                   grade: cp.grade,
@@ -476,26 +580,22 @@ function StationBody({
                       ],
                     ),
                     ['Counterparties', String(cp.n_partners)],
+                    ['Position bases', formatPositionBases(cp.position_bases)],
                   ],
                 }
-              : {
-                  title: `${name} · ${assetLabel} — top-5 counterparty share`,
-                  subtitle: 'no bilateral positions for this scope',
-                  value_usd: 0,
-                  grade: 'A',
-                  source_ids: ['imf_pip', 'bis_lbs'],
-                  context: [
-                    ['Reason', 'no CPIS/LBS bilateral reporting for this scope'],
-                  ],
-                },
+              : unavailableCounterpartyDossier(
+                  `${name} · ${counterpartyAssetLabel} — top-5 counterparty share`,
+                ),
           },
           {
             label: 'CP HHI',
-            value: cp ? `${cp.hhi.toFixed(2)} · ${hhiClass(cp.hhi)}` : '—',
+            value: cp
+              ? `${cp.hhi.toFixed(2)} · ${hhiClass(cp.hhi)}`
+              : 'UNAVAIL',
             tone: cp && cp.hhi >= 0.25 ? 'in' : 'dim',
             dossier: cp
               ? {
-                  title: `${name} · ${assetLabel} — counterparty HHI`,
+                  title: `${name} · ${counterpartyAssetLabel} — counterparty HHI`,
                   subtitle: `Bilateral positions · ${cp.period}`,
                   value_usd: cp.gross_usd,
                   grade: cp.grade,
@@ -507,18 +607,12 @@ function StationBody({
                     ['Class', `${hhiClass(cp.hhi)} (0.15 / 0.25 bands)`],
                     ['Top counterparty', cp.top5[0]?.country ?? '—'],
                     ['Counterparties', String(cp.n_partners)],
+                    ['Position bases', formatPositionBases(cp.position_bases)],
                   ],
                 }
-              : {
-                  title: `${name} · ${assetLabel} — counterparty HHI`,
-                  subtitle: 'no bilateral positions for this scope',
-                  value_usd: 0,
-                  grade: 'A',
-                  source_ids: ['imf_pip', 'bis_lbs'],
-                  context: [
-                    ['Reason', 'no CPIS/LBS bilateral reporting for this scope'],
-                  ],
-                },
+              : unavailableCounterpartyDossier(
+                  `${name} · ${counterpartyAssetLabel} — counterparty HHI`,
+                ),
           },
         ] satisfies Gauge[])
       : []),
@@ -691,7 +785,7 @@ function StationBody({
               sides={partnerSides}
               effPeriod={partnerEff}
               iso3={iso}
-              assetLabel="ALL ASSETS"
+              assetLabel={counterpartyAssetLabel}
               observedOnly={observedOnly}
               emptyHint={partnerEmpty}
               fmt={(v, d) => money.fmtAt(v, partnerEff ?? period, d)}

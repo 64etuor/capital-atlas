@@ -100,6 +100,7 @@
       "mirror": "Mirror"
     },
     "observedValue": "— (observed value)",
+    "derivedExactPoint": "— (exact derived point; no modeled interval)",
     "directObservation": "DIRECT OBSERVATION",
     "modes": {
       "live_market": "LIVE MARKET",
@@ -117,9 +118,9 @@
     }
   },
   "synoptic": {
-    "circulationFlow": "DERIVED NET FLOW",
-    "circulationPositions": "CPIS POSITIONS",
-    "circulationNoObserved": "NO OBSERVED CORRIDORS — CPIS-DERIVED FLOWS ARE GRADE D",
+    "circulationFlow": "DERIVED POSITION CHANGE",
+    "circulationPositions": "BILATERAL POSITIONS",
+    "circulationNoObserved": "NO OBSERVED CORRIDORS — PIP-DERIVED POSITION CHANGES ARE GRADE D",
     "circulationAwaiting": "AWAITING BILATERAL OBSERVATION",
     "circulationAria": "top capital corridors",
     "visibilityTitle": "visibility — observation grade mix",

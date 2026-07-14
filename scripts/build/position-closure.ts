@@ -38,7 +38,7 @@ export interface RasResult {
 }
 
 export interface ClosureAuditInputs {
-  schema_version: 1
+  schema_version: 2
   source_ids: ['imf_iip', 'imf_pip']
   iip: ImfStockObs[]
   pip: PipObs[]
@@ -52,17 +52,17 @@ export function buildClosureAuditInputs(
   pip: readonly PipObs[],
 ): ClosureAuditInputs {
   return {
-    schema_version: 1,
+    schema_version: 2,
     source_ids: ['imf_iip', 'imf_pip'],
     iip: canonicalSort(
       iip.filter(
         (row) =>
           (row.indicator === 'P_F5_MV' || row.indicator === 'P_F3_MV') &&
-          row.quarter.endsWith('-Q4') &&
+          (row.quarter.endsWith('-Q2') || row.quarter.endsWith('-Q4')) &&
           row.quarter >= '2013-Q4',
       ),
     ),
-    pip: canonicalSort(pip.filter((row) => row.year >= 2013)),
+    pip: canonicalSort(pip.filter((row) => row.period >= '2013-Q4')),
   }
 }
 
@@ -92,12 +92,11 @@ export function rawPipSeedForClosure(
   rowMargins: Readonly<Record<string, number>>,
   columnMargins: Readonly<Record<string, number>>,
 ): PositionSeed[] {
-  const year = Number(period.slice(0, 4))
   const indicator = PIP_INDICATOR_BY_ASSET[asset]
   return observations
     .filter(
       (row) =>
-        row.year === year &&
+        row.period === period &&
         row.indicator === indicator &&
         row.owner !== row.issuer &&
         rowMargins[row.owner] !== undefined &&
@@ -257,7 +256,11 @@ export function buildPositionClosure(): { periods: number; cells: number } {
   let publishedCells = 0
   for (const [key, margins] of [...byMargin].sort(([a], [b]) => a.localeCompare(b))) {
     const [period, asset] = key.split('|') as [string, 'listed_equity' | 'debt_securities']
-    if (!period.endsWith('-Q4') || period < '2013-Q4') continue
+    if (
+      (!period.endsWith('-Q2') && !period.endsWith('-Q4')) ||
+      period < '2013-Q4'
+    )
+      continue
     const inDomainDirect = rawPipSeedForClosure(
       pip,
       period,

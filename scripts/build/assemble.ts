@@ -19,6 +19,10 @@ import {
   type PipObs,
 } from '../fetch/imf.ts'
 import { compareQuarters, failures, quarterEndDate, writeJson } from '../fetch/lib.ts'
+import { derivePipPositionChanges } from './bilateral.ts'
+import type { BilateralPositionBasis } from '../../src/types/data.ts'
+import type { DipObs } from '../fetch/imf-dip.ts'
+import { dipToBilateral } from './bilateral.ts'
 
 type Grade = 'A' | 'B' | 'C' | 'D' | 'E'
 
@@ -64,6 +68,7 @@ interface BilateralRecord {
   estimate_method?: string
   lower_bound?: number
   upper_bound?: number
+  position_basis: BilateralPositionBasis
 }
 
 const GENERATED_AT = new Date().toISOString()
@@ -115,9 +120,10 @@ export interface AssembleInputs {
   iip: ImfStockObs[]
   bop: ImfFlowObs[]
   pip: PipObs[]
+  dip: DipObs[]
 }
 
-export function assemble({ countries, wb, iip, bop, pip }: AssembleInputs): void {
+export function assemble({ countries, wb, iip, bop, pip, dip }: AssembleInputs): void {
   const iso3Set = new Set(countries.map((c) => c.iso3))
   const regionOf = new Map(countries.map((c) => [c.iso3, c.region]))
   // latest GDP per country (single pass, keep max year)
@@ -360,7 +366,7 @@ export function assemble({ countries, wb, iip, bop, pip }: AssembleInputs): void
     }
   }
 
-  // ---- flows_bilateral: PIP positions (A) + naive derived flows (D) ------
+  // ---- flows_bilateral: PIP positions (A) + unadjusted position changes (D) ----
   const bilateralShards = new Map<string, BilateralRecord[]>()
   const pushBi = (r: BilateralRecord) => {
     let arr = bilateralShards.get(r.period)
@@ -368,65 +374,65 @@ export function assemble({ countries, wb, iip, bop, pip }: AssembleInputs): void
     arr.push(r)
   }
   const ASSET_OF_PIP = { P_F51_P_USD: 'listed_equity', P_F3_P_USD: 'debt_securities' } as const
-  const pipGrid = new Map<string, Map<number, number>>() // `${o}|${i}|${asset}` -> year -> v
   let biStockDropped = 0
   let biFlowDropped = 0
   for (const o of pip) {
     if (!iso3Set.has(o.owner) || !iso3Set.has(o.issuer)) continue
     if (o.owner === o.issuer) continue
     const asset = ASSET_OF_PIP[o.indicator]
-    const key = `${o.owner}|${o.issuer}|${asset}`
-    if (!pipGrid.has(key)) pipGrid.set(key, new Map())
-    pipGrid.get(key)!.set(o.year, o.value) // full grid — Δflows see unpruned data
     if (Math.abs(o.value) < BILATERAL_MIN_USD) {
       biStockDropped++
       continue
     }
-    const period = `${o.year}-Q4`
     gradeCount.A++
     pushBi({
       owner_country: o.owner,
       issuer_country: o.issuer,
       asset,
-      period,
+      period: o.period,
       measure: 'stock',
       value_usd: round(o.value),
       source_id: 'imf_pip',
-      effective_date: `${o.year}-12-31`,
+      effective_date: quarterEndDate(o.period),
       confidence_grade: 'A',
+      position_basis: 'asset_liability',
     })
   }
-  for (const [key, byYear] of pipGrid) {
-    const [owner, issuer, asset] = key.split('|')
-    for (const [year, v] of byYear) {
-      const prev = byYear.get(year - 1)
-      if (prev === undefined) continue
-      const flow = v - prev
-      if (Math.abs(flow) < BILATERAL_MIN_USD) {
-        biFlowDropped++
-        continue
-      }
-      const spread = Math.abs(flow) * 0.35
-      gradeCount.D++
-      pushBi({
-        owner_country: owner,
-        issuer_country: issuer,
-        asset,
-        period: `${year}-Q4`,
-        measure: 'flow',
-        value_usd: round(flow),
-        source_id: 'imf_pip',
-        effective_date: `${year}-12-31`,
-        confidence_grade: 'D',
-        estimate_method: 'position_change_unadjusted_for_price',
-        lower_bound: round(flow - spread),
-        upper_bound: round(flow + spread),
-      })
+  const dipBilateral = dipToBilateral(dip, iso3Set, BILATERAL_MIN_USD)
+  for (const record of dipBilateral.records) {
+    gradeCount.A++
+    pushBi(record)
+  }
+  for (const change of derivePipPositionChanges(pip)) {
+    const { current } = change
+    if (!iso3Set.has(current.owner) || !iso3Set.has(current.issuer)) continue
+    const asset = ASSET_OF_PIP[current.indicator]
+    if (Math.abs(change.value) < BILATERAL_MIN_USD) {
+      biFlowDropped++
+      continue
     }
+    const spread = Math.abs(change.value) * 0.35
+    gradeCount.D++
+    pushBi({
+      owner_country: current.owner,
+      issuer_country: current.issuer,
+      asset,
+      period: current.period,
+      measure: 'flow',
+      value_usd: round(change.value),
+      source_id: 'imf_pip',
+      effective_date: quarterEndDate(current.period),
+      confidence_grade: 'D',
+      estimate_method: 'position_change_unadjusted_for_price',
+      lower_bound: round(change.value - spread),
+      upper_bound: round(change.value + spread),
+      position_basis: 'asset_liability',
+    })
   }
   console.log(
     `[assemble] bilateral pruning <$${BILATERAL_MIN_USD / 1e6}M: ` +
-      `dropped ${biStockDropped} stock + ${biFlowDropped} flow records`,
+      `dropped ${biStockDropped} PIP stock + ` +
+      `${dipBilateral.droppedBelowThreshold} DIP stock + ${biFlowDropped} flow records`,
   )
 
   // ---- write shards + index + barograph series --------------------------
@@ -482,9 +488,11 @@ export function assemble({ countries, wb, iip, bop, pip }: AssembleInputs): void
       [...grid.owner.keys()].map((k) => k.split('|')[0]),
     ).size,
     pip_reporters: new Set(pip.map((p) => p.owner)).size,
+    dip_reporters: new Set(dip.map((row) => row.owner)).size,
     bilateral_pruning: {
       min_usd: BILATERAL_MIN_USD,
       dropped_stock_records: biStockDropped,
+      dropped_dip_stock_records: dipBilateral.droppedBelowThreshold,
       dropped_flow_records: biFlowDropped,
       note: 'value retention is not computed; use the recorded dropped record counts',
     },

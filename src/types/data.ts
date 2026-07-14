@@ -74,15 +74,21 @@ export interface StockRecord extends Lineage {
   value_usd_constant_fx?: number
 }
 
-/** public/data/flows_bilateral.json — country-pair positions/flows (CPIS-derived). */
+/** public/data/flows_bilateral — PIP/DIP/BIS positions + PIP-derived position changes. */
+export type BilateralPositionBasis =
+  | 'asset_liability'
+  | 'lbs_position_side'
+  | 'directional_principle'
+
 export interface BilateralRecord extends Lineage {
   owner_country: string // ISO3 (asset holder)
   issuer_country: string // ISO3 (asset issuer / destination)
   asset: AssetClass
   period: PeriodKey
-  /** CPIS gives positions (stock); derived net transactions are 'flow' */
+  /** `flow` is a legacy storage tag for PIP position change, never observed transactions. */
   measure: 'stock' | 'flow'
   value_usd: number
+  position_basis: BilateralPositionBasis
 }
 
 /**
@@ -111,6 +117,7 @@ export interface SourceRegistryEntry {
     | 'daily'
     | 'monthly'
     | 'quarterly'
+    | 'semiannual'
     | 'annual'
     | 'static'
   /** 공식 발표 지연의 정직한 기대치 (그대로 표시 가능한 문구) */
@@ -401,6 +408,10 @@ export interface SynopticCorridorConcentration {
   top10_share_obs: number
   top20_share_obs: number
   gross_obs_usd: number
+  grade: ConfidenceGrade
+  source_ids: string[]
+  position_bases: BilateralPositionBasis[]
+  method: string
 }
 
 export interface SynopticCorridor {
@@ -414,6 +425,7 @@ export interface SynopticCorridor {
   method?: string
   lower?: number
   upper?: number
+  position_basis: BilateralPositionBasis
 }
 
 export interface SynopticAnomaly {
@@ -468,6 +480,7 @@ export interface StationPartner {
   upper?: number
   range_label?: string
   coverage_share?: number
+  position_bases: BilateralPositionBasis[]
 }
 
 export interface StationPartnerSides {
@@ -493,6 +506,23 @@ export interface StationSummary {
 }
 
 /** §14 상대국 집중도 — 발행 bilateral 샤드 전체에서 계산 (top-15 리스트 아님) */
+export type StationAllocationCoverage =
+  | {
+      status: 'available'
+      allocated_usd: number
+      owner_stock_usd: number
+      share: number
+      confidence_grade: ConfidenceGrade
+      denominator_source_ids: string[]
+      lower_bound?: number
+      upper_bound?: number
+      range_label?: string
+    }
+  | {
+      status: 'unavailable'
+      reason: string
+    }
+
 export interface StationCpConcentration {
   period: PeriodKey
   scope: 'all' | AssetClass
@@ -504,6 +534,8 @@ export interface StationCpConcentration {
   grade: ConfidenceGrade
   source_ids: string[]
   method: string
+  position_bases: BilateralPositionBasis[]
+  allocation_coverage: StationAllocationCoverage
 }
 
 /** §14 분기별 세계 대비·자산 구성 비중 */

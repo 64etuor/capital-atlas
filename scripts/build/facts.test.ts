@@ -62,6 +62,7 @@ const bilateral: BilateralRecord = {
   source_id: 'bis_lbs',
   effective_date: '2024-12-31',
   confidence_grade: 'B',
+  position_basis: 'lbs_position_side',
   estimate_method: 'lbs_loans_and_deposits_instrument_mapped_by_position_side',
 }
 
@@ -95,6 +96,7 @@ describe('fact line shapes — §11.2 축소 스키마', () => {
       issuer_country: 'USA',
       estimate_method:
         'lbs_loans_and_deposits_instrument_mapped_by_position_side',
+      position_basis: 'lbs_position_side',
     })
   })
   it('optional lineage fields are omitted, not null', () => {

@@ -70,8 +70,58 @@ export interface PipObs {
   owner: string
   issuer: string
   indicator: 'P_F51_P_USD' | 'P_F3_P_USD'
-  year: number
+  period: string
+  frequency: 'A' | 'S'
   value: number
+}
+
+const PIP_INDICATORS = new Set<PipObs['indicator']>([
+  'P_F51_P_USD',
+  'P_F3_P_USD',
+])
+
+const pipKey = (row: PipObs) =>
+  [row.owner, row.issuer, row.indicator, row.period].join('|')
+
+/** Normalize annual + semiannual direct PIP positions; S wins on a Q4 collision. */
+export function parsePip(xml: string): PipObs[] {
+  const rows = new Map<string, { row: PipObs; priority: number }>()
+  for (const series of parseSdmxSeries(xml)) {
+    const owner = series.attrs.COUNTRY
+    const issuer = series.attrs.COUNTERPART_COUNTRY
+    const indicator = series.attrs.INDICATOR as PipObs['indicator']
+    const frequency = series.attrs.FREQUENCY as PipObs['frequency']
+    if (
+      owner?.length !== 3 ||
+      issuer?.length !== 3 ||
+      owner === issuer ||
+      series.attrs.ACCOUNTING_ENTRY !== 'A' ||
+      series.attrs.SECTOR !== 'S1' ||
+      series.attrs.COUNTERPART_SECTOR !== 'S1' ||
+      !PIP_INDICATORS.has(indicator) ||
+      (frequency !== 'A' && frequency !== 'S')
+    )
+      continue
+    const priority = frequency === 'S' ? 2 : 1
+    for (const observation of series.obs) {
+      const period = toQuarter(observation.period)
+      if (!period) continue
+      const row: PipObs = {
+        owner,
+        issuer,
+        indicator,
+        period,
+        frequency,
+        value: observation.value,
+      }
+      const key = pipKey(row)
+      if ((rows.get(key)?.priority ?? 0) < priority)
+        rows.set(key, { row, priority })
+    }
+  }
+  return [...rows.values()]
+    .map(({ row }) => row)
+    .sort((a, b) => pipKey(a).localeCompare(pipKey(b)))
 }
 
 async function fetchChunkedQuarterly<T>(
@@ -156,34 +206,19 @@ export async function runBop(iso3s: string[]): Promise<ImfFlowObs[]> {
 
 /**
  * PIP/CPIS bilateral positions: per-reporter requests (assets side, total
- * economy sector S1 vs counterpart sector S1, annual). Non-reporters return
+ * economy sector S1 vs counterpart sector S1, annual + semiannual). Non-reporters return
  * an empty dataset (~2.6KB) — cheap to skip over.
  */
 export async function runPip(iso3s: string[]): Promise<PipObs[]> {
   const failureStart = failures.length
-  const out: PipObs[] = []
-  await pooled(iso3s, 6, async (iso3) => {
-    const key = `${iso3}.A.P_F51_P_USD+P_F3_P_USD.S1.S1..A`
+  const parsed = await pooled(iso3s, 6, async (iso3) => {
+    const key = `${iso3}.A.P_F51_P_USD+P_F3_P_USD.S1.S1..A+S`
     const url = `${BASE}/IMF.STA,PIP/${key}?startPeriod=2013`
-    const xml = await fetchCached(`imf/pip_${iso3}.xml`, url)
-    if (xml === null) return
-    for (const s of parseSdmxSeries(xml)) {
-      const issuer = s.attrs.COUNTERPART_COUNTRY
-      if (!issuer || issuer.length !== 3) continue // skip aggregates
-      for (const o of s.obs) {
-        const year = Number(/^(\d{4})/.exec(o.period)?.[1])
-        if (!year) continue
-        out.push({
-          owner: iso3,
-          issuer,
-          indicator: s.attrs.INDICATOR as PipObs['indicator'],
-          year,
-          value: o.value,
-        })
-      }
-    }
+    const xml = await fetchCached(`imf/pip_A-S_${iso3}.xml`, url)
+    return xml === null ? [] : parsePip(xml)
   })
   assertNoNewFailures('IMF PIP', failureStart)
+  const out = parsed.flat()
   assertMinimumRows('IMF PIP', out.length, 1_000)
   writeRawJson('imf/pip_normalized.json', out)
   const reporters = new Set(out.map((r) => r.owner))

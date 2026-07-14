@@ -150,10 +150,19 @@ export interface PipExposureParseResult {
 }
 
 export function parsePipExposure(xml: string): PipExposureParseResult {
-  const sectors: SectorPositionRecord[] = []
-  const reconstructed: PipReconstructedObservation[] = []
+  const sectors = new Map<
+    string,
+    { row: SectorPositionRecord; priority: number }
+  >()
+  const reconstructed = new Map<
+    string,
+    { row: PipReconstructedObservation; priority: number }
+  >()
   for (const series of parseSdmxSeries(xml)) {
     const derivation = series.attrs.DERIVATION_TYPE ?? series.attrs.DV_TYPE
+    const frequency = series.attrs.FREQUENCY
+    if (frequency !== 'A' && frequency !== 'S') continue
+    const priority = frequency === 'S' ? 2 : 1
     const periodRows = series.obs
       .map((obs) => ({ obs, period: toQuarter(obs.period) }))
       .filter((row): row is { obs: (typeof series.obs)[number]; period: string } =>
@@ -172,7 +181,7 @@ export function parsePipExposure(xml: string): PipExposureParseResult {
       series.attrs.COUNTERPART_COUNTRY === 'G001'
     ) {
       for (const { obs, period } of periodRows) {
-        sectors.push({
+        const row: SectorPositionRecord = {
           country: series.attrs.COUNTRY,
           period: period as SectorPositionRecord['period'],
           sector,
@@ -181,7 +190,10 @@ export function parsePipExposure(xml: string): PipExposureParseResult {
           source_id: 'imf_pip',
           effective_date: quarterEndDate(period),
           confidence_grade: 'A',
-        })
+        }
+        const key = [row.country, row.period, row.asset, row.sector].join('|')
+        if ((sectors.get(key)?.priority ?? 0) < priority)
+          sectors.set(key, { row, priority })
       }
     }
 
@@ -196,7 +208,7 @@ export function parsePipExposure(xml: string): PipExposureParseResult {
       owner !== 'G001'
     ) {
       for (const { obs, period } of periodRows) {
-        reconstructed.push({
+        const row: PipReconstructedObservation = {
           country: series.attrs.COUNTRY,
           owner_country: owner,
           period: period as CurrencyExposureRecord['period'],
@@ -206,17 +218,29 @@ export function parsePipExposure(xml: string): PipExposureParseResult {
           effective_date: quarterEndDate(period),
           confidence_grade: 'C',
           estimate_method: 'imf_staff_counterparty_derived_liability',
-        })
+        }
+        const key = [
+          row.country,
+          row.owner_country,
+          row.period,
+          row.asset,
+        ].join('|')
+        if ((reconstructed.get(key)?.priority ?? 0) < priority)
+          reconstructed.set(key, { row, priority })
       }
     }
   }
   const key = (row: { country: string; period: string; asset: string }) =>
     [row.country, row.period, row.asset].join('|')
-  sectors.sort((a, b) => `${key(a)}|${a.sector}`.localeCompare(`${key(b)}|${b.sector}`))
-  reconstructed.sort((a, b) =>
+  const sectorRows = [...sectors.values()].map(({ row }) => row)
+  const reconstructedRows = [...reconstructed.values()].map(({ row }) => row)
+  sectorRows.sort((a, b) =>
+    `${key(a)}|${a.sector}`.localeCompare(`${key(b)}|${b.sector}`),
+  )
+  reconstructedRows.sort((a, b) =>
     `${key(a)}|${a.owner_country}`.localeCompare(`${key(b)}|${b.owner_country}`),
   )
-  return { sectors, reconstructed }
+  return { sectors: sectorRows, reconstructed: reconstructedRows }
 }
 
 export async function runIipcc(iso3s: string[]): Promise<CurrencyExposureRecord[]> {
@@ -243,15 +267,15 @@ export async function runPipExposure(
   iso3s: string[],
 ): Promise<PipExposureParseResult> {
   const parsed = await pooled(iso3s, 6, async (iso3) => {
-    const directKey = `${iso3}.A.P_F51_P_USD+P_F3_P_USD..S1.G001.A`
-    const derivedKey = `${iso3}.L.P_F51_P_SCC_USD+P_F3_P_SCC_USD.S1.S1..A`
+    const directKey = `${iso3}.A.P_F51_P_USD+P_F3_P_USD..S1.G001.A+S`
+    const derivedKey = `${iso3}.L.P_F51_P_SCC_USD+P_F3_P_SCC_USD.S1.S1..A+S`
     const [direct, derived] = await Promise.all([
       fetchCached(
-        `imf/pip_sector_${iso3}.xml`,
+        `imf/pip_sector_A-S_${iso3}.xml`,
         `${BASE}/IMF.STA,PIP/${directKey}?startPeriod=2013`,
       ),
       fetchCached(
-        `imf/pip_scc_${iso3}.xml`,
+        `imf/pip_scc_A-S_${iso3}.xml`,
         `${BASE}/IMF.STA,PIP/${derivedKey}?startPeriod=2013`,
       ),
     ])

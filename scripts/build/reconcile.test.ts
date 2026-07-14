@@ -28,6 +28,7 @@ const bank = (
   effective_date: '2024-12-31',
   confidence_grade: 'B',
   estimate_method: 'lbs_loans_and_deposits_instrument_mapped_by_position_side',
+  position_basis: 'lbs_position_side',
 })
 
 describe('mirrorFromRecords — 양방향 쌍 구성', () => {
@@ -56,6 +57,7 @@ describe('mirrorFromRecords — 양방향 쌍 구성', () => {
       asset: 'listed_equity',
       source_id: 'imf_pip',
       confidence_grade: 'A',
+      position_basis: 'asset_liability',
     }
     expect(mirrorFromRecords([cpis, bank('KOR', 'USA', 'deposits', 80)])).toEqual([])
   })

@@ -8,20 +8,29 @@ import { useTranslation } from 'react-i18next'
 import { ASSET_LABELS } from '../../lib/assetLabels'
 import { formatUsd } from '../../lib/format'
 import { fogAlpha } from '../../lib/tokens'
-import type { AssetClass, PeriodKey, SynopticCorridor } from '../../types/data'
+import type {
+  AssetClass,
+  PeriodKey,
+  SynopticCorridor,
+  SynopticCorridorConcentration,
+} from '../../types/data'
 import { OBSERVED_GRADES, gradeDash } from './shared'
+import {
+  corridorCoverageLabel,
+  corridorDossierPayload,
+} from './corridorDossier'
 
 const SHOWN = 12
 
 interface Props {
-  /** 회랑이 존재하는 가장 가까운 과거 기간 (연간 CPIS — null이면 데이터 없음) */
+  /** 회랑이 존재하는 가장 가까운 과거 기간 (null이면 데이터 없음) */
   effPeriod: PeriodKey | null
   corridors: SynopticCorridor[]
   isFlow: boolean
   observedOnly: boolean
   filter: AssetClass | null
   /** §14 회랑 집중도 — 상위 20 gross ÷ 전체 bilateral gross (포지션 기준) */
-  top20Share: number | null
+  corridorConcentration: SynopticCorridorConcentration | null
 }
 
 export function CirculationChart({
@@ -30,7 +39,7 @@ export function CirculationChart({
   isFlow,
   observedOnly,
   filter,
-  top20Share,
+  corridorConcentration,
 }: Props) {
   const { t } = useTranslation()
   const openDossier = useViewStore((s) => s.openDossier)
@@ -42,6 +51,17 @@ export function CirculationChart({
   const owners = [...new Set(rows.map((r) => r.owner))]
   const issuers = [...new Set(rows.map((r) => r.issuer))]
   const maxV = Math.max(...rows.map((r) => Math.abs(r.value)), 1)
+  const top20Share = corridorConcentration
+    ? observedOnly
+      ? corridorConcentration.top20_share_obs
+      : corridorConcentration.top20_share
+    : null
+  const coverageLabel = corridorConcentration
+    ? corridorCoverageLabel(
+        corridorConcentration.source_ids,
+        corridorConcentration.position_bases,
+      )
+    : null
   const y = (i: number, n: number) => ((i + 0.5) / Math.max(n, 1)) * 100
 
   return (
@@ -51,10 +71,42 @@ export function CirculationChart({
         {isFlow ? t('synoptic.circulationFlow') : t('synoptic.circulationPositions')}
         {effPeriod ? ` · ${effPeriod}` : ''}
         {/* 집중도는 포지션 기준 — flow 뷰에선 오도 방지 위해 생략 */}
-        {!isFlow && top20Share !== null && (
-          <span className="text-flow-in/80">
-            {' '}· TOP 20 = {(top20Share * 100).toFixed(0)}% OF GROSS
-          </span>
+        {!isFlow && top20Share !== null && corridorConcentration && (
+          <button
+            type="button"
+            className="text-flow-in/80 transition-colors duration-140 hover:text-flow-in"
+            onClick={() =>
+              openDossier({
+                title: 'Top-20 bilateral corridor share',
+                subtitle: `${coverageLabel ?? 'BILATERAL POSITIONS'} · ${effPeriod ?? '—'}`,
+                value_ratio: top20Share,
+                grade: corridorConcentration.grade,
+                method: corridorConcentration.method,
+                effective_date: effPeriod
+                  ? `${effPeriod.slice(0, 4)}-${['03-31', '06-30', '09-30', '12-31'][Number(effPeriod.at(-1)) - 1]}`
+                  : undefined,
+                source_ids: corridorConcentration.source_ids,
+                context: [
+                  ['Scope', coverageLabel ?? 'Bilateral positions'],
+                  [
+                    'Position bases',
+                    corridorConcentration.position_bases.join(' + '),
+                  ],
+                  [
+                    'Gross denominator',
+                    formatUsd(
+                      observedOnly
+                        ? corridorConcentration.gross_obs_usd
+                        : corridorConcentration.gross_usd,
+                    ),
+                  ],
+                ],
+              })
+            }
+          >
+            {' '}· {coverageLabel} · TOP 20 ={' '}
+            {(top20Share * 100).toFixed(0)}% OF GROSS
+          </button>
         )}
       </p>
       {rows.length === 0 ? (
@@ -97,18 +149,9 @@ export function CirculationChart({
                 vectorEffect="non-scaling-stroke"
                 className="cursor-pointer transition-opacity duration-140 hover:opacity-100"
                 onClick={() =>
-                  openDossier({
-                    title: `${r.owner} → ${r.issuer} · ${ASSET_LABELS[r.asset]}`,
-                    subtitle: `${isFlow ? 'Derived bilateral net flow' : 'CPIS bilateral position'} · ${effPeriod ?? ''}`,
-                    value_usd: r.value,
-                    grade: r.grade,
-                    method: r.method,
-                    lower_bound: r.lower,
-                    upper_bound: r.upper,
-                    effective_date: r.effective_date,
-                    source_ids: [r.source_id],
-                    context: [['Rank', `#${i + 1} by |value| this period`]],
-                  })
+                  openDossier(
+                    corridorDossierPayload(r, effPeriod ?? '—', isFlow, i),
+                  )
                 }
               />
             )
