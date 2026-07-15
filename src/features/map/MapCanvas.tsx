@@ -37,6 +37,8 @@ import {
 import { ARC_LOOP, buildArcs, type FlowArc, type GradeClass } from './arcs'
 import { lerpRgb, pressureColor, rgbVar } from '../../lib/tokens'
 import { formatUsd, formatUsdNet } from '../../lib/format'
+import { ObservationLoader } from '../../components/ObservationLoader'
+import { isMapSyncing } from './loading'
 
 /**
  * BAROMETER data canvas — deck.gl globe. Pressure choropleth (stocks),
@@ -500,7 +502,13 @@ export function MapCanvas() {
     }
   }
 
-  const syncing = ready && choro.key !== choroKey
+  const syncing = isMapSyncing({
+    ready,
+    requestedChoroKey: choroKey,
+    loadedChoroKey: choro?.key ?? null,
+    requestedArcKey: arcKey,
+    loadedArcKey: arcState?.key ?? null,
+  })
   const nearestNote =
     ready && choro.effPeriod && choro.effPeriod !== period
       ? choro.effPeriod
@@ -539,26 +547,31 @@ export function MapCanvas() {
             if (!info.picked) selectCountry(null)
           }}
         />
-      ) : (
+      ) : loadError ? (
         <div className="absolute inset-0 flex flex-col items-center justify-center gap-2">
-          {loadError ? (
-            <>
-              <p className="dial-label text-signal">OBSERVATION FAULT</p>
-              <p className="readout max-w-md text-center text-[11px] text-paper-dim">
-                {loadError}
-              </p>
-            </>
-          ) : (
-            <>
-              <p className="dial-label text-paper-dim">
-                PREPARING OBSERVATION
-              </p>
-              <p className="readout text-[11px] tracking-[0.12em] text-paper-dim/60">
-                SYNCING SHARDS
-              </p>
-            </>
-          )}
+          <p className="dial-label text-signal">OBSERVATION FAULT</p>
+          <p className="readout max-w-md text-center text-[11px] text-paper-dim">
+            {loadError}
+          </p>
         </div>
+      ) : (
+        <ObservationLoader className="absolute inset-0" />
+      )}
+
+      {ready && loadError && (
+        <div
+          role="alert"
+          className="pointer-events-none absolute inset-0 z-10 flex flex-col items-center justify-center gap-2 bg-ink-0/55"
+        >
+          <p className="dial-label text-signal">OBSERVATION FAULT</p>
+          <p className="readout max-w-md text-center text-[11px] text-paper-dim">
+            {loadError}
+          </p>
+        </div>
+      )}
+
+      {syncing && !loadError && (
+        <ObservationLoader className="pointer-events-none absolute inset-0 z-10 bg-ink-0/45" />
       )}
 
       {/* honesty chips — nearest-shard + sync state (instrument language) */}
@@ -566,11 +579,6 @@ export function MapCanvas() {
         {nearestNote && (
           <p className="readout text-[10px] tracking-[0.12em] text-paper-dim/80">
             NEAREST OBS {nearestNote}
-          </p>
-        )}
-        {syncing && (
-          <p className="readout text-[10px] tracking-[0.12em] text-flow-in/80">
-            SYNCING OBSERVATION…
           </p>
         )}
       </div>

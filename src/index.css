@@ -100,6 +100,151 @@ body {
   letter-spacing: 0.12em;
 }
 
+/* 관측 준비 계기 — 궤도/스캔/코어의 세 속도로 샤드 동기화를 표현한다. */
+.observation-loader {
+  position: relative;
+  width: 88px;
+  height: 88px;
+  contain: layout paint;
+}
+
+.observation-loader__orbit,
+.observation-loader__reticle,
+.observation-loader__sweep,
+.observation-loader__core {
+  position: absolute;
+  display: block;
+}
+
+.observation-loader__orbit {
+  border-radius: 999px;
+  will-change: transform;
+}
+
+.observation-loader__orbit--outer {
+  inset: 0;
+  border: 1px solid color-mix(in srgb, var(--atlas-paper-dim) 28%, transparent);
+  border-top-color: color-mix(in srgb, var(--flow-out) 88%, transparent);
+  border-bottom-color: color-mix(in srgb, var(--flow-in) 62%, transparent);
+  animation: observation-orbit 4.8s steps(72, end) infinite;
+}
+
+.observation-loader__orbit--inner {
+  inset: 14px;
+  border: 1px dashed color-mix(in srgb, var(--flow-in) 58%, transparent);
+  animation: observation-counter-orbit 3.1s steps(48, end) infinite;
+}
+
+.observation-loader__reticle {
+  inset: 25px;
+  border: 1px solid color-mix(in srgb, var(--atlas-paper) 18%, transparent);
+  border-radius: 999px;
+}
+
+.observation-loader__reticle::before,
+.observation-loader__reticle::after {
+  content: "";
+  position: absolute;
+  background: color-mix(in srgb, var(--atlas-paper-dim) 30%, transparent);
+}
+
+.observation-loader__reticle::before {
+  top: 50%;
+  left: -12px;
+  width: calc(100% + 24px);
+  height: 1px;
+}
+
+.observation-loader__reticle::after {
+  top: -12px;
+  left: 50%;
+  width: 1px;
+  height: calc(100% + 24px);
+}
+
+.observation-loader__sweep {
+  top: calc(50% - 0.5px);
+  left: 50%;
+  width: 36px;
+  height: 1px;
+  transform-origin: left center;
+  background: color-mix(in srgb, var(--flow-out) 76%, transparent);
+  animation: observation-sweep 2.4s steps(60, end) infinite;
+  will-change: transform, opacity;
+}
+
+.observation-loader__core {
+  top: calc(50% - 3px);
+  left: calc(50% - 3px);
+  width: 6px;
+  height: 6px;
+  border: 1px solid var(--flow-in);
+  border-radius: 999px;
+  background: var(--atlas-ink-0);
+  animation: observation-core 1.8s var(--ease-baro) infinite;
+  will-change: transform, opacity;
+}
+
+@keyframes observation-orbit {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes observation-counter-orbit {
+  to {
+    transform: rotate(-360deg);
+  }
+}
+
+@keyframes observation-sweep {
+  0% {
+    transform: rotate(-90deg) scaleX(0.55);
+    opacity: 0.35;
+  }
+  45% {
+    opacity: 0.9;
+  }
+  100% {
+    transform: rotate(270deg) scaleX(1);
+    opacity: 0.35;
+  }
+}
+
+@keyframes observation-core {
+  0%,
+  100% {
+    transform: scale(0.72);
+    opacity: 0.55;
+  }
+  50% {
+    transform: scale(1.25);
+    opacity: 1;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .observation-loader__orbit,
+  .observation-loader__sweep,
+  .observation-loader__core {
+    animation: none;
+    will-change: auto;
+  }
+
+  .observation-loader__orbit--outer {
+    transform: rotate(42deg);
+  }
+
+  .observation-loader__orbit--inner {
+    transform: rotate(-24deg);
+  }
+
+  .observation-loader__sweep {
+    transform: rotate(-32deg);
+    opacity: 0.72;
+  }
+}
+
 /* 오도미터 롤 (§4 — 수치 변경은 자리수별 상하 롤) */
 .odo {
   display: inline-flex;

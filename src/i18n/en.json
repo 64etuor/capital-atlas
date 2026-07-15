@@ -2,6 +2,8 @@
   "common": {
     "close": "Close",
     "preparing": "PREPARING OBSERVATION",
+    "syncing": "SYNCING SHARDS",
+    "loadingAria": "Loading Capital Atlas observations",
     "noObservation": "NO OBSERVATION",
     "quarterAria": "Quarter"
   },
@@ -218,7 +220,7 @@
     },
     "s3": {
       "title": "THREE SURFACES",
-      "body": "GLOBE is the living map, SYNOPTIC the world bulletin, STATION the per-country analysis console. Cmd+K jumps anywhere — try KOR EQTY."
+      "body": "GLOBE is the living map. Click a country on the globe to open its detailed observation report. SYNOPTIC is the world bulletin, and STATION the per-country analysis console. Cmd+K jumps anywhere — try KOR EQTY."
     },
     "s4": {
       "title": "EVERY NUMBER OPENS ITS LINEAGE",

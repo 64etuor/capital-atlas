@@ -23,6 +23,11 @@ describe('catalog parity', () => {
   it('en and ko expose identical key sets', () => {
     expect(keysOf(ko).sort()).toEqual(keysOf(en).sort())
   })
+
+  it('teaches first-time users that globe countries open details', () => {
+    expect(en.tutorial.s3.body).toContain('Click a country on the globe')
+    expect(ko.tutorial.s3.body).toContain('글로브에서 나라를 클릭')
+  })
 })
 
 const UI_DIRS = ['components', 'features'].map((d) =>
