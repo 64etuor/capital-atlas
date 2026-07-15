@@ -13,6 +13,7 @@ import { fogAlpha } from '../lib/tokens'
 import { useTranslation } from 'react-i18next'
 import type { SourceRegistryEntry } from '../types/data'
 import type { DossierPayload } from '../types/dossier'
+import { ObservationLoader } from './ObservationLoader'
 
 /**
  * REVISIONS (Phase N, §15.5) — 빈티지 다이제스트와 현재 값을 대조해 소급
@@ -317,7 +318,12 @@ export function LineageDossier() {
           )}
           {payload.revision_key && (
             <Row label={t('dossier.rows.revisions')}>
-              {revisions.kind === 'loading' && '…'}
+              {revisions.kind === 'loading' && (
+                <ObservationLoader
+                  variant="inline"
+                  label={t('common.syncing')}
+                />
+              )}
               {revisions.kind === 'none' &&
                 t('dossier.revisions.none', { date: revisions.since })}
               {revisions.kind === 'notTracked' &&
@@ -337,7 +343,12 @@ export function LineageDossier() {
           )}
           {payload.mirror_key && (
             <Row label={t('dossier.rows.mirror')}>
-              {mirror.kind === 'loading' && '…'}
+              {mirror.kind === 'loading' && (
+                <ObservationLoader
+                  variant="inline"
+                  label={t('common.syncing')}
+                />
+              )}
               {mirror.kind === 'none' && t('dossier.mirror.none')}
               {mirror.kind === 'pair' &&
                 t('dossier.mirror.line', {

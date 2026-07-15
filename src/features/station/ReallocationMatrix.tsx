@@ -19,6 +19,7 @@ import type {
   PeriodKey,
 } from '../../types/data'
 import type { CompositionMode } from './CompositionStream'
+import { ObservationLoader } from '../../components/ObservationLoader'
 
 const EXTERNAL = 'external'
 const E_FOG = 0.45 // --fog-E — 이 구역의 기본 대기
@@ -130,7 +131,18 @@ export function ReallocationMatrix({
   )
   if (observedOnly) return empty(t('station.realloc.hiddenObs'))
   if (iso === 'WLD') return empty(t('station.realloc.world'))
-  if (state === 'loading') return empty(t('station.realloc.loading'))
+  if (state === 'loading') {
+    return (
+      <section className="flex min-h-0 flex-col">
+        {header}
+        <ObservationLoader
+          variant="compact"
+          label={t('station.realloc.loading')}
+          className="flex-1 justify-center"
+        />
+      </section>
+    )
+  }
   if (state === 'absent' || !matrix) return empty(t('station.realloc.empty', { period }))
 
   const rows = [...new Set(matrix.cells.map((c) => c.from))]

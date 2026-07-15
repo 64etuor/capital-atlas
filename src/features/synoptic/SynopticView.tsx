@@ -7,7 +7,6 @@
  * 언마운트하지 않아 지구본 로드 시퀀스가 재생되지 않는다(§4 "1회만").
  */
 import { useEffect, useState } from 'react'
-import { useTranslation } from 'react-i18next'
 import { useViewStore } from '../../store/viewStore'
 import { getSynoptic, nearestAvailable } from '../../lib/dataClient'
 import { periodFromIndex } from '../../lib/periods'
@@ -16,9 +15,9 @@ import { BarometerBank } from './BarometerBank'
 import { CirculationChart } from './CirculationChart'
 import { StripBank } from './StripBank'
 import { AnomalyBulletin, VisibilityBar } from './AnomalyBulletin'
+import { ObservationLoader } from '../../components/ObservationLoader'
 
 export function SynopticView() {
-  const { t } = useTranslation()
   const appView = useViewStore((s) => s.appView)
   const periodIndex = useViewStore((s) => s.periodIndex)
   const measure = useViewStore((s) => s.measure)
@@ -74,11 +73,16 @@ export function SynopticView() {
       }}
     >
       {!syn ? (
-        <div className="readout flex h-full items-center justify-center text-[12px] tracking-[0.18em] text-paper-dim">
-          {loadError
-            ? `SYNOPTIC FEED UNAVAILABLE — ${loadError}`
-            : t('common.preparing')}
-        </div>
+        loadError ? (
+          <div
+            role="alert"
+            className="readout flex h-full items-center justify-center text-[12px] tracking-[0.18em] text-paper-dim"
+          >
+            SYNOPTIC FEED UNAVAILABLE — {loadError}
+          </div>
+        ) : (
+          <ObservationLoader variant="full" className="h-full" />
+        )
       ) : (
         <div className="grid h-full grid-rows-[minmax(0,32fr)_minmax(0,34fr)_minmax(0,26fr)_auto] gap-4 pb-24 pl-6 pr-28 pt-28">
           <BarometerBank
