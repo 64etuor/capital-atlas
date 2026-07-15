@@ -1,0 +1,56 @@
+src/features/map/loading.test.ts
+  s_6cfe0f5f25d4e5::t_890a430929f86e 1-39
+src/i18n/en.json
+  s_6cfe0f5f25d4e5::t_d2436875d7b3f6 5-6,223
+src/i18n/i18n.test.ts
+  s_6cfe0f5f25d4e5::t_65db79b72349ef 26-30
+src/main.tsx
+  s_6cfe0f5f25d4e5::t_d2436875d7b3f6 10,17-23
+  s_951a5d0dfbecdc::t_1432c77b8bdec7 24
+src/i18n/ko.json
+  s_6cfe0f5f25d4e5::t_d2436875d7b3f6 5-6,223
+src/components/ObservationLoader.test.ts
+  s_6cfe0f5f25d4e5::t_65db79b72349ef 1-22
+src/features/map/loading.ts
+  s_6cfe0f5f25d4e5::t_e1461a0619725c 1-21
+src/components/ObservationLoader.tsx
+  s_6cfe0f5f25d4e5::t_d2436875d7b3f6 1-51
+src/index.css
+  s_6cfe0f5f25d4e5::t_d2436875d7b3f6 103-247
+src/features/map/MapCanvas.tsx
+  s_6cfe0f5f25d4e5::t_e1461a0619725c 41,505-511,559,561-574
+  s_6cfe0f5f25d4e5::t_d2436875d7b3f6 40,550,552-555,557-558
+  s_196e5b31affd6e::t_b4376d3fc68031 560
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.14",
+  "base_commit_sha": "afbde8b18f8a4ffd2a57d7054fd4afe8c5b9e133",
+  "prompts": {},
+  "sessions": {
+    "s_196e5b31affd6e": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "019f5e0c-9a1f-75b0-a3ab-1c02dee66eb0",
+        "model": "gpt-5.6-sol"
+      },
+      "human_author": "64etuor <130260521+64etuor@users.noreply.github.com>"
+    },
+    "s_6cfe0f5f25d4e5": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "019f5c0a-f294-78b2-af01-6c5483dbfcbe",
+        "model": "gpt-5.6-sol"
+      },
+      "human_author": "64etuor <130260521+64etuor@users.noreply.github.com>"
+    },
+    "s_951a5d0dfbecdc": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "019f639c-9191-74a2-b9e8-cdc58b965ee0",
+        "model": "gpt-5.6-sol"
+      },
+      "human_author": "64etuor <130260521+64etuor@users.noreply.github.com>"
+    }
+  }
+}
