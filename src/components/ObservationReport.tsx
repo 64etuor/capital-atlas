@@ -26,6 +26,7 @@ import type {
 } from '../types/data'
 import type { DossierPayload } from '../types/dossier'
 import { bilateralPositionSubtitle } from '../features/synoptic/corridorDossier'
+import { ObservationLoader } from './ObservationLoader'
 
 const GRADES: readonly ConfidenceGrade[] = ['A', 'B', 'C', 'D', 'E']
 
@@ -304,9 +305,11 @@ export function ObservationReport() {
       </div>
 
       {syncing && (
-        <p className="readout px-6 pt-3 text-[10px] tracking-[0.12em] text-flow-in/80">
-          {t('report.syncing')}
-        </p>
+        <ObservationLoader
+          variant="compact"
+          label={t('report.syncing')}
+          className="px-6 pt-3"
+        />
       )}
 
       <div className="mt-4">

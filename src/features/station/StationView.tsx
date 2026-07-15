@@ -69,12 +69,12 @@ import {
   yoyStock,
 } from './derive'
 import { OBSERVED_GRADES, STATION_ASSET_ORDER, quarterEnd } from './shared'
+import { ObservationLoader } from '../../components/ObservationLoader'
 
 const INK_BG =
   'linear-gradient(180deg, var(--atlas-ink-0) 0%, var(--atlas-ink-1) 55%, var(--atlas-ink-2) 130%)'
 
 export function StationView() {
-  const { t } = useTranslation()
   const appView = useViewStore((s) => s.appView)
   const periodIndex = useViewStore((s) => s.periodIndex)
   const setPeriodIndex = useViewStore((s) => s.setPeriodIndex)
@@ -172,11 +172,16 @@ export function StationView() {
           />
         </div>
       ) : !current ? (
-        <div className="readout flex h-full items-center justify-center text-[12px] tracking-[0.18em] text-paper-dim">
-          {loadError
-            ? `STATION FEED UNAVAILABLE — ${loadError}`
-            : t('common.preparing')}
-        </div>
+        loadError ? (
+          <div
+            role="alert"
+            className="readout flex h-full items-center justify-center text-[12px] tracking-[0.18em] text-paper-dim"
+          >
+            STATION FEED UNAVAILABLE — {loadError}
+          </div>
+        ) : (
+          <ObservationLoader variant="full" className="h-full" />
+        )
       ) : (
         <StationBody
           file={current}

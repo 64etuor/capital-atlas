@@ -31,6 +31,7 @@ import {
 } from './exposure'
 import { selectDebtMarket } from './debtMarket'
 import type { AssetTab } from './AssetRail'
+import { ObservationLoader } from '../../components/ObservationLoader'
 
 interface Props {
   iso: string
@@ -385,8 +386,6 @@ export function ExposurePanel({
   const debtState =
     iso === 'WLD'
       ? t('station.exposure.world')
-      : debtCurrent === undefined
-      ? t('station.exposure.debtLoading')
       : debtCurrent === null
         ? t('station.exposure.noDebtCountry')
         : debtSelection?.status === 'unavailable'
@@ -400,11 +399,15 @@ export function ExposurePanel({
   const directState =
     iso === 'WLD'
       ? t('station.exposure.world')
-      : current === undefined
-        ? t('station.exposure.loading')
-        : current === null
-          ? t('station.exposure.absent')
-          : null
+      : current === null
+        ? t('station.exposure.absent')
+        : null
+  const directLoading = iso !== 'WLD' && current === undefined
+  const debtLoading = iso !== 'WLD' && debtCurrent === undefined
+  const closureLoading =
+    iso !== 'WLD' &&
+    !observedOnly &&
+    closureLoaded?.key !== closureKey
 
   return (
     <section
@@ -419,7 +422,13 @@ export function ExposurePanel({
           {observedOnly ? t('station.exposure.obs') : t('station.exposure.est')}
         </p>
       </header>
-      {directState ? (
+      {directLoading ? (
+        <ObservationLoader
+          variant="compact"
+          label={t('station.exposure.loading')}
+          className="min-h-0 flex-1"
+        />
+      ) : directState ? (
         <p className="readout flex flex-1 items-center text-[9px] tracking-[0.1em] text-paper-dim">
           {directState}
         </p>
@@ -495,6 +504,12 @@ export function ExposurePanel({
                     onClick={() => openDossier(reconstructedDossier(row, name))}
                   />
                 ))}
+                {closureLoading && (
+                  <ObservationLoader
+                    variant="inline"
+                    label={t('station.realloc.loading')}
+                  />
+                )}
                 {closureRows.map(({ row, publication }) => (
                   <FactButton
                     key={`ras|${row.asset}|${row.owner_country}|${row.issuer_country}`}
@@ -511,16 +526,22 @@ export function ExposurePanel({
                   </p>
                 )}
                 {fxdRows.length + reconstructedRows.length + closureRows.length === 0 &&
-                  !hasOmittedClosureTail && (
-                  <p className="readout text-[8px] leading-snug text-paper-dim/60">
-                    {t('station.exposure.noDerived')}
-                  </p>
+                  !hasOmittedClosureTail &&
+                  !closureLoading && (
+                    <p className="readout text-[8px] leading-snug text-paper-dim/60">
+                      {t('station.exposure.noDerived')}
+                    </p>
                   )}
               </>
             )}
           </Column>
           <Column title={t('station.exposure.debtMarket')}>
-            {debtState ? (
+            {debtLoading ? (
+              <ObservationLoader
+                variant="inline"
+                label={t('station.exposure.debtLoading')}
+              />
+            ) : debtState ? (
               <p className="readout text-[8px] leading-snug text-paper-dim/60">
                 {debtState}
               </p>

@@ -102,10 +102,23 @@ body {
 
 /* 관측 준비 계기 — 궤도/스캔/코어의 세 속도로 샤드 동기화를 표현한다. */
 .observation-loader {
+  --observation-loader-size: 88px;
+  --observation-loader-core: 6px;
   position: relative;
-  width: 88px;
-  height: 88px;
+  width: var(--observation-loader-size);
+  height: var(--observation-loader-size);
+  flex: 0 0 var(--observation-loader-size);
   contain: layout paint;
+}
+
+.observation-loader--compact {
+  --observation-loader-size: 34px;
+  --observation-loader-core: 4px;
+}
+
+.observation-loader--inline {
+  --observation-loader-size: 15px;
+  --observation-loader-core: 3px;
 }
 
 .observation-loader__orbit,
@@ -130,13 +143,13 @@ body {
 }
 
 .observation-loader__orbit--inner {
-  inset: 14px;
+  inset: 16%;
   border: 1px dashed color-mix(in srgb, var(--flow-in) 58%, transparent);
   animation: observation-counter-orbit 3.1s steps(48, end) infinite;
 }
 
 .observation-loader__reticle {
-  inset: 25px;
+  inset: 28%;
   border: 1px solid color-mix(in srgb, var(--atlas-paper) 18%, transparent);
   border-radius: 999px;
 }
@@ -150,22 +163,22 @@ body {
 
 .observation-loader__reticle::before {
   top: 50%;
-  left: -12px;
-  width: calc(100% + 24px);
+  left: -22%;
+  width: 144%;
   height: 1px;
 }
 
 .observation-loader__reticle::after {
-  top: -12px;
+  top: -22%;
   left: 50%;
   width: 1px;
-  height: calc(100% + 24px);
+  height: 144%;
 }
 
 .observation-loader__sweep {
   top: calc(50% - 0.5px);
   left: 50%;
-  width: 36px;
+  width: 41%;
   height: 1px;
   transform-origin: left center;
   background: color-mix(in srgb, var(--flow-out) 76%, transparent);
@@ -174,15 +187,21 @@ body {
 }
 
 .observation-loader__core {
-  top: calc(50% - 3px);
-  left: calc(50% - 3px);
-  width: 6px;
-  height: 6px;
+  top: calc(50% - var(--observation-loader-core) / 2);
+  left: calc(50% - var(--observation-loader-core) / 2);
+  width: var(--observation-loader-core);
+  height: var(--observation-loader-core);
   border: 1px solid var(--flow-in);
   border-radius: 999px;
   background: var(--atlas-ink-0);
   animation: observation-core 1.8s var(--ease-baro) infinite;
   will-change: transform, opacity;
+}
+
+.observation-loader--inline .observation-loader__reticle,
+.observation-loader--inline .observation-loader__sweep,
+.observation-loader--inline .observation-loader__core {
+  display: none;
 }
 
 @keyframes observation-orbit {
