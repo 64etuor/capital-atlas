@@ -1,0 +1,47 @@
+src/features/synoptic/SynopticView.tsx
+  s_6cfe0f5f25d4e5::t_396f936a89730c 18,76-85
+src/features/station/ReallocationMatrix.tsx
+  s_6cfe0f5f25d4e5::t_396f936a89730c 22,134-145
+src/features/station/StationView.tsx
+  s_6cfe0f5f25d4e5::t_396f936a89730c 72,175-184
+src/components/LineageDossier.tsx
+  s_6cfe0f5f25d4e5::t_396f936a89730c 16,321-326,346-351
+src/index.css
+  s_6cfe0f5f25d4e5::t_f287f32a31b8a6 105-106,108-110,114-123,146,152,166-167,172,175,181,190-193,201-205
+  s_196e5b31affd6e::t_91a12bca204cb1 206
+src/features/station/ExposurePanel.tsx
+  s_6cfe0f5f25d4e5::t_396f936a89730c 34,402-410,425-431,507-512,529-533,539-544
+src/components/ObservationLoader.test.ts
+  s_6cfe0f5f25d4e5::t_0eaf37f969073b 2,23-39
+src/components/loadingAffordance.test.ts
+  s_6cfe0f5f25d4e5::t_0eaf37f969073b 1-18,20-38
+  s_6cfe0f5f25d4e5::t_396f936a89730c 19
+src/components/ObservationLoader.tsx
+  s_6cfe0f5f25d4e5::t_f287f32a31b8a6 7,19,24-29,35-36,38-42,55-72
+src/components/ObservationReport.tsx
+  s_6cfe0f5f25d4e5::t_396f936a89730c 29,308-312
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.14",
+  "base_commit_sha": "a65ee5cbe24acfcca6987bfb9b3a7e49f9f11ab8",
+  "prompts": {},
+  "sessions": {
+    "s_196e5b31affd6e": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "019f5e0c-9a1f-75b0-a3ab-1c02dee66eb0",
+        "model": "gpt-5.6-sol"
+      },
+      "human_author": "64etuor <130260521+64etuor@users.noreply.github.com>"
+    },
+    "s_6cfe0f5f25d4e5": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "019f5c0a-f294-78b2-af01-6c5483dbfcbe",
+        "model": "gpt-5.6-sol"
+      },
+      "human_author": "64etuor <130260521+64etuor@users.noreply.github.com>"
+    }
+  }
+}
