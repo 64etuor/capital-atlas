@@ -2,6 +2,8 @@
   "common": {
     "close": "닫기",
     "preparing": "관측 준비 중",
+    "syncing": "데이터 샤드 동기화 중",
+    "loadingAria": "Capital Atlas 관측 데이터 불러오는 중",
     "noObservation": "관측 없음",
     "quarterAria": "분기"
   },
@@ -218,7 +220,7 @@
     },
     "s3": {
       "title": "세 개의 관측 표면",
-      "body": "GLOBE는 살아있는 지도, SYNOPTIC은 세계 개황, STATION은 국가별 분석 콘솔. Cmd+K로 어디든 점프 — KOR EQTY를 입력해 보세요."
+      "body": "GLOBE는 살아있는 지도입니다. 글로브에서 나라를 클릭하면 해당 국가의 상세 관측 리포트를 볼 수 있습니다. SYNOPTIC은 세계 개황, STATION은 국가별 분석 콘솔입니다. Cmd+K로 어디든 점프 — KOR EQTY를 입력해 보세요."
     },
     "s4": {
       "title": "모든 숫자는 계보를 엽니다",

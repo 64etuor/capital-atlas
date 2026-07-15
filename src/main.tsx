@@ -7,11 +7,20 @@ import { initDataVintage, initPeriods, periodCount } from './lib/periods'
 import { useViewStore } from './store/viewStore'
 import { applyLocale, detectLocale } from './i18n'
 import { applyUrlState, startUrlSync } from './lib/urlState'
+import { ObservationLoader } from './components/ObservationLoader'
 
 // 로케일: URL ?lang > localStorage > en (G2) — 첫 렌더 전에 적용
 applyLocale(detectLocale())
 
 const root = createRoot(document.getElementById('root')!)
+
+// Paint the observatory immediately; the canonical period index is resolved
+// before the interactive surface mounts so URL quarter clamping stays exact.
+root.render(
+  <StrictMode>
+    <ObservationLoader className="atlas-grain h-full" />
+  </StrictMode>,
+)
 
 // index.json is the canonical period list (DATA_CONTRACT) — sync the
 // timeline to it before first render; fall back to the built-in range.
