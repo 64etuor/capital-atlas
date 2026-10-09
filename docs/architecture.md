@@ -54,7 +54,7 @@ data:fetch → data:bis → data:dss → data:exposure → data:closure → data
 ```
 
 - 체인 누락은 조용한 소실/스테일을 만든다(Phase N에서 `data:bis` 누락이 은행
-  회랑 15만 건을 지울 뻔한 실사고로 확인) — 일일 크론
+  회랑 15만 건을 지울 뻔한 실사고로 확인) — 주간 크론
   (`.github/workflows/data-refresh.yml`)이 이 순서를 명시적으로 실행한다.
 - **결정론(Phase N)**: 샤드·파생 파일에 타임스탬프가 없다. 같은 상류 데이터면
   같은 바이트 — `data:changed`가 타임스탬프-전용 변경을 걸러 실질 변경일 때만

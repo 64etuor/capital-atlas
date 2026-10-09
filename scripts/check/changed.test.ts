@@ -1,5 +1,5 @@
 /**
- * data:changed 분류기 (Phase N) — 일일 크론의 커밋 게이트.
+ * data:changed 분류기 (Phase N) — 주간 크론의 커밋 게이트.
  * 타임스탬프-전용 변경(index.generated_at·sources.retrieved_at)과 실질 변경을
  * 구분한다: 실질 변경이 없으면 커밋하지 않는다(레포·배포 churn 0).
  */

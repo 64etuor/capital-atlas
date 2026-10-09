@@ -1,11 +1,14 @@
-# 일일 데이터 갱신 — 전체 재생성 체인을 돌리고 sanity 통과분만 커밋한다.
+# 주간 데이터 갱신 — 전체 재생성 체인을 돌리고 sanity 통과분만 커밋한다.
+# 매일이 아닌 주 1회인 이유: 데이터 커밋마다 Vercel 배포(public/data ~370MB)가
+# 생겨 Hobby 플랜 Deployment Storage(10GB)를 소진한다. 상류(BIS/IMF/WB)는
+# 분기 단위라 주간 갱신으로 충분하다. 급하면 workflow_dispatch로 수동 실행.
 # 필수 소스는 bounded retry(3회 캡) 뒤에도 실패하면 public 쓰기 전에 중단한다.
 # CoinGecko만 명시적 optional snapshot 폴백이다.
 name: Data refresh
 
 on:
   schedule:
-    - cron: '17 5 * * *' # 05:17 UTC = 14:17 KST
+    - cron: '17 5 * * 1' # 매주 월 05:17 UTC = 14:17 KST
   workflow_dispatch:
 
 permissions:

@@ -394,7 +394,7 @@ normalized 입력과 byte-equivalent row set인지 검사하고, raw cache가 �
 (수집 시각)·`meta/pipeline_report.json`·`meta/global_crypto.json`뿐.
 
 **커밋 게이트**: `pnpm data:changed`가 워킹트리↔HEAD를 대조해
-실질(substantive) / 타임스탬프-전용 / 메타데이터로 분류한다. 일일 크론
+실질(substantive) / 타임스탬프-전용 / 메타데이터로 분류한다. 주간 크론
 (`data-refresh.yml`)은 실질 변경일 때만 커밋·배포한다.
 
 **빈티지 다이제스트** (`public/data/vintages/{YYYY-MM-DD}.json` + `index.json`):

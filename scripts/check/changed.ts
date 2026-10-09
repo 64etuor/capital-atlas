@@ -1,5 +1,5 @@
 /**
- * data:changed (Phase N) — 일일 크론의 커밋 게이트.
+ * data:changed (Phase N) — 주간 크론의 커밋 게이트.
  * public/data 워킹트리 변경을 HEAD와 대조해 세 갈래로 분류한다:
  *   substantive     실질 데이터 변경 → 커밋·배포 가치 있음
  *   timestamp-only  index.generated_at / sources.retrieved_at만 변경
